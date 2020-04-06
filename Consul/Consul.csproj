@@ -8,7 +8,7 @@
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
     <PackageReleaseNotes>https://github.com/PlayFab/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/PlayFab/consuldotnet</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/PlayFab/consuldotnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/PlayFab/consuldotnet</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
