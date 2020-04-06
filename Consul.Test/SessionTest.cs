@@ -207,12 +207,6 @@ namespace Consul.Test
             Assert.True(infoRequest.Response.CreateIndex > 0);
             Assert.Equal(infoRequest.Response.Behavior, SessionBehavior.Release);
 
-            Assert.True(string.IsNullOrEmpty(infoRequest.Response.Name));
-            Assert.NotNull(infoRequest.KnownLeader);
-
-            Assert.True(infoRequest.LastIndex > 0);
-            Assert.NotNull(infoRequest.KnownLeader);
-
             var destroyRequest = await client.Session.Destroy(id);
 
             Assert.True(destroyRequest.Response);
