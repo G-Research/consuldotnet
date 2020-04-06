@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="CatalogTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -41,7 +42,7 @@ namespace Consul.Test
             var client = new ConsulClient();
             var datacenterList = await client.Catalog.Datacenters();
 
-            Assert.NotEqual(0, datacenterList.Response.Length);
+            Assert.NotEmpty(datacenterList.Response);
         }
 
         [Fact]
@@ -51,7 +52,7 @@ namespace Consul.Test
             var nodeList = await client.Catalog.Nodes();
 
             Assert.NotEqual((ulong)0, nodeList.LastIndex);
-            Assert.NotEqual(0, nodeList.Response.Length);
+            Assert.NotEmpty(nodeList.Response);
             // make sure deserialization is working right
             Assert.NotNull(nodeList.Response[0].Address);
             Assert.NotNull(nodeList.Response[0].Name);
@@ -64,7 +65,7 @@ namespace Consul.Test
             var servicesList = await client.Catalog.Services();
 
             Assert.NotEqual((ulong)0, servicesList.LastIndex);
-            Assert.NotEqual(0, servicesList.Response.Count);
+            Assert.NotEmpty(servicesList.Response);
         }
 
         [Fact]
@@ -74,7 +75,7 @@ namespace Consul.Test
             var serviceList = await client.Catalog.Service("consul");
 
             Assert.NotEqual((ulong)0, serviceList.LastIndex);
-            Assert.NotEqual(0, serviceList.Response.Length);
+            Assert.NotEmpty(serviceList.Response);
         }
 
         [Fact]
@@ -142,7 +143,7 @@ namespace Consul.Test
             await client.Catalog.Deregister(dereg);
 
             health = await client.Health.Node("foobar");
-            Assert.Equal(0, health.Response.Length);
+            Assert.Empty(health.Response);
 
             dereg = new CatalogDeregistration()
             {

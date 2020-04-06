@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="SnapshotTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -83,12 +84,12 @@ namespace Consul.Test
 
                 // This should work with a valid token.
                 var snap = await client.Snapshot.Save(new QueryOptions() { Token = ACLTest.ConsulRoot });
-                Assert.IsAssignableFrom(typeof(Stream), snap.Response);
+                Assert.IsAssignableFrom<Stream>(snap.Response);
 
                 // This should work with a stale snapshot. This doesn't have good feedback
                 // that the stale option was sent, but it makes sure nothing bad happens.
                 var snapStale = await client.Snapshot.Save(new QueryOptions() { Token = ACLTest.ConsulRoot, Consistency = ConsistencyMode.Stale });
-                Assert.IsAssignableFrom(typeof(Stream), snapStale.Response);
+                Assert.IsAssignableFrom<Stream>(snapStale.Response);
 
                 byte[] snapData;
 

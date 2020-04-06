@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="HealthTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -45,7 +46,7 @@ namespace Consul.Test
             var checks = await client.Health.Node((string)info.Response["Config"]["NodeName"]);
 
             Assert.NotEqual((ulong)0, checks.LastIndex);
-            Assert.NotEqual(0, checks.Response.Length);
+            Assert.NotEmpty(checks.Response);
         }
 
         [Fact]
@@ -68,7 +69,7 @@ namespace Consul.Test
                 await client.Agent.ServiceRegister(registration);
                 var checks = await client.Health.Checks(svcID);
                 Assert.NotEqual((ulong)0, checks.LastIndex);
-                Assert.NotEqual(0, checks.Response.Length);
+                Assert.NotEmpty(checks.Response);
             }
             finally
             {
@@ -83,7 +84,7 @@ namespace Consul.Test
 
             var checks = await client.Health.Service("consul", "", false);
             Assert.NotEqual((ulong)0, checks.LastIndex);
-            Assert.NotEqual(0, checks.Response.Length);
+            Assert.NotEmpty(checks.Response);
         }
 
         [Fact]
@@ -93,7 +94,7 @@ namespace Consul.Test
 
             var checks = await client.Health.State(HealthStatus.Any);
             Assert.NotEqual((ulong)0, checks.LastIndex);
-            Assert.NotEqual(0, checks.Response.Length);
+            Assert.NotEmpty(checks.Response);
         }
 
         private struct AggregatedStatusResult

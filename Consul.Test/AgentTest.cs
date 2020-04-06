@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="AgentTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -57,7 +58,7 @@ namespace Consul.Test
             var members = await client.Agent.Members(false);
 
             Assert.NotNull(members);
-            Assert.Equal(1, members.Response.Length);
+            Assert.Single(members.Response);
         }
 
         [Fact]
@@ -462,7 +463,7 @@ namespace Consul.Test
             checks = await client.Agent.Checks();
             foreach (var check in checks.Response)
             {
-                Assert.False(check.Value.CheckID.Contains("maintenance"));
+                Assert.DoesNotContain("maintenance", check.Value.CheckID);
             }
 
             await client.Agent.ServiceDeregister(svcID);
@@ -493,7 +494,7 @@ namespace Consul.Test
             checks = await client.Agent.Checks();
             foreach (var check in checks.Response)
             {
-                Assert.False(check.Value.CheckID.Contains("maintenance"));
+                Assert.DoesNotContain("maintenance", check.Value.CheckID);
             }
         }
 

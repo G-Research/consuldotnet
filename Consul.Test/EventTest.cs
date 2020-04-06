@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="EventTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -54,7 +55,7 @@ namespace Consul.Test
             Assert.False(string.IsNullOrEmpty(res.Response));
 
             var events = await client.Event.List();
-            Assert.NotEqual(0, events.Response.Length);
+            Assert.NotEmpty(events.Response);
             Assert.Equal(res.Response, events.Response[events.Response.Length - 1].ID);
             Assert.Equal(client.Event.IDToIndex(res.Response), events.LastIndex);
         }

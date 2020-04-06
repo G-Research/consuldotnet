@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="AssemblyTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -34,7 +35,7 @@ namespace Consul.Test
             Type type = typeof(Consul.ConsulClient);
             TypeInfo typeInfo = type.GetTypeInfo();
             string name = typeInfo.Assembly.FullName.ToString();
-            Assert.True(typeInfo.Assembly.FullName.Contains("PublicKeyToken"));
+            Assert.Contains("PublicKeyToken", typeInfo.Assembly.FullName);
 
         }
     }

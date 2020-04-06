@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="KVTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -130,7 +131,7 @@ namespace Consul.Test
 
             var pairs = await client.KV.List(prefix);
             Assert.NotNull(pairs.Response);
-            Assert.Equal(pairs.Response.Length, 100);
+            Assert.Equal(100, pairs.Response.Length);
             foreach (var pair in pairs.Response)
             {
                 Assert.True(StructuralComparisons.StructuralEqualityComparer.Equals(value, pair.Value));
@@ -326,7 +327,7 @@ namespace Consul.Test
             }
 
             Assert.NotNull(pairs2.Response);
-            Assert.Equal(pairs2.Response.Length, 1);
+            Assert.Single(pairs2.Response);
             Assert.True(StructuralComparisons.StructuralEqualityComparer.Equals(value, pairs2.Response[0].Value));
             Assert.Equal(pairs2.Response[0].Flags, (ulong)42);
             Assert.True(pairs2.LastIndex > pairs.LastIndex);
@@ -428,7 +429,7 @@ namespace Consul.Test
             getRequest = await client.KV.Get(key);
 
             Assert.NotNull(getRequest.Response);
-            Assert.Equal(null, getRequest.Response.Session);
+            Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
 
@@ -464,7 +465,7 @@ namespace Consul.Test
 
                     Assert.False(result.Response.Success, "transaction should have failed");
                     Assert.Equal(2, result.Response.Errors.Count);
-                    Assert.Equal(0, result.Response.Results.Count);
+                    Assert.Empty(result.Response.Results);
 
                     Assert.Equal(0, result.Response.Errors[0].OpIndex);
                     Assert.Contains("missing session", result.Response.Errors[0].What);
@@ -476,7 +477,7 @@ namespace Consul.Test
                     result = await client.KV.Txn(txn);
 
                     Assert.True(result.Response.Success, "transaction failure");
-                    Assert.Equal(0, result.Response.Errors.Count);
+                    Assert.Empty(result.Response.Errors);
                     Assert.Equal(2, result.Response.Results.Count);
 
 
@@ -501,8 +502,8 @@ namespace Consul.Test
                     result = await client.KV.Txn(txn);
 
                     Assert.True(result.Response.Success, "transaction failure");
-                    Assert.Equal(0, result.Response.Errors.Count);
-                    Assert.Equal(1, result.Response.Results.Count);
+                    Assert.Empty(result.Response.Errors);
+                    Assert.Single(result.Response.Results);
 
                     var getResult = result.Response.Results[0];
 

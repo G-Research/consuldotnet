@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="PreparedQueryTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -96,7 +97,7 @@ namespace Consul.Test
             Assert.NotNull(results);
             var nodes = results.Nodes.Where(n => n.Node.Name == "foobaz").ToArray();
             Assert.True(nodes.Length == 1);
-            Assert.Equal(nodes[0].Node.Name, "foobaz");
+            Assert.Equal("foobaz", nodes[0].Node.Name);
 
             results = null;
             results = (await client.PreparedQuery.Execute("my-query")).Response;
@@ -104,7 +105,7 @@ namespace Consul.Test
             Assert.NotNull(results);
             nodes = results.Nodes.Where(n => n.Node.Name == "foobaz").ToArray();
             Assert.True(nodes.Length == 1);
-            Assert.Equal(results.Nodes[0].Node.Name, "foobaz");
+            Assert.Equal("foobaz", results.Nodes[0].Node.Name);
 
             await client.PreparedQuery.Delete(id);
 

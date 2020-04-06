@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="OperatorTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -44,7 +45,7 @@ namespace Consul.Test
             {
                 var servers = await client.Operator.RaftGetConfiguration();
 
-                Assert.Equal(1, servers.Response.Servers.Count);
+                Assert.Single(servers.Response.Servers);
                 Assert.True(servers.Response.Servers[0].Leader);
                 Assert.True(servers.Response.Servers[0].Voter);
             }

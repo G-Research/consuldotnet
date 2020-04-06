@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="SessionTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -132,7 +133,7 @@ namespace Consul.Test
 
             var infoRequest = await client.Session.Info(id);
             Assert.True(infoRequest.LastIndex > 0);
-            Assert.NotNull(infoRequest.KnownLeader);
+            Assert.True(infoRequest.KnownLeader);
 
             Assert.Equal(id, infoRequest.Response.ID);
 
@@ -197,7 +198,7 @@ namespace Consul.Test
 
             var infoRequest = await client.Session.Info(id);
             Assert.True(infoRequest.LastIndex > 0);
-            Assert.NotNull(infoRequest.KnownLeader);
+            Assert.True(infoRequest.KnownLeader);
 
             Assert.Equal(id, infoRequest.Response.ID);
 
