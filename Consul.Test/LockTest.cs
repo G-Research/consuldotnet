@@ -345,7 +345,7 @@ namespace Consul.Test
 
             for (var i = 0; i < contenderPool; i++)
             {
-                if (acquired[i])
+                if (acquired.ContainsKey(i))
                 {
                     Assert.True(acquired[i]);
                 }
