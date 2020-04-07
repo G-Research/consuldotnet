@@ -1,6 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CoordinateTest.cs" company="PlayFab Inc">
-//    Copyright 2015 PlayFab Inc.
+//  <copyright file="ACLReplicationTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +16,19 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using FluentAssertions;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
 {
-    public class CoordinateTest : IDisposable
+    public class ACLReplicationTest : IDisposable
     {
         private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
-        public CoordinateTest()
+        public ACLReplicationTest()
         {
             _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
@@ -43,29 +43,16 @@ namespace Consul.Test
             _lock.Dispose();
         }
 
-        [Fact]
-        public async Task Coordinate_GetDatacenters()
+        [SkippableFact]
+        public async Task ACLReplication_GetStatus()
         {
-            var info = await _client.Agent.Self();
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
-            var datacenters = await _client.Coordinate.Datacenters();
-
-            Assert.NotNull(datacenters.Response);
-            Assert.True(datacenters.Response.Length > 0);
-        }
-
-        [Fact]
-        public async Task Coordinate_GetNodes()
-        {
-            var info = await _client.Agent.Self();
-
-            var nodes = await _client.Coordinate.Nodes();
-
-            // There's not a good way to populate coordinates without
-            // waiting for them to calculate and update, so the best
-            // we can do is call the endpoint and make sure we don't
-            // get an error. - from offical API.
-            Assert.NotNull(nodes);
+            var aclReplicationEntry = new ACLReplicationEntry(false, false);
+            var aclReplicationStatus = await _client.ACLReplication.Status();
+            Assert.NotNull(aclReplicationStatus.Response);
+            Assert.NotEqual(TimeSpan.Zero, aclReplicationStatus.RequestTime);
+            aclReplicationStatus.Response.Should().BeEquivalentTo(aclReplicationEntry);
         }
     }
 }

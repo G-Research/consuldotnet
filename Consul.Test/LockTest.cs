@@ -29,23 +29,29 @@ namespace Consul.Test
     [Trait("speed", "slow")]
     public class LockTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public LockTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
     
         [Fact]
         public async Task Lock_AcquireRelease()
         {
-            var client = new ConsulClient();
             const string keyName = "test/lock/acquirerelease";
-            var lockKey = client.CreateLock(keyName);
+            var lockKey = _client.CreateLock(keyName);
 
             try
             {
@@ -96,48 +102,44 @@ namespace Consul.Test
         public void Lock_MultithreadedRelease()
         {
             const int numTasks = 100000;
-            using (var client = new ConsulClient())
+            const string keyName = "test/lock/acquirerelease";
+            var lockKey = _client.CreateLock(keyName);
+            Task[] tasks = new Task[numTasks];
+
+            for (int i = 0; i < numTasks; i++)
             {
-                const string keyName = "test/lock/acquirerelease";
-                var lockKey = client.CreateLock(keyName);
-                Task[] tasks = new Task[numTasks];
+                tasks[i] = lockKey.Acquire(CancellationToken.None);
+            }
 
-                for (int i = 0; i < numTasks; i++)
-                {
-                    tasks[i] = lockKey.Acquire(CancellationToken.None);
-                }
+            try
+            {
+                Task.WaitAll(tasks);
+            }
+            catch (AggregateException e)
+            {
+                Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
+            }
 
-                try
-                {
-                    Task.WaitAll(tasks);
-                }
-                catch (AggregateException e)
-                {
-                    Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
-                }
+            Assert.True(lockKey.IsHeld);
 
-                Assert.True(lockKey.IsHeld);
+            for (int i = 0; i < numTasks; i++)
+            {
+                tasks[i] = lockKey.Release(CancellationToken.None);
+            }
 
-                for (int i = 0; i < numTasks; i++)
-                {
-                    tasks[i] = lockKey.Release(CancellationToken.None);
-                }
-
-                try
-                {
-                    Task.WaitAll(tasks);
-                }
-                catch (AggregateException e)
-                {
-                    Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
-                }
+            try
+            {
+                Task.WaitAll(tasks);
+            }
+            catch (AggregateException e)
+            {
+                Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
             }
         }
 
         [Fact]
         public async Task Lock_OneShot()
         {
-            var client = new ConsulClient();
             const string keyName = "test/lock/oneshot";
             var lockOptions = new LockOptions(keyName)
             {
@@ -148,12 +150,12 @@ namespace Consul.Test
 
             lockOptions.LockWaitTime = TimeSpan.FromMilliseconds(1000);
 
-            var lockKey = client.CreateLock(lockOptions);
+            var lockKey = _client.CreateLock(lockOptions);
 
             await lockKey.Acquire(CancellationToken.None);
 
 
-            var contender = client.CreateLock(new LockOptions(keyName)
+            var contender = _client.CreateLock(new LockOptions(keyName)
             {
                 LockTryOnce = true,
                 LockWaitTime = TimeSpan.FromMilliseconds(1000)
@@ -198,29 +200,26 @@ namespace Consul.Test
         [Fact]
         public async Task Lock_EphemeralAcquireRelease()
         {
-            var client = new ConsulClient();
             const string keyName = "test/lock/ephemerallock";
-            var sessionId = await client.Session.Create(new SessionEntry { Behavior = SessionBehavior.Delete });
+            var sessionId = await _client.Session.Create(new SessionEntry { Behavior = SessionBehavior.Delete });
 
-            var l = await client.AcquireLock(new LockOptions(keyName) { Session = sessionId.Response }, CancellationToken.None);
+            var l = await _client.AcquireLock(new LockOptions(keyName) { Session = sessionId.Response }, CancellationToken.None);
 
             Assert.True(l.IsHeld);
-            await client.Session.Destroy(sessionId.Response);
+            await _client.Session.Destroy(sessionId.Response);
 
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             Assert.False(l.IsHeld);
-            Assert.Null((await client.KV.Get(keyName)).Response);
+            Assert.Null((await _client.KV.Get(keyName)).Response);
         }
 
         [Fact]
         public async Task Lock_Disposable()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/disposable";
 
-            var l = await client.AcquireLock(keyName);
+            var l = await _client.AcquireLock(keyName);
             try
             {
                 Assert.True(l.IsHeld);
@@ -230,19 +229,17 @@ namespace Consul.Test
                 await l.Release();
             }
         }
+
         [Fact]
         public async Task Lock_ExecuteAction()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/action";
-            await client.ExecuteLocked(keyName, () => Assert.True(true));
+            await _client.ExecuteLocked(keyName, () => Assert.True(true));
         }
+
         [Fact]
         public async Task Lock_AcquireWaitRelease()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/acquirewaitrelease";
 
             var lockOptions = new LockOptions(keyName)
@@ -251,7 +248,7 @@ namespace Consul.Test
                 SessionTTL = TimeSpan.FromSeconds(10)
             };
 
-            var l = client.CreateLock(lockOptions);
+            var l = _client.CreateLock(lockOptions);
 
             await l.Acquire(CancellationToken.None);
 
@@ -272,11 +269,10 @@ namespace Consul.Test
 
             await l.Destroy();
         }
+
         [Fact]
         public async Task Lock_ContendWait()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/contendwait";
             const int contenderPool = 3;
 
@@ -292,7 +288,7 @@ namespace Consul.Test
                     acquired[v] = false;
                     tasks.Add(Task.Run(async () =>
                     {
-                        var lockKey = client.CreateLock(keyName);
+                        var lockKey = _client.CreateLock(keyName);
                         await lockKey.Acquire(CancellationToken.None);
                         acquired[v] = lockKey.IsHeld;
                         if (lockKey.IsHeld)
@@ -311,11 +307,10 @@ namespace Consul.Test
                 Assert.True(acquired[i], "Contender " + i.ToString() + " did not acquire the lock");
             }
         }
+
         [Fact]
         public async Task Lock_ContendFast()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/contendfast";
             const int contenderPool = 10;
 
@@ -330,7 +325,7 @@ namespace Consul.Test
                     var v = i;
                     tasks.Add(Task.Run(async () =>
                     {
-                        var lockKey = client.CreateLock(keyName);
+                        var lockKey = _client.CreateLock(keyName);
                         await lockKey.Acquire(CancellationToken.None);
                         Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
                         if (lockKey.IsHeld)
@@ -359,8 +354,6 @@ namespace Consul.Test
         [Fact]
         public async Task Lock_Contend_LockDelay()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/contendlockdelay";
 
             const int contenderPool = 3;
@@ -376,12 +369,12 @@ namespace Consul.Test
                     var v = i;
                     tasks.Add(Task.Run(async () =>
                     {
-                        var lockKey = (Lock)client.CreateLock(keyName);
+                        var lockKey = (Lock)_client.CreateLock(keyName);
                         await lockKey.Acquire(CancellationToken.None);
                         if (lockKey.IsHeld)
                         {
                             Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
-                            await client.Session.Destroy(lockKey.LockSession);
+                            await _client.Session.Destroy(lockKey.LockSession);
                         }
                     }));
                 }
@@ -401,14 +394,13 @@ namespace Consul.Test
                 }
             }
         }
+
         [Fact]
         public async Task Lock_Destroy()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/destroy";
 
-            var lockKey = client.CreateLock(keyName);
+            var lockKey = _client.CreateLock(keyName);
 
             try
             {
@@ -430,7 +422,7 @@ namespace Consul.Test
 
                 Assert.False(lockKey.IsHeld);
 
-                var lockKey2 = client.CreateLock(keyName);
+                var lockKey2 = _client.CreateLock(keyName);
 
                 await lockKey2.Acquire(CancellationToken.None);
 
@@ -469,13 +461,11 @@ namespace Consul.Test
         [Fact]
         public void Lock_RunAction()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/runaction";
 
             Task.WaitAll(Task.Run(() =>
             {
-                client.ExecuteLocked(keyName, () =>
+                _client.ExecuteLocked(keyName, () =>
                 {
                     // Only executes if the lock is held
                     Assert.True(true);
@@ -483,7 +473,7 @@ namespace Consul.Test
             }),
             Task.Run(() =>
             {
-                client.ExecuteLocked(keyName, () =>
+                _client.ExecuteLocked(keyName, () =>
                 {
                     // Only executes if the lock is held
                     Assert.True(true);
@@ -494,20 +484,18 @@ namespace Consul.Test
         [Fact]
         public async Task Lock_ReclaimLock()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/reclaim";
 
-            var sessionRequest = await client.Session.Create();
+            var sessionRequest = await _client.Session.Create();
             var sessionId = sessionRequest.Response;
             try
             {
-                var lock1 = client.CreateLock(new LockOptions(keyName)
+                var lock1 = _client.CreateLock(new LockOptions(keyName)
                 {
                     Session = sessionId
                 });
 
-                var lock2 = client.CreateLock(new LockOptions(keyName)
+                var lock2 = _client.CreateLock(new LockOptions(keyName)
                 {
                     Session = sessionId
                 });
@@ -548,24 +536,23 @@ namespace Consul.Test
             }
             finally
             {
-                Assert.True((await client.Session.Destroy(sessionId)).Response, "Failed to destroy session");
+                var destroyResponse = await _client.Session.Destroy(sessionId);
+                Assert.True(destroyResponse.Response, "Failed to destroy session");
             }
         }
 
         [Fact]
         public async Task Lock_SemaphoreConflict()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/semaphoreconflict";
 
-            var semaphore = client.Semaphore(keyName, 2);
+            var semaphore = _client.Semaphore(keyName, 2);
 
             await semaphore.Acquire(CancellationToken.None);
 
             Assert.True(semaphore.IsHeld);
 
-            var lockKey = client.CreateLock(keyName + "/.lock");
+            var lockKey = _client.CreateLock(keyName + "/.lock");
 
             try
             {
@@ -592,11 +579,9 @@ namespace Consul.Test
         [Fact]
         public async Task Lock_ForceInvalidate()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/forceinvalidate";
 
-            var lockKey = (Lock)client.CreateLock(keyName);
+            var lockKey = (Lock)_client.CreateLock(keyName);
             try
             {
                 await lockKey.Acquire(CancellationToken.None);
@@ -612,7 +597,7 @@ namespace Consul.Test
                     Assert.False(lockKey.IsHeld);
                 });
 
-                await Task.Run(() => { client.Session.Destroy(lockKey.LockSession); });
+                await Task.Run(() => { _client.Session.Destroy(lockKey.LockSession); });
 
                 Task.WaitAny(new[] { checker }, 1000);
             }
@@ -633,11 +618,9 @@ namespace Consul.Test
         [Fact]
         public async Task Lock_DeleteKey()
         {
-            var client = new ConsulClient();
-
             const string keyName = "test/lock/deletekey";
 
-            var lockKey = (Lock)client.CreateLock(keyName);
+            var lockKey = (Lock)_client.CreateLock(keyName);
             try
             {
                 await lockKey.Acquire(CancellationToken.None);
@@ -655,7 +638,7 @@ namespace Consul.Test
 
                 Task.WaitAny(new[] { checker }, 1000);
 
-                await client.KV.Delete(lockKey.Opts.Key);
+                await _client.KV.Delete(lockKey.Opts.Key);
             }
             finally
             {

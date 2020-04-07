@@ -26,24 +26,29 @@ namespace Consul.Test
 {
     public class HealthTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public HealthTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
 
         [Fact]
-        public async Task Health_Node()
+        public async Task Health_GetLocalNode()
         {
-            var client = new ConsulClient();
-
-            var info = await client.Agent.Self();
-            var checks = await client.Health.Node((string)info.Response["Config"]["NodeName"]);
+            var info = await _client.Agent.Self();
+            var checks = await _client.Health.Node((string)info.Response["Config"]["NodeName"]);
 
             Assert.NotEqual((ulong)0, checks.LastIndex);
             Assert.NotEmpty(checks.Response);
@@ -52,9 +57,8 @@ namespace Consul.Test
         [Fact]
         public async Task Health_Checks()
         {
-            var client = new ConsulClient();
             var svcID = KVTest.GenerateTestKeyName();
-            var registration = new AgentServiceRegistration()
+            var registration = new AgentServiceRegistration
             {
                 Name = svcID,
                 Tags = new[] { "bar", "baz" },
@@ -66,33 +70,29 @@ namespace Consul.Test
             };
             try
             {
-                await client.Agent.ServiceRegister(registration);
-                var checks = await client.Health.Checks(svcID);
+                await _client.Agent.ServiceRegister(registration);
+                var checks = await _client.Health.Checks(svcID);
                 Assert.NotEqual((ulong)0, checks.LastIndex);
                 Assert.NotEmpty(checks.Response);
             }
             finally
             {
-                await client.Agent.ServiceDeregister(svcID);
+                await _client.Agent.ServiceDeregister(svcID);
             }
         }
 
         [Fact]
-        public async Task Health_Service()
+        public async Task Health_GetConsulService()
         {
-            var client = new ConsulClient();
-
-            var checks = await client.Health.Service("consul", "", false);
+            var checks = await _client.Health.Service("consul", "", false);
             Assert.NotEqual((ulong)0, checks.LastIndex);
             Assert.NotEmpty(checks.Response);
         }
 
         [Fact]
-        public async Task Health_State()
+        public async Task Health_GetState()
         {
-            var client = new ConsulClient();
-
-            var checks = await client.Health.State(HealthStatus.Any);
+            var checks = await _client.Health.State(HealthStatus.Any);
             Assert.NotEqual((ulong)0, checks.LastIndex);
             Assert.NotEmpty(checks.Response);
         }
@@ -106,7 +106,7 @@ namespace Consul.Test
         }
 
         [Fact]
-        public void Health_AggregatedStatus()
+        public void Health_GetAggregatedStatus()
         {
             var cases = new List<AggregatedStatusResult>()
             {

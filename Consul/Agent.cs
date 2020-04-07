@@ -231,6 +231,9 @@ namespace Consul
         public string Script { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string[] Args { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DockerContainerID { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

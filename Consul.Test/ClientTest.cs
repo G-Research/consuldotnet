@@ -31,15 +31,22 @@ namespace Consul.Test
 {
     public class ClientTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public ClientTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
 
         [Fact]
@@ -88,7 +95,6 @@ namespace Consul.Test
         [Fact]
         public async Task Client_SetQueryOptions()
         {
-            var client = new ConsulClient();
             var opts = new QueryOptions()
             {
                 Datacenter = "foo",
@@ -97,7 +103,7 @@ namespace Consul.Test
                 WaitTime = new TimeSpan(0, 0, 100),
                 Token = "12345"
             };
-            var request = client.Get<KVPair>("/v1/kv/foo", opts);
+            var request = _client.Get<KVPair>("/v1/kv/foo", opts);
 
             await Assert.ThrowsAsync<ConsulRequestException>(async () => await request.Execute(CancellationToken.None));
 
@@ -110,8 +116,9 @@ namespace Consul.Test
         [Fact]
         public async Task Client_SetClientOptions()
         {
-            var client = new ConsulClient((c) =>
+            var client = new ConsulClient(c =>
             {
+                c.Address = TestHelper.HttpUri;
                 c.Datacenter = "foo";
                 c.WaitTime = new TimeSpan(0, 0, 100);
                 c.Token = "12345";
@@ -126,15 +133,13 @@ namespace Consul.Test
         [Fact]
         public async Task Client_SetWriteOptions()
         {
-            var client = new ConsulClient();
-
             var opts = new WriteOptions()
             {
                 Datacenter = "foo",
                 Token = "12345"
             };
 
-            var request = client.Put("/v1/kv/foo", new KVPair("kv/foo"), opts);
+            var request = _client.Put("/v1/kv/foo", new KVPair("kv/foo"), opts);
 
             await Assert.ThrowsAsync<ConsulRequestException>(async () => await request.Execute(CancellationToken.None));
 
@@ -148,31 +153,37 @@ namespace Consul.Test
             {
                 hc.Timeout = TimeSpan.FromDays(10);
                 hc.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var config = new ConsulClientConfiguration();
+                config.Address = TestHelper.HttpUri;
+                config.Token = TestHelper.MasterToken;
+
 #pragma warning disable CS0618 // Type or member is obsolete
-                using (var client = new ConsulClient(new ConsulClientConfiguration(), hc))
+                using (var client = new ConsulClient(config, hc))
 #pragma warning restore CS0618 // Type or member is obsolete
                 {
                     await client.KV.Put(new KVPair("customhttpclient") { Value = System.Text.Encoding.UTF8.GetBytes("hello world") });
                     Assert.Equal(TimeSpan.FromDays(10), client.HttpClient.Timeout);
                     Assert.Contains(new MediaTypeWithQualityHeaderValue("application/json"), client.HttpClient.DefaultRequestHeaders.Accept);
                 }
-                Assert.Equal("hello world", await (await hc.GetAsync("http://localhost:8500/v1/kv/customhttpclient?raw")).Content.ReadAsStringAsync());
+
+                var getRawClientResponse = await hc.GetAsync(TestHelper.HttpAddr + "/v1/kv/customhttpclient?raw");
+                Assert.Equal("hello world", await getRawClientResponse.Content.ReadAsStringAsync()); ;
             }
         }
 
         [Fact]
         public async Task Client_DisposeBehavior()
         {
-            var client = new ConsulClient();
             var opts = new WriteOptions()
             {
                 Datacenter = "foo",
                 Token = "12345"
             };
 
-            client.Dispose();
+            _client.Dispose();
 
-            var request = client.Put("/v1/kv/foo", new KVPair("kv/foo"), opts);
+            var request = _client.Put("/v1/kv/foo", new KVPair("kv/foo"), opts);
 
             await Assert.ThrowsAsync<ObjectDisposedException>(() => request.Execute(CancellationToken.None));
         }
@@ -181,6 +192,8 @@ namespace Consul.Test
         public async Task Client_ReuseAndUpdateConfig()
         {
             var config = new ConsulClientConfiguration();
+            config.Address = TestHelper.HttpUri;
+            config.Token = TestHelper.MasterToken;
 
 #pragma warning disable CS0618 // Type or member is obsolete
             using (var client = new ConsulClient(config))

@@ -26,38 +26,43 @@ namespace Consul.Test
 {    
     public class EventTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public EventTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
     
         [Fact]
         public async Task Event_FireList()
         {
-            var client = new ConsulClient();
-
             var userevent = new UserEvent()
             {
                 Name = "foo"
             };
 
-            var res = await client.Event.Fire(userevent);
+            var res = await _client.Event.Fire(userevent);
 
             await Task.Delay(100);
 
             Assert.NotEqual(TimeSpan.Zero, res.RequestTime);
             Assert.False(string.IsNullOrEmpty(res.Response));
 
-            var events = await client.Event.List();
+            var events = await _client.Event.List();
             Assert.NotEmpty(events.Response);
             Assert.Equal(res.Response, events.Response[events.Response.Length - 1].ID);
-            Assert.Equal(client.Event.IDToIndex(res.Response), events.LastIndex);
+            Assert.Equal(_client.Event.IDToIndex(res.Response), events.LastIndex);
         }
     }
 }

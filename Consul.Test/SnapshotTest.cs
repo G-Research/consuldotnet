@@ -27,89 +27,92 @@ namespace Consul.Test
 {
     public class SnapshotTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;   
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public SnapshotTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
 
         [Fact]
         public async Task Snapshot_TakeRestore()
         {
-            using (var client = new ConsulClient((c) => { c.Token = ACLTest.ConsulRoot; }))
+            var keyName = KVTest.GenerateTestKeyName();
+
+            var key = new KVPair(keyName)
             {
-                var keyName = KVTest.GenerateTestKeyName();
+                Value = Encoding.UTF8.GetBytes("hello")
+            };
 
-                var key = new KVPair(keyName)
-                {
-                    Value = Encoding.UTF8.GetBytes("hello")
-                };
+            var putResponse = await _client.KV.Put(key);
+            Assert.True(putResponse.Response);
 
-                Assert.True((await client.KV.Put(key)).Response);
+            Assert.Equal(Encoding.UTF8.GetBytes("hello"), (await _client.KV.Get(keyName)).Response.Value);
 
-                Assert.Equal(Encoding.UTF8.GetBytes("hello"), (await client.KV.Get(keyName)).Response.Value);
+            var snap = await _client.Snapshot.Save();
 
-                var snap = await client.Snapshot.Save();
+            Assert.NotEqual<ulong>(0, snap.LastIndex);
+            Assert.True(snap.KnownLeader);
 
-                Assert.NotEqual<ulong>(0, snap.LastIndex);
-                Assert.True(snap.KnownLeader);
+            key.Value = Encoding.UTF8.GetBytes("goodbye");
 
-                key.Value = Encoding.UTF8.GetBytes("goodbye");
+            putResponse = await _client.KV.Put(key);
+            Assert.True(putResponse.Response);
 
-                Assert.True((await client.KV.Put(key)).Response);
+            Assert.Equal(Encoding.UTF8.GetBytes("goodbye"), (await _client.KV.Get(keyName)).Response.Value);
 
-                Assert.Equal(Encoding.UTF8.GetBytes("goodbye"), (await client.KV.Get(keyName)).Response.Value);
+            await _client.Snapshot.Restore(snap.Response);
 
-                await client.Snapshot.Restore(snap.Response);
-
-                Assert.Equal(Encoding.UTF8.GetBytes("hello"), (await client.KV.Get(keyName)).Response.Value);
-            }
+            Assert.Equal(Encoding.UTF8.GetBytes("hello"), (await _client.KV.Get(keyName)).Response.Value);
         }
 
         [Fact]
         public async Task Snapshot_Options()
         {
-            using (var client = new ConsulClient())
+            // Try to take a snapshot with a bad token.
+            await Assert.ThrowsAsync<ConsulRequestException>(() => _client.Snapshot.Save(new QueryOptions() { Token = "anonymous" }));
+
+            // Now try an unknown DC.
+            await Assert.ThrowsAsync<ConsulRequestException>(() => _client.Snapshot.Save(new QueryOptions() { Datacenter = "nope" }));
+
+            // This should work with a valid token.
+            var snap = await _client.Snapshot.Save(new QueryOptions() { Token = TestHelper.MasterToken });
+            Assert.IsAssignableFrom<Stream>(snap.Response);
+
+            // This should work with a stale snapshot. This doesn't have good feedback
+            // that the stale option was sent, but it makes sure nothing bad happens.
+            var snapStale = await _client.Snapshot.Save(new QueryOptions() { Token = TestHelper.MasterToken, Consistency = ConsistencyMode.Stale });
+            Assert.IsAssignableFrom<Stream>(snapStale.Response);
+
+            byte[] snapData;
+
+            using (MemoryStream ms = new MemoryStream())
             {
-                // Try to take a snapshot with a bad token.
-                await Assert.ThrowsAsync<ConsulRequestException>(() => client.Snapshot.Save(new QueryOptions() { Token = "anonymous" }));
-
-                // Now try an unknown DC.
-                await Assert.ThrowsAsync<ConsulRequestException>(() => client.Snapshot.Save(new QueryOptions() { Datacenter = "nope" }));
-
-                // This should work with a valid token.
-                var snap = await client.Snapshot.Save(new QueryOptions() { Token = ACLTest.ConsulRoot });
-                Assert.IsAssignableFrom<Stream>(snap.Response);
-
-                // This should work with a stale snapshot. This doesn't have good feedback
-                // that the stale option was sent, but it makes sure nothing bad happens.
-                var snapStale = await client.Snapshot.Save(new QueryOptions() { Token = ACLTest.ConsulRoot, Consistency = ConsistencyMode.Stale });
-                Assert.IsAssignableFrom<Stream>(snapStale.Response);
-
-                byte[] snapData;
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    snap.Response.CopyTo(ms);
-                    snapData = ms.ToArray();
-                }
-
-                Assert.NotEmpty(snapData);
-
-                // Try to restore a snapshot with a bad token.
-                await Assert.ThrowsAsync<ConsulRequestException>(() => client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Token = "anonymous" }));
-
-                // Now try an unknown DC.
-                await Assert.ThrowsAsync<ConsulRequestException>(() => client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Datacenter = "nope" }));
-
-                // This should work.
-                await client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Token = ACLTest.ConsulRoot });
+                snap.Response.CopyTo(ms);
+                snapData = ms.ToArray();
             }
+
+            Assert.NotEmpty(snapData);
+
+            // Try to restore a snapshot with a bad token.
+            await Assert.ThrowsAsync<ConsulRequestException>(() => _client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Token = "anonymous" }));
+
+            // Now try an unknown DC.
+            await Assert.ThrowsAsync<ConsulRequestException>(() => _client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Datacenter = "nope" }));
+
+            // This should work.
+            await _client.Snapshot.Restore(new MemoryStream(snapData, false), new WriteOptions() { Token = TestHelper.MasterToken });
         }
     }
 }

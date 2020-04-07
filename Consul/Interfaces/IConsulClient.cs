@@ -28,7 +28,12 @@ namespace Consul
     /// </summary>
     public interface IConsulClient : IDisposable
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         IACLEndpoint ACL { get; }
+#pragma warning restore CS0618 // Type or member is obsolete
+        IPolicyEndpoint Policy { get; }
+        IRoleEndpoint Role { get; }
+        ITokenEndpoint Token { get; }
         Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default(CancellationToken));
         Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default(CancellationToken));
         Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default(CancellationToken));

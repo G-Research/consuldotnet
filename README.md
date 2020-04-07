@@ -2,7 +2,7 @@
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/PlayFab/consuldotnet?branch=master&svg=true)](https://ci.appveyor.com/project/highlyunavailable/consuldotnet)
 
-* Consul API: [v0.7.2](https://github.com/hashicorp/consul/tree/v0.7.2/api)
+* Consul API: [v1.6.1](https://github.com/hashicorp/consul/tree/v1.6.1/api)
 * .NET: >= 4.6.1 - .NET Core: >= 2.0.0
 
 Consul.NET is a .NET port of the Go Consul API, but reworked to use .NET
@@ -25,8 +25,8 @@ version and unzip it into the `Consul.Test` folder.
 This creates a 1-server cluster that operates in "dev" mode (does not
 write data to disk) and listens on `127.0.0.1:8500`.
 
-Once Consul is running (you'll see something like `consul: cluster
-leadership acquired`) in your command prompt, then do the following
+Once Consul is running (you'll see something like `==> Consul
+agent running!`) in your command prompt, then do the following
 steps in your project.
 
 Add a reference to the Consul library and add a using statement:
@@ -96,7 +96,11 @@ modes](https://www.consul.io/docs/agent/http.html)
 
 ### ACL
 
-The ACL endpoints are used to create, update, destroy, and query ACL tokens.
+The ACL endpoints are used to create, update, destroy, and query Legacy ACL tokens.
+
+### ACLReplication
+
+The ACLReplication endpoint is used to query the status of ACL Replication.
 
 ### Agent
 
@@ -105,6 +109,11 @@ Usually, services and checks are registered with an agent which then
 takes on the burden of keeping that data synchronized with the cluster.
 For example, the agent registers services and checks with the Catalog
 and performs anti-entropy to recover from outages.
+
+### AuthMethod
+
+The AuthMethod endpoints are used to create, update, destroy, and query ACL Auth Methods
+related to ACL Replication. **These are untested and a place-holder for future changes.**
 
 ### Catalog
 
@@ -129,6 +138,14 @@ endpoints provide the raw entries.
 The KV endpoint is used to access Consul's simple key/value store,
 useful for storing service configuration or other metadata.
 
+### Policy
+
+The Policy endpoint is used to create, update, delete and read ACL Policies
+
+### Role
+
+The Role endpoint is used to create, update, delete and read ACL Roles
+
 ### Query
 
 The Prepared Query endpoints are used to create, update, destroy, and
@@ -145,6 +162,10 @@ The Session endpoints are used to create, destroy, and query sessions.
 The Status endpoints are used to get information about the status of the
 Consul cluster. This information is generally very low level and not
 often useful for clients.
+
+### Token
+
+The Token endpoint is used to create, update, clone, delete and read ACL Tokens
 
 ### Additional Functions
 
