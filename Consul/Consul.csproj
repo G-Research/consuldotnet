@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.7.2.6</VersionPrefix>
+    <VersionPrefix>1.6.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <AssemblyName>Consul</AssemblyName>
     <PackageId>Consul</PackageId>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
-    <PackageReleaseNotes>https://github.com/PlayFab/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/PlayFab/consuldotnet</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/PlayFab/consuldotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -40,6 +40,7 @@
     <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.6.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
