@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="Agent.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -76,6 +77,9 @@ namespace Consul
         }
     }
 
+    /// <summary>
+    /// TLS Status Convertor (to and from JSON)
+    /// </summary>
     public class TTLStatusConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -270,6 +274,9 @@ namespace Consul
         public TimeSpan? DeregisterCriticalServiceAfter { get; set; }
     }
 
+    /// <summary>
+    /// Log Level Enum
+    /// </summary>
     public enum LogLevel
     {
         Info,
@@ -438,6 +445,13 @@ namespace Consul
             return _client.Put(string.Format("/v1/agent/check/update/{0}", checkID), u).Execute(ct);
         }
 
+        /// <summary>
+        /// LegacyUpdateTTL is used to update the TTL of a check
+        /// </summary>
+        /// <param name="checkID">The check ID</param>
+        /// <param name="note">An optional, arbitrary string to note on the check status</param>
+        /// <param name="status">The state to set the check to</param>
+        /// <returns>An empty write result</returns>
         private Task<WriteResult> LegacyUpdateTTL(string checkID, string note, TTLStatus status, CancellationToken ct = default(CancellationToken))
         {
             var request = _client.PutNothing(string.Format("/v1/agent/check/{0}/{1}", status.LegacyStatus, checkID));
@@ -576,6 +590,9 @@ namespace Consul
             return new LogStream(res.Response);
         }
 
+        /// <summary>
+        /// Log streamer
+        /// </summary>
         public class LogStream : IEnumerable<Task<string>>, IDisposable
         {
             private Stream m_stream;

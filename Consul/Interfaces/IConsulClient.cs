@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="IConsulClient.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -22,6 +23,9 @@ using System.Threading.Tasks;
 
 namespace Consul
 {
+    /// <summary>
+    /// The interface for the Consul Client
+    /// </summary>
     public interface IConsulClient : IDisposable
     {
         IACLEndpoint ACL { get; }

@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="IRawEndpoint.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -21,6 +22,9 @@ using System.Threading.Tasks;
 
 namespace Consul
 {
+    /// <summary>
+    /// The interface for the Raw API Endpoints
+    /// </summary>
     public interface IRawEndpoint
     {
         Task<QueryResult<dynamic>> Query(string endpoint, QueryOptions q, CancellationToken ct = default(CancellationToken));

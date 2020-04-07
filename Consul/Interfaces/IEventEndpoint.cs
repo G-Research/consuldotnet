@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="IEventEndpoint.cs" company="PlayFab Inc">>
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -21,6 +22,9 @@ using System.Threading.Tasks;
 
 namespace Consul
 {
+    /// <summary>
+    /// The interface for the Event API Endpoints
+    /// </summary>
     public interface IEventEndpoint
     {
         Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default(CancellationToken));
