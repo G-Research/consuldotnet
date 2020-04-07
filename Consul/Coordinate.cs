@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ClientTest.cs" company="PlayFab Inc">
+//  <copyright file="Coordinate.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");

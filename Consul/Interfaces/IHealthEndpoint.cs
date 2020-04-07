@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Health.cs" company="PlayFab Inc">
+//  <copyright file="IHealthEndpoint.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
