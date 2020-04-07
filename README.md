@@ -3,7 +3,7 @@
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/PlayFab/consuldotnet?branch=master&svg=true)](https://ci.appveyor.com/project/highlyunavailable/consuldotnet)
 
 * Consul API: [v0.7.2](https://github.com/hashicorp/consul/tree/v0.7.2/api)
-* .NET: >= 4.5 - .NET Core: >= 1.0.0
+* .NET: >= 4.6.1 - .NET Core: >= 2.0.0
 
 Consul.NET is a .NET port of the Go Consul API, but reworked to use .NET
 idioms such as Tasks/CancellationTokens instead of Goroutines/Channels.
@@ -165,7 +165,7 @@ KV primitives. It is an implementation of the [Consul Semaphore
 
 ## Using with .NET Core and Mono
 
-Both .NET 4.5+ and .NET Core 1.0+ are fully supported. Mono is supported on a
+Both .NET 4.6.1+ and .NET Core 2.0+ are fully supported. Mono is supported on a
 best-effort basis. It should compile and run happily on Mono but this is not as
 heavily tested as Microsoft .NET stacks. If you have any issues using the Nuget
 package or compiling this code with .NET, .NET Core, or Mono, please file a
