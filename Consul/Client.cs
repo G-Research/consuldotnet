@@ -48,10 +48,10 @@ namespace Consul
 
 #if CORECLR
         [Obsolete("Use of DisableServerCertificateValidation should be converted to setting the HttpHandler's ServerCertificateCustomValidationCallback in the ConsulClient constructor" +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #else
         [Obsolete("Use of DisableServerCertificateValidation should be converted to setting the WebRequestHandler's ServerCertificateValidationCallback in the ConsulClient constructor" +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #endif
         internal bool DisableServerCertificateValidation
         {
@@ -82,10 +82,10 @@ namespace Consul
         /// </summary>
 #if CORECLR
         [Obsolete("Use of HttpAuth should be converted to setting the HttpHandler's Credential property in the ConsulClient constructor" +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #else
         [Obsolete("Use of HttpAuth should be converted to setting the WebRequestHandler's Credential property in the ConsulClient constructor" +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #endif
         public NetworkCredential HttpAuth
         {
@@ -109,10 +109,10 @@ namespace Consul
         [Obsolete("Client Certificates are not implemented in Mono", true)]
 #elif CORECLR
         [Obsolete("Use of ClientCertificate should be converted to adding to the HttpHandler's ClientCertificates list in the ConsulClient constructor." +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #else
         [Obsolete("Use of ClientCertificate should be converted to adding to the WebRequestHandler's ClientCertificates list in the ConsulClient constructor." +
-            "This property will be removed when 0.8.0 is released.", false)]
+            "This property will be removed in a future release.", false)]
 #endif
         public X509Certificate2 ClientCertificate
         {
@@ -425,7 +425,7 @@ namespace Consul
         /// Initializes a new Consul client with the configuration specified.
         /// </summary>
         /// <param name="config">A Consul client configuration</param>
-        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed when 0.8.0 is released." +
+        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed in a future release." +
             "Please use the ConsulClient(Action<ConsulClientConfiguration>) constructor to set configuration options.", false)]
         public ConsulClient(ConsulClientConfiguration config)
         {
@@ -443,7 +443,7 @@ namespace Consul
         /// </summary>
         /// <param name="config">A Consul client configuration</param>
         /// <param name="client">A custom HttpClient</param>
-        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed when 0.8.0 is released." +
+        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed in a future release." +
             "Please use one of the ConsulClient(Action<>) constructors instead to set internal options on the HttpClient/WebRequestHandler.", false)]
         public ConsulClient(ConsulClientConfiguration config, HttpClient client)
         {

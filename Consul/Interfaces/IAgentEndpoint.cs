@@ -40,7 +40,7 @@ namespace Consul
         Task<WriteResult> ForceLeave(string node, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> Join(string addr, bool wan, CancellationToken ct = default(CancellationToken));
         Task<QueryResult<AgentMember[]>> Members(bool wan, CancellationToken ct = default(CancellationToken));
-        [Obsolete("This property will be removed in 0.8.0. Replace uses of it with a call to GetNodeName()")]
+        [Obsolete("This property will be removed in a future release. Replace uses of it with a call to GetNodeName()")]
         string NodeName { get; }
         Task<string> GetNodeName(CancellationToken ct = default(CancellationToken));
         Task PassTTL(string checkID, string note, CancellationToken ct = default(CancellationToken));

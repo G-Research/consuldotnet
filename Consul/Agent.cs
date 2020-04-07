@@ -321,7 +321,7 @@ namespace Consul
         /// <summary>
         /// NodeName is used to get the node name of the agent
         /// </summary>
-        [Obsolete("This property will be removed in 0.8.0. Replace uses of it with a call to 'await GetNodeName()'")]
+        [Obsolete("This property will be removed in a future version. Replace uses of it with a call to 'await GetNodeName()'")]
         public string NodeName
         {
             get
