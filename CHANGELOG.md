@@ -1,5 +1,14 @@
 # Changelog
 
+## Forked from PlayFab Inc by G-Research (1.6.1.0)
+* Upgrade to .NET 4.6.1 and .NET Core 2.0
+* Add missing code documentation
+* General cleanup
+* Make unit tests run on .NET framework
+* Added new Token, Policy and Role API Entry points to reflect the ACL
+changes made in Consul 1.4.0 and 1.5.0
+* Aligned to Consul API 1.6.1
+
 ## Major Changes between 0.6.4.7 and 0.7.0
 * The method of configuring the ConsulClient has been reworked. It now
   uses `Action`s to configure the options inside itself - e.g.
