@@ -18,11 +18,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Text;
-using System.Collections.Generic;
 using Xunit;
 using System.Reflection;
-using System.Diagnostics;
 
 namespace Consul.Test
 {
@@ -32,7 +29,7 @@ namespace Consul.Test
         public void Assembly_IsStrongNamed()
         {
 
-            Type type = typeof(Consul.ConsulClient);
+            Type type = typeof(ConsulClient);
             TypeInfo typeInfo = type.GetTypeInfo();
             string name = typeInfo.Assembly.FullName.ToString();
             Assert.Contains("PublicKeyToken", typeInfo.Assembly.FullName);
