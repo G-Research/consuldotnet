@@ -1,4 +1,22 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+//  <copyright file="Lock.cs" company="PlayFab Inc">
+//    Copyright 2015 PlayFab Inc.
+//
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -708,7 +726,7 @@ namespace Consul
         /// <param name="ct"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        [Obsolete("This method will be removed in 0.8.0. Replace calls with the method signature ExecuteLocked(string, Action, CancellationToken)")]
+        [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(string, Action, CancellationToken)")]
         public Task ExecuteLocked(string key, CancellationToken ct, Action action)
         {
             if (string.IsNullOrEmpty(key))
@@ -729,7 +747,7 @@ namespace Consul
         /// <param name="ct"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        [Obsolete("This method will be removed in 0.8.0. Replace calls with the method signature ExecuteLocked(LockOptions, Action, CancellationToken)")]
+        [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(LockOptions, Action, CancellationToken)")]
         public Task ExecuteLocked(LockOptions opts, CancellationToken ct, Action action)
         {
             if (opts == null)

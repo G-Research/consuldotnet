@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="StatusTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -24,30 +25,35 @@ namespace Consul.Test
 {
     public class StatusTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public StatusTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
     
         [Fact]
         public async Task Status_Leader()
         {
-            var client = new ConsulClient();
-            var leader = await client.Status.Leader();
+            var leader = await _client.Status.Leader();
             Assert.False(string.IsNullOrEmpty(leader));
         }
 
         [Fact]
         public async Task Status_Peers()
         {
-            var client = new ConsulClient();
-            var peers = await client.Status.Peers();
+            var peers = await _client.Status.Peers();
             Assert.True(peers.Length > 0);
         }
     }

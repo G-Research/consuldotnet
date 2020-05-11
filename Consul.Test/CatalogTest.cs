@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 //  <copyright file="CatalogTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -24,65 +25,66 @@ namespace Consul.Test
 {
     public class CatalogTest : IDisposable
     {
-        AsyncReaderWriterLock.Releaser m_lock;
+        private AsyncReaderWriterLock.Releaser _lock;
+        private ConsulClient _client;
+
         public CatalogTest()
         {
-            m_lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
+            _client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
         }
 
         public void Dispose()
         {
-            m_lock.Dispose();
+            _lock.Dispose();
         }
     
         [Fact]
-        public async Task Catalog_Datacenters()
+        public async Task Catalog_GetDatacenters()
         {
-            var client = new ConsulClient();
-            var datacenterList = await client.Catalog.Datacenters();
+            var datacenterList = await _client.Catalog.Datacenters();
 
-            Assert.NotEqual(0, datacenterList.Response.Length);
+            Assert.NotEmpty(datacenterList.Response);
         }
 
         [Fact]
-        public async Task Catalog_Nodes()
+        public async Task Catalog_GetNodes()
         {
-            var client = new ConsulClient();
-            var nodeList = await client.Catalog.Nodes();
+            var nodeList = await _client.Catalog.Nodes();
 
             Assert.NotEqual((ulong)0, nodeList.LastIndex);
-            Assert.NotEqual(0, nodeList.Response.Length);
+            Assert.NotEmpty(nodeList.Response);
             // make sure deserialization is working right
             Assert.NotNull(nodeList.Response[0].Address);
             Assert.NotNull(nodeList.Response[0].Name);
         }
 
         [Fact]
-        public async Task Catalog_Services()
+        public async Task Catalog_GetServices()
         {
-            var client = new ConsulClient();
-            var servicesList = await client.Catalog.Services();
+            var servicesList = await _client.Catalog.Services();
 
             Assert.NotEqual((ulong)0, servicesList.LastIndex);
-            Assert.NotEqual(0, servicesList.Response.Count);
+            Assert.NotEmpty(servicesList.Response);
         }
 
         [Fact]
-        public async Task Catalog_Service()
+        public async Task Catalog_GetConsulService()
         {
-            var client = new ConsulClient();
-            var serviceList = await client.Catalog.Service("consul");
+            var serviceList = await _client.Catalog.Service("consul");
 
             Assert.NotEqual((ulong)0, serviceList.LastIndex);
-            Assert.NotEqual(0, serviceList.Response.Length);
+            Assert.NotEmpty(serviceList.Response);
         }
 
         [Fact]
-        public async Task Catalog_Node()
+        public async Task Catalog_GetLocalhostNode()
         {
-            var client = new ConsulClient();
-
-            var node = await client.Catalog.Node(await client.Agent.GetNodeName());
+            var node = await _client.Catalog.Node(await _client.Agent.GetNodeName());
 
             Assert.NotEqual((ulong)0, node.LastIndex);
             Assert.NotNull(node.Response.Services);
@@ -94,9 +96,8 @@ namespace Consul.Test
         [Fact]
         public async Task Catalog_RegistrationDeregistration()
         {
-            var client = new ConsulClient();
             var svcID = KVTest.GenerateTestKeyName();
-            var service = new AgentService()
+            var service = new AgentService
             {
                 ID = svcID,
                 Service = "redis",
@@ -104,7 +105,7 @@ namespace Consul.Test
                 Port = 8000
             };
 
-            var check = new AgentCheck()
+            var check = new AgentCheck
             {
                 Node = "foobar",
                 CheckID = "service:" + svcID,
@@ -114,7 +115,7 @@ namespace Consul.Test
                 ServiceID = svcID
             };
 
-            var registration = new CatalogRegistration()
+            var registration = new CatalogRegistration
             {
                 Datacenter = "dc1",
                 Node = "foobar",
@@ -123,15 +124,15 @@ namespace Consul.Test
                 Check = check
             };
 
-            await client.Catalog.Register(registration);
+            await _client.Catalog.Register(registration);
 
-            var node = await client.Catalog.Node("foobar");
+            var node = await _client.Catalog.Node("foobar");
             Assert.True(node.Response.Services.ContainsKey(svcID));
 
-            var health = await client.Health.Node("foobar");
+            var health = await _client.Health.Node("foobar");
             Assert.Equal("service:" + svcID, health.Response[0].CheckID);
 
-            var dereg = new CatalogDeregistration()
+            var dereg = new CatalogDeregistration
             {
                 Datacenter = "dc1",
                 Node = "foobar",
@@ -139,21 +140,21 @@ namespace Consul.Test
                 CheckID = "service:" + svcID
             };
 
-            await client.Catalog.Deregister(dereg);
+            await _client.Catalog.Deregister(dereg);
 
-            health = await client.Health.Node("foobar");
-            Assert.Equal(0, health.Response.Length);
+            health = await _client.Health.Node("foobar");
+            Assert.Empty(health.Response);
 
-            dereg = new CatalogDeregistration()
+            dereg = new CatalogDeregistration
             {
                 Datacenter = "dc1",
                 Node = "foobar",
                 Address = "192.168.10.10"
             };
 
-            await client.Catalog.Deregister(dereg);
+            await _client.Catalog.Deregister(dereg);
 
-            node = await client.Catalog.Node("foobar");
+            node = await _client.Catalog.Node("foobar");
             Assert.Null(node.Response);
         }
 
@@ -161,7 +162,7 @@ namespace Consul.Test
         public async Task Catalog_EnableTagOverride()
         {
             var svcID = KVTest.GenerateTestKeyName();
-            var service = new AgentService()
+            var service = new AgentService
             {
                 ID = svcID,
                 Service = svcID,
@@ -169,7 +170,7 @@ namespace Consul.Test
                 Port = 8000
             };
 
-            var registration = new CatalogRegistration()
+            var registration = new CatalogRegistration
             {
                 Datacenter = "dc1",
                 Node = "foobar",
@@ -177,7 +178,11 @@ namespace Consul.Test
                 Service = service
             };
 
-            using (IConsulClient client = new ConsulClient())
+            using (IConsulClient client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
             {
                 await client.Catalog.Register(registration);
 
@@ -195,7 +200,11 @@ namespace Consul.Test
             }
 
             // Use a new scope
-            using (IConsulClient client = new ConsulClient())
+            using (IConsulClient client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
             {
                 service.EnableTagOverride = true;
 

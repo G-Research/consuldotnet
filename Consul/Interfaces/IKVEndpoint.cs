@@ -1,6 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Health.cs" company="PlayFab Inc">
+//  <copyright file="IKVEndpoint.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -22,6 +23,9 @@ using System.Threading.Tasks;
 
 namespace Consul
 {
+    /// <summary>
+    /// The interface for the Key Value Store API Endpoints
+    /// </summary>
     public interface IKVEndpoint
     {
         Task<WriteResult<bool>> Acquire(KVPair p, CancellationToken ct = default(CancellationToken));
