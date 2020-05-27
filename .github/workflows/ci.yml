@@ -31,6 +31,13 @@ jobs:
           rm consul.zip
       - name: Build
         run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true Consul.Test
+      - name: Repack
+        if: runner.os == 'Windows'
+        run: |
+          cd Consul/bin/Release/net461
+          &$HOME/.nuget/packages/ilrepack/2.0.18/tools/ilrepack.exe /keyfile:${{ github.workspace }}/assets/consuldotnet.snk /parallel /internalize /out:Consul.dll.merged Consul.dll Newtonsoft.Json.dll
+          mv -force Consul.dll.merged Consul.dll
+          rm Newtonsoft.Json.dll
       - name: Run tests
         shell: bash
         run: |
