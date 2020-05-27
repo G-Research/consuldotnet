@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <VersionPrefix>1.6.1</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
     <AssemblyName>Consul</AssemblyName>
     <PackageId>Consul</PackageId>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
