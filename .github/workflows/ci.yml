@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  CONSUL_VERSION: 1.6.1
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+      - name: Download Consul
+        shell: bash
+        run: |
+          cd Consul.Test
+          SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
+          curl -sSL https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_${SYSTEM}_amd64.zip -o consul.zip
+          unzip consul.zip
+          rm consul.zip
+      - name: Build
+        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true Consul.Test
+      - name: Run tests
+        shell: bash
+        run: |
+          cd Consul.Test
+          ./consul agent -dev -config-file test_config.json &
+          dotnet test --configuration=Release --no-build -v=Normal
+      - name: Create NuGet package
+        if: runner.os == 'Windows'
+        run: dotnet pack --configuration=Release --no-build --output dist Consul
+      - name: Upload NuGet package artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuget-package
+          path: dist
