@@ -8,6 +8,12 @@ env:
   CONSUL_VERSION: 1.6.1
 
 jobs:
+ 
+  # Build and test on all major platforms.
+  # Repack to avoid Newtonsoft.Json dependency in .NET Framework (This is to
+  # prevent issues with mismatched JSON.NET versions in user projects).
+  # Create a NuGet package on Windows only, as we build for .NET Framework 4.6.1
+  # and for .NET Standard 2.0.
   build:
     strategy:
       matrix:
