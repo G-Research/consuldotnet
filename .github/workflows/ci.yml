@@ -30,7 +30,7 @@ jobs:
           unzip consul.zip
           rm consul.zip
       - name: Build
-        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true Consul.Test
+        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true
       - name: Repack
         if: runner.os == 'Windows'
         run: |
@@ -46,7 +46,18 @@ jobs:
           dotnet test --configuration=Release --no-build -v=Normal
       - name: Create NuGet package
         if: runner.os == 'Windows'
-        run: dotnet pack --configuration=Release --no-build --output dist Consul
+        run: |
+          if ("${{ github.ref }}" -like "refs/tags/v*") {
+            $tag = "${{ github.ref }}".SubString(11)
+            $version = (Select-Xml -path Consul/Consul.csproj -XPath "/Project/PropertyGroup/VersionPrefix/text()").node.Value
+            if (-not ($tag -eq $version)) {
+              echo "There is a mismatch between the project version ($version) and the tag ($tag)"
+              exit 1
+            }
+          } else {
+            $params = "--version-suffix", $(git rev-parse --short HEAD)
+          }
+          dotnet pack --configuration=Release --no-build @params
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
