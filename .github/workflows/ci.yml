@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  CONSUL_VERSION: 1.6.1
+
+jobs:
+ 
+  # Build and test on all major platforms.
+  # Repack to avoid Newtonsoft.Json dependency in .NET Framework (This is to
+  # prevent issues with mismatched JSON.NET versions in user projects).
+  # Create a NuGet package on Windows only, as we build for .NET Framework 4.6.1
+  # and for .NET Standard 2.0.
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+      - name: Download Consul
+        shell: bash
+        run: |
+          cd Consul.Test
+          SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
+          curl -sSL https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_${SYSTEM}_amd64.zip -o consul.zip
+          unzip consul.zip
+          rm consul.zip
+      - name: Build
+        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true
+      - name: Repack
+        if: runner.os == 'Windows'
+        run: |
+          cd Consul/bin/Release/net461
+          &$HOME/.nuget/packages/ilrepack/2.0.18/tools/ilrepack.exe /keyfile:${{ github.workspace }}/assets/consuldotnet.snk /parallel /internalize /out:Consul.dll.merged Consul.dll Newtonsoft.Json.dll
+          mv -force Consul.dll.merged Consul.dll
+          rm Newtonsoft.Json.dll
+      - name: Run tests
+        shell: bash
+        run: |
+          cd Consul.Test
+          ./consul agent -dev -config-file test_config.json &
+          dotnet test --configuration=Release --no-build -v=Normal
+      - name: Create NuGet package
+        if: runner.os == 'Windows'
+        run: |
+          if ("${{ github.ref }}" -like "refs/tags/v*") {
+            $tag = "${{ github.ref }}".SubString(11)
+            $version = (Select-Xml -path Consul/Consul.csproj -XPath "/Project/PropertyGroup/VersionPrefix/text()").node.Value
+            if (-not ($tag -eq $version)) {
+              echo "There is a mismatch between the project version ($version) and the tag ($tag)"
+              exit 1
+            }
+          } else {
+            $params = "--version-suffix", $(git rev-parse --short HEAD)
+          }
+          dotnet pack --configuration=Release --no-build @params
+      - name: Upload NuGet package artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuget-package
+          path: dist
