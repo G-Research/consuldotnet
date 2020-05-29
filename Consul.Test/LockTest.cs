@@ -250,30 +250,28 @@ namespace Consul.Test
             const int contenderPool = 3;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
-            using (var cts = new CancellationTokenSource())
+
+            var tasks = new List<Task>();
+            for (var i = 0; i < contenderPool; i++)
             {
-                cts.CancelAfter(contenderPool * (int)Lock.DefaultLockWaitTime.TotalMilliseconds);
-
-                var tasks = new List<Task>();
-                for (var i = 0; i < contenderPool; i++)
+                var v = i;
+                acquired[v] = false;
+                tasks.Add(Task.Run(async () =>
                 {
-                    var v = i;
-                    acquired[v] = false;
-                    tasks.Add(Task.Run(async () =>
+                    var lockKey = _client.CreateLock(keyName);
+                    await lockKey.Acquire(CancellationToken.None);
+                    acquired[v] = lockKey.IsHeld;
+                    if (lockKey.IsHeld)
                     {
-                        var lockKey = _client.CreateLock(keyName);
-                        await lockKey.Acquire(CancellationToken.None);
-                        acquired[v] = lockKey.IsHeld;
-                        if (lockKey.IsHeld)
-                        {
-                            await Task.Delay(1000);
-                            await lockKey.Release();
-                        }
-                    }));
-                }
-
-                await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(Timeout.Infinite, cts.Token));
+                        await Task.Delay(1000);
+                        await lockKey.Release();
+                    }
+                }));
             }
+
+            await Task.WhenAny(
+                Task.WhenAll(tasks),
+                Task.Delay(TimeSpan.FromTicks(contenderPool * Lock.DefaultLockWaitTime.Ticks)));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -288,28 +286,26 @@ namespace Consul.Test
             const int contenderPool = 10;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
-            using (var cts = new CancellationTokenSource())
+
+            var tasks = new List<Task>();
+            for (var i = 0; i < contenderPool; i++)
             {
-                cts.CancelAfter(contenderPool * (int)Lock.DefaultLockWaitTime.TotalMilliseconds);
-
-                var tasks = new List<Task>();
-                for (var i = 0; i < contenderPool; i++)
+                var v = i;
+                tasks.Add(Task.Run(async () =>
                 {
-                    var v = i;
-                    tasks.Add(Task.Run(async () =>
+                    var lockKey = _client.CreateLock(keyName);
+                    await lockKey.Acquire(CancellationToken.None);
+                    Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
+                    if (lockKey.IsHeld)
                     {
-                        var lockKey = _client.CreateLock(keyName);
-                        await lockKey.Acquire(CancellationToken.None);
-                        Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
-                        if (lockKey.IsHeld)
-                        {
-                            await lockKey.Release();
-                        }
-                    }));
-                }
-
-                await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(Timeout.Infinite, cts.Token));
+                        await lockKey.Release();
+                    }
+                }));
             }
+
+            await Task.WhenAny(
+                Task.WhenAll(tasks),
+                Task.Delay(TimeSpan.FromTicks(contenderPool * Lock.DefaultLockWaitTime.Ticks)));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -332,28 +328,27 @@ namespace Consul.Test
             const int contenderPool = 3;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
-            using (var cts = new CancellationTokenSource())
+
+            var tasks = new List<Task>();
+            for (var i = 0; i < contenderPool; i++)
             {
-                cts.CancelAfter((contenderPool + 1) * (int)Lock.DefaultLockWaitTime.TotalMilliseconds);
-
-                var tasks = new List<Task>();
-                for (var i = 0; i < contenderPool; i++)
+                var v = i;
+                tasks.Add(Task.Run(async () =>
                 {
-                    var v = i;
-                    tasks.Add(Task.Run(async () =>
+                    var lockKey = (Lock)_client.CreateLock(keyName);
+                    await lockKey.Acquire(CancellationToken.None);
+                    if (lockKey.IsHeld)
                     {
-                        var lockKey = (Lock)_client.CreateLock(keyName);
-                        await lockKey.Acquire(CancellationToken.None);
-                        if (lockKey.IsHeld)
-                        {
-                            Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
-                            await _client.Session.Destroy(lockKey.LockSession);
-                        }
-                    }));
-                }
-
-                await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(Timeout.Infinite, cts.Token));
+                        Assert.True(acquired.TryAdd(v, lockKey.IsHeld));
+                        await _client.Session.Destroy(lockKey.LockSession);
+                    }
+                }));
             }
+
+            await Task.WhenAny(
+                Task.WhenAll(tasks),
+                Task.Delay(TimeSpan.FromTicks((contenderPool + 1) * Lock.DefaultLockWaitTime.Ticks)));
+
             for (var i = 0; i < contenderPool; i++)
             {
                 bool didContend = false;
