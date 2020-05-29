@@ -134,9 +134,10 @@ namespace Consul.Test
 
             Assert.True(lockKey.IsHeld);
             Assert.False(contender.IsHeld);
-            Assert.NotEqual(WaitHandle.WaitTimeout, Task.WaitAny(
-                new Task[] { Task.Run(async () => { await Assert.ThrowsAsync<LockMaxAttemptsReachedException>(async () => await contender.Acquire()); }) },
-                (int)(2 * lockOptions.LockWaitTime.TotalMilliseconds)));
+
+            await WithTimeout(
+                Assert.ThrowsAsync<LockMaxAttemptsReachedException>(async () => await contender.Acquire()),
+                TimeSpan.FromMinutes(1));
 
             Assert.False(stopwatch.ElapsedMilliseconds < lockOptions.LockWaitTime.TotalMilliseconds);
             Assert.False(contender.IsHeld, "Contender should have failed to acquire");
@@ -177,9 +178,8 @@ namespace Consul.Test
             Assert.True(l.IsHeld);
             await _client.Session.Destroy(sessionId.Response);
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await WaitFor(() => !l.IsHeld, "Expected lock to be lost when session destroyed", TimeSpan.FromMinutes(1));
 
-            Assert.False(l.IsHeld);
             Assert.Null((await _client.KV.Get(keyName)).Response);
         }
 
@@ -269,9 +269,7 @@ namespace Consul.Test
                 }));
             }
 
-            await Task.WhenAny(
-                Task.WhenAll(tasks),
-                Task.Delay(TimeSpan.FromTicks(contenderPool * Lock.DefaultLockWaitTime.Ticks)));
+            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(5));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -303,9 +301,7 @@ namespace Consul.Test
                 }));
             }
 
-            await Task.WhenAny(
-                Task.WhenAll(tasks),
-                Task.Delay(TimeSpan.FromTicks(contenderPool * Lock.DefaultLockWaitTime.Ticks)));
+            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(1));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -345,9 +341,7 @@ namespace Consul.Test
                 }));
             }
 
-            await Task.WhenAny(
-                Task.WhenAll(tasks),
-                Task.Delay(TimeSpan.FromTicks((contenderPool + 1) * Lock.DefaultLockWaitTime.Ticks)));
+            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(5));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -462,36 +456,20 @@ namespace Consul.Test
                 try
                 {
                     await lock1.Acquire(CancellationToken.None);
-
                     Assert.True(lock1.IsHeld);
-                    if (lock1.IsHeld)
-                    {
-                        Assert.NotEqual(WaitHandle.WaitTimeout, Task.WaitAny(new[] {
-                            Task.Run(() => { lock2.Acquire(CancellationToken.None); Assert.True(lock2.IsHeld); }) },
-                            1000));
-                    }
+
+                    await WithTimeout(lock2.Acquire(CancellationToken.None), TimeSpan.FromMinutes(1));
+                    Assert.True(lock2.IsHeld);
                 }
                 finally
                 {
                     await lock1.Release();
                 }
 
-                var lockCheck = new[]
-                {
-                    Task.Run(() =>
-                    {
-                        while (lock1.IsHeld) { }
-                    }),
-                    Task.Run(() =>
-                    {
-                        while (lock2.IsHeld) { }
-                    })
-                };
+                await WaitFor(() => !lock1.IsHeld, "Lock 1 is still held", TimeSpan.FromMinutes(1));
 
-                Assert.True(Task.WaitAll(lockCheck, 1000));
-
-                Assert.False(lock1.IsHeld, "Lock 1 still held");
-                Assert.False(lock2.IsHeld, "Lock 2 still held");
+                // By releasing lock1, lock2 should also eventually be released as it is for the same session
+                await WaitFor(() => !lock2.IsHeld, "Lock 2 is still held", TimeSpan.FromMinutes(1));
             }
             finally
             {
@@ -535,18 +513,13 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                var checker = Task.Run(async () =>
-                {
-                    while (lockKey.IsHeld)
-                    {
-                        await Task.Delay(10);
-                    }
-                    Assert.False(lockKey.IsHeld);
-                });
+                var checker = WaitFor(
+                    () => !lockKey.IsHeld,
+                    "Expected session destroy to release lock", TimeSpan.FromMinutes(1));
 
-                await Task.Run(() => { _client.Session.Destroy(lockKey.LockSession); });
+                await _client.Session.Destroy(lockKey.LockSession);
 
-                Task.WaitAny(new[] { checker }, 1000);
+                await checker;
             }
             finally
             {
@@ -574,18 +547,11 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                var checker = Task.Run(() =>
-                {
-                    while (lockKey.IsHeld)
-                    {
-                        Thread.Sleep(10);
-                    }
-                    Assert.False(lockKey.IsHeld);
-                });
-
-                Task.WaitAny(new[] { checker }, 1000);
+                var checker = WaitFor(() => !lockKey.IsHeld, "Expected key delete to release lock", TimeSpan.FromMinutes(1));
 
                 await _client.KV.Delete(lockKey.Opts.Key);
+
+                await checker;
             }
             finally
             {
@@ -599,6 +565,41 @@ namespace Consul.Test
                     // Exception expected if above checks all pass
                 }
             }
+        }
+
+        /// <summary>
+        /// Waits for a condition to become true and raises an exception if it is still false after reaching the timeout
+        /// </summary>
+        private static async Task WaitFor(Func<bool> condition, string failureMessage, TimeSpan timeout)
+        {
+            var cancellationToken = new CancellationTokenSource(timeout).Token;
+            while (!condition())
+            {
+                try
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(10), cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+            }
+            Assert.True(condition(), failureMessage);
+        }
+
+        /// <summary>
+        /// Waits for the given task to complete and throws an exception if it doesn't complete within the given time
+        /// </summary>
+        private static async Task WithTimeout(Task task, TimeSpan timeout)
+        {
+            var timeoutTask = Task.Delay(timeout);
+            var completedTask = await Task.WhenAny(new[] { task, timeoutTask });
+            if (completedTask == timeoutTask)
+            {
+                throw new OperationCanceledException("Timeout waiting for task to complete");
+            }
+            // Make sure we await the task so that any exceptions are thrown if it faulted.
+            await task;
         }
     }
 }
