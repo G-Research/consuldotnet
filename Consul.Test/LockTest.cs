@@ -53,38 +53,20 @@ namespace Consul.Test
             const string keyName = "test/lock/acquirerelease";
             var lockKey = _client.CreateLock(keyName);
 
-            try
-            {
-                await lockKey.Release();
-            }
-            catch (LockNotHeldException ex)
-            {
-                Assert.IsType<LockNotHeldException>(ex);
-            }
+            await Assert.ThrowsAsync<LockNotHeldException>(async () =>
+                await lockKey.Release());
 
             await lockKey.Acquire(CancellationToken.None);
 
-            try
-            {
-                await lockKey.Acquire(CancellationToken.None);
-            }
-            catch (LockHeldException ex)
-            {
-                Assert.IsType<LockHeldException>(ex);
-            }
+            await Assert.ThrowsAsync<LockHeldException>(async () =>
+                await lockKey.Acquire(CancellationToken.None));
 
             Assert.True(lockKey.IsHeld);
 
             await lockKey.Release();
 
-            try
-            {
-                await lockKey.Release();
-            }
-            catch (LockNotHeldException ex)
-            {
-                Assert.IsType<LockNotHeldException>(ex);
-            }
+            await Assert.ThrowsAsync<LockNotHeldException>(async () =>
+                await lockKey.Release());
 
             Assert.False(lockKey.IsHeld);
         }
@@ -111,14 +93,8 @@ namespace Consul.Test
                 tasks[i] = lockKey.Acquire(CancellationToken.None);
             }
 
-            try
-            {
-                Task.WaitAll(tasks);
-            }
-            catch (AggregateException e)
-            {
-                Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
-            }
+            var aggregateException = Assert.Throws<AggregateException>(() => Task.WaitAll(tasks));
+            Assert.Equal(numTasks - 1, aggregateException.InnerExceptions.Count);
 
             Assert.True(lockKey.IsHeld);
 
@@ -127,14 +103,8 @@ namespace Consul.Test
                 tasks[i] = lockKey.Release(CancellationToken.None);
             }
 
-            try
-            {
-                Task.WaitAll(tasks);
-            }
-            catch (AggregateException e)
-            {
-                Assert.Equal(numTasks - 1, e.InnerExceptions.Count);
-            }
+            aggregateException = Assert.Throws<AggregateException>(() => Task.WaitAll(tasks));
+            Assert.Equal(numTasks - 1, aggregateException.InnerExceptions.Count);
         }
 
         [Fact]
@@ -153,7 +123,6 @@ namespace Consul.Test
             var lockKey = _client.CreateLock(lockOptions);
 
             await lockKey.Acquire(CancellationToken.None);
-
 
             var contender = _client.CreateLock(new LockOptions(keyName)
             {
@@ -234,7 +203,11 @@ namespace Consul.Test
         public async Task Lock_ExecuteAction()
         {
             const string keyName = "test/lock/action";
-            await _client.ExecuteLocked(keyName, () => Assert.True(true));
+            var actionExecuted = false;
+
+            await _client.ExecuteLocked(keyName, () => actionExecuted = true);
+
+            Assert.True(actionExecuted);
         }
 
         [Fact]
@@ -408,15 +381,8 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                try
-                {
-                    await lockKey.Destroy();
-                    Assert.True(false);
-                }
-                catch (LockHeldException ex)
-                {
-                    Assert.IsType<LockHeldException>(ex);
-                }
+                await Assert.ThrowsAsync<LockHeldException>(async () =>
+                    await lockKey.Destroy());
 
                 await lockKey.Release();
 
@@ -428,15 +394,8 @@ namespace Consul.Test
 
                 Assert.True(lockKey2.IsHeld);
 
-                try
-                {
-                    await lockKey.Destroy();
-                    Assert.True(false);
-                }
-                catch (LockInUseException ex)
-                {
-                    Assert.IsType<LockInUseException>(ex);
-                }
+                await Assert.ThrowsAsync<LockInUseException>(async () =>
+                    await lockKey.Destroy());
 
                 await lockKey2.Release();
 
@@ -451,9 +410,9 @@ namespace Consul.Test
                 {
                     await lockKey.Release();
                 }
-                catch (LockNotHeldException ex)
+                catch (LockNotHeldException)
                 {
-                    Assert.IsType<LockNotHeldException>(ex);
+                    // Exception expected if above checks all pass
                 }
             }
         }
@@ -462,23 +421,28 @@ namespace Consul.Test
         public void Lock_RunAction()
         {
             const string keyName = "test/lock/runaction";
+            var firstTaskRan = false;
+            var secondTaskRan = false;
 
-            Task.WaitAll(Task.Run(() =>
+            Task.WaitAll(Task.Run(async () =>
             {
-                _client.ExecuteLocked(keyName, () =>
+                await _client.ExecuteLocked(keyName, () =>
                 {
                     // Only executes if the lock is held
-                    Assert.True(true);
+                    firstTaskRan = true;
                 });
             }),
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                _client.ExecuteLocked(keyName, () =>
+                await _client.ExecuteLocked(keyName, () =>
                 {
                     // Only executes if the lock is held
-                    Assert.True(true);
+                    secondTaskRan = true;
                 });
             }));
+
+            Assert.True(firstTaskRan);
+            Assert.True(secondTaskRan);
         }
 
         [Fact]
@@ -554,23 +518,11 @@ namespace Consul.Test
 
             var lockKey = _client.CreateLock(keyName + "/.lock");
 
-            try
-            {
-                await lockKey.Acquire(CancellationToken.None);
-            }
-            catch (LockConflictException ex)
-            {
-                Assert.IsType<LockConflictException>(ex);
-            }
+            await Assert.ThrowsAsync<LockConflictException>(async () =>
+                await lockKey.Acquire(CancellationToken.None));
 
-            try
-            {
-                await lockKey.Destroy();
-            }
-            catch (LockConflictException ex)
-            {
-                Assert.IsType<LockConflictException>(ex);
-            }
+            await Assert.ThrowsAsync<LockConflictException>(async () =>
+                await lockKey.Destroy());
 
             await semaphore.Release();
             await semaphore.Destroy();
@@ -608,9 +560,9 @@ namespace Consul.Test
                     await lockKey.Release();
                     await lockKey.Destroy();
                 }
-                catch (LockNotHeldException ex)
+                catch (LockNotHeldException)
                 {
-                    Assert.IsType<LockNotHeldException>(ex);
+                    // Exception expected if above checks all pass
                 }
             }
         }
@@ -647,9 +599,9 @@ namespace Consul.Test
                     await lockKey.Release();
                     await lockKey.Destroy();
                 }
-                catch (LockNotHeldException ex)
+                catch (LockNotHeldException)
                 {
-                    Assert.IsType<LockNotHeldException>(ex);
+                    // Exception expected if above checks all pass
                 }
             }
         }
