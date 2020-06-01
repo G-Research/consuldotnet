@@ -136,8 +136,7 @@ namespace Consul.Test
             Assert.False(contender.IsHeld);
 
             await WithTimeout(
-                Assert.ThrowsAsync<LockMaxAttemptsReachedException>(async () => await contender.Acquire()),
-                TimeSpan.FromMinutes(1));
+                Assert.ThrowsAsync<LockMaxAttemptsReachedException>(async () => await contender.Acquire()));
 
             Assert.False(stopwatch.ElapsedMilliseconds < lockOptions.LockWaitTime.TotalMilliseconds);
             Assert.False(contender.IsHeld, "Contender should have failed to acquire");
@@ -178,7 +177,7 @@ namespace Consul.Test
             Assert.True(l.IsHeld);
             await _client.Session.Destroy(sessionId.Response);
 
-            await WaitFor(() => !l.IsHeld, "Expected lock to be lost when session destroyed", TimeSpan.FromMinutes(1));
+            await WaitFor(() => !l.IsHeld, "Expected lock to be lost when session destroyed");
 
             Assert.Null((await _client.KV.Get(keyName)).Response);
         }
@@ -269,7 +268,7 @@ namespace Consul.Test
                 }));
             }
 
-            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(5));
+            await WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -301,7 +300,7 @@ namespace Consul.Test
                 }));
             }
 
-            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(1));
+            await WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -341,6 +340,8 @@ namespace Consul.Test
                 }));
             }
 
+            // (contenderPool - 1) tasks will need to wait for the default session lock delay
+            // before the lock can be acquired, so wait for tasks to complete with a long timeout.
             await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(5));
 
             for (var i = 0; i < contenderPool; i++)
@@ -458,7 +459,7 @@ namespace Consul.Test
                     await lock1.Acquire(CancellationToken.None);
                     Assert.True(lock1.IsHeld);
 
-                    await WithTimeout(lock2.Acquire(CancellationToken.None), TimeSpan.FromMinutes(1));
+                    await WithTimeout(lock2.Acquire(CancellationToken.None));
                     Assert.True(lock2.IsHeld);
                 }
                 finally
@@ -466,10 +467,10 @@ namespace Consul.Test
                     await lock1.Release();
                 }
 
-                await WaitFor(() => !lock1.IsHeld, "Lock 1 is still held", TimeSpan.FromMinutes(1));
+                await WaitFor(() => !lock1.IsHeld, "Lock 1 is still held");
 
                 // By releasing lock1, lock2 should also eventually be released as it is for the same session
-                await WaitFor(() => !lock2.IsHeld, "Lock 2 is still held", TimeSpan.FromMinutes(1));
+                await WaitFor(() => !lock2.IsHeld, "Lock 2 is still held");
             }
             finally
             {
@@ -515,7 +516,7 @@ namespace Consul.Test
 
                 var checker = WaitFor(
                     () => !lockKey.IsHeld,
-                    "Expected session destroy to release lock", TimeSpan.FromMinutes(1));
+                    "Expected session destroy to release lock");
 
                 await _client.Session.Destroy(lockKey.LockSession);
 
@@ -547,7 +548,7 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                var checker = WaitFor(() => !lockKey.IsHeld, "Expected key delete to release lock", TimeSpan.FromMinutes(1));
+                var checker = WaitFor(() => !lockKey.IsHeld, "Expected key delete to release lock");
 
                 await _client.KV.Delete(lockKey.Opts.Key);
 
@@ -567,12 +568,20 @@ namespace Consul.Test
             }
         }
 
+        // The default timeout should allow enough time for tests to complete when running on a CI host under load,
+        // but be short enough to catch when tests are hanging in a timely manner.
+        private static readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(1);
+
         /// <summary>
         /// Waits for a condition to become true and raises an exception if it is still false after reaching the timeout
         /// </summary>
-        private static async Task WaitFor(Func<bool> condition, string failureMessage, TimeSpan timeout)
+        /// <param name="condition">Condition to wait for</param>
+        /// <param name="failureMessage">Message shown when the condition does not become true</param>
+        /// <param name="timeout">Maximum time to wait. If null the default timeout is used</param>
+        private static async Task WaitFor(Func<bool> condition, string failureMessage, TimeSpan? timeout=null)
         {
-            var cancellationToken = new CancellationTokenSource(timeout).Token;
+            timeout = timeout ?? _defaultTimeout;
+            var cancellationToken = new CancellationTokenSource(timeout.Value).Token;
             while (!condition())
             {
                 try
@@ -590,9 +599,12 @@ namespace Consul.Test
         /// <summary>
         /// Waits for the given task to complete and throws an exception if it doesn't complete within the given time
         /// </summary>
-        private static async Task WithTimeout(Task task, TimeSpan timeout)
+        /// <param name="task">The task to wait for</param>
+        /// <param name="timeout">Maximum time to wait. If null the default timeout is used</param>
+        private static async Task WithTimeout(Task task, TimeSpan? timeout=null)
         {
-            var timeoutTask = Task.Delay(timeout);
+            timeout = timeout ?? _defaultTimeout;
+            var timeoutTask = Task.Delay(timeout.Value);
             var completedTask = await Task.WhenAny(new[] { task, timeoutTask });
             if (completedTask == timeoutTask)
             {
