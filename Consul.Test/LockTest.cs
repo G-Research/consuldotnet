@@ -300,7 +300,10 @@ namespace Consul.Test
                 }));
             }
 
-            await WithTimeout(Task.WhenAll(tasks));
+            // Set timeout to allow each task to wait up to the lock wait time
+            await WithTimeout(
+                Task.WhenAll(tasks),
+                TimeSpan.FromTicks(2 * contenderPool * Lock.DefaultLockWaitTime.Ticks));
 
             for (var i = 0; i < contenderPool; i++)
             {
