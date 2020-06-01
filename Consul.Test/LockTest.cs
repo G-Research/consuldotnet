@@ -300,10 +300,7 @@ namespace Consul.Test
                 }));
             }
 
-            // Set timeout to allow each task to wait up to the lock wait time
-            await WithTimeout(
-                Task.WhenAll(tasks),
-                TimeSpan.FromTicks(2 * contenderPool * Lock.DefaultLockWaitTime.Ticks));
+            await WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -344,8 +341,8 @@ namespace Consul.Test
             }
 
             // (contenderPool - 1) tasks will need to wait for the default session lock delay
-            // before the lock can be acquired, so wait for tasks to complete with a long timeout.
-            await WithTimeout(Task.WhenAll(tasks), TimeSpan.FromMinutes(5));
+            // before the lock can be acquired.
+            await WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -571,20 +568,18 @@ namespace Consul.Test
             }
         }
 
-        // The default timeout should allow enough time for tests to complete when running on a CI host under load,
-        // but be short enough to catch when tests are hanging in a timely manner.
-        private static readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(1);
+        // The default timeout should allow plenty of time for tests to complete when running on a CI host under load.
+        // It isn't intended to be used as a performance check but rather to catch when a test is hanging.
+        private static readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(5);
 
         /// <summary>
-        /// Waits for a condition to become true and raises an exception if it is still false after reaching the timeout
+        /// Waits for a condition to become true and throws an exception if it is still false after reaching the timeout
         /// </summary>
         /// <param name="condition">Condition to wait for</param>
         /// <param name="failureMessage">Message shown when the condition does not become true</param>
-        /// <param name="timeout">Maximum time to wait. If null the default timeout is used</param>
-        private static async Task WaitFor(Func<bool> condition, string failureMessage, TimeSpan? timeout=null)
+        private static async Task WaitFor(Func<bool> condition, string failureMessage)
         {
-            timeout = timeout ?? _defaultTimeout;
-            var cancellationToken = new CancellationTokenSource(timeout.Value).Token;
+            var cancellationToken = new CancellationTokenSource(_defaultTimeout).Token;
             while (!condition())
             {
                 try
@@ -600,14 +595,12 @@ namespace Consul.Test
         }
 
         /// <summary>
-        /// Waits for the given task to complete and throws an exception if it doesn't complete within the given time
+        /// Waits for the given task to complete and throws an exception if it doesn't complete within the timeout
         /// </summary>
         /// <param name="task">The task to wait for</param>
-        /// <param name="timeout">Maximum time to wait. If null the default timeout is used</param>
-        private static async Task WithTimeout(Task task, TimeSpan? timeout=null)
+        private static async Task WithTimeout(Task task)
         {
-            timeout = timeout ?? _defaultTimeout;
-            var timeoutTask = Task.Delay(timeout.Value);
+            var timeoutTask = Task.Delay(_defaultTimeout);
             var completedTask = await Task.WhenAny(new[] { task, timeoutTask });
             if (completedTask == timeoutTask)
             {
