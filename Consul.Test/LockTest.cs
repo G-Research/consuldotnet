@@ -135,7 +135,7 @@ namespace Consul.Test
             Assert.True(lockKey.IsHeld);
             Assert.False(contender.IsHeld);
 
-            await WithTimeout(
+            await TimeoutUtils.WithTimeout(
                 Assert.ThrowsAsync<LockMaxAttemptsReachedException>(async () => await contender.Acquire()));
 
             Assert.False(stopwatch.ElapsedMilliseconds < lockOptions.LockWaitTime.TotalMilliseconds);
@@ -177,7 +177,7 @@ namespace Consul.Test
             Assert.True(l.IsHeld);
             await _client.Session.Destroy(sessionId.Response);
 
-            await WaitFor(() => !l.IsHeld, "Expected lock to be lost when session destroyed");
+            await TimeoutUtils.WaitFor(() => !l.IsHeld, "Expected lock to be lost when session destroyed");
 
             Assert.Null((await _client.KV.Get(keyName)).Response);
         }
@@ -268,7 +268,7 @@ namespace Consul.Test
                 }));
             }
 
-            await WithTimeout(Task.WhenAll(tasks));
+            await TimeoutUtils.WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -300,7 +300,7 @@ namespace Consul.Test
                 }));
             }
 
-            await WithTimeout(Task.WhenAll(tasks));
+            await TimeoutUtils.WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -342,7 +342,7 @@ namespace Consul.Test
 
             // (contenderPool - 1) tasks will need to wait for the default session lock delay
             // before the lock can be acquired.
-            await WithTimeout(Task.WhenAll(tasks));
+            await TimeoutUtils.WithTimeout(Task.WhenAll(tasks));
 
             for (var i = 0; i < contenderPool; i++)
             {
@@ -459,7 +459,7 @@ namespace Consul.Test
                     await lock1.Acquire(CancellationToken.None);
                     Assert.True(lock1.IsHeld);
 
-                    await WithTimeout(lock2.Acquire(CancellationToken.None));
+                    await TimeoutUtils.WithTimeout(lock2.Acquire(CancellationToken.None));
                     Assert.True(lock2.IsHeld);
                 }
                 finally
@@ -467,10 +467,10 @@ namespace Consul.Test
                     await lock1.Release();
                 }
 
-                await WaitFor(() => !lock1.IsHeld, "Lock 1 is still held");
+                await TimeoutUtils.WaitFor(() => !lock1.IsHeld, "Lock 1 is still held");
 
                 // By releasing lock1, lock2 should also eventually be released as it is for the same session
-                await WaitFor(() => !lock2.IsHeld, "Lock 2 is still held");
+                await TimeoutUtils.WaitFor(() => !lock2.IsHeld, "Lock 2 is still held");
             }
             finally
             {
@@ -514,7 +514,7 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                var checker = WaitFor(
+                var checker = TimeoutUtils.WaitFor(
                     () => !lockKey.IsHeld,
                     "Expected session destroy to release lock");
 
@@ -548,7 +548,7 @@ namespace Consul.Test
 
                 Assert.True(lockKey.IsHeld);
 
-                var checker = WaitFor(() => !lockKey.IsHeld, "Expected key delete to release lock");
+                var checker = TimeoutUtils.WaitFor(() => !lockKey.IsHeld, "Expected key delete to release lock");
 
                 await _client.KV.Delete(lockKey.Opts.Key);
 
@@ -566,48 +566,6 @@ namespace Consul.Test
                     // Exception expected if above checks all pass
                 }
             }
-        }
-
-        // The default timeout should allow plenty of time for tests to complete when running on a CI host under load.
-        // It isn't intended to be used as a performance check but rather to catch when a test is hanging.
-        private static readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(5);
-
-        /// <summary>
-        /// Waits for a condition to become true and throws an exception if it is still false after reaching the timeout
-        /// </summary>
-        /// <param name="condition">Condition to wait for</param>
-        /// <param name="failureMessage">Message shown when the condition does not become true</param>
-        private static async Task WaitFor(Func<bool> condition, string failureMessage)
-        {
-            var cancellationToken = new CancellationTokenSource(_defaultTimeout).Token;
-            while (!condition())
-            {
-                try
-                {
-                    await Task.Delay(TimeSpan.FromMilliseconds(10), cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-            }
-            Assert.True(condition(), failureMessage);
-        }
-
-        /// <summary>
-        /// Waits for the given task to complete and throws an exception if it doesn't complete within the timeout
-        /// </summary>
-        /// <param name="task">The task to wait for</param>
-        private static async Task WithTimeout(Task task)
-        {
-            var timeoutTask = Task.Delay(_defaultTimeout);
-            var completedTask = await Task.WhenAny(new[] { task, timeoutTask });
-            if (completedTask == timeoutTask)
-            {
-                throw new OperationCanceledException("Timeout waiting for task to complete");
-            }
-            // Make sure we await the task so that any exceptions are thrown if it faulted.
-            await task;
         }
     }
 }
