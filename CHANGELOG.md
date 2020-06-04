@@ -1,6 +1,6 @@
 # Changelog
 
-## Forked from PlayFab Inc by G-Research (1.6.1.0)
+## Forked from PlayFab Inc by G-Research (1.6.1)
 * Upgrade to .NET 4.6.1 and .NET Core 2.0
 * Add missing code documentation
 * General cleanup
