@@ -15,6 +15,7 @@ jobs:
   # Create a NuGet package on Windows only, as we build for .NET Framework 4.6.1
   # and for .NET Standard 2.0.
   build:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
