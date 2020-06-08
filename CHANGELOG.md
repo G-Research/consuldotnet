@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.1.1
+* Fix issue #9 preventing use of the library with .NET Framework
+
 ## Forked from PlayFab Inc by G-Research (1.6.1)
 * Upgrade to .NET 4.6.1 and .NET Core 2.0
 * Add missing code documentation
