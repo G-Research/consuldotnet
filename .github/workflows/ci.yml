@@ -41,10 +41,13 @@ jobs:
       - name: Repack
         if: runner.os == 'Windows'
         run: |
-          cd Consul/bin/Release/net461
-          &$HOME/.nuget/packages/ilrepack/2.0.18/tools/ilrepack.exe /keyfile:${{ github.workspace }}/assets/consuldotnet.snk /parallel /internalize /out:Consul.dll.merged Consul.dll Newtonsoft.Json.dll
-          mv -force Consul.dll.merged Consul.dll
-          rm Newtonsoft.Json.dll
+          cd Consul/bin/Release
+          mv net461 net461unmerged
+          cd net461unmerged
+          &$HOME/.nuget/packages/ilrepack/2.0.18/tools/ilrepack.exe /keyfile:${{ github.workspace }}/assets/consuldotnet.snk /parallel /internalize /out:../net461/Consul.dll Consul.dll Newtonsoft.Json.dll
+          cd ..
+          cp net461unmerged/Consul.pdb net461/
+          rm -r net461unmerged
       - name: Run tests
         shell: bash
         run: |
