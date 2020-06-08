@@ -67,7 +67,7 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack --configuration=Release --no-build @params
+          dotnet pack --configuration=Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg @params
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
