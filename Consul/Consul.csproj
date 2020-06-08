@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
     <Authors>PlayFab,G-Research</Authors>
-    <Description>Consul.NET is .NET client library for the Consul HTTP API</Description>
+    <Description>Consul.NET is a .NET client library for the Consul HTTP API</Description>
     <PackageOutputPath>../dist</PackageOutputPath>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
