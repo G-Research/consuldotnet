@@ -5,9 +5,27 @@
     <VersionPrefix>0.0.1</VersionPrefix>
     <PackageId>Consul.AspNetCore</PackageId>
     <AssemblyName>Consul.AspNetCore</AssemblyName>
+    <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
+    <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <LangVersion>8</LangVersion>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
+    <Authors>PlayFab,G-Research</Authors>
+    <Description>Consul.NET is a .NET client library for the Consul HTTP API</Description>
+    <PackageOutputPath>../dist</PackageOutputPath>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <PublicSign>true</PublicSign>
+    <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
