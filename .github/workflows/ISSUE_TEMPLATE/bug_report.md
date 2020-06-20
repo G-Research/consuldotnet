@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG] Summary of item"
+title: "Summary of item"
 labels: bug
 assignees: ''
 
@@ -10,7 +10,7 @@ assignees: ''
 <!--
 Thanks for reporting this! Please provide as much info as you can about the issue, so we can best help you. As a general guidance, pointers from https://stackoverflow.com/help/mcve can help you craft a good bug report.
 
-If this is a question please ask on [StackOverflow](https://stackoverflow.com/questions/tagged/consul).
+If this is a question about the Consul API or Consul itself, please ask on [StackOverflow](https://stackoverflow.com/questions/tagged/consul).
 -->
 
 **Describe the bug**
@@ -21,10 +21,9 @@ If this is a question please ask on [StackOverflow](https://stackoverflow.com/qu
 **Steps To Reproduce**
 <!--
 Provide the steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+1. Share your minimal code in a git repository, including the Consul configuration
+2. Specify the command used to launch the agent
+3. Share the exact error message observed
 -->
 
 
@@ -34,7 +33,7 @@ Provide the steps to reproduce the behavior:
 
 
 
-**Screenshots** or **Logs**
+**Logs**
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 
@@ -42,7 +41,8 @@ Provide the steps to reproduce the behavior:
 **Environment**
 <!-- Please complete the following information. -->
 - OS:       <!-- [e.g. Windows] -->
-- Consul Version   <!-- [e.g. 1.6.1.1] -->
+- Consul Version:   <!-- [e.g. 1.7.2] -->
+- consultdotnet Version   <!-- [e.g. 1.6.1.1] -->
 
 **Additional context**
 <!-- Add any other context about the problem here. -->
