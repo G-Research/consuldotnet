@@ -12,7 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
     <Authors>PlayFab,G-Research</Authors>
-    <Description>Consul.NET is a .NET client library for the Consul HTTP API</Description>
+    <Description>Consul Service registration for ASP.NET Core</Description>
     <PackageOutputPath>../dist</PackageOutputPath>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.5" />
   </ItemGroup>
 
 </Project>
