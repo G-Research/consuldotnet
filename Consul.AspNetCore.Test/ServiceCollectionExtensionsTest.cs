@@ -7,19 +7,19 @@ namespace Consul.AspNetCore.Test
 {
 	public class ServiceCollectionExtensionsTest
 	{
-		private readonly IServiceCollection services;
+		private readonly IServiceCollection _services;
 
 		public ServiceCollectionExtensionsTest()
 		{
-			services = new ServiceCollection();
+			_services = new ServiceCollection();
 		}
 
 		[Fact]
 		public void AddConsul_Client_Registered()
 		{
-			services.AddConsul();
+			_services.AddConsul();
 
-			var descriptor = Assert.Single(services);
+			var descriptor = Assert.Single(_services);
 
 			Assert.Equal(typeof(IConsulClient), descriptor.ServiceType);
 			Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
@@ -35,7 +35,7 @@ namespace Consul.AspNetCore.Test
 			var token = "token";
 			var waitTime = TimeSpan.FromSeconds(30);
 
-			var serviceProvider = services
+			var serviceProvider = _services
 				.AddConsul(options =>
 				{
 					options.Datacenter = datacenter;
@@ -58,15 +58,15 @@ namespace Consul.AspNetCore.Test
 		[Fact]
 		public void AddConsulRegistration_HostedService()
 		{
-			services.AddConsul()
-				.AddConsulRegistration(options =>
+			_services.AddConsul()
+				.AddConsulServiceRegistration(options =>
 				{
 					options.ID = "id";
 					options.Name = "name";
 				});
 
 			Assert.Collection(
-				services,
+				_services,
 				consul => Assert.Equal(typeof(IConsulClient), consul.ServiceType),
 				agent => Assert.Equal(typeof(AgentServiceRegistration), agent.ServiceType),
 				hostedService =>

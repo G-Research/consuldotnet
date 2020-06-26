@@ -20,7 +20,7 @@ namespace Consul.AspNetCore
 			return services;
 		}
 
-		public static IServiceCollection AddConsulRegistration(
+		public static IServiceCollection AddConsulServiceRegistration(
 			this IServiceCollection services,
 			Action<AgentServiceRegistration> options)
 		{

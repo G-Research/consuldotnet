@@ -6,25 +6,25 @@ namespace Consul.AspNetCore
 {
 	public class AgentServiceRegistrationHostedService : IHostedService
 	{
-		private readonly IConsulClient consulClient;
-		private readonly AgentServiceRegistration registration;
+		private readonly IConsulClient _consulClient;
+		private readonly AgentServiceRegistration _serviceRegistration;
 
 		public AgentServiceRegistrationHostedService(
 			IConsulClient consulClient,
-			AgentServiceRegistration registration)
+			AgentServiceRegistration serviceRegistration)
 		{
-			this.consulClient = consulClient;
-			this.registration = registration;
+			_consulClient = consulClient;
+			_serviceRegistration = serviceRegistration;
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			return consulClient.Agent.ServiceRegister(registration, cancellationToken);
+			return _consulClient.Agent.ServiceRegister(_serviceRegistration, cancellationToken);
 		}
 
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
-			return consulClient.Agent.ServiceDeregister(registration.ID, cancellationToken);
+			return _consulClient.Agent.ServiceDeregister(_serviceRegistration.ID, cancellationToken);
 		}
 	}
 }
