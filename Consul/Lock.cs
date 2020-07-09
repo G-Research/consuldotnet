@@ -336,10 +336,13 @@ namespace Consul
                             continue;
                         }
 
-                        // If the session is null and the lock failed to acquire, then it means
-                        // a lock-delay is in effect and a timed wait must be used to avoid a hot loop.
-                        try { await Task.Delay(Opts.LockRetryTime, ct).ConfigureAwait(false); }
-                        catch (TaskCanceledException) { /* Ignore TaskTaskCanceledException */}
+                        if (Opts.LockTryOnce)
+                        {
+                            // If the session is null and the lock failed to acquire, then it means
+                            // a lock-delay is in effect and a timed wait must be used to avoid a hot loop.
+                            try { await Task.Delay(Opts.LockRetryTime, ct).ConfigureAwait(false); }
+                            catch (TaskCanceledException) { /* Ignore TaskTaskCanceledException */}
+                        }
                     }
                     DisposeCancellationTokenSource();
                     throw new LockNotHeldException("Unable to acquire the lock with Consul");
