@@ -67,7 +67,7 @@ namespace Consul
         /// <returns>A query result containing a map of datacenters, each with a list of coordinates of all the servers in the WAN pool</returns>
         public Task<QueryResult<CoordinateDatacenterMap[]>> Datacenters(CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<CoordinateDatacenterMap[]>(string.Format("/v1/coordinate/datacenters")).Execute(ct);
+            return _client.Get<CoordinateDatacenterMap[]>("/v1/coordinate/datacenters").Execute(ct);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Consul
         /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
         public Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/nodes"), q).Execute(ct);
+            return _client.Get<CoordinateEntry[]>("/v1/coordinate/nodes", q).Execute(ct);
         }
     }
 
@@ -97,9 +97,6 @@ namespace Consul
         /// <summary>
         /// Session returns a handle to the session endpoints
         /// </summary>
-        public ICoordinateEndpoint Coordinate
-        {
-            get { return _coordinate.Value; }
-        }
+        public ICoordinateEndpoint Coordinate => _coordinate.Value;
     }
 }

@@ -64,7 +64,7 @@ namespace Consul.Test
             var client = new ConsulClient();
             var config = client.Config;
 
-            Assert.Equal(addr, string.Format("{0}:{1}", config.Address.Host, config.Address.Port));
+            Assert.Equal(addr, $"{config.Address.Host}:{config.Address.Port}");
             Assert.Equal(token, config.Token);
 #pragma warning disable CS0618 // Type or member is obsolete
             Assert.NotNull(config.HttpAuth);
