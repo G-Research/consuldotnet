@@ -19,6 +19,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -185,9 +186,11 @@ namespace Consul
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
+        // For backward compatibility 
+        [Obsolete]
         public Task<QueryResult<CatalogService[]>> Service(string service, CancellationToken ct = default(CancellationToken))
         {
-            return Service(service, string.Empty, QueryOptions.Default, ct);
+            return Service(service, new []{string.Empty}, QueryOptions.Default, ct);
         }
 
         /// <summary>
@@ -197,9 +200,11 @@ namespace Consul
         /// <param name="tag">A tag to filter on</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
+        // For backward compatibility 
+        [Obsolete]
         public Task<QueryResult<CatalogService[]>> Service(string service, string tag, CancellationToken ct = default(CancellationToken))
         {
-            return Service(service, tag, QueryOptions.Default, ct);
+            return Service(service, new []{tag}, QueryOptions.Default, ct);
         }
 
         /// <summary>
@@ -210,12 +215,27 @@ namespace Consul
         /// <param name="q">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
+        // For backward compatibility 
+        [Obsolete]
         public Task<QueryResult<CatalogService[]>> Service(string service, string tag, QueryOptions q, CancellationToken ct)
         {
-            var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/service/{0}", service), q);
-            if (!string.IsNullOrEmpty(tag))
+            return Service(service,new []{tag}, q, ct);
+        }
+        
+        /// <summary>
+        /// Service is used to query catalog entries for a given service
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// <param name="tag">A tag to filter on</param>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> Service(string service, string[] tag, QueryOptions q = null, CancellationToken ct = default(CancellationToken))
+        {
+            var req = _client.Get<CatalogService[]>($"/v1/catalog/service/{service}", q ?? QueryOptions.Default);
+            if (tag.Any())
             {
-                req.Params["tag"] = tag;
+                req.Params["tag"] = tag.ToArray();
             }
             return req.Execute(ct);
         }
@@ -240,7 +260,7 @@ namespace Consul
         /// <returns>The node information including a list of services</returns>
         public Task<QueryResult<CatalogNode>> Node(string node, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<CatalogNode>(string.Format("/v1/catalog/node/{0}", node), q).Execute(ct);
+            return _client.Get<CatalogNode>($"/v1/catalog/node/{node}", q).Execute(ct);
         }
     }
 

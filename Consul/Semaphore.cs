@@ -400,8 +400,7 @@ namespace Consul
                         {
                             DisposeCancellationTokenSource();
                             throw new SemaphoreLimitConflictException(
-                                string.Format("Semaphore limit conflict (lock: {0}, local: {1})", semaphoreLock.Limit,
-                                    Opts.Limit),
+                                $"Semaphore limit conflict (lock: {semaphoreLock.Limit}, local: {Opts.Limit})",
                                 semaphoreLock.Limit, Opts.Limit);
                         }
 

@@ -264,7 +264,7 @@ namespace Consul
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.PutReturning<bool>(string.Format("/v1/acl/destroy/{0}", id), q).Execute(ct);
+            return _client.PutReturning<bool>($"/v1/acl/destroy/{id}", q).Execute(ct);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Consul
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<WriteResult<string>> Clone(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.PutReturning<ACLCreationResult>(string.Format("/v1/acl/clone/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.PutReturning<ACLCreationResult>($"/v1/acl/clone/{id}", q).Execute(ct).ConfigureAwait(false);
             return new WriteResult<string>(res, res.Response.ID);
         }
 
@@ -312,7 +312,7 @@ namespace Consul
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<QueryResult<ACLEntry>> Info(string id, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Get<ACLEntry[]>(string.Format("/v1/acl/info/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Get<ACLEntry[]>($"/v1/acl/info/{id}", q).Execute(ct).ConfigureAwait(false);
             return new QueryResult<ACLEntry>(res, res.Response != null && res.Response.Length > 0 ? res.Response[0] : null);
         }
 

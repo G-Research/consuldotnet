@@ -244,7 +244,7 @@ namespace Consul
 
         public async Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.DeleteReturning<string>(string.Format("/v1/query/{0}", queryID), q).Execute(ct);
+            var res = await _client.DeleteReturning<string>($"/v1/query/{queryID}", q).Execute(ct);
             return new WriteResult(res);
         }
 
@@ -255,7 +255,7 @@ namespace Consul
 
         public Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<PreparedQueryExecuteResponse>(string.Format("/v1/query/{0}/execute", queryIDOrName), q).Execute(ct);
+            return _client.Get<PreparedQueryExecuteResponse>($"/v1/query/{queryIDOrName}/execute", q).Execute(ct);
         }
 
         public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, CancellationToken ct = default(CancellationToken))
@@ -265,7 +265,7 @@ namespace Consul
 
         public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<PreparedQueryDefinition[]>(string.Format("/v1/query/{0}", queryID), q).Execute(ct);
+            return _client.Get<PreparedQueryDefinition[]>($"/v1/query/{queryID}", q).Execute(ct);
         }
 
         public Task<QueryResult<PreparedQueryDefinition[]>> List(CancellationToken ct = default(CancellationToken))
@@ -285,7 +285,7 @@ namespace Consul
 
         public Task<WriteResult> Update(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put(string.Format("/v1/query/{0}", query.ID), query, q).Execute(ct);
+            return _client.Put($"/v1/query/{query.ID}", query, q).Execute(ct);
         }
     }
 

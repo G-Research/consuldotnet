@@ -220,7 +220,7 @@ namespace Consul
         /// <returns>A query result containing the health checks matching the provided service ID, or a query result with a null response if no service matched the provided ID</returns>
         public Task<QueryResult<HealthCheck[]>> Checks(string service, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<HealthCheck[]>(string.Format("/v1/health/checks/{0}", service), q).Execute(ct);
+            return _client.Get<HealthCheck[]>($"/v1/health/checks/{service}", q).Execute(ct);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace Consul
         /// <returns>A query result containing the health checks matching the provided node ID, or a query result with a null response if no node matched the provided ID</returns>
         public Task<QueryResult<HealthCheck[]>> Node(string node, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<HealthCheck[]>(string.Format("/v1/health/node/{0}", node), q).Execute(ct);
+            return _client.Get<HealthCheck[]>($"/v1/health/node/{node}", q).Execute(ct);
         }
 
         /// <summary>
@@ -289,14 +289,14 @@ namespace Consul
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
         public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/service/{0}", service), q);
+            var req = _client.Get<ServiceEntry[]>($"/v1/health/service/{service}", q);
             if (!string.IsNullOrEmpty(tag))
             {
-                req.Params["tag"] = tag;
+                req.Params["tag"] = new []{tag};
             }
             if (passingOnly)
             {
-                req.Params["passing"] = "1";
+                req.Params["passing"] = new [] {"1"};
             }
             return req.Execute(ct);
         }
@@ -320,7 +320,7 @@ namespace Consul
         /// <returns>A query result containing a list of health checks in the specified state, or a query result with a null response if no health checks matched the provided state</returns>
         public Task<QueryResult<HealthCheck[]>> State(HealthStatus status, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<HealthCheck[]>(string.Format("/v1/health/state/{0}", status.Status), q).Execute(ct);
+            return _client.Get<HealthCheck[]>($"/v1/health/state/{status.Status}", q).Execute(ct);
         }
     }
 

@@ -200,3 +200,5 @@ NuGet.exe
 .vs
 project.lock.json
 .vscode/
+.idea/
+.idea/.idea.Consul/

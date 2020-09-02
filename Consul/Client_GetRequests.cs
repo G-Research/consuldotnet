@@ -70,13 +70,12 @@ namespace Consul
             {
                 if (ResponseStream == null)
                 {
-                    throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
-                        response.StatusCode), response.StatusCode);
+                    throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}", response.StatusCode);
                 }
                 using (var sr = new StreamReader(ResponseStream))
                 {
-                    throw new ConsulRequestException(string.Format("Unexpected response, status code {0}: {1}",
-                        response.StatusCode, sr.ReadToEnd()), response.StatusCode);
+                    throw new ConsulRequestException(
+                        $"Unexpected response, status code {response.StatusCode}: {sr.ReadToEnd()}", response.StatusCode);
                 }
             }
 
@@ -114,8 +113,7 @@ namespace Consul
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
-                throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
-                    response.StatusCode), response.StatusCode);
+                throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}", response.StatusCode);
             }
 
             result.RequestTime = timer.Elapsed;
@@ -133,30 +131,30 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new []{Options.Datacenter};
             }
             switch (Options.Consistency)
             {
                 case ConsistencyMode.Consistent:
-                    Params["consistent"] = string.Empty;
+                    Params["consistent"] = new []{string.Empty};
                     break;
                 case ConsistencyMode.Stale:
-                    Params["stale"] = string.Empty;
+                    Params["stale"] = new []{string.Empty};
                     break;
                 case ConsistencyMode.Default:
                     break;
             }
             if (Options.WaitIndex != 0)
             {
-                Params["index"] = Options.WaitIndex.ToString();
+                Params["index"] = new []{Options.WaitIndex.ToString()};
             }
             if (Options.WaitTime.HasValue)
             {
-                Params["wait"] = Options.WaitTime.Value.ToGoDuration();
+                Params["wait"] = new []{Options.WaitTime.Value.ToGoDuration()};
             }
             if (!string.IsNullOrEmpty(Options.Near))
             {
-                Params["near"] = Options.Near;
+                Params["near"] = new []{Options.Near};
             }
         }
 
@@ -260,13 +258,12 @@ namespace Consul
             {
                 if (ResponseStream == null)
                 {
-                    throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
-                        response.StatusCode), response.StatusCode);
+                    throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}", response.StatusCode);
                 }
                 using (var sr = new StreamReader(ResponseStream))
                 {
-                    throw new ConsulRequestException(string.Format("Unexpected response, status code {0}: {1}",
-                        response.StatusCode, sr.ReadToEnd()), response.StatusCode);
+                    throw new ConsulRequestException(
+                        $"Unexpected response, status code {response.StatusCode}: {sr.ReadToEnd()}", response.StatusCode);
                 }
             }
 
@@ -293,7 +290,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new []{Options.Datacenter};
             }
         }
 

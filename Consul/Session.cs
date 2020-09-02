@@ -215,7 +215,7 @@ namespace Consul
                 }
                 var waitDuration = (int)(initialTTL.TotalMilliseconds / 2);
                 var lastRenewTime = DateTime.Now;
-                Exception lastException = new SessionExpiredException(string.Format("Session expired: {0}", id));
+                Exception lastException = new SessionExpiredException($"Session expired: {id}");
                 try
                 {
                     while (!ct.IsCancellationRequested)
@@ -356,7 +356,7 @@ namespace Consul
         /// <returns>A write result containing the result of the session destruction</returns>
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put<object, bool>(string.Format("/v1/session/destroy/{0}", id), q).Execute(ct);
+            return _client.Put<object, bool>($"/v1/session/destroy/{id}", q).Execute(ct);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace Consul
         /// <returns>A query result containing the session information, or an empty query result if the session entry does not exist</returns>
         public async Task<QueryResult<SessionEntry>> Info(string id, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Get<SessionEntry[]>(string.Format("/v1/session/info/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Get<SessionEntry[]>($"/v1/session/info/{id}", q).Execute(ct).ConfigureAwait(false);
             return new QueryResult<SessionEntry>(res, res.Response != null && res.Response.Length > 0 ? res.Response[0] : null);
         }
 
@@ -418,7 +418,7 @@ namespace Consul
         /// <returns>A query result containing the list of sessions, or an empty query result if no sessions exist</returns>
         public Task<QueryResult<SessionEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<SessionEntry[]>(string.Format("/v1/session/node/{0}", node), q).Execute(ct);
+            return _client.Get<SessionEntry[]>($"/v1/session/node/{node}", q).Execute(ct);
         }
 
         /// <summary>
@@ -439,10 +439,10 @@ namespace Consul
         /// <returns>An updated session entry</returns>
         public async Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Put<object, SessionEntry[]>(string.Format("/v1/session/renew/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Put<object, SessionEntry[]>($"/v1/session/renew/{id}", q).Execute(ct).ConfigureAwait(false);
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
-                throw new SessionExpiredException(string.Format("Session expired: {0}", id));
+                throw new SessionExpiredException($"Session expired: {id}");
             }
             return new WriteResult<SessionEntry>(res, res.Response != null && res.Response.Length > 0 ? res.Response[0] : null);
         }
