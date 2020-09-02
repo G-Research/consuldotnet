@@ -233,9 +233,9 @@ namespace Consul
         public Task<QueryResult<CatalogService[]>> Service(string service, string[] tag, QueryOptions q = null, CancellationToken ct = default(CancellationToken))
         {
             var req = _client.Get<CatalogService[]>($"/v1/catalog/service/{service}", q ?? QueryOptions.Default);
-            if (tag.Any())
+            if (tag.Any(t => !string.IsNullOrEmpty(t)))
             {
-                req.Params["tag"] = tag.ToArray();
+                req.Params["tag"] = tag.Where(t => !string.IsNullOrEmpty(t)).ToArray();
             }
             return req.Execute(ct);
         }
