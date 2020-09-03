@@ -25,6 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup .NET Core SDK
+        if: runner.os != 'Windows'
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.300
