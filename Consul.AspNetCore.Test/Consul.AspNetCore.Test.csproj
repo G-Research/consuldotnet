@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netcoreapp2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>Consul.AspNetCore.Test</AssemblyName>
+    <PackageId>Consul.AspNetCore.Test</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0"/>
+    <PackageReference Include="xunit" Version="2.4.0"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0"/>
+    <PackageReference Include="coverlet.collector" Version="1.2.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Consul.AspNetCore\Consul.AspNetCore.csproj"/>
+  </ItemGroup>
+
+</Project>

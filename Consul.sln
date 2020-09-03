@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consul.AspNetCore", "Consul.AspNetCore\Consul.AspNetCore.csproj", "{E7C9D5BF-7B28-43CE-93F2-B89FACF921C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consul.AspNetCore.Test", "Consul.AspNetCore.Test\Consul.AspNetCore.Test.csproj", "{2C3A84C0-877F-4542-8B41-A03ED43C2211}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,14 @@ Global
 		{59CA6048-E8D0-46BF-997B-FEB7083C42C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59CA6048-E8D0-46BF-997B-FEB7083C42C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59CA6048-E8D0-46BF-997B-FEB7083C42C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C9D5BF-7B28-43CE-93F2-B89FACF921C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7C9D5BF-7B28-43CE-93F2-B89FACF921C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7C9D5BF-7B28-43CE-93F2-B89FACF921C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7C9D5BF-7B28-43CE-93F2-B89FACF921C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C3A84C0-877F-4542-8B41-A03ED43C2211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C3A84C0-877F-4542-8B41-A03ED43C2211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C3A84C0-877F-4542-8B41-A03ED43C2211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C3A84C0-877F-4542-8B41-A03ED43C2211}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
