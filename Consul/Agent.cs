@@ -263,6 +263,12 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool TLSSkipVerify { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string GRPC { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool GRPCUseTLS  { get; set; }
 
         /// <summary>
         /// In Consul 0.7 and later, checks that are associated with a service
