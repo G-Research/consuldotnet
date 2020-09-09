@@ -30,13 +30,28 @@ namespace Consul
     {
         public string ID { get; set; }
         public string Name { get; set; }
+        public PolicyLink()
+        : this(string.Empty, string.Empty)
+        {
+        }
+        public PolicyLink(string id)
+        : this(id, string.Empty)
+        {
+        }
+        public PolicyLink(string id, string name)
+        {
+            ID = id;
+            Name = name;
+        }
     }
 
     /// <summary>
     /// PolicyEntry represents an ACL Policy in Consul
     /// </summary>
-    public class PolicyEntry:PolicyLink
+    public class PolicyEntry
     {
+        public string ID { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public string Rules { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -75,6 +90,7 @@ namespace Consul
             Rules = rules;
             Datacenters = datacenters;
         }
+        public static implicit operator PolicyLink(PolicyEntry p) => new PolicyLink(p.ID);
     }
 
     /// <summary>
