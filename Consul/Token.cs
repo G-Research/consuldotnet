@@ -18,6 +18,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -224,9 +225,26 @@ namespace Consul
         /// <param name="writeOptions">Customized write options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL token</returns>
-        public async Task<WriteResult<TokenEntry>> Clone(string id, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<TokenEntry>> Clone(string id, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.PutReturning<TokenActionResult>($"/v1/acl/token/{id}/clone", writeOptions).Execute(ct).ConfigureAwait(false);
+            return Clone(id, string.Empty, writeOptions, ct);
+        }
+
+        /// <summary>
+        /// Clones an existing ACL Token in Consul
+        /// </summary>
+        /// <param name="id">The Accessor ID of the ACL Token to clone</param>
+        /// <param name="description">The description for the cloned ACL Token</param>
+        /// <param name="writeOptions">Customized write options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A write result containing the created ACL token</returns>
+        public async Task<WriteResult<TokenEntry>> Clone(string id, string description, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        {
+            var body = new Dictionary<string, string>
+                {
+                    {"Description", description}
+                };
+            var res = await _client.Put<object, TokenActionResult>($"/v1/acl/token/{id}/clone", body, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<TokenEntry>(res, res.Response);
         }
 
