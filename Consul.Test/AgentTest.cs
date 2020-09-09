@@ -407,7 +407,8 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_ForceLeave()
         {
-            await _client.Agent.ForceLeave("nonexistant");
+            var info = await _client.Agent.Self();
+            await _client.Agent.ForceLeave(info.Response["Config"]["NodeName"]);
             // Success is not throwing an exception
         }
 
