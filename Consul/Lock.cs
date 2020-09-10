@@ -336,7 +336,7 @@ namespace Consul
                             continue;
                         }
 
-                        if (Opts.LockTryOnce)
+                        if (!(Opts.LockTryOnce && Opts.LockWaitTime == TimeSpan.Zero))
                         {
                             // If the session is null and the lock failed to acquire, then it means
                             // a lock-delay is in effect and a timed wait must be used to avoid a hot loop.
