@@ -67,31 +67,6 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Policy_ReadCloneUpdateDelete()
-        {
-            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
-
-            var selfTokenEntry = await _client.Token.Read("self");
-            var clonedTokenEntry = await _client.Token.Clone(selfTokenEntry.Response.AccessorID);
-
-            Assert.NotEqual(TimeSpan.Zero, clonedTokenEntry.RequestTime);
-            Assert.Equal(selfTokenEntry.Response.Description, clonedTokenEntry.Response.Description);
-            Assert.Equal(selfTokenEntry.Response.Local, clonedTokenEntry.Response.Local);
-
-            clonedTokenEntry.Response.Description = "This is an updated clone of the self token";
-            var updatedTokenEntry = await _client.Token.Update(clonedTokenEntry.Response);
-
-            Assert.NotEqual(TimeSpan.Zero, updatedTokenEntry.RequestTime);
-            Assert.Equal(clonedTokenEntry.Response.AccessorID, updatedTokenEntry.Response.AccessorID);
-            Assert.Equal(clonedTokenEntry.Response.SecretID, updatedTokenEntry.Response.SecretID);
-            Assert.Equal(clonedTokenEntry.Response.Local, updatedTokenEntry.Response.Local);
-            Assert.Equal(clonedTokenEntry.Response.Description, updatedTokenEntry.Response.Description);
-
-            var deleteResponse = await _client.Policy.Delete(updatedTokenEntry.Response.AccessorID);
-            Assert.True(deleteResponse.Response);
-        }
-
-        [SkippableFact]
         public async Task Policy_Read()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));

@@ -30,13 +30,28 @@ namespace Consul
     {
         public string ID { get; set; }
         public string Name { get; set; }
+        public RoleLink()
+        : this(string.Empty, string.Empty)
+        {
+        }
+        public RoleLink(string id)
+        : this(id, string.Empty)
+        {
+        }
+        public RoleLink(string id, string name)
+        {
+            ID = id;
+            Name = name;
+        }
     }
 
     /// <summary>
     /// RoleEntry represents an ACL Role in Consul
     /// </summary>
-    public class RoleEntry : RoleLink
+    public class RoleEntry
     {
+        public string ID { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public PolicyLink[] Policies { get; set; }
@@ -91,6 +106,7 @@ namespace Consul
             Policies = policies;
             ServiceIdentities = serviceIdentities;
         }
+        public static implicit operator RoleLink(RoleEntry r) => new RoleLink(r.ID);
     }
 
     /// <summary>
