@@ -443,8 +443,6 @@ namespace Consul
         /// </summary>
         /// <param name="config">A Consul client configuration</param>
         /// <param name="client">A custom HttpClient</param>
-        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed in a future release." +
-            "Please use one of the ConsulClient(Action<>) constructors instead to set internal options on the HttpClient/WebRequestHandler.", false)]
         public ConsulClient(ConsulClientConfiguration config, HttpClient client)
         {
             var ctr = new ConsulClientConfigurationContainer(config, client);
