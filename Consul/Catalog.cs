@@ -215,7 +215,7 @@ namespace Consul
             var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/service/{0}", service), q);
             if (!string.IsNullOrEmpty(tag))
             {
-                req.Params["tag"] = tag;
+                req.Params["tag"] = new [] {tag};
             }
             return req.Execute(ct);
         }
