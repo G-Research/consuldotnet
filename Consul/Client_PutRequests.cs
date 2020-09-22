@@ -99,7 +99,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new []{Options.Datacenter};
             }
         }
 
@@ -176,7 +176,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new [] {Options.Datacenter};
             }
         }
 
@@ -273,7 +273,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new [] { Options.Datacenter };
             }
         }
 
@@ -380,7 +380,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new [] {Options.Datacenter};
             }
         }
 

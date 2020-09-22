@@ -161,7 +161,7 @@ namespace Consul
             // From Consul repo:
             // TODO (slackpad) Currently we made address a query parameter. Once
             // IDs are in place this will be DELETE /v1/operator/raft/peer/<id>.
-            req.Params["address"] = address;
+            req.Params["address"] = new [] { address };
 
             return req.Execute(ct);
         }
