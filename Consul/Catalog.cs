@@ -227,7 +227,7 @@ namespace Consul
         public Task<QueryResult<CatalogService[]>> Service(string service, IList<string> tags, QueryOptions q, CancellationToken ct)
         {
             var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/service/{0}", service), q);
-            if (tags?.Any() == true)
+            if (tags?.Any(s => !string.IsNullOrEmpty(s)) == true)
             {
                 req.Params["tag"] = tags;
             }
