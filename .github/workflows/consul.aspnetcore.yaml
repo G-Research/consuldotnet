@@ -21,12 +21,13 @@ jobs:
           dotnet-version: 3.1.300
 
       - name: Consul | AspNetCore | Build
-        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true
+        run: dotnet build -c=Release -p:TreatWarningsAsErrors=true
 
       - name: Consul | AspNetCore | Tests
         run: |
           cd Consul.AspNetCore.Test
-          dotnet test --configuration=Release --no-build -v=Normal
+          dotnet test -c=Release --no-build -v=Normal
+          cd ..
 
       - name: Consul | AspNetCore | Package
         run: |
@@ -40,7 +41,7 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack --configuration=Release --no-build @params
+          dotnet pack -c=Release --no-build @params
 
       - name: Consul | AspNetCore | Package | Artifacts
         uses: actions/upload-artifact@v2
