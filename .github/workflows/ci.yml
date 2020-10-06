@@ -68,7 +68,7 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack --configuration=Release -o dist/consul --no-build @params
+          dotnet pack --configuration=Release -o dist/consul --no-build @params Consul
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
