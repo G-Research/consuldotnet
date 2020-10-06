@@ -15,7 +15,9 @@ namespace Consul.AspNetCore
 			this IServiceCollection services,
 			Action<ConsulClientConfiguration> options)
 		{
-			services.TryAddSingleton<IConsulClient>(sp => new ConsulClient(options));
+			services.Configure(options)
+				.AddSingleton<IConsulClientFactory, ConsulClientFactory>()
+				.TryAddSingleton(sp => sp.GetRequiredService<IConsulClientFactory>().CreateClient());
 
 			return services;
 		}

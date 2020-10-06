@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Consul.AspNetCore.Test
 {
@@ -19,9 +21,8 @@ namespace Consul.AspNetCore.Test
 		{
 			_services.AddConsul();
 
-			var descriptor = Assert.Single(_services);
+			var descriptor = Assert.Single(_services.Where(x => x.ServiceType == typeof(IConsulClient)));
 
-			Assert.Equal(typeof(IConsulClient), descriptor.ServiceType);
 			Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
 			Assert.Null(descriptor.ImplementationInstance);
 			Assert.NotNull(descriptor.ImplementationFactory);
@@ -65,15 +66,11 @@ namespace Consul.AspNetCore.Test
 					options.Name = "name";
 				});
 
-			Assert.Collection(
-				_services,
-				consul => Assert.Equal(typeof(IConsulClient), consul.ServiceType),
-				agent => Assert.Equal(typeof(AgentServiceRegistration), agent.ServiceType),
-				hostedService =>
-				{
-					Assert.Equal(typeof(IHostedService), hostedService.ServiceType);
-					Assert.Equal(typeof(AgentServiceRegistrationHostedService), hostedService.ImplementationType);
-				});
+			Assert.Single(_services.Where(x => x.ServiceType == typeof(IConfigureOptions<ConsulClientConfiguration>)));
+			Assert.Single(_services.Where(x => x.ServiceType == typeof(IConsulClient)));
+			Assert.Single(_services.Where(x => x.ServiceType == typeof(AgentServiceRegistration)));
+			var hostedService = Assert.Single(_services.Where(x => x.ServiceType == typeof(IHostedService)));
+			Assert.Equal(typeof(AgentServiceRegistrationHostedService), hostedService.ImplementationType);
 		}
 	}
 }
