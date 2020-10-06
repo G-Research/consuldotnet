@@ -41,13 +41,13 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack -c=Release --no-build @params
+          dotnet pack -c=Release -o dist/consul.aspnetcore --no-build @params
 
       - name: Consul | AspNetCore | Package | Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: nuget-aspnetcore-package
-          path: dist
+          path: dist/consul.aspnetcore
 
   # Publish NuGet package when a tag is pushed.
   # Tests need to succeed first, including having a tag name that matches the version number.

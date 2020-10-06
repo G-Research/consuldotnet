@@ -68,13 +68,13 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack --configuration=Release --no-build @params
+          dotnet pack --configuration=Release -o dist/consul --no-build @params
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
         with:
           name: nuget-package
-          path: dist
+          path: dist/consul
 
   # Publish NuGet package when a tag is pushed.
   # Tests need to succeed on all platforms first, including having a tag name that matches the version number.
