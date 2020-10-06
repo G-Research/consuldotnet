@@ -63,4 +63,4 @@ jobs:
           path: dist
 
       - name: Consul | AspNetCore | Package | Publish
-        run: dotnet nuget push dist/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push dist/consul.aspnetcore/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
