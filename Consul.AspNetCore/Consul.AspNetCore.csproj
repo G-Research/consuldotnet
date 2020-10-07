@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
     <Authors>PlayFab,G-Research</Authors>
     <Description>Consul Service registration for ASP.NET Core</Description>
-    <PackageOutputPath>../dist</PackageOutputPath>
+    <PackageOutputPath>../dist/consul.aspnetcore</PackageOutputPath>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

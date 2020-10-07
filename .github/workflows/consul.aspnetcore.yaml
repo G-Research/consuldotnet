@@ -41,7 +41,7 @@ jobs:
           } else {
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
-          dotnet pack -c=Release -o dist/consul.aspnetcore --no-build @params Consul.AspNetCore/Consul.AspNetCore.csproj
+          dotnet pack -c=Release --no-build @params Consul.AspNetCore/Consul.AspNetCore.csproj
 
       - name: Consul | AspNetCore | Package | Artifacts
         uses: actions/upload-artifact@v2
