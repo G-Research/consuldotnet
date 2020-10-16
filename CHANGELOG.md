@@ -1,7 +1,11 @@
 # Changelog
 
+## 1.6.1.3
+* Added the possibility to specify the id, name and notes for a service check definition.
+  Added the possibility to indicate when a dead service should be dropped from the registry `DeregisterCriticalServiceAfter` http API parameter
+
 ## 1.6.1.2
-* Added possibility to specify more http request options when registrating service checks.
+* Added the possibility to specify more http request options when registrating service checks.
   It is now possible to specify the Header(s), method and body to be used for a given service check.
   Details might be found here <https://www.consul.io/api/agent/check>
 
