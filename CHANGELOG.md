@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1.2
+* Added possibility to specify more http request options when registrating service checks.
+  It is now possible to specify the Header(s), method and body to be used for a given service check.
+  Details might be found here <https://www.consul.io/api/agent/check>
+
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework
 
