@@ -227,6 +227,19 @@ namespace Consul
     /// </summary>
     public class AgentServiceCheck
     {
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Notes { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DeregisterCriticalServiceAfter { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Script { get; set; }
 
