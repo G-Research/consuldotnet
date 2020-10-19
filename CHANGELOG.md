@@ -1,13 +1,12 @@
 # Changelog
 
-## 1.6.1.3
-* Added the possibility to specify the id, name and notes for a service check definition.
-  Added the possibility to indicate when a dead service should be dropped from the registry `DeregisterCriticalServiceAfter` http API parameter
+## 1.7.0
+* Added the possibility to specify more http request options and meta-data when registrating service checks. 
+  It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
+  A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
+  Details on the Consul's HTTP API can be found here <https://www.consul.io/api/agent/check>
 
-## 1.6.1.2
-* Added the possibility to specify more http request options when registrating service checks.
-  It is now possible to specify the Header(s), method and body to be used for a given service check.
-  Details might be found here <https://www.consul.io/api/agent/check>
+* Increased minor version and align with NuGet versioning best-practices <https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics>
 
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework
