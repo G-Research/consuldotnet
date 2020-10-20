@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Added `Type` field to the `AgentCheck` and `HealthCheck` structures  
 * Added the possibility to specify more http request options and meta-data when registrating service checks. 
   It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
   A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
