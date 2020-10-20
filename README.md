@@ -191,3 +191,16 @@ best-effort basis. It should compile and run happily on Mono but this is not as
 heavily tested as Microsoft .NET stacks. If you have any issues using the Nuget
 package or compiling this code with .NET, .NET Core, or Mono, please file a
 Github issue with details of the problem.
+
+## Versioning
+
+The version number indicates which version of Consul is supported in terms of API features.
+Since Consul has already a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to indicate patch releases of Consul.NET.
+
+Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
+For example version `1.6.1.0` is going to be normalised to `1.6.1`. Because of the normalisation process versions and tags with zero in the fourth part should be avoided.
+
+## Release process
+
+Before making a new release the version in the [csproj](../Consul/Consul.csproj), in the [README](README.md), in the [CI pipeline](../.github/workflows/ci.yml) and in the [CHANGELOG](CHANGELOG.md) files should be updated.
+The new versions can be released using the [releases](https://github.com/G-Research/consuldotnet/releases) page.
