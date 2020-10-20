@@ -202,5 +202,5 @@ For example version `1.6.1.0` is going to be normalised to `1.6.1`. So to avoid 
 
 ## Release process
 
-Before making a new release the version in the [csproj](../Consul/Consul.csproj), in the [README](README.md), in the [CI pipeline](../.github/workflows/ci.yml) and in the [CHANGELOG](CHANGELOG.md) files should be updated.
+Before making a new release the version in the [csproj](Consul/Consul.csproj), in the [README](README.md), in the [CI pipeline](../.github/workflows/ci.yml) and in the [CHANGELOG](CHANGELOG.md) files should be updated.
 The new versions can be released using the [releases](https://github.com/G-Research/consuldotnet/releases) page.
