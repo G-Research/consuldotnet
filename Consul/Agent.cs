@@ -210,15 +210,6 @@ namespace Consul
     public class AgentCheckRegistration : AgentServiceCheck
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ID { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Notes { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceID { get; set; }
     }
 
@@ -227,6 +218,16 @@ namespace Consul
     /// </summary>
     public class AgentServiceCheck
     {
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Notes { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Script { get; set; }
 
@@ -255,6 +256,15 @@ namespace Consul
         public string HTTP { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, List<string>> Header { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Method { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Body { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string TCP { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -263,12 +273,12 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool TLSSkipVerify { get; set; }
-        
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string GRPC { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool GRPCUseTLS  { get; set; }
+        public bool GRPCUseTLS { get; set; }
 
         /// <summary>
         /// In Consul 0.7 and later, checks that are associated with a service
