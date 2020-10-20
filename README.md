@@ -198,7 +198,7 @@ The version number indicates which version of Consul is supported in terms of AP
 Since Consul has already a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to indicate patch releases of Consul.NET.
 
 Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
-For example version `1.6.1.0` is going to be normalised to `1.6.1`. Because of the normalisation process versions and tags with zero in the fourth part should be avoided.
+For example version `1.6.1.0` is going to be normalised to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
 
 ## Release process
 
