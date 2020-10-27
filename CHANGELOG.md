@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures  
+* Added the possibility to specify more http request options and meta-data when registrating service checks. 
+  It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
+  A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
+
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework
 
