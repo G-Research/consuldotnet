@@ -440,9 +440,7 @@ namespace Consul
         /// The HttpClient must accept the "application/json" content type and the Timeout property should be set to at least 15 minutes to allow for blocking queries.
         /// </summary>
         /// <param name="config">A Consul client configuration</param>
-        /// <param name="client">A custom HttpClient</param>
-        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed in a future release." +
-            "Please use one of the ConsulClient(Action<>) constructors instead to set internal options on the HttpClient/WebRequestHandler.", false)]
+        /// <param name="client">A custom HttpClient. The lifetime, including disposal, of this HttpClient is not handled by ConsulClient</param>
         public ConsulClient(ConsulClientConfiguration config, HttpClient client)
         {
             var ctr = new ConsulClientConfigurationContainer(config, client);

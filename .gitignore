@@ -200,4 +200,6 @@ NuGet.exe
 .vs
 project.lock.json
 .vscode/
-.idea
+
+# Rider
+*.idea/
