@@ -1,12 +1,11 @@
 # Changelog
 
-## 1.7.0
+## Unreleased
+* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures  
 * Added the possibility to specify more http request options and meta-data when registrating service checks. 
   It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
   A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
-  Details on the Consul's HTTP API can be found here <https://www.consul.io/api/agent/check>
-
-* Increased minor version and align with NuGet versioning best-practices <https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics>
+* Fix issue #24 removing constructor's Obsolete attribute for HttpClient injection
 
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework
