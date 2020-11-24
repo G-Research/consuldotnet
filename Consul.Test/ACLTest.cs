@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="ACLTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -152,7 +152,7 @@ namespace Consul.Test
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var legacyRule = "agent \"\" {\n policy = \"read\"\n}";
-            var newRule    = "agent_prefix \"\" {\n  policy = \"read\"\n}";
+            var newRule = "agent_prefix \"\" {\n  policy = \"read\"\n}";
 
 #pragma warning disable CS0618 // Type or member is obsolete
             var translatedRule = await _client.ACL.TranslateRules(legacyRule);

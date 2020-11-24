@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="RoleTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -117,7 +117,7 @@ namespace Consul.Test
                 Name = "RoleTestPolicyTwo",
                 Description = "ACL API Test Policy Two",
                 Rules = "key_prefix \"test\" { policy = \"deny\" }",
-                Datacenters = new [] { "DC1", "DC2" }
+                Datacenters = new[] { "DC1", "DC2" }
             };
 
             var policyTwo = await _client.Policy.Create(policyTwoEntry);
@@ -127,7 +127,7 @@ namespace Consul.Test
             {
                 Name = "APITestingRole",
                 Description = "Role for API Testing (Role_CreateWithPolicyUpdatePolicyDelete)",
-                Policies = new PolicyLink[] {policyOne.Response}
+                Policies = new PolicyLink[] { policyOne.Response }
             };
 
             var newRoleResult = await _client.Role.Create(roleEntry);
@@ -163,8 +163,8 @@ namespace Consul.Test
 
             var serviceIdentityOne = new ServiceIdentity
             {
-                 ServiceName = "apitestingdummyserviceidentityone",
-                 Datacenters = new [] { "dc1", "dc2" }
+                ServiceName = "apitestingdummyserviceidentityone",
+                Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity
@@ -177,7 +177,7 @@ namespace Consul.Test
             {
                 Name = "APITestingRole",
                 Description = "Role for API Testing (Role_CreateWithServiceIdentityUpdateServiceIdentityDelete)",
-                ServiceIdentities = new ServiceIdentity[] { serviceIdentityOne, serviceIdentityTwo}
+                ServiceIdentities = new ServiceIdentity[] { serviceIdentityOne, serviceIdentityTwo }
             };
 
             var newRoleResult = await _client.Role.Create(roleEntry);
@@ -223,7 +223,7 @@ namespace Consul.Test
                 Name = "RoleTestPolicyTwo",
                 Description = "ACL API Test Policy Two",
                 Rules = "key_prefix \"test\" { policy = \"deny\" }",
-                Datacenters = new [] { "DC1", "DC2" }
+                Datacenters = new[] { "DC1", "DC2" }
             };
 
             var policyTwo = await _client.Policy.Create(policyTwoEntry);
@@ -266,7 +266,7 @@ namespace Consul.Test
             var serviceIdentityOne = new ServiceIdentity
             {
                 ServiceName = "apitestingdummyserviceidentityone",
-                Datacenters = new [] { "dc1", "dc2" }
+                Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity

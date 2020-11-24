@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="ACL.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -17,10 +17,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {

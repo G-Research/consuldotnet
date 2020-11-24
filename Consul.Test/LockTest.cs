@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="LockTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -46,7 +46,7 @@ namespace Consul.Test
         {
             _lock.Dispose();
         }
-    
+
         [Fact]
         public async Task Lock_AcquireRelease()
         {

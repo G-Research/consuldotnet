@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="JsonConverters.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -17,10 +17,10 @@
 // -----------------------------------------------------------------------
 
 using System;
-using Newtonsoft.Json;
-using System.Reflection;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Consul
 {

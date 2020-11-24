@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Role.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -16,10 +16,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -148,7 +148,7 @@ namespace Consul
         /// <returns>A write result containing the created ACL Role</returns>
         public async Task<WriteResult<RoleEntry>> Create(RoleEntry policy, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Put<RoleEntry,RoleActionResult>("/v1/acl/role", policy, writeOptions).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Put<RoleEntry, RoleActionResult>("/v1/acl/role", policy, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<RoleEntry>(res, res.Response);
         }
 

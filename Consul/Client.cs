@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Client.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -20,9 +20,9 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using Newtonsoft.Json;
 #if !(CORECLR || PORTABLE || PORTABLE40)
 using System.Security.Permissions;
 using System.Runtime.Serialization;
@@ -255,7 +255,7 @@ namespace Consul
         }
     }
 
-   /// <summary>
+    /// <summary>
     /// Represents a persistant connection to a Consul agent. Instances of this class should be created rarely and reused often.
     /// </summary>
     public partial class ConsulClient : IDisposable
@@ -432,7 +432,7 @@ namespace Consul
             config.Updated += HandleConfigUpdateEvent;
             var ctr = new ConsulClientConfigurationContainer(config);
             ApplyConfig(ctr.Config, ctr.HttpHandler, ctr.HttpClient);
-            
+
             ConfigContainer = ctr;
             InitializeEndpoints();
         }
