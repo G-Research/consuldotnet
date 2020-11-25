@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Token.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -16,11 +16,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -56,7 +56,7 @@ namespace Consul
         }
 
         public TokenEntry()
-            : this(string.Empty, string.Empty, new PolicyLink[]{}, new RoleLink[] { }, new ServiceIdentity[] { })
+            : this(string.Empty, string.Empty, new PolicyLink[] { }, new RoleLink[] { }, new ServiceIdentity[] { })
         {
         }
 
@@ -71,7 +71,7 @@ namespace Consul
         }
 
         public TokenEntry(string description, ServiceIdentity[] serviceIdentities)
-            : this(string.Empty, description, new PolicyLink[] { }, new RoleLink[]{ }, serviceIdentities)
+            : this(string.Empty, description, new PolicyLink[] { }, new RoleLink[] { }, serviceIdentities)
         {
         }
 

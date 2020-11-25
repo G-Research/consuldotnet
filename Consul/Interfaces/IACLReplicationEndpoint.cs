@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="IACLReplicationEndpoint.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //

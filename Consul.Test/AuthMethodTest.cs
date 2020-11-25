@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="AuthMethodTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -59,7 +59,8 @@ namespace Consul.Test
                 {
                     ["Host"] = "https://192.0.2.42:8443",
                     ["CACert"] = "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n",
-                    ["ServiceAccountJWT"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9..." }
+                    ["ServiceAccountJWT"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9..."
+                }
             };
 
             var newAuthMethodResult = await _client.AuthMethod.Create(authMethodEntry);

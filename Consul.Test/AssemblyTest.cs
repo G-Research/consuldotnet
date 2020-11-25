@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="AssemblyTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -18,8 +18,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using Xunit;
 using System.Reflection;
+using Xunit;
 
 namespace Consul.Test
 {

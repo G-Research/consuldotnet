@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="SemaphoreTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -46,7 +46,7 @@ namespace Consul.Test
         {
             _lock.Dispose();
         }
-    
+
         [Fact]
         public async Task Semaphore_BadLimit()
         {
@@ -125,7 +125,7 @@ namespace Consul.Test
             });
 
             var stopwatch = Stopwatch.StartNew();
-            
+
             await TimeoutUtils.WithTimeout(
                 Assert.ThrowsAsync<SemaphoreMaxAttemptsReachedException>(async () => await contender.Acquire()));
 

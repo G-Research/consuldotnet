@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="TokenTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -85,7 +85,7 @@ namespace Consul.Test
                 Name = "TokenTestPolicyTwo",
                 Description = "ACL API Test Policy Two",
                 Rules = "key_prefix \"test\" { policy = \"deny\" }",
-                Datacenters = new [] { "DC1", "DC2" }
+                Datacenters = new[] { "DC1", "DC2" }
             };
 
             var policyOne = await _client.Policy.Create(policyOneEntry);
@@ -97,7 +97,7 @@ namespace Consul.Test
             {
                 Description = "API Testing Token",
                 SecretID = "2BF4CA45-5C67-471C-8391-E5D54C76A08B",
-                Policies = new PolicyLink[] {policyOne.Response, policyTwo.Response},
+                Policies = new PolicyLink[] { policyOne.Response, policyTwo.Response },
                 Local = true
             };
 
@@ -143,7 +143,7 @@ namespace Consul.Test
             {
                 Description = "API Testing Token",
                 SecretID = "2F3BF7FF-1297-42FD-9372-9418904ACAE1",
-                Roles = new RoleLink[] {roleOne.Response, roleTwo.Response },
+                Roles = new RoleLink[] { roleOne.Response, roleTwo.Response },
                 Local = true
             };
 
@@ -172,7 +172,7 @@ namespace Consul.Test
             var serviceIdentityOne = new ServiceIdentity
             {
                 ServiceName = "apitestingdummyserviceidentityone",
-                Datacenters = new [] { "dc1", "dc2" }
+                Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity

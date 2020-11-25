@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="ServiceIdentity.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -24,7 +24,7 @@ namespace Consul
     public class ServiceIdentity
     {
         public ServiceIdentity()
-            :this(string.Empty, new string[] { })
+            : this(string.Empty, new string[] { })
         {
         }
 

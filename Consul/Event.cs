@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Event.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -16,12 +16,12 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Globalization;
 using System.Linq;
-using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System;
+using Newtonsoft.Json;
 
 namespace Consul
 {

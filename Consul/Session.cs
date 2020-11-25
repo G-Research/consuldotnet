@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Session.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -18,11 +18,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Net;
-using System.Runtime.Serialization;
 
 namespace Consul
 {

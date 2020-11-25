@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="SelectiveParallel.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -19,8 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Consul.Test
 {

@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="TestHelper.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -47,7 +47,7 @@ namespace Consul.Test
             HttpPort = _config["http_port"];
             MasterToken = _config["master_token"];
 
-            HttpAddr = $"http://{BindingAddress}:{HttpPort}" ;
+            HttpAddr = $"http://{BindingAddress}:{HttpPort}";
             HttpUri = new Uri(HttpAddr);
         }
     }

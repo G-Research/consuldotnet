@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Client_PutRequests.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //

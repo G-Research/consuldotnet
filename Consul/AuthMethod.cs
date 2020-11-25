@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="AuthMethod.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -16,11 +16,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -34,7 +34,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string,string> Config { get; set; }
+        public Dictionary<string, string> Config { get; set; }
 
         public bool ShouldSerializeCreateIndex()
         {
@@ -56,7 +56,7 @@ namespace Consul
         {
         }
 
-        public AuthMethodEntry(string name, string type, string description, Dictionary<string,string> config)
+        public AuthMethodEntry(string name, string type, string description, Dictionary<string, string> config)
         {
             Name = name;
             Type = type;
