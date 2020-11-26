@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="ACLReplicationTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -16,9 +16,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentAssertions;
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace Consul.Test

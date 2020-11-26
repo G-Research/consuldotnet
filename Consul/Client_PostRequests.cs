@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Client_PostRequests.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -20,9 +20,9 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Text;
 #if !(CORECLR || PORTABLE || PORTABLE40)
     using System.Security.Permissions;
     using System.Runtime.Serialization;

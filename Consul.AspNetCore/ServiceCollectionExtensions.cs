@@ -69,8 +69,8 @@ namespace Consul.AspNetCore
 			services.TryAddSingleton<IConsulClientFactory, ConsulClientFactory>();
 			services.TryAddSingleton(sp => sp.GetRequiredService<IConsulClientFactory>().CreateClient(name));
 
-			return services;
-		}
+            return services;
+        }
 
 		/// <summary>
 		/// Register consul service with default <see cref="IConsulClient"/>
@@ -83,9 +83,9 @@ namespace Consul.AspNetCore
 
 			configure.Invoke(registration);
 
-			return services
-				.AddSingleton(registration)
-				.AddHostedService<AgentServiceRegistrationHostedService>();
-		}
-	}
+            return services
+                .AddSingleton(registration)
+                .AddHostedService<AgentServiceRegistrationHostedService>();
+        }
+    }
 }

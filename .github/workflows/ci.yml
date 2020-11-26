@@ -8,7 +8,22 @@ env:
   CONSUL_VERSION: 1.6.1
 
 jobs:
- 
+
+  # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Check format
+        run: dotnet format --check
+
   # Build and test on all major platforms.
   # Repack to avoid Newtonsoft.Json dependency in .NET Framework (This is to
   # prevent issues with mismatched JSON.NET versions in user projects).

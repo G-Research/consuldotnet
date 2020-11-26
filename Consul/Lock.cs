@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Lock.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -459,7 +459,8 @@ namespace Consul
         /// </summary>
         private Task MonitorLock()
         {
-            return Task.Factory.StartNew(async () => { 
+            return Task.Factory.StartNew(async () =>
+            {
                 // Copy a reference to _cts since we could end up destroying it before this method returns
                 var cts = _cts;
                 try

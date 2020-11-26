@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Client_GetRequests.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
@@ -18,11 +18,11 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 #if !(CORECLR || PORTABLE || PORTABLE40)
     using System.Security.Permissions;
     using System.Runtime.Serialization;

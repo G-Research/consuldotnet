@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="EventTest.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
-{    
+{
     public class EventTest : IDisposable
     {
         private AsyncReaderWriterLock.Releaser _lock;
@@ -43,7 +43,7 @@ namespace Consul.Test
         {
             _lock.Dispose();
         }
-    
+
         [Fact]
         public async Task Event_FireList()
         {

@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 //  <copyright file="Catalog.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //
@@ -16,11 +16,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -44,7 +44,7 @@ namespace Consul
         public string[] ServiceTags { get; set; }
         public int ServicePort { get; set; }
         public bool ServiceEnableTagOverride { get; set; }
-        public IDictionary<string,string> ServiceMeta { get; set; }
+        public IDictionary<string, string> ServiceMeta { get; set; }
     }
 
     public class CatalogNode
