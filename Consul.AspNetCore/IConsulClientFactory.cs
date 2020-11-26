@@ -1,8 +1,8 @@
 namespace Consul.AspNetCore
 {
-	public interface IConsulClientFactory
-	{
-		IConsulClient CreateClient();
-		IConsulClient CreateClient(string name);
-	}
+    public interface IConsulClientFactory
+    {
+        IConsulClient CreateClient();
+        IConsulClient CreateClient(string name);
+    }
 }
