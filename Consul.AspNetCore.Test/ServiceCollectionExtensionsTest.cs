@@ -187,25 +187,3 @@ namespace Consul.AspNetCore.Test
         }
     }
 }
-[Fact]
-public void AddConsulRegistration_HostedService()
-{
-    _services.AddConsul()
-        .AddConsulServiceRegistration(options =>
-        {
-            options.ID = "id";
-            options.Name = "name";
-        });
-
-    Assert.Collection(
-        _services,
-        consul => Assert.Equal(typeof(IConsulClient), consul.ServiceType),
-        agent => Assert.Equal(typeof(AgentServiceRegistration), agent.ServiceType),
-        hostedService =>
-        {
-            Assert.Equal(typeof(IHostedService), hostedService.ServiceType);
-            Assert.Equal(typeof(AgentServiceRegistrationHostedService), hostedService.ImplementationType);
-        });
-}
-    }
-}
