@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Consul.AspNetCore.Test
@@ -19,9 +21,8 @@ namespace Consul.AspNetCore.Test
         {
             _services.AddConsul();
 
-            var descriptor = Assert.Single(_services);
+            var descriptor = Assert.Single(_services.Where(x => x.ServiceType == typeof(IConsulClient)));
 
-            Assert.Equal(typeof(IConsulClient), descriptor.ServiceType);
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
             Assert.Null(descriptor.ImplementationInstance);
             Assert.NotNull(descriptor.ImplementationFactory);
@@ -56,6 +57,55 @@ namespace Consul.AspNetCore.Test
         }
 
         [Fact]
+        public void AddConsul_Named_Options_Override()
+        {
+            var datacenter1 = "datacenter1";
+            var address1 = new Uri("http://address1");
+            var token1 = "token1";
+            var waitTime1 = TimeSpan.FromSeconds(10);
+
+            var datacenter2 = "datacenter2";
+            var address2 = new Uri("http://address2");
+            var token2 = "token2";
+            var waitTime2 = TimeSpan.FromSeconds(30);
+
+            var serviceProvider = _services
+                .AddConsul("consul", options =>
+                {
+                    options.Datacenter = datacenter1;
+                    options.Address = address1;
+                    options.Token = token1;
+                    options.WaitTime = waitTime1;
+                })
+                .AddConsul(options =>
+                {
+                    options.Datacenter = datacenter2;
+                    options.Address = address2;
+                    options.Token = token2;
+                    options.WaitTime = waitTime2;
+                })
+                .BuildServiceProvider();
+
+            var consulClient1 = serviceProvider.GetRequiredService<IConsulClient>() as ConsulClient;
+
+            var configuration1 = consulClient1.Config;
+            Assert.Equal(datacenter1, configuration1.Datacenter);
+            Assert.Equal(address1, configuration1.Address);
+            Assert.Equal(token1, configuration1.Token);
+            Assert.Equal(waitTime1, configuration1.WaitTime);
+
+            var consulClient2 = serviceProvider
+                .GetRequiredService<IConsulClientFactory>()
+                .CreateClient(Options.DefaultName) as ConsulClient;
+
+            var configuration2 = consulClient2.Config;
+            Assert.Equal(datacenter2, configuration2.Datacenter);
+            Assert.Equal(address2, configuration2.Address);
+            Assert.Equal(token2, configuration2.Token);
+            Assert.Equal(waitTime2, configuration2.WaitTime);
+        }
+
+        [Fact]
         public void AddConsulRegistration_HostedService()
         {
             _services.AddConsul()
@@ -65,15 +115,75 @@ namespace Consul.AspNetCore.Test
                     options.Name = "name";
                 });
 
-            Assert.Collection(
-                _services,
-                consul => Assert.Equal(typeof(IConsulClient), consul.ServiceType),
-                agent => Assert.Equal(typeof(AgentServiceRegistration), agent.ServiceType),
-                hostedService =>
-                {
-                    Assert.Equal(typeof(IHostedService), hostedService.ServiceType);
-                    Assert.Equal(typeof(AgentServiceRegistrationHostedService), hostedService.ImplementationType);
-                });
+            Assert.Single(_services.Where(x => x.ServiceType == typeof(IConfigureOptions<ConsulClientConfiguration>)));
+            Assert.Single(_services.Where(x => x.ServiceType == typeof(IConsulClient)));
+            Assert.Single(_services.Where(x => x.ServiceType == typeof(AgentServiceRegistration)));
+            var hostedService = Assert.Single(_services.Where(x => x.ServiceType == typeof(IHostedService)));
+            Assert.Equal(typeof(AgentServiceRegistrationHostedService), hostedService.ImplementationType);
+        }
+
+        [Fact]
+        public void AddUrlBasedConsul()
+        {
+            _services.AddConsul(new Uri("http://token@localhost:8500/datacenter"));
+
+            var serviceProvider = _services.BuildServiceProvider();
+
+            var consulClient = serviceProvider.GetRequiredService<IConsulClient>() as ConsulClient;
+
+            var configuration = consulClient.Config;
+
+            Assert.Equal(new Uri("http://localhost:8500"), configuration.Address);
+            Assert.Equal("token", configuration.Token);
+            Assert.Equal("datacenter", configuration.Datacenter);
+        }
+
+        [Fact]
+        public void AddUrlBasedConsul_Overriden()
+        {
+            _services.AddConsul(new Uri("http://token@localhost:8500/datacenter"), options =>
+            {
+                options.Address = new Uri("https://consul:8500");
+                options.Token = "secret token";
+                options.Datacenter = "production";
+                options.WaitTime = TimeSpan.FromSeconds(30);
+            });
+
+            var serviceProvider = _services.BuildServiceProvider();
+
+            var consulClient = serviceProvider.GetRequiredService<IConsulClient>() as ConsulClient;
+
+            var configuration = consulClient.Config;
+
+            Assert.Equal(new Uri("https://consul:8500"), configuration.Address);
+            Assert.Equal("secret token", configuration.Token);
+            Assert.Equal("production", configuration.Datacenter);
+            Assert.Equal(TimeSpan.FromSeconds(30), configuration.WaitTime);
+        }
+
+        [Fact]
+        public void AddUrlBasedConsul_Named()
+        {
+            _services.AddConsul("consul1", new Uri("http://token1@consul1:8500/datacenter1"))
+                .AddConsul("consul2", new Uri("http://token2@consul2:8500/datacenter2"));
+
+            var serviceProvider = _services.BuildServiceProvider();
+
+            var factory = serviceProvider.GetRequiredService<IConsulClientFactory>();
+
+            var consulClient1 = factory.CreateClient("consul1") as ConsulClient;
+            var configuration1 = consulClient1.Config;
+
+            Assert.Equal(new Uri("http://consul1:8500"), configuration1.Address);
+            Assert.Equal("token1", configuration1.Token);
+            Assert.Equal("datacenter1", configuration1.Datacenter);
+
+            var consulClient2 = factory.CreateClient("consul2") as ConsulClient;
+            var configuration2 = consulClient2.Config;
+
+            Assert.Equal(new Uri("http://consul2:8500"), configuration2.Address);
+            Assert.Equal("token2", configuration2.Token);
+            Assert.Equal("datacenter2", configuration2.Datacenter);
         }
     }
 }
