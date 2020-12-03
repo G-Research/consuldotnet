@@ -8,7 +8,8 @@ namespace Consul.AspNetCore
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add default <see cref="IConsulClient"/>
+        /// Add default <see cref="IConsulClient"/>.
+        /// First client can be accessed from DI, to create multiple named clients use <see cref="IConsulClientFactory"/>
         /// </summary>
         public static IServiceCollection AddConsul(this IServiceCollection services)
         {
@@ -16,19 +17,8 @@ namespace Consul.AspNetCore
         }
 
         /// <summary>
-        /// Add url based <see cref="IConsulClient"/>
-        /// </summary>
-        /// <example>http://token@host:port/datacenter</example>
-        public static IServiceCollection AddConsul(
-            this IServiceCollection services,
-            Uri url,
-            Action<ConsulClientConfiguration> configure = null)
-        {
-            return services.AddConsul(Options.DefaultName, url, configure);
-        }
-
-        /// <summary>
-        /// Add default <see cref="IConsulClient"/> with configured <see cref="IOptions{ConsulClientConfiguration}"/>
+        /// Add default <see cref="IConsulClient"/> with configured <see cref="IOptions{ConsulClientConfiguration}"/>.
+        /// First client can be accessed from DI, to create multiple named clients use <see cref="IConsulClientFactory"/>
         /// </summary>
         public static IServiceCollection AddConsul(
             this IServiceCollection services,
@@ -38,27 +28,8 @@ namespace Consul.AspNetCore
         }
 
         /// <summary>
-        /// Add named url based <see cref="IConsulClient"/>
-        /// </summary>
-        /// <example>http://token@host:port/datacenter</example>
-        public static IServiceCollection AddConsul(
-            this IServiceCollection services,
-            string name,
-            Uri url,
-            Action<ConsulClientConfiguration> configure = null)
-        {
-            return services.AddConsul(name, options =>
-            {
-                options.Address = new Uri($"{url.Scheme}://{url.Authority}");
-                options.Token = url.UserInfo;
-                options.Datacenter = url.AbsolutePath.TrimStart('/');
-
-                configure?.Invoke(options);
-            });
-        }
-
-        /// <summary>
-        /// Add named <see cref="IConsulClient"/> with configured <see cref="IOptions{ConsulClientConfiguration}"/>
+        /// Add named <see cref="IConsulClient"/> with configured <see cref="IOptions{ConsulClientConfiguration}"/>.
+        /// First client can be accessed from DI, to create multiple named clients use <see cref="IConsulClientFactory"/>
         /// </summary>
         public static IServiceCollection AddConsul(
             this IServiceCollection services,
@@ -73,7 +44,8 @@ namespace Consul.AspNetCore
         }
 
         /// <summary>
-        /// Register consul service with default <see cref="IConsulClient"/>
+        /// Register consul service with default <see cref="IConsulClient"/>.
+        /// First client can be accessed from DI, to create multiple named clients use <see cref="IConsulClientFactory"/>
         /// </summary>
         public static IServiceCollection AddConsulServiceRegistration(
             this IServiceCollection services,

@@ -4,11 +4,11 @@ namespace Consul.AspNetCore
 {
     public class ConsulClientFactory : IConsulClientFactory
     {
-        private readonly IOptionsMonitor<ConsulClientConfiguration> _monitor;
+        private readonly IOptionsMonitor<ConsulClientConfiguration> _optionsMonitor;
 
-        public ConsulClientFactory(IOptionsMonitor<ConsulClientConfiguration> monitor)
+        public ConsulClientFactory(IOptionsMonitor<ConsulClientConfiguration> optionsMonitor)
         {
-            _monitor = monitor;
+            _optionsMonitor = optionsMonitor;
         }
 
         public IConsulClient CreateClient()
@@ -18,7 +18,7 @@ namespace Consul.AspNetCore
 
         public IConsulClient CreateClient(string name)
         {
-            var options = _monitor.Get(name);
+            var options = _optionsMonitor.Get(name);
 
             return new ConsulClient(options);
         }
