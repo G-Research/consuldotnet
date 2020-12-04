@@ -28,6 +28,7 @@ jobs:
           cd Consul.AspNetCore.Test
           dotnet test -c=Release --no-build -v=Normal
           cd ..
+
       - name: Consul | AspNetCore | Package
         run: |
           if ("${{ github.ref }}" -like "refs/tags/v*") {
@@ -41,6 +42,7 @@ jobs:
             $params = "--version-suffix", $(git rev-parse --short HEAD)
           }
           dotnet pack -c=Release --no-build @params Consul.AspNetCore/Consul.AspNetCore.csproj
+
       - name: Consul | AspNetCore | Package | Artifacts
         uses: actions/upload-artifact@v2
         with:
