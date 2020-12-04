@@ -425,8 +425,6 @@ namespace Consul
         /// Initializes a new Consul client with the configuration specified.
         /// </summary>
         /// <param name="config">A Consul client configuration</param>
-        [Obsolete("This constructor is no longer necessary due to the new Action based constructors and will be removed in a future release." +
-            "Please use the ConsulClient(Action<ConsulClientConfiguration>) constructor to set configuration options.", false)]
         public ConsulClient(ConsulClientConfiguration config)
         {
             config.Updated += HandleConfigUpdateEvent;
