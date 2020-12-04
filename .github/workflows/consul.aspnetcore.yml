@@ -31,8 +31,8 @@ jobs:
 
       - name: Consul | AspNetCore | Package
         run: |
-          if ("${{ github.ref }}" -like "refs/tags/v*") {
-            $tag = "${{ github.ref }}".SubString(11)
+          if ("${{ github.ref }}" -like "refs/tags/Consul.AspNetCore_v*") {
+            $tag = "${{ github.ref }}".SubString(29)
             $version = (Select-Xml -path Consul.AspNetCore/Consul.AspNetCore.csproj -XPath "/Project/PropertyGroup/VersionPrefix/text()").node.Value
             if (-not ($tag -eq $version)) {
               echo "There is a mismatch between the project version ($version) and the tag ($tag)"
