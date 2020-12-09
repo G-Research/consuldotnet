@@ -59,8 +59,8 @@ jobs:
       - name: Consul | AspNetCore | Package | Artifact | Download
         uses: actions/download-artifact@v2
         with:
-          name: nuget-package
-          path: dist
+          name: nuget-aspnetcore-package
+          path: dist/consul.aspnetcore
 
       - name: Consul | AspNetCore | Package | Publish
         run: dotnet nuget push dist/consul.aspnetcore/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
