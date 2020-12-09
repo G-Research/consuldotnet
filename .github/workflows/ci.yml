@@ -19,7 +19,7 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.300
+          dotnet-version: 3.1.404
       - name: Restore tools
         run: dotnet tool restore
       - name: Check format
@@ -44,7 +44,7 @@ jobs:
         if: runner.os != 'Windows'
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.300
+          dotnet-version: 3.1.404
       - name: Download Consul
         shell: bash
         run: |
