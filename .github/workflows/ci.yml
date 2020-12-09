@@ -11,7 +11,7 @@ jobs:
 
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-18.04, windows-2019, macos-10.15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -101,7 +101,7 @@ jobs:
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Download NuGet package artifact
         uses: actions/download-artifact@v2

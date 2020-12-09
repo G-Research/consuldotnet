@@ -9,7 +9,7 @@ jobs:
   build:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     name: Consul | AspNetCore
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
       - name: Consul | AspNetCore | Checkout
@@ -59,7 +59,7 @@ jobs:
   publish:
     if: startsWith(github.ref, 'refs/tags/Consul.AspNetCore_v')
     needs: build
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Consul | AspNetCore | Package | Artifact | Download
         uses: actions/download-artifact@v2
