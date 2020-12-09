@@ -11,6 +11,7 @@ jobs:
 
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
