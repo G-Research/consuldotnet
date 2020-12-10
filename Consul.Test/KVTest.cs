@@ -29,7 +29,6 @@ namespace Consul.Test
 {
     public class KVTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public KVTest()
@@ -44,7 +43,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         private static readonly Random Random = new Random();

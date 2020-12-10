@@ -115,19 +115,22 @@ namespace Consul.Test
         [Fact]
         public async Task Client_SetClientOptions()
         {
-            var client = new ConsulClient(c =>
+            using (var client = new ConsulClient(c =>
             {
                 c.Address = TestHelper.HttpUri;
                 c.Datacenter = "foo";
                 c.WaitTime = new TimeSpan(0, 0, 100);
                 c.Token = "12345";
-            });
-            var request = client.Get<KVPair>("/v1/kv/foo");
+            }))
+            {
+                var request = client.Get<KVPair>("/v1/kv/foo");
 
-            await Assert.ThrowsAsync<ConsulRequestException>(async () => await request.Execute(CancellationToken.None));
+                await Assert.ThrowsAsync<ConsulRequestException>(async () =>
+                    await request.Execute(CancellationToken.None));
 
-            Assert.Equal("foo", request.Params["dc"]);
-            Assert.Equal("1m40s", request.Params["wait"]);
+                Assert.Equal("foo", request.Params["dc"]);
+                Assert.Equal("1m40s", request.Params["wait"]);
+            }
         }
         [Fact]
         public async Task Client_SetWriteOptions()
