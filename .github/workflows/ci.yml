@@ -11,7 +11,8 @@ jobs:
 
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,7 +34,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-18.04, windows-2019, macos-10.15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -81,28 +82,33 @@ jobs:
               exit 1
             }
           } else {
-            $params = "--version-suffix", $(git rev-parse --short HEAD)
+            # WORKAROUND: Add letter prefix to ensure that MSBuild treats
+            # the suffix as a string. e.g. '0313071' will fail as an invalid
+            # version string, but 'G0313071' will succeeded. It looks like
+            # the parser does not like numbers with a leading zero.
+            $suffix = 'g' + $(git rev-parse --short HEAD)
+            $params = "--version-suffix", $suffix
           }
-          dotnet pack --configuration=Release --no-build @params
+          dotnet pack --configuration=Release --no-build @params Consul/Consul.csproj
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
         with:
           name: nuget-package
-          path: dist
+          path: dist/consul
 
   # Publish NuGet package when a tag is pushed.
   # Tests need to succeed on all platforms first, including having a tag name that matches the version number.
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Download NuGet package artifact
         uses: actions/download-artifact@v2
         with:
           name: nuget-package
-          path: dist
+          path: dist/consul
       - name: Publish to NuGet
         shell: bash
-        run: dotnet nuget push dist/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push dist/consul/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
