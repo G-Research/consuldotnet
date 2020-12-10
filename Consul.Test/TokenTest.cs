@@ -39,6 +39,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
+            _client.Dispose();
             _lock.Dispose();
         }
 
