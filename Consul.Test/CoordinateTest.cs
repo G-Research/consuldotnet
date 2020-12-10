@@ -25,12 +25,10 @@ namespace Consul.Test
 {
     public class CoordinateTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public CoordinateTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -41,7 +39,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         [Fact]

@@ -29,12 +29,10 @@ namespace Consul.Test
     [Trait("speed", "slow")]
     public class LockTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public LockTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -45,7 +43,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         [Fact]

@@ -21,7 +21,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -32,7 +31,6 @@ namespace Consul.Test
 
         public ACLTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
               {
                   c.Token = TestHelper.MasterToken;
@@ -43,7 +41,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         [SkippableFact]

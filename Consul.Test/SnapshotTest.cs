@@ -25,14 +25,13 @@ using Xunit;
 
 namespace Consul.Test
 {
+    [Collection("Non-Parallel Collection")]
     public class SnapshotTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public SnapshotTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -43,7 +42,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         [Fact]
