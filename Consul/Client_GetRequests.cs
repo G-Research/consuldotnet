@@ -133,30 +133,30 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new [] { Options.Datacenter };
             }
             switch (Options.Consistency)
             {
                 case ConsistencyMode.Consistent:
-                    Params["consistent"] = string.Empty;
+                    Params["consistent"] = new [] { string.Empty };
                     break;
                 case ConsistencyMode.Stale:
-                    Params["stale"] = string.Empty;
+                    Params["stale"] = new [] { string.Empty };
                     break;
                 case ConsistencyMode.Default:
                     break;
             }
             if (Options.WaitIndex != 0)
             {
-                Params["index"] = Options.WaitIndex.ToString();
+                Params["index"] = new [] { Options.WaitIndex.ToString() };
             }
             if (Options.WaitTime.HasValue)
             {
-                Params["wait"] = Options.WaitTime.Value.ToGoDuration();
+                Params["wait"] = new [] { Options.WaitTime.Value.ToGoDuration() };
             }
             if (!string.IsNullOrEmpty(Options.Near))
             {
-                Params["near"] = Options.Near;
+                Params["near"] = new [] { Options.Near };
             }
         }
 
@@ -293,7 +293,7 @@ namespace Consul
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
-                Params["dc"] = Options.Datacenter;
+                Params["dc"] = new [] { Options.Datacenter };
             }
         }
 

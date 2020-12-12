@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
 #if !(CORECLR || PORTABLE || PORTABLE40)
@@ -55,7 +56,7 @@ namespace Consul
     {
         internal ConsulClient Client { get; set; }
         internal HttpMethod Method { get; set; }
-        internal Dictionary<string, string> Params { get; set; }
+        internal Dictionary<string, IList<string>> Params { get; set; }
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
 
@@ -67,21 +68,21 @@ namespace Consul
             Method = method;
             Endpoint = url;
 
-            Params = new Dictionary<string, string>();
+            Params = new Dictionary<string, IList<string>>();
             if (!string.IsNullOrEmpty(client.Config.Datacenter))
             {
-                Params["dc"] = client.Config.Datacenter;
+                Params["dc"] = new [] {client.Config.Datacenter};
             }
             if (client.Config.WaitTime.HasValue)
             {
-                Params["wait"] = client.Config.WaitTime.Value.ToGoDuration();
+                Params["wait"] =new [] {client.Config.WaitTime.Value.ToGoDuration()};
             }
         }
 
         protected abstract void ApplyOptions(ConsulClientConfiguration clientConfig);
         protected abstract void ApplyHeaders(HttpRequestMessage message, ConsulClientConfiguration clientConfig);
 
-        protected Uri BuildConsulUri(string url, Dictionary<string, string> p)
+        protected Uri BuildConsulUri(string url, Dictionary<string, IList<string>> p)
         {
             var builder = new UriBuilder(Client.Config.Address);
             builder.Path = url;
@@ -91,10 +92,9 @@ namespace Consul
             var queryParams = new List<string>(Params.Count / 2);
             foreach (var queryParam in Params)
             {
-                if (!string.IsNullOrEmpty(queryParam.Value))
+                if (queryParam.Value?.Any() == true)
                 {
-                    queryParams.Add(string.Format("{0}={1}", Uri.EscapeDataString(queryParam.Key),
-                        Uri.EscapeDataString(queryParam.Value)));
+                    queryParams.AddRange(queryParam.Value.Select(value => string.Format("{0}={1}", Uri.EscapeDataString(queryParam.Key), Uri.EscapeDataString(value))));
                 }
                 else
                 {
