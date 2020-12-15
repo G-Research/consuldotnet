@@ -26,7 +26,6 @@ namespace Consul.Test
 {
     public class ACLTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public ACLTest()

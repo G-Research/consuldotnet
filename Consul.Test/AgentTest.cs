@@ -500,7 +500,7 @@ namespace Consul.Test
                     }
                 });
 
-                await await Task.WhenAny(new[] {timeoutTask, logsTask});
+                await await Task.WhenAny(new[] { timeoutTask, logsTask });
             }
         }
     }

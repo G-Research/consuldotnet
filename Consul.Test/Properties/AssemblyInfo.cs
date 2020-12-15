@@ -38,5 +38,5 @@ using Xunit;
 // By default, each test class is a unique test collection, but we put all test classes that are not decorated with
 // CollectionAttribute into the assembly-level collection instead.
 // This is to limit the number of tests that are going to be run in parallel so we can reduce the number
-// of concurrent http connections that are required to complete the tests.
+// of concurrent http connections that are required to complete all tests.
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
