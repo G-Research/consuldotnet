@@ -29,7 +29,6 @@ using Xunit;
 
 namespace Consul.Test
 {
-    [Collection("Non-Parallel Collection")]
     public class ClientTest : IDisposable
     {
         private ConsulClient _client;

@@ -26,7 +26,9 @@ using Xunit;
 
 namespace Consul.Test
 {
+    // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
+    [Collection("SemaphoreTest")]
     public class SemaphoreTest : IDisposable
     {
         private ConsulClient _client;

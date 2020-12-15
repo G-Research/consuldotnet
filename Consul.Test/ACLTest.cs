@@ -183,7 +183,7 @@ namespace Consul.Test
             Assert.NotNull(theLegacyToken);
             if (string.IsNullOrEmpty(theLegacyToken.AccessorID))
             {
-                System.Threading.Thread.Sleep(5000);
+                await Task.Delay(5000);
                 tokens = await _client.Token.List();
                 theLegacyToken = tokens.Response.SingleOrDefault(token => token.Description == aclEntry.Name);
             }
