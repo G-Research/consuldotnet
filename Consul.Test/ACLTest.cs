@@ -21,7 +21,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -32,7 +31,6 @@ namespace Consul.Test
 
         public ACLTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
               {
                   c.Token = TestHelper.MasterToken;
@@ -42,7 +40,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
-            _lock.Dispose();
+            _client.Dispose();
         }
 
         [SkippableFact]
@@ -185,7 +183,7 @@ namespace Consul.Test
             Assert.NotNull(theLegacyToken);
             if (string.IsNullOrEmpty(theLegacyToken.AccessorID))
             {
-                System.Threading.Thread.Sleep(5000);
+                await Task.Delay(5000);
                 tokens = await _client.Token.List();
                 theLegacyToken = tokens.Response.SingleOrDefault(token => token.Description == aclEntry.Name);
             }

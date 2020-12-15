@@ -25,12 +25,10 @@ namespace Consul.Test
 {
     public class AuthMethodTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public AuthMethodTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -40,7 +38,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
-            _lock.Dispose();
+            _client.Dispose();
         }
 
         [SkippableFact]

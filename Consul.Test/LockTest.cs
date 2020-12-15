@@ -26,15 +26,15 @@ using Xunit;
 
 namespace Consul.Test
 {
+    // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
+    [Collection("LockTest")]
     public class LockTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public LockTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -44,7 +44,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
-            _lock.Dispose();
+            _client.Dispose();
         }
 
         [Fact]

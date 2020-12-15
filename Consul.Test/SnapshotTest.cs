@@ -27,12 +27,10 @@ namespace Consul.Test
 {
     public class SnapshotTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public SnapshotTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -42,7 +40,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
-            _lock.Dispose();
+            _client.Dispose();
         }
 
         [Fact]

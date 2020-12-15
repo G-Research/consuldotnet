@@ -26,12 +26,10 @@ namespace Consul.Test
 {
     public class AgentTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public AgentTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.Parallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -41,7 +39,7 @@ namespace Consul.Test
 
         public void Dispose()
         {
-            _lock.Dispose();
+            _client.Dispose();
         }
 
         [Fact]
@@ -478,18 +476,32 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Monitor()
         {
-            var logs = await _client.Agent.Monitor(LogLevel.Trace);
-            var counter = 0;
-            var successToken = new CancellationTokenSource();
-            var failTask = Task.Delay(5000, successToken.Token).ContinueWith(x => Assert.True(false, "Failed to finish reading logs in time"));
-            foreach (var line in logs)
+            using (var logs = await _client.Agent.Monitor(LogLevel.Trace))
             {
-                Assert.False(string.IsNullOrEmpty(await line));
-                counter++;
-                if (counter > 5) { break; }
+                var counter = 0;
+                var successToken = new CancellationTokenSource();
+                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(1), successToken.Token).ContinueWith(x => Assert.True(false, "Failed to finish reading logs in time"));
+                var logsTask = Task.Run(async () =>
+                {
+                    // to get some logs
+                    await _client.Agent.Self();
+
+                    foreach (var line in logs)
+                    {
+                        // Make a request each time so we get more logs
+                        await _client.Agent.Self();
+                        Assert.False(string.IsNullOrEmpty(await line));
+                        counter++;
+                        if (counter > 5)
+                        {
+                            successToken.Cancel();
+                            break;
+                        }
+                    }
+                });
+
+                await await Task.WhenAny(new[] {timeoutTask, logsTask});
             }
-            successToken.Cancel();
-            logs.Dispose();
         }
     }
 }
