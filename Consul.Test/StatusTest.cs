@@ -25,12 +25,10 @@ namespace Consul.Test
 {
     public class StatusTest : IDisposable
     {
-        private AsyncReaderWriterLock.Releaser _lock;
         private ConsulClient _client;
 
         public StatusTest()
         {
-            _lock = AsyncHelpers.RunSync(() => SelectiveParallel.NoParallel());
             _client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
@@ -41,7 +39,6 @@ namespace Consul.Test
         public void Dispose()
         {
             _client.Dispose();
-            _lock.Dispose();
         }
 
         [Fact]
