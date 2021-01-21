@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -251,23 +252,24 @@ namespace Consul
 
                     var qOpts = new QueryOptions()
                     {
-                        WaitTime = Opts.LockWaitTime
+                        WaitTime = Opts.LockWaitTime,
                     };
 
                     var attempts = 0;
-                    var start = DateTime.UtcNow;
+                    var sw = Stopwatch.StartNew();
 
                     while (!ct.IsCancellationRequested)
                     {
                         if (attempts > 0 && Opts.LockTryOnce)
                         {
-                            var elapsed = DateTime.UtcNow.Subtract(start);
-                            if (elapsed > qOpts.WaitTime)
+                            var elapsed = sw.Elapsed;
+                            if (elapsed > Opts.LockWaitTime)
                             {
                                 DisposeCancellationTokenSource();
                                 throw new LockMaxAttemptsReachedException("LockTryOnce is set and the lock is already held or lock delay is in effect");
                             }
-                            qOpts.WaitTime -= elapsed;
+
+                            qOpts.WaitTime = Opts.LockWaitTime - elapsed;
                         }
 
                         attempts++;
