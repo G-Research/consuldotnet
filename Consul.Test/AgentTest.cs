@@ -479,8 +479,7 @@ namespace Consul.Test
             using (var logs = await _client.Agent.Monitor(LogLevel.Trace))
             {
                 var counter = 0;
-                var successToken = new CancellationTokenSource();
-                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(1), successToken.Token).ContinueWith(x => Assert.True(false, "Failed to finish reading logs in time"));
+                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(1));
                 var logsTask = Task.Run(async () =>
                 {
                     // to get some logs
@@ -494,13 +493,18 @@ namespace Consul.Test
                         counter++;
                         if (counter > 5)
                         {
-                            successToken.Cancel();
                             break;
                         }
                     }
                 });
 
-                await await Task.WhenAny(new[] { timeoutTask, logsTask });
+                var task = await Task.WhenAny(new[] { timeoutTask, logsTask });
+                if (task == timeoutTask)
+                {
+                    Assert.True(false, "Failed to finish reading logs in time");
+                }
+
+                await logsTask;
             }
         }
     }
