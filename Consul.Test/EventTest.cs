@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -44,21 +45,15 @@ namespace Consul.Test
         [Fact]
         public async Task Event_FireList()
         {
-            var userEvent = new UserEvent()
-            {
-                Name = "foo"
-            };
-
+            var previousIndex = (await _client.Event.List()).LastIndex;
+            var userEvent = new UserEvent() {Name = "foo"};
             var res = await _client.Event.Fire(userEvent);
-
-            await Task.Delay(1000);
-
             Assert.NotEqual(TimeSpan.Zero, res.RequestTime);
             Assert.False(string.IsNullOrEmpty(res.Response));
 
-            var events = await _client.Event.List();
+            var events = await _client.Event.List("foo", new QueryOptions {WaitIndex = previousIndex});
             Assert.NotEmpty(events.Response);
-            Assert.Equal(res.Response, events.Response[events.Response.Length - 1].ID);
+            Assert.Equal(res.Response, events.Response.Last().ID);
             Assert.Equal(_client.Event.IDToIndex(res.Response), events.LastIndex);
         }
     }
