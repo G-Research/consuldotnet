@@ -69,8 +69,14 @@ jobs:
         shell: bash
         run: |
           cd Consul.Test
-          ./consul agent -dev -config-file test_config.json &
+          ./consul agent -dev -config-file test_config.json -log-file consul.log >/dev/null &
           dotnet test --configuration=Release --no-build -v=Normal
+      - name: Upload Consul logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: consul-logs-${{ matrix.os }}
+          path: Consul.Test/consul*.log
       - name: Create NuGet package
         if: runner.os == 'Windows'
         run: |
