@@ -18,7 +18,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -45,14 +44,14 @@ namespace Consul.Test
         [Fact]
         public async Task Event_FireList()
         {
-            var userevent = new UserEvent()
+            var userEvent = new UserEvent()
             {
                 Name = "foo"
             };
 
-            var res = await _client.Event.Fire(userevent);
+            var res = await _client.Event.Fire(userEvent);
 
-            await Task.Delay(100);
+            await Task.Delay(1000);
 
             Assert.NotEqual(TimeSpan.Zero, res.RequestTime);
             Assert.False(string.IsNullOrEmpty(res.Response));
