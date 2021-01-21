@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-//  <copyright file="NonThreadSafeCollection.cs" company="G-Research Limited">
+//  <copyright file="ExclusiveCollection.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License"),
@@ -20,8 +20,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    [CollectionDefinition(nameof(NonThreadSafeCollection), DisableParallelization = true)]
-    public class NonThreadSafeCollection
+    [CollectionDefinition(nameof(ExclusiveCollection), DisableParallelization = true)]
+    public class ExclusiveCollection
     {
     }
 }

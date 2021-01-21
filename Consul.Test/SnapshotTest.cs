@@ -28,7 +28,7 @@ namespace Consul.Test
     /// <summary>
     /// Snapshot tests mutate global state of the consul client so we avoid running them in parallel with other tests.
     /// </summary>
-    [Collection(nameof(NonThreadSafeCollection))]
+    [Collection(nameof(ExclusiveCollection))]
     public class SnapshotTest : IDisposable
     {
         private ConsulClient _client;
