@@ -479,7 +479,6 @@ namespace Consul.Test
             using (var logs = await _client.Agent.Monitor(LogLevel.Trace))
             {
                 var counter = 0;
-                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(1));
                 var logsTask = Task.Run(async () =>
                 {
                     // to get some logs
@@ -498,13 +497,7 @@ namespace Consul.Test
                     }
                 });
 
-                var task = await Task.WhenAny(new[] { timeoutTask, logsTask });
-                if (task == timeoutTask)
-                {
-                    Assert.True(false, "Failed to finish reading logs in time");
-                }
-
-                await task;
+                await TimeoutUtils.WithTimeout(logsTask);
             }
         }
     }
