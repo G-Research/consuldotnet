@@ -25,6 +25,10 @@ using Xunit;
 
 namespace Consul.Test
 {
+    /// <summary>
+    /// Snapshot test mutate global state of the consul client so we avoid running them in parallel with other tests.
+    /// </summary>
+    [Collection(nameof(NonThreadSafeCollection))]
     public class SnapshotTest : IDisposable
     {
         private ConsulClient _client;
