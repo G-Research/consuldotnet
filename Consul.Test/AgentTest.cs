@@ -504,7 +504,7 @@ namespace Consul.Test
                     Assert.True(false, "Failed to finish reading logs in time");
                 }
 
-                await logsTask;
+                await task;
             }
         }
     }
