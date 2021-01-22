@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -360,19 +361,19 @@ namespace Consul
                     };
 
                     var attempts = 0;
-                    var start = DateTime.UtcNow;
+                    var sw = Stopwatch.StartNew();
 
                     while (!ct.IsCancellationRequested)
                     {
                         if (attempts > 0 && Opts.SemaphoreTryOnce)
                         {
-                            var elapsed = DateTime.UtcNow.Subtract(start);
-                            if (elapsed > qOpts.WaitTime)
+                            var elapsed = sw.Elapsed;
+                            if (elapsed > Opts.SemaphoreWaitTime)
                             {
                                 DisposeCancellationTokenSource();
                                 throw new SemaphoreMaxAttemptsReachedException("SemaphoreTryOnce is set and the semaphore is already at maximum capacity");
                             }
-                            qOpts.WaitTime -= elapsed;
+                            qOpts.WaitTime = Opts.SemaphoreWaitTime - elapsed;
                         }
 
                         attempts++;
