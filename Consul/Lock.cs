@@ -252,7 +252,7 @@ namespace Consul
 
                     var qOpts = new QueryOptions()
                     {
-                        WaitTime = Opts.LockWaitTime,
+                        WaitTime = Opts.LockWaitTime
                     };
 
                     var attempts = 0;
