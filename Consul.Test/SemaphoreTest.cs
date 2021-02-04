@@ -417,5 +417,54 @@ namespace Consul.Test
             await distributedLock2.Destroy();
             masterClient.Dispose();
         }
+
+        [Fact]
+        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Respects_The_Token()
+        {
+            const string key = "service/myApp/leader";
+
+            var masterInstanceClient = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
+
+            // Arrange
+            var distributedLock2 = masterInstanceClient.CreateLock(new LockOptions(key)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+            var distributedLock = _client.CreateLock(new LockOptions(key)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+            var cancellationOperationTimer = new Stopwatch();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+
+            // Act
+            await distributedLock2.Acquire(); // Become "Master" with another instance first
+            cancellationOperationTimer.Start();
+            try
+            {
+                await distributedLock.Acquire(cts.Token);
+            }
+            catch (Exception) { }
+            cancellationOperationTimer.Stop();
+
+            // Assert
+            var stopTimeMs = cancellationOperationTimer.ElapsedMilliseconds;
+            var LockWaitTimeMs = TimeSpan.FromSeconds(15).TotalMilliseconds;
+            Assert.True(stopTimeMs < LockWaitTimeMs);
+
+            // cleanup
+            await distributedLock2.Release();
+            if (distributedLock.IsHeld)
+                await distributedLock2.Release();
+            await distributedLock2.Destroy();
+
+            masterInstanceClient.Dispose();
+        }
     }
 }
