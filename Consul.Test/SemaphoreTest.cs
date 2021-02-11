@@ -410,15 +410,11 @@ namespace Consul.Test
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
 
             await distributedLock2.Acquire(); // Become "Master" with another instance first
-            var task = distributedLock.Acquire(cts.Token);
 
             await Assert.ThrowsAsync<LockNotHeldException>(async () => await distributedLock.Acquire(cts.Token));
 
             await distributedLock2.Release();
-            if (distributedLock.IsHeld)
-                await distributedLock2.Release();
             await distributedLock2.Destroy();
-
             masterClient.Dispose();
         }
     }
