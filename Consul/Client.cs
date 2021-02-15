@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using Consul.Filtering;
 using Newtonsoft.Json;
 #if !(CORECLR || PORTABLE || PORTABLE40)
 using System.Security.Permissions;
@@ -592,9 +593,9 @@ namespace Consul
             }
         }
 
-        internal GetRequest<TOut> Get<TOut>(string path, QueryOptions opts = null)
+        internal GetRequest<TOut> Get<TOut>(string path, QueryOptions opts = null, IEncodable filter = null)
         {
-            return new GetRequest<TOut>(this, path, opts ?? QueryOptions.Default);
+            return new GetRequest<TOut>(this, path, opts ?? QueryOptions.Default, filter);
         }
 
         internal GetRequest Get(string path, QueryOptions opts = null)
