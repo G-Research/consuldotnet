@@ -45,7 +45,7 @@
     <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
   </PropertyGroup>
 
-  <Target Name="ILMerge" AfterTargets="Build" Condition=" '$(TargetFramework)' == 'net461' ">
+  <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' ">
     <ItemGroup>
       <BuildArtifacts Include="$(OutputPath)\$(AssemblyName).*" />
       <ArtifactsToMerge Include="$(OutputPath)\Newtonsoft.Json.dll" />
@@ -57,7 +57,9 @@
     </PropertyGroup>
     <MakeDir Directories="$(OutputPath)\ILMerge" />
     <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
-    <Move SourceFiles="%(BuildArtifacts.RelativeDir)\ILMerge\%(filename)%(extension)" DestinationFiles="%(BuildArtifacts.RelativeDir)%(filename)%(extension)" OverwriteReadOnlyFiles="true"/>
+    <Move SourceFiles="%(BuildArtifacts.RelativeDir)\ILMerge\%(filename)%(extension)"
+          DestinationFiles="%(BuildArtifacts.RelativeDir)%(filename)%(extension)"
+          OverwriteReadOnlyFiles="true"/>
   </Target>
 
 </Project>
