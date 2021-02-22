@@ -27,7 +27,6 @@
     <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -60,7 +59,5 @@
     <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
     <Move SourceFiles="%(BuildArtifacts.RelativeDir)\ILMerge\%(filename)%(extension)" DestinationFiles="%(BuildArtifacts.RelativeDir)%(filename)%(extension)" OverwriteReadOnlyFiles="true"/>
   </Target>
-  <ItemGroup>
-    <DotNetCliToolReference Include="ILRepack" Version="2.0.18" />
-  </ItemGroup>
+
 </Project>
