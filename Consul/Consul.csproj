@@ -52,7 +52,7 @@
     </ItemGroup>
     <PropertyGroup>
       <IlmergeCommand>$(ILMergeConsolePath) /out:$(OutputPath)\ILMerge\$(AssemblyName).dll</IlmergeCommand>
-      <IlmergeCommand>$(IlmergeCommand) /delaysign /keyfile:../assets/consuldotnet.snk</IlmergeCommand>
+      <IlmergeCommand>$(IlmergeCommand) /keyfile:../assets/consuldotnet.snk</IlmergeCommand>
       <IlmergeCommand>$(IlmergeCommand) $(OutputPath)\$(AssemblyName).dll @(ArtifactsToMerge->'%(RelativeDir)%(filename)%(extension)', ' ')</IlmergeCommand>
     </PropertyGroup>
     <MakeDir Directories="$(OutputPath)\ILMerge" />
