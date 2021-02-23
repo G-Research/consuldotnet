@@ -60,7 +60,7 @@
     <Move SourceFiles="%(BuildArtifacts.RelativeDir)ILMerge\%(filename)%(extension)"
           DestinationFiles="%(BuildArtifacts.RelativeDir)%(filename)%(extension)"
           OverwriteReadOnlyFiles="true"/>
-    <Delete Files="$(ArtifactsToMerge)" />
+    <Delete Files="@(ArtifactsToMerge)" />
     <RemoveDir Directories="$(OutputPath)ILMerge" />
   </Target>
 
