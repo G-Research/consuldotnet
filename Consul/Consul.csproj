@@ -47,19 +47,21 @@
 
   <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' ">
     <ItemGroup>
-      <BuildArtifacts Include="$(OutputPath)\$(AssemblyName).*" />
-      <ArtifactsToMerge Include="$(OutputPath)\Newtonsoft.Json.dll" />
+      <BuildArtifacts Include="$(OutputPath)$(AssemblyName).*" />
+      <ArtifactsToMerge Include="$(OutputPath)Newtonsoft.Json.dll" />
     </ItemGroup>
     <PropertyGroup>
-      <IlmergeCommand>$(ILMergeConsolePath) /out:$(OutputPath)\ILMerge\$(AssemblyName).dll</IlmergeCommand>
-      <IlmergeCommand>$(IlmergeCommand) /keyfile:../assets/consuldotnet.snk</IlmergeCommand>
-      <IlmergeCommand>$(IlmergeCommand) $(OutputPath)\$(AssemblyName).dll @(ArtifactsToMerge->'%(RelativeDir)%(filename)%(extension)', ' ')</IlmergeCommand>
+      <IlmergeCommand>$(ILMergeConsolePath) /internalize /out:$(OutputPath)ILMerge\$(AssemblyName).dll</IlmergeCommand>
+      <IlmergeCommand>$(IlmergeCommand) /keyfile:$(AssemblyOriginatorKeyFile)</IlmergeCommand>
+      <IlmergeCommand>$(IlmergeCommand) $(OutputPath)$(AssemblyName).dll @(ArtifactsToMerge->'%(RelativeDir)%(filename)%(extension)', ' ')</IlmergeCommand>
     </PropertyGroup>
     <MakeDir Directories="$(OutputPath)\ILMerge" />
     <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
-    <Move SourceFiles="%(BuildArtifacts.RelativeDir)\ILMerge\%(filename)%(extension)"
+    <Move SourceFiles="%(BuildArtifacts.RelativeDir)ILMerge\%(filename)%(extension)"
           DestinationFiles="%(BuildArtifacts.RelativeDir)%(filename)%(extension)"
           OverwriteReadOnlyFiles="true"/>
+    <Delete Files="$(ArtifactsToMerge)" />
+    <RemoveDir Directories="$(OutputPath)ILMerge" />
   </Target>
 
 </Project>
