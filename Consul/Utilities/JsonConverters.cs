@@ -20,126 +20,138 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Consul
 {
-    public class NanoSecTimespanConverter : JsonConverter
+    public class NanoSecTimespanConverter : JsonConverter<TimeSpan?>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override TimeSpan? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            serializer.Serialize(writer, (long)((TimeSpan)value).TotalMilliseconds * 1000000, typeof(long));
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            return Extensions.FromGoDuration((string)serializer.Deserialize(reader, typeof(string)));
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof(TimeSpan))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                return true;
+                return null;
             }
-            return false;
+
+            if (reader.TokenType == JsonTokenType.Number)
+            {
+                if (reader.TryGetUInt64(out var result))
+                {
+                    return TimeSpan.FromTicks((long)(result / 100));
+                }
+            }
+            return Extensions.FromGoDuration(reader.GetString());
+        }
+
+        public override void Write(Utf8JsonWriter writer, TimeSpan? value, JsonSerializerOptions options)
+        {
+            if (value.HasValue)
+            {
+                writer.WriteNumberValue((long)value.Value.TotalMilliseconds * 1000000);
+            }
+            else
+            {
+                writer.WriteNullValue();
+            }
         }
     }
 
-    public class DurationTimespanConverter : JsonConverter
+    public class DurationTimespanConverter : JsonConverter<TimeSpan?>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override TimeSpan? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            serializer.Serialize(writer, ((TimeSpan)value).ToGoDuration());
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            return Extensions.FromGoDuration((string)serializer.Deserialize(reader, typeof(string)));
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof(TimeSpan))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                return true;
+                return null;
             }
-            return false;
+
+            if (reader.TokenType == JsonTokenType.Number)
+            {
+                if (reader.TryGetUInt64(out var result))
+                {
+                    return TimeSpan.FromTicks((long)(result / 100));
+                }
+            }
+            return Extensions.FromGoDuration(reader.GetString());
+        }
+
+        public override void Write(Utf8JsonWriter writer, TimeSpan? value, JsonSerializerOptions options)
+        {
+            if (value.HasValue)
+            {
+                writer.WriteStringValue(value.Value.ToGoDuration());
+            }
+            else
+            {
+                writer.WriteNullValue();
+            }
         }
     }
 
-    public class KVPairConverter : JsonConverter
+    public class KVPairConverter : JsonConverter<KVPair>
     {
         static Lazy<string[]> objProps = new Lazy<string[]>(() => typeof(KVPair).GetRuntimeProperties().Select(p => p.Name).ToArray());
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+
+        public override bool CanConvert(Type objectType)
         {
-            throw new NotImplementedException();
+            return objectType == typeof(KVPair);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override KVPair Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             KVPair result = new KVPair();
             while (reader.Read())
             {
-                if (reader.TokenType == JsonToken.StartObject) { continue; }
-                if (reader.TokenType == JsonToken.EndObject) { return result; }
-                if (reader.TokenType == JsonToken.PropertyName)
+                if (reader.TokenType == JsonTokenType.StartObject) { continue; }
+                if (reader.TokenType == JsonTokenType.EndObject) { return result; }
+                if (reader.TokenType == JsonTokenType.PropertyName)
                 {
-                    string jsonPropName = reader.Value.ToString();
+                    string jsonPropName = reader.GetString();
+                    if (jsonPropName == null)
+                    {
+                        continue;
+                    }
                     var propName = objProps.Value.FirstOrDefault(p => p.Equals(jsonPropName, StringComparison.OrdinalIgnoreCase));
                     if (propName != null)
                     {
                         PropertyInfo pi = result.GetType().GetRuntimeProperty(propName);
 
-                        if (jsonPropName.Equals("Flags", StringComparison.OrdinalIgnoreCase))
+                        if (jsonPropName.Equals("Flags", StringComparison.OrdinalIgnoreCase) && reader.Read())
                         {
-                            if (!string.IsNullOrEmpty(reader.ReadAsString()))
-                            {
-                                var val = Convert.ToUInt64(reader.Value);
-                                pi.SetValue(result, val, null);
-                            }
+                            pi.SetValue(result, reader.GetUInt64(), null);
                         }
-                        else if (jsonPropName.Equals("Value", StringComparison.OrdinalIgnoreCase))
+                        else if (jsonPropName.Equals("Value", StringComparison.OrdinalIgnoreCase) && reader.Read())
                         {
-                            if (!string.IsNullOrEmpty(reader.ReadAsString()))
+                            if (reader.TokenType == JsonTokenType.Null)
                             {
-                                var val = Convert.FromBase64String(reader.Value.ToString());
-                                pi.SetValue(result, val, null);
+                                continue;
                             }
+                            pi.SetValue(result, reader.GetBytesFromBase64(), null);
                         }
-                        else
+                        else if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                var convertedValue = Convert.ChangeType(reader.Value, pi.PropertyType);
-                                pi.SetValue(result, convertedValue, null);
-                            }
+                            pi.SetValue(result, JsonSerializer.Deserialize(ref reader, pi.PropertyType, options), null);
                         }
                     }
                 }
             }
+
             return result;
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, KVPair value, JsonSerializerOptions options)
         {
-            if (objectType == typeof(KVPair))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public override bool CanWrite
-        {
-            get
-            {
-                return false;
-            }
+            writer.WriteStartObject();
+            writer.WriteString("Key", value.Key);
+            writer.WriteNumber("CreateIndex", value.CreateIndex);
+            writer.WriteNumber("ModifyIndex", value.ModifyIndex);
+            writer.WriteNumber("LockIndex", value.LockIndex);
+            writer.WriteNumber("Flags", value.Flags);
+            writer.WriteBase64String("Session", value.Value);
+            writer.WriteString("Session", value.Session);
+            writer.WriteEndObject();
         }
     }
 }

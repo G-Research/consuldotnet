@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -82,18 +83,16 @@ namespace Consul
         }
     }
 
-    public class HealthStatusConverter : JsonConverter
+    public class HealthStatusConverter : JsonConverter<HealthStatus>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
         {
-            serializer.Serialize(writer, ((HealthStatus)value).Status);
+            return objectType == typeof(HealthStatus);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override HealthStatus Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var status = (string)serializer.Deserialize(reader, typeof(string));
-            switch (status)
+            switch (reader.GetString())
             {
                 case "passing":
                     return HealthStatus.Passing;
@@ -106,13 +105,9 @@ namespace Consul
             }
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, HealthStatus value, JsonSerializerOptions options)
         {
-            if (objectType == typeof(HealthStatus))
-            {
-                return true;
-            }
-            return false;
+            writer.WriteStringValue(value.Status);
         }
     }
 

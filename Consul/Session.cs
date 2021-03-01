@@ -20,9 +20,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -61,18 +62,11 @@ namespace Consul
         }
     }
 
-    public class SessionBehaviorConverter : JsonConverter
+    public class SessionBehaviorConverter : JsonConverter<SessionBehavior>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override SessionBehavior Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            serializer.Serialize(writer, ((SessionBehavior)value).Behavior);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            var behavior = (string)serializer.Deserialize(reader, typeof(string));
-            switch (behavior)
+            switch (reader.GetString())
             {
                 case "release":
                     return SessionBehavior.Release;
@@ -83,9 +77,9 @@ namespace Consul
             }
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, SessionBehavior value, JsonSerializerOptions options)
         {
-            return objectType == typeof(SessionBehavior);
+            writer.WriteStringValue(value.Behavior);
         }
     }
 
@@ -126,24 +120,24 @@ namespace Consul
 
         public string ID { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Name { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Node { get; set; }
 
         public List<string> Checks { get; set; }
 
         [JsonConverter(typeof(NanoSecTimespanConverter))]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public TimeSpan? LockDelay { get; set; }
 
         [JsonConverter(typeof(SessionBehaviorConverter))]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public SessionBehavior Behavior { get; set; }
 
         [JsonConverter(typeof(DurationTimespanConverter))]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public TimeSpan? TTL { get; set; }
 
         public SessionEntry()
@@ -172,12 +166,6 @@ namespace Consul
     /// </summary>
     public class Session : ISessionEndpoint
     {
-        private class SessionCreationResult
-        {
-            [JsonProperty]
-            internal string ID { get; set; }
-        }
-
         private readonly ConsulClient _client;
 
         internal Session(ConsulClient c)
@@ -293,8 +281,8 @@ namespace Consul
         /// <returns>A write result containing the new session ID</returns>
         public async Task<WriteResult<string>> Create(SessionEntry se, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Put<SessionEntry, SessionCreationResult>("/v1/session/create", se, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            var res = await _client.Put<SessionEntry, JsonElement>("/v1/session/create", se, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(res, res.Response.GetProperty("ID").GetString());
         }
         /// <summary>
         /// CreateNoChecks is like Create but is used specifically to create a session with no associated health checks.

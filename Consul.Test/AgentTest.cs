@@ -48,8 +48,8 @@ namespace Consul.Test
             var info = await _client.Agent.Self();
 
             Assert.NotNull(info);
-            Assert.False(string.IsNullOrEmpty(info.Response["Config"]["NodeName"]));
-            Assert.False(string.IsNullOrEmpty(info.Response["Member"]["Tags"]["bootstrap"].ToString()));
+            Assert.False(string.IsNullOrEmpty(info.Response["Config"]["NodeName"].GetString()));
+            Assert.False(string.IsNullOrEmpty(info.Response["Member"]["Tags"].GetProperty("bootstrap").GetString()));
         }
 
         [Fact]
@@ -398,7 +398,7 @@ namespace Consul.Test
         public async Task Agent_Join()
         {
             var info = await _client.Agent.Self();
-            await _client.Agent.Join(info.Response["DebugConfig"]["AdvertiseAddrLAN"], false);
+            await _client.Agent.Join(info.Response["DebugConfig"]["AdvertiseAddrLAN"].GetString(), false);
             // Success is not throwing an exception
         }
 
@@ -406,7 +406,7 @@ namespace Consul.Test
         public async Task Agent_ForceLeave()
         {
             var info = await _client.Agent.Self();
-            await _client.Agent.ForceLeave(info.Response["Config"]["NodeName"]);
+            await _client.Agent.ForceLeave(info.Response["Config"]["NodeName"].GetString());
             // Success is not throwing an exception
         }
 

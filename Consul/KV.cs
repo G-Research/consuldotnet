@@ -20,9 +20,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -112,18 +113,16 @@ namespace Consul
         }
     }
 
-    public class KVTxnVerbTypeConverter : JsonConverter
+    public class KVTxnVerbTypeConverter : JsonConverter<KVTxnVerb>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override bool CanConvert(Type objectType)
         {
-            serializer.Serialize(writer, ((KVTxnVerb)value).Operation);
+            return objectType == typeof(KVTxnVerb);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override KVTxnVerb Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var status = (string)serializer.Deserialize(reader, typeof(string));
-            switch (status)
+            switch (reader.GetString())
             {
                 case "set":
                     return KVTxnVerb.Set;
@@ -152,9 +151,9 @@ namespace Consul
             }
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, KVTxnVerb value, JsonSerializerOptions options)
         {
-            return objectType == typeof(KVTxnVerb);
+            writer.WriteStringValue(value.Operation);
         }
     }
 
@@ -179,51 +178,20 @@ namespace Consul
     /// <summary>
     /// KVTxnResponse  is used to return the results of a transaction.
     /// </summary>
+    [JsonConverter(typeof(TxnResponseConverter))]
     public class KVTxnResponse
     {
         [JsonIgnore]
         public bool Success { get; internal set; }
-        [JsonProperty]
+        [JsonInclude]
         public List<TxnError> Errors { get; internal set; }
-        [JsonProperty]
+        [JsonInclude]
         public List<KVPair> Results { get; internal set; }
 
         public KVTxnResponse()
         {
             Results = new List<KVPair>();
             Errors = new List<TxnError>();
-        }
-
-        internal KVTxnResponse(TxnResponse txnRes)
-        {
-            if (txnRes == null)
-            {
-                Results = new List<KVPair>(0);
-                Errors = new List<TxnError>(0);
-                return;
-            }
-
-            if (txnRes.Results == null)
-            {
-                Results = new List<KVPair>(0);
-            }
-            else
-            {
-                Results = new List<KVPair>(txnRes.Results.Count);
-                foreach (var txnResult in txnRes.Results)
-                {
-                    Results.Add(txnResult.KV);
-                }
-            }
-
-            if (txnRes.Errors == null)
-            {
-                Errors = new List<TxnError>(0);
-            }
-            else
-            {
-                Errors = txnRes.Errors;
-            }
         }
     }
 
@@ -540,14 +508,14 @@ namespace Consul
         /// If there are more non-KV operations in the future we may break out a new
         /// transaction API client, but it will be easy to keep this KV-specific variant
         /// supported.
-        /// 
+        ///
         /// Even though this is generally a write operation, we take a QueryOptions input
         /// and return a QueryMeta output. If the transaction contains only read ops, then
         /// Consul will fast-path it to a different endpoint internally which supports
         /// consistency controls, but not blocking. If there are write operations then
         /// the request will always be routed through raft and any consistency settings
         /// will be ignored.
-        /// 
+        ///
         /// // If there is a problem making the transaction request then an error will be
         /// returned. Otherwise, the ok value will be true if the transaction succeeded
         /// or false if it was rolled back. The response is a structured return value which
@@ -578,14 +546,14 @@ namespace Consul
         /// If there are more non-KV operations in the future we may break out a new
         /// transaction API client, but it will be easy to keep this KV-specific variant
         /// supported.
-        /// 
+        ///
         /// Even though this is generally a write operation, we take a QueryOptions input
         /// and return a QueryMeta output. If the transaction contains only read ops, then
         /// Consul will fast-path it to a different endpoint internally which supports
         /// consistency controls, but not blocking. If there are write operations then
         /// the request will always be routed through raft and any consistency settings
         /// will be ignored.
-        /// 
+        ///
         /// // If there is a problem making the transaction request then an error will be
         /// returned. Otherwise, the ok value will be true if the transaction succeeded
         /// or false if it was rolled back. The response is a structured return value which
@@ -609,10 +577,10 @@ namespace Consul
                 txnOps.Add(new TxnOp() { KV = kvTxnOp });
             }
 
-            var req = _client.Put<List<TxnOp>, TxnResponse>("/v1/txn", txnOps, q);
+            var req = _client.Put<List<TxnOp>, KVTxnResponse>("/v1/txn", txnOps, q);
             var txnRes = await req.Execute(ct);
 
-            var res = new WriteResult<KVTxnResponse>(txnRes, new KVTxnResponse(txnRes.Response));
+            var res = new WriteResult<KVTxnResponse>(txnRes, txnRes.Response);
 
             res.Response.Success = txnRes.StatusCode == System.Net.HttpStatusCode.OK;
 

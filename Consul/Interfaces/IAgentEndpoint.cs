@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace Consul
         string NodeName { get; }
         Task<string> GetNodeName(CancellationToken ct = default(CancellationToken));
         Task PassTTL(string checkID, string note, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, Dictionary<string, dynamic>>>> Self(CancellationToken ct = default(CancellationToken));
+        Task<QueryResult<Dictionary<string, Dictionary<string, JsonElement>>>> Self(CancellationToken ct = default(CancellationToken));
         Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default(CancellationToken));
         Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken));

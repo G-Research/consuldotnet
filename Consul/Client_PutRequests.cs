@@ -79,9 +79,9 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode && response.Content.Headers.ContentLength.GetValueOrDefault(0) > 0)
             {
-                result.Response = Deserialize<TOut>(ResponseStream);
+                result.Response = await Deserialize<TOut>(ResponseStream);
             }
 
             result.RequestTime = timer.Elapsed;
@@ -343,8 +343,8 @@ namespace Consul
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode && (
-                (response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(TxnResponse)) ||
-                (response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse))))
+                (response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(KVTxnResponse)) ||
+                (response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(KVTxnResponse))))
             {
                 if (ResponseStream == null)
                 {
@@ -360,9 +360,9 @@ namespace Consul
 
             if (response.IsSuccessStatusCode ||
                 // Special case for KV txn operations
-                (response.StatusCode == HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse)))
+                (response.StatusCode == HttpStatusCode.Conflict && typeof(TOut) == typeof(KVTxnResponse)))
             {
-                result.Response = Deserialize<TOut>(ResponseStream);
+                result.Response = await Deserialize<TOut>(ResponseStream);
             }
 
             result.RequestTime = timer.Elapsed;

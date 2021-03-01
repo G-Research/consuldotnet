@@ -20,9 +20,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -41,7 +42,7 @@ namespace Consul
         /// never try a datacenter multiple times, so those are subtracted from
         /// this list before proceeding.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public List<string> Datacenters { get; set; }
 
         public QueryDatacenterOptions()
@@ -58,7 +59,8 @@ namespace Consul
         /// <summary>
         /// TTL is the time to live for the served DNS results.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonConverter(typeof(DurationTimespanConverter))]
         public TimeSpan? TTL { get; set; }
     }
 
@@ -70,7 +72,7 @@ namespace Consul
         /// <summary>
         /// Service is the service to query.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Service { get; set; }
 
         /// <summary>
@@ -78,13 +80,13 @@ namespace Consul
         /// sort from. The magic "_agent" value is supported, which sorts near
         /// the agent which initiated the request by default.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Near { get; set; }
 
         /// <summary>
         /// Failover controls what we do if there are no healthy nodes in the local datacenter.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public QueryDatacenterOptions Failover { get; set; }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Consul
         /// health checks (critical AND warning checks will cause a node to be
         /// discarded)
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool OnlyPassing { get; set; }
 
         /// <summary>
@@ -100,7 +102,7 @@ namespace Consul
         /// this list it must be present. If the tag is preceded with "!" then
         /// it is disallowed.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public List<string> Tags { get; set; }
     }
 
@@ -113,14 +115,14 @@ namespace Consul
         /// Type specifies the type of the query template. Currently only
         /// "name_prefix_match" is supported. This field is required.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public string Type { get; set; }
 
         /// <summary>
         /// Regexp allows specifying a regex pattern to match against the name
         /// of the query being executed.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Regexp { get; set; }
 
         public QueryTemplate()
@@ -151,7 +153,7 @@ namespace Consul
         /// Session is an optional session to tie this query's lifetime to. If
         /// this is omitted then the query will not expire.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Session { get; set; }
 
         /// <summary>
@@ -159,24 +161,24 @@ namespace Consul
         /// used when a query is subsequently executed. This token, or a token
         /// with management privileges, must be used to change the query later.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Token { get; set; }
 
         /// <summary>
         /// Service defines a service query (leaving things open for other types
         /// later).
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ServiceQuery Service { get; set; }
 
         /// <summary>
         /// DNS has options that control how the results of this query are
         /// served over DNS.
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public QueryDNSOptions DNS { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public QueryTemplate Template { get; set; }
     }
 
@@ -214,11 +216,6 @@ namespace Consul
 
     public class PreparedQuery : IPreparedQueryEndpoint
     {
-        private class PreparedQueryCreationResult
-        {
-            [JsonProperty]
-            internal string ID { get; set; }
-        }
         private readonly ConsulClient _client;
 
         internal PreparedQuery(ConsulClient c)
@@ -233,8 +230,8 @@ namespace Consul
 
         public async Task<WriteResult<string>> Create(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Post<PreparedQueryDefinition, PreparedQueryCreationResult>("/v1/query", query, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            var res = await _client.Post<PreparedQueryDefinition, JsonElement>("/v1/query", query, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(res, res.Response.GetProperty("ID").GetString());
         }
 
         public Task<WriteResult> Delete(string queryID, CancellationToken ct = default(CancellationToken))

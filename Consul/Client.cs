@@ -22,7 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
-using Newtonsoft.Json;
+using System.Text.Json;
 #if !(CORECLR || PORTABLE || PORTABLE40)
 using System.Security.Permissions;
 using System.Runtime.Serialization;
@@ -369,8 +369,6 @@ namespace Consul
 #endif
         public ConsulClientConfiguration Config { get { return ConfigContainer.Config; } }
 
-        internal readonly JsonSerializer serializer = new JsonSerializer();
-
         #region New style config with Actions
         /// <summary>
         /// Initializes a new Consul client with a default configuration that connects to 127.0.0.1:8500.
@@ -529,7 +527,7 @@ namespace Consul
         void ApplyConfig(ConsulClientConfiguration config, WebRequestHandler handler, HttpClient client)
 #else
         void ApplyConfig(ConsulClientConfiguration config, HttpClientHandler handler, HttpClient client)
-#endif        
+#endif
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             if (config.HttpAuth != null)
