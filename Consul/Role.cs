@@ -17,9 +17,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -53,9 +54,9 @@ namespace Consul
         public string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public PolicyLink[] Policies { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
 
         public bool ShouldSerializeCreateIndex()

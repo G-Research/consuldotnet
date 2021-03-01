@@ -19,8 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -36,17 +37,59 @@ namespace Consul
 
     public class TxnError
     {
-        [JsonProperty]
+        [JsonInclude]
         public int OpIndex { get; private set; }
-        [JsonProperty]
+        [JsonInclude]
         public string What { get; private set; }
     }
 
-    internal class TxnResponse
+    public class TxnResponseConverter : JsonConverter<KVTxnResponse>
     {
-        [JsonProperty]
-        internal List<TxnResult> Results { get; set; }
-        [JsonProperty]
-        internal List<TxnError> Errors { get; set; }
+        public override KVTxnResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var result = new KVTxnResponse() { Results = new List<KVPair>() };
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.PropertyName
+                    && reader.GetString() == "Results"
+                    && reader.Read()
+                    && reader.TokenType == JsonTokenType.StartArray)
+                {
+                    while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+                    {
+                        if (reader.TokenType == JsonTokenType.StartObject || reader.TokenType == JsonTokenType.EndObject)
+                        {
+                            continue;
+                        }
+
+                        if (reader.TokenType == JsonTokenType.PropertyName && reader.Read())
+                        {
+                            var resultPair = JsonSerializer.Deserialize<KVPair>(ref reader, options);
+                            result.Results.Add(resultPair);
+                        }
+                    }
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName
+                    && reader.GetString() == "Errors"
+                    && reader.Read()
+                    && reader.TokenType == JsonTokenType.StartArray)
+                {
+                    result.Errors = JsonSerializer.Deserialize<List<TxnError>>(ref reader, options);
+                }
+            }
+
+            if (result.Errors == null)
+            {
+                result.Errors = new List<TxnError>(0);
+            }
+            return result;
+        }
+
+        public override void Write(Utf8JsonWriter writer, KVTxnResponse value, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

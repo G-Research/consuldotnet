@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -28,7 +29,7 @@ namespace Consul
     {
         // Cannot be "Node" as in the Go API because in C#, properties cannot
         // have the same name as their enclosing class.
-        [JsonProperty(PropertyName = "Node")]
+        [JsonPropertyName("Node")]
         public string Name { get; set; }
         public string Address { get; set; }
         public Dictionary<string, string> TaggedAddresses { get; set; }

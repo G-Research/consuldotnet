@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -29,19 +30,19 @@ namespace Consul
     /// </summary>
     public class TokenEntry
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string AccessorID { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string SecretID { get; set; }
         public string Description { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public PolicyLink[] Policies { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public RoleLink[] Roles { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
         public bool Local { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string AuthMethod { get; set; }
 
 
@@ -104,13 +105,13 @@ namespace Consul
 
         private class TokenActionResult : TokenEntry
         {
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public DateTime? CreateTime { get; set; }
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string Hash { get; set; }
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public ulong CreateIndex { get; set; }
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public ulong ModifyIndex { get; set; }
         }
 

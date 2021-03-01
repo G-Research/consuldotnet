@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -31,9 +32,9 @@ namespace Consul
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Description { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public Dictionary<string, string> Config { get; set; }
 
         public bool ShouldSerializeCreateIndex()
@@ -79,9 +80,9 @@ namespace Consul
 
         private class AuthMethodActionResult : AuthMethodEntry
         {
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public ulong CreateIndex { get; set; }
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public ulong ModifyIndex { get; set; }
         }
 

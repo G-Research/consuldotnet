@@ -92,9 +92,9 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode && response.Content.Headers.ContentLength.GetValueOrDefault(0) > 0)
             {
-                result.Response = Deserialize<TOut>(ResponseStream);
+                result.Response = await Deserialize<TOut>(ResponseStream).ConfigureAwait(false);
             }
 
             result.RequestTime = timer.Elapsed;

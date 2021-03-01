@@ -21,9 +21,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 #if !(NETSTANDARD || NETCOREAPP)
 using System.Security.Permissions;
 using System.Runtime.Serialization;
@@ -202,7 +204,6 @@ namespace Consul
         {
             private int _limit;
 
-            [JsonProperty]
             internal int Limit
             {
                 get { return _limit; }
@@ -219,12 +220,26 @@ namespace Consul
                 }
             }
 
-            [JsonProperty]
             internal Dictionary<string, bool> Holders { get; set; }
 
             internal SemaphoreLock()
             {
                 Holders = new Dictionary<string, bool>();
+            }
+
+            internal SemaphoreLock(JsonDocument json)
+            {
+                Limit = json.RootElement.GetProperty("Limit").GetInt32();
+                Holders = new Dictionary<string, bool>();
+                foreach (var holder in json.RootElement.GetProperty("Holders").EnumerateObject())
+                {
+                    Holders.Add(holder.Name, holder.Value.GetBoolean());
+                }
+            }
+
+            internal string ToJson()
+            {
+                return JsonSerializer.Serialize(new { Limit, Holders });
             }
         }
 
@@ -710,7 +725,10 @@ namespace Consul
                 return new SemaphoreLock() { Limit = Opts.Limit };
             }
 
-            return JsonConvert.DeserializeObject<SemaphoreLock>(Encoding.UTF8.GetString(pair.Value));
+            using (var holderJson = JsonDocument.Parse(Encoding.UTF8.GetString(pair.Value)))
+            {
+                return new SemaphoreLock(holderJson);
+            }
         }
 
         /// <summary>
@@ -721,7 +739,7 @@ namespace Consul
         /// <returns>A K/V pair with the lock data encoded in the Value field</returns>
         private KVPair EncodeLock(SemaphoreLock l, ulong oldIndex)
         {
-            var jsonValue = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(l));
+            var jsonValue = Encoding.UTF8.GetBytes(l.ToJson());
 
             return new KVPair(string.Join("/", Opts.Prefix, DefaultSemaphoreKey))
             {

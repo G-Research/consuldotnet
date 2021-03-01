@@ -19,9 +19,10 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -42,12 +43,6 @@ namespace Consul
 
     public class Event : IEventEndpoint
     {
-        private class EventCreationResult
-        {
-            [JsonProperty]
-            internal string ID { get; set; }
-        }
-
         private readonly ConsulClient _client;
 
         internal Event(ConsulClient c)
@@ -68,7 +63,7 @@ namespace Consul
         /// <returns></returns>
         public async Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var req = _client.Put<byte[], EventCreationResult>(string.Format("/v1/event/fire/{0}", ue.Name), ue.Payload, q);
+            var req = _client.Put<byte[], JsonElement>(string.Format("/v1/event/fire/{0}", ue.Name), ue.Payload, q);
             if (!string.IsNullOrEmpty(ue.NodeFilter))
             {
                 req.Params["node"] = ue.NodeFilter;
@@ -82,7 +77,7 @@ namespace Consul
                 req.Params["tag"] = ue.TagFilter;
             }
             var res = await req.Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            return new WriteResult<string>(res, res.Response.GetProperty("ID").GetString());
         }
 
         /// <summary>

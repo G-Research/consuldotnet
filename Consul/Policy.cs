@@ -17,9 +17,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -54,7 +55,7 @@ namespace Consul
         public string Name { get; set; }
         public string Description { get; set; }
         public string Rules { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string[] Datacenters { get; set; }
 
         public bool ShouldSerializeCreateIndex()

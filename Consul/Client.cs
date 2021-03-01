@@ -23,7 +23,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using Consul.Filtering;
-using Newtonsoft.Json;
+#if !(CORECLR || PORTABLE || PORTABLE40)
+using System.Security.Permissions;
+using System.Runtime.Serialization;
+#endif
 
 namespace Consul
 {
@@ -365,7 +368,6 @@ namespace Consul
         internal WebRequestHandler HttpHandler { get { return _configContainer._httpHandler; } }
 #endif
         public ConsulClientConfiguration Config { get { return _configContainer.Config; } }
-
 
         #region New style config with Actions
         /// <summary>

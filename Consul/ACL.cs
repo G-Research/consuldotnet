@@ -18,9 +18,10 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -80,23 +81,14 @@ namespace Consul
     }
 
     [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
-    public class ACLTypeConverter : JsonConverter
+    public class ACLTypeConverter : JsonConverter<ACLType>
     {
-#pragma warning disable CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
+#pragma warning disable CS0809
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-#pragma warning restore CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
+        public override ACLType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+#pragma warning restore CS0809
         {
-            serializer.Serialize(writer, ((ACLType)value).Type);
-        }
-
-#pragma warning disable CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
-        [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-#pragma warning restore CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
-        {
-            var type = (string)serializer.Deserialize(reader, typeof(string));
+            var type = reader.GetString();
             switch (type)
             {
                 case "client":
@@ -104,21 +96,17 @@ namespace Consul
                 case "management":
                     return ACLType.Management;
                 default:
-                    throw new ArgumentOutOfRangeException("serializer", type,
+                    throw new ArgumentOutOfRangeException(nameof(reader), type,
                         "Unknown ACL token type value found during deserialization");
             }
         }
 
-#pragma warning disable CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
+#pragma warning disable CS0809
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
-        public override bool CanConvert(Type objectType)
-#pragma warning restore CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
+        public override void Write(Utf8JsonWriter writer, ACLType value, JsonSerializerOptions options)
+#pragma warning restore CS0809
         {
-            if (objectType == typeof(ACLType))
-            {
-                return true;
-            }
-            return false;
+            writer.WriteStringValue(value.Type);
         }
     }
 
@@ -139,7 +127,7 @@ namespace Consul
 
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         [JsonConverter(typeof(ACLTypeConverter))]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ACLType Type { get; set; }
 
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
@@ -192,12 +180,6 @@ namespace Consul
             _client = c;
         }
 
-        private class ACLCreationResult
-        {
-            [JsonProperty]
-            internal string ID { get; set; }
-        }
-
         /// <summary>
         /// [Deprecated] Create is used to generate a new token with the given parameters
         /// </summary>
@@ -218,8 +200,8 @@ namespace Consul
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<WriteResult<string>> Create(ACLEntry acl, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Put<ACLEntry, ACLCreationResult>("/v1/acl/create", acl, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            var res = await _client.Put<ACLEntry, JsonElement>("/v1/acl/create", acl, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(res, res.Response.GetProperty("ID").GetString());
         }
 
         /// <summary>
@@ -288,8 +270,8 @@ namespace Consul
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<WriteResult<string>> Clone(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.PutReturning<ACLCreationResult>(string.Format("/v1/acl/clone/{0}", id), q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            var res = await _client.PutReturning<JsonElement>(string.Format("/v1/acl/clone/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(res, res.Response.GetProperty("ID").GetString());
         }
 
         /// <summary>
