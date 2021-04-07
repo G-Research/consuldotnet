@@ -32,6 +32,8 @@ namespace Consul.Test
     public class SemaphoreTest : IDisposable
     {
         private ConsulClient _client;
+        const int DefaultSessionTTLSeconds = 10;
+        const int LockWaitTimeSeconds = 15;
 
         public SemaphoreTest()
         {
@@ -362,6 +364,58 @@ namespace Consul.Test
             Assert.False(semaphoreLock.IsHeld);
 
             await semaphoreLock.Destroy();
+        }
+
+        [Fact]
+        public async Task Passing_Cancelled_CancellationToken_Should_Throw_LockNotHeldException()
+        {
+            const string keyName = "service/myApp/leader";
+
+            var distributedLock = _client.CreateLock(new LockOptions(keyName)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+
+            var cts = new CancellationTokenSource();
+
+            cts.Cancel();
+
+            await Assert.ThrowsAsync<LockNotHeldException>(async () => await distributedLock.Acquire(cts.Token));
+        }
+
+        [Fact]
+        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_LockNotHeldException()
+        {
+            const string keyName = "service/myApp/leader";
+
+            var masterClient = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
+
+            var distributedLock2 = masterClient.CreateLock(new LockOptions(keyName)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+
+            var distributedLock = _client.CreateLock(new LockOptions(keyName)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+
+            await distributedLock2.Acquire(); // Become "Master" with another instance first
+
+            await Assert.ThrowsAsync<LockNotHeldException>(async () => await distributedLock.Acquire(cts.Token));
+
+            await distributedLock2.Release();
+            await distributedLock2.Destroy();
+            masterClient.Dispose();
         }
     }
 }
