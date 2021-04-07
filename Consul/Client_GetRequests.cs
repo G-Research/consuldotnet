@@ -23,6 +23,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Filtering;
 #if !(CORECLR || PORTABLE || PORTABLE40)
     using System.Security.Permissions;
     using System.Runtime.Serialization;
@@ -38,13 +39,16 @@ namespace Consul
     {
         public QueryOptions Options { get; set; }
 
-        public GetRequest(ConsulClient client, string url, QueryOptions options = null) : base(client, url, HttpMethod.Get)
+        public IEncodable Filter { get; set; }
+
+        public GetRequest(ConsulClient client, string url, QueryOptions options = null, IEncodable filter = null) : base(client, url, HttpMethod.Get)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new ArgumentException(nameof(url));
             }
             Options = options ?? QueryOptions.Default;
+            Filter = filter;
         }
 
         /// <summary>
@@ -126,6 +130,11 @@ namespace Consul
 
         protected override void ApplyOptions(ConsulClientConfiguration clientConfig)
         {
+            if (Filter != null)
+            {
+                Params["filter"] = Filter.Encode();
+            }
+
             if (Options == QueryOptions.Default)
             {
                 return;
