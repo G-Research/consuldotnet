@@ -386,7 +386,7 @@ namespace Consul.Test
         }
 
         [Fact]
-        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_LockNotHeldException()
+        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_TaskCanceledException()
         {
             var keyName = Path.GetTempFileName();
 
@@ -408,11 +408,11 @@ namespace Consul.Test
                 LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
             });
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
-
             await distributedLock2.Acquire(); // Become "Master" with another instance first
 
-            await Assert.ThrowsAsync<LockNotHeldException>(async () => await distributedLock.Acquire(cts.Token));
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            await Assert.ThrowsAsync<TaskCanceledException>(async () => await distributedLock.Acquire(cts.Token));
 
             await distributedLock2.Release();
             await distributedLock2.Destroy();
