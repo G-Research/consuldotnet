@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -387,7 +388,7 @@ namespace Consul.Test
         [Fact]
         public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_LockNotHeldException()
         {
-            const string keyName = "service/myApp/leader";
+            var keyName = Path.GetTempFileName();
 
             var masterClient = new ConsulClient(c =>
             {
@@ -421,7 +422,7 @@ namespace Consul.Test
         [Fact]
         public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Respects_The_Token()
         {
-            const string key = "service/myApp/leader";
+            var keyName = Path.GetTempFileName();
 
             var masterInstanceClient = new ConsulClient(c =>
             {
@@ -430,22 +431,24 @@ namespace Consul.Test
             });
 
             // Arrange
-            var distributedLock2 = masterInstanceClient.CreateLock(new LockOptions(key)
+            var distributedLock2 = masterInstanceClient.CreateLock(new LockOptions(keyName)
             {
                 SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
                 LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
             });
-            var distributedLock = _client.CreateLock(new LockOptions(key)
+            var distributedLock = _client.CreateLock(new LockOptions(keyName)
             {
                 SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
                 LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
             });
             var cancellationOperationTimer = new Stopwatch();
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
 
             // Act
             await distributedLock2.Acquire(); // Become "Master" with another instance first
             cancellationOperationTimer.Start();
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
             try
             {
                 await distributedLock.Acquire(cts.Token);
@@ -455,8 +458,8 @@ namespace Consul.Test
 
             // Assert
             var stopTimeMs = cancellationOperationTimer.ElapsedMilliseconds;
-            var LockWaitTimeMs = TimeSpan.FromSeconds(15).TotalMilliseconds;
-            Assert.True(stopTimeMs < LockWaitTimeMs);
+            var lockWaitTimeMs = TimeSpan.FromSeconds(LockWaitTimeSeconds).TotalMilliseconds;
+            Assert.True(stopTimeMs < lockWaitTimeMs);
 
             // cleanup
             await distributedLock2.Release();
