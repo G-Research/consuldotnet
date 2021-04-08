@@ -388,7 +388,7 @@ namespace Consul.Test
         [Fact]
         public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_TaskCanceledException()
         {
-            var keyName = Path.GetTempFileName();
+            var keyName = Path.GetRandomFileName();
 
             var masterClient = new ConsulClient(c =>
             {
@@ -422,7 +422,7 @@ namespace Consul.Test
         [Fact]
         public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Respects_The_Token()
         {
-            var keyName = Path.GetTempFileName();
+            var keyName = Path.GetRandomFileName();
 
             var masterInstanceClient = new ConsulClient(c =>
             {
