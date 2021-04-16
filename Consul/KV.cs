@@ -519,7 +519,7 @@ namespace Consul
         public Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
             p.Validate();
-            var req = _client.Put<object, bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), q);
+            var req = _client.Put<object, bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), null, q);
             if (p.Flags > 0)
             {
                 req.Params["flags"] = p.Flags.ToString();
@@ -540,14 +540,14 @@ namespace Consul
         /// If there are more non-KV operations in the future we may break out a new
         /// transaction API client, but it will be easy to keep this KV-specific variant
         /// supported.
-        /// 
+        ///
         /// Even though this is generally a write operation, we take a QueryOptions input
         /// and return a QueryMeta output. If the transaction contains only read ops, then
         /// Consul will fast-path it to a different endpoint internally which supports
         /// consistency controls, but not blocking. If there are write operations then
         /// the request will always be routed through raft and any consistency settings
         /// will be ignored.
-        /// 
+        ///
         /// // If there is a problem making the transaction request then an error will be
         /// returned. Otherwise, the ok value will be true if the transaction succeeded
         /// or false if it was rolled back. The response is a structured return value which
@@ -578,14 +578,14 @@ namespace Consul
         /// If there are more non-KV operations in the future we may break out a new
         /// transaction API client, but it will be easy to keep this KV-specific variant
         /// supported.
-        /// 
+        ///
         /// Even though this is generally a write operation, we take a QueryOptions input
         /// and return a QueryMeta output. If the transaction contains only read ops, then
         /// Consul will fast-path it to a different endpoint internally which supports
         /// consistency controls, but not blocking. If there are write operations then
         /// the request will always be routed through raft and any consistency settings
         /// will be ignored.
-        /// 
+        ///
         /// // If there is a problem making the transaction request then an error will be
         /// returned. Otherwise, the ok value will be true if the transaction succeeded
         /// or false if it was rolled back. The response is a structured return value which

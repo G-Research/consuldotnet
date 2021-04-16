@@ -356,7 +356,7 @@ namespace Consul
         /// <returns>A write result containing the result of the session destruction</returns>
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put<object, bool>(string.Format("/v1/session/destroy/{0}", id), q).Execute(ct);
+            return _client.Put<object, bool>(string.Format("/v1/session/destroy/{0}", id), null, q).Execute(ct);
         }
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace Consul
         /// <returns>An updated session entry</returns>
         public async Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.Put<object, SessionEntry[]>(string.Format("/v1/session/renew/{0}", id), q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Put<object, SessionEntry[]>(string.Format("/v1/session/renew/{0}", id), null, q).Execute(ct).ConfigureAwait(false);
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
                 throw new SessionExpiredException(string.Format("Session expired: {0}", id));

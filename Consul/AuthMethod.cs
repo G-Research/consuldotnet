@@ -241,7 +241,7 @@ namespace Consul
         /// <returns>A write result</returns>
         public async Task<WriteResult> Logout(WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
         {
-            return await _client.Post($"/v1/acl/logout", writeOptions).Execute(ct);
+            return await _client.Post($"/v1/acl/logout", null, writeOptions).Execute(ct);
         }
     }
 
