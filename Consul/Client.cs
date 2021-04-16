@@ -618,7 +618,7 @@ namespace Consul
             return new DeleteAcceptingRequest<TIn>(this, path, body, opts);
         }
 
-        internal PutReturningRequest<TOut> PutReturning<TOut>(string path, WriteOptions opts)
+        internal PutReturningRequest<TOut> PutReturning<TOut>(string path, WriteOptions opts = null)
         {
             return new PutReturningRequest<TOut>(this, path, opts);
         }
