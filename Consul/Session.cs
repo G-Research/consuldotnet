@@ -356,7 +356,7 @@ namespace Consul
         /// <returns>A write result containing the result of the session destruction</returns>
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put<object, bool>(string.Format("/v1/session/destroy/{0}", id), q).Execute(ct);
+            return _client.Put<object, bool>(string.Format("/v1/session/destroy/{0}", id), null, q).Execute(ct);
         }
 
         /// <summary>
