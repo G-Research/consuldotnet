@@ -291,16 +291,7 @@ namespace Consul
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
         public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/service/{0}", service), q);
-            if (!string.IsNullOrEmpty(tag))
-            {
-                req.Params["tag"] = tag;
-            }
-            if (passingOnly)
-            {
-                req.Params["passing"] = "1";
-            }
-            return req.Execute(ct);
+            return Service(service, tag, passingOnly, q, null, ct);
         }
 
         /// <summary>
