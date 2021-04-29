@@ -37,11 +37,22 @@ namespace Consul
     /// <typeparam name="TOut">A generic type to be deserialised and returned</typeparam>
     public class GetRequest<TOut> : ConsulRequest
     {
+        // TODO(marcink): Remove the setter in the next major release to make the class immutable
         public QueryOptions Options { get; set; }
 
-        public IEncodable Filter { get; set; }
+        public IEncodable Filter { get; }
 
-        public GetRequest(ConsulClient client, string url, QueryOptions options = null, IEncodable filter = null) : base(client, url, HttpMethod.Get)
+        public GetRequest(ConsulClient client, string url) :
+            this(client, url, null, null)
+        {
+        }
+
+        public GetRequest(ConsulClient client, string url, QueryOptions options) :
+            this(client, url, options, null)
+        {
+        }
+
+        public GetRequest(ConsulClient client, string url, QueryOptions options, IEncodable filter) : base(client, url, HttpMethod.Get)
         {
             if (string.IsNullOrEmpty(url))
             {

@@ -62,7 +62,6 @@ namespace Consul.Test
 
         private static class ServiceConstants
         {
-            public static readonly string NodeName = "nodeName";
             public static readonly string ServiceId = "serviceId";
             public static readonly string Address = "1.1.1.1";
             public static readonly int Port = 1234;
