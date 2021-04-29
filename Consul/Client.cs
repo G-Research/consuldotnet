@@ -530,7 +530,7 @@ namespace Consul
         void ApplyConfig(ConsulClientConfiguration config, WebRequestHandler handler, HttpClient client)
 #else
         void ApplyConfig(ConsulClientConfiguration config, HttpClientHandler handler, HttpClient client)
-#endif        
+#endif
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             if (config.HttpAuth != null)
@@ -595,67 +595,67 @@ namespace Consul
 
         internal GetRequest<TOut> Get<TOut>(string path, QueryOptions opts = null, IEncodable filter = null)
         {
-            return new GetRequest<TOut>(this, path, opts ?? QueryOptions.Default, filter);
+            return new GetRequest<TOut>(this, path, opts, filter);
         }
 
         internal GetRequest Get(string path, QueryOptions opts = null)
         {
-            return new GetRequest(this, path, opts ?? QueryOptions.Default);
+            return new GetRequest(this, path, opts);
         }
 
         internal DeleteReturnRequest<TOut> DeleteReturning<TOut>(string path, WriteOptions opts = null)
         {
-            return new DeleteReturnRequest<TOut>(this, path, opts ?? WriteOptions.Default);
+            return new DeleteReturnRequest<TOut>(this, path, opts);
         }
 
         internal DeleteRequest Delete(string path, WriteOptions opts = null)
         {
-            return new DeleteRequest(this, path, opts ?? WriteOptions.Default);
+            return new DeleteRequest(this, path, opts);
         }
 
-        internal DeleteAcceptingRequest<TIn> DeleteAccepting<TIn>(string path, TIn body, WriteOptions opts = null)
+        internal DeleteAcceptingRequest<TIn> DeleteAccepting<TIn>(string path, TIn body, WriteOptions opts)
         {
-            return new DeleteAcceptingRequest<TIn>(this, path, body, opts ?? WriteOptions.Default);
+            return new DeleteAcceptingRequest<TIn>(this, path, body, opts);
         }
 
         internal PutReturningRequest<TOut> PutReturning<TOut>(string path, WriteOptions opts = null)
         {
-            return new PutReturningRequest<TOut>(this, path, opts ?? WriteOptions.Default);
+            return new PutReturningRequest<TOut>(this, path, opts);
         }
 
-        internal PutRequest<TIn> Put<TIn>(string path, TIn body, WriteOptions opts = null)
+        internal PutRequest<TIn> Put<TIn>(string path, TIn body, WriteOptions opts)
         {
-            return new PutRequest<TIn>(this, path, body, opts ?? WriteOptions.Default);
+            return new PutRequest<TIn>(this, path, body, opts);
         }
 
         internal PutNothingRequest PutNothing(string path, WriteOptions opts = null)
         {
-            return new PutNothingRequest(this, path, opts ?? WriteOptions.Default);
+            return new PutNothingRequest(this, path, opts);
         }
 
-        internal PutRequest<TIn, TOut> Put<TIn, TOut>(string path, TIn body, WriteOptions opts = null)
+        internal PutRequest<TIn, TOut> Put<TIn, TOut>(string path, TIn body, WriteOptions opts)
         {
-            return new PutRequest<TIn, TOut>(this, path, body, opts ?? WriteOptions.Default);
+            return new PutRequest<TIn, TOut>(this, path, body, opts);
         }
 
         internal PostReturningRequest<TOut> PostReturning<TOut>(string path, WriteOptions opts = null)
         {
-            return new PostReturningRequest<TOut>(this, path, opts ?? WriteOptions.Default);
+            return new PostReturningRequest<TOut>(this, path, opts);
         }
 
-        internal PostRequest<TIn> Post<TIn>(string path, TIn body, WriteOptions opts = null)
+        internal PostRequest<TIn> Post<TIn>(string path, TIn body, WriteOptions opts)
         {
-            return new PostRequest<TIn>(this, path, body, opts ?? WriteOptions.Default);
+            return new PostRequest<TIn>(this, path, body, opts);
         }
 
-        internal PostRequest<TIn, TOut> Post<TIn, TOut>(string path, TIn body, WriteOptions opts = null)
+        internal PostRequest<TIn, TOut> Post<TIn, TOut>(string path, TIn body, WriteOptions opts)
         {
-            return new PostRequest<TIn, TOut>(this, path, body, opts ?? WriteOptions.Default);
+            return new PostRequest<TIn, TOut>(this, path, body, opts);
         }
 
         internal PostRequest Post(string path, string body, WriteOptions opts = null)
         {
-            return new PostRequest(this, path, body, opts ?? WriteOptions.Default);
+            return new PostRequest(this, path, body, opts);
         }
     }
 }
