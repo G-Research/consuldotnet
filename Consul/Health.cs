@@ -291,7 +291,7 @@ namespace Consul
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
         public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return Service(service, tag, passingOnly, QueryOptions.Default, null, ct);
+            return Service(service, tag, passingOnly, q, null, ct);
         }
 
         /// <summary>
