@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -385,9 +386,9 @@ namespace Consul.Test
         }
 
         [Fact]
-        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_LockNotHeldException()
+        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Should_Throw_TaskCanceledException()
         {
-            const string keyName = "service/myApp/leader";
+            var keyName = Path.GetRandomFileName();
 
             var masterClient = new ConsulClient(c =>
             {
@@ -407,15 +408,66 @@ namespace Consul.Test
                 LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
             });
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
-
             await distributedLock2.Acquire(); // Become "Master" with another instance first
 
-            await Assert.ThrowsAsync<LockNotHeldException>(async () => await distributedLock.Acquire(cts.Token));
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            await Assert.ThrowsAsync<TaskCanceledException>(async () => await distributedLock.Acquire(cts.Token));
 
             await distributedLock2.Release();
             await distributedLock2.Destroy();
             masterClient.Dispose();
+        }
+
+        [Fact]
+        public async Task Cancelling_A_Token_When_Acquiring_A_Lock_Respects_The_Token()
+        {
+            var keyName = Path.GetRandomFileName();
+
+            var masterInstanceClient = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
+
+            // Arrange
+            var distributedLock2 = masterInstanceClient.CreateLock(new LockOptions(keyName)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+            var distributedLock = _client.CreateLock(new LockOptions(keyName)
+            {
+                SessionTTL = TimeSpan.FromSeconds(DefaultSessionTTLSeconds),
+                LockWaitTime = TimeSpan.FromSeconds(LockWaitTimeSeconds)
+            });
+            var cancellationOperationTimer = new Stopwatch();
+
+            // Act
+            await distributedLock2.Acquire(); // Become "Master" with another instance first
+            cancellationOperationTimer.Start();
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+            try
+            {
+                await distributedLock.Acquire(cts.Token);
+            }
+            catch (Exception) { }
+            cancellationOperationTimer.Stop();
+
+            // Assert
+            var stopTimeMs = cancellationOperationTimer.ElapsedMilliseconds;
+            var lockWaitTimeMs = TimeSpan.FromSeconds(LockWaitTimeSeconds).TotalMilliseconds;
+            Assert.True(stopTimeMs < lockWaitTimeMs);
+
+            // cleanup
+            await distributedLock2.Release();
+            if (distributedLock.IsHeld)
+                await distributedLock2.Release();
+            await distributedLock2.Destroy();
+
+            masterInstanceClient.Dispose();
         }
     }
 }

@@ -405,7 +405,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put("/v1/agent/service/register", service).Execute(ct);
+            return _client.Put("/v1/agent/service/register", service, null).Execute(ct);
         }
 
         /// <summary>
@@ -462,7 +462,7 @@ namespace Consul
                 Status = status.Status,
                 Output = output
             };
-            return _client.Put(string.Format("/v1/agent/check/update/{0}", checkID), u).Execute(ct);
+            return _client.Put(string.Format("/v1/agent/check/update/{0}", checkID), u, null).Execute(ct);
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> CheckRegister(AgentCheckRegistration check, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put("/v1/agent/check/register", check).Execute(ct);
+            return _client.Put("/v1/agent/check/register", check, null).Execute(ct);
         }
 
         /// <summary>
