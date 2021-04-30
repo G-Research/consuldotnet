@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.6.1.2-rc1</Version>
+    <VersionPrefix>1.6.1.2</VersionPrefix>
+    <VersionSuffix>rc1</VersionSuffix>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netstandard2.0;net461</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
     <AssemblyName>Consul</AssemblyName>
