@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.6.1.2
+## 1.6.10.1
 * Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
 * Compatibility with Consul 1.7.x - RoleLink & PolicyLink (#31)
 * Added the possibility to specify more http request options and meta-data when registering service checks (#39) 
