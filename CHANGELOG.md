@@ -16,6 +16,7 @@
 * Fixed NRE in Lock (#66)
 * Lock: Forward user cancellation token downstream (#67)
 * Pass WriteOptions parameter to correct parameter of Put(...) (#76)(#77)
+* Update consul to v1.6.10 (#78)
 
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework
