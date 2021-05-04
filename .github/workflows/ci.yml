@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  CONSUL_VERSION: 1.6.1
+  CONSUL_VERSION: 1.6.10
 
 jobs:
 

@@ -1,11 +1,22 @@
 # Changelog
 
 ## Unreleased
-* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures  
-* Added the possibility to specify more http request options and meta-data when registrating service checks. 
+
+## 1.6.10.1
+* Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
+* Compatibility with Consul 1.7.x - RoleLink & PolicyLink (#31)
+* Added the possibility to specify more http request options and meta-data when registering service checks (#39) 
   It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
   A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
-* Fix issue #24 removing constructor's Obsolete attribute for HttpClient injection
+* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures (#42)   
+* Fix issue #24 removing constructor's Obsolete attribute for HttpClient injection (#32)
+* Added asp net core integration - Consul.AspNetCore (#17)(#45)
+* Fixed lock and semaphore timeouts logic (#64)
+* Added service and node filtering abilities into Health.Service (#70)
+* Fixed NRE in Lock (#66)
+* Lock: Forward user cancellation token downstream (#67)
+* Pass WriteOptions parameter to correct parameter of Put(...) (#76)(#77)
+* Update consul to v1.6.10 (#78)
 
 ## 1.6.1.1
 * Fix issue #9 preventing use of the library with .NET Framework

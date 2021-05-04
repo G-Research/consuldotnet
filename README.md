@@ -3,7 +3,7 @@
 ![CI](https://github.com/G-Research/consuldotnet/workflows/CI/badge.svg)
 [![](https://img.shields.io/nuget/v/consul)](https://www.nuget.org/packages/Consul/)
 
-* Consul API: [v1.6.1](https://github.com/hashicorp/consul/tree/v1.6.1/api)
+* Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
 * .NET: >= 4.6.1 - .NET Core: >= 2.0.0
 
 Consul.NET is a .NET port of the Go Consul API, but reworked to use .NET
