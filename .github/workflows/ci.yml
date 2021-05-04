@@ -81,7 +81,7 @@ jobs:
             $expectedFile = "dist/consul/Consul.$tag.nupkg"
             if (-not (Test-Path -Path $expectedFile))
             {            
-                echo "Expected file $expectedFile doesn't exist
+                echo "Expected file $expectedFile doesn't exist"
                 exit 1
             }
           }
