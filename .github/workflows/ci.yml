@@ -78,7 +78,7 @@ jobs:
             $suffix = 'g' + $(git rev-parse --short HEAD)
             $params = "--version-suffix", $suffix
           }
-          
+
           dotnet pack --configuration=Release --no-build @params Consul/Consul.csproj
 
           if ("${{ github.ref }}" -like "refs/tags/v*") {
