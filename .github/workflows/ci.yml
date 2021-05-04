@@ -78,6 +78,11 @@ jobs:
           if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
             $tag = "${{ github.ref }}".SubString(11)
             $version = "1.2.3.4"
-            IF NOT EXIST dist/consul/Consul.$tag.nupkg echo "There is a mismatch between the project version ($version) and the tag ($tag) exit 1
+            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            if (-not (Test-Path -Path $expectedFile))
+            {            
+                echo "Expected file $expectedFile doesn't exist
+                exit 1
+            }
           }
        
