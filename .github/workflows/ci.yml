@@ -75,10 +75,9 @@ jobs:
           
           dotnet pack --configuration=Release --no-build @params Consul/Consul.csproj
           
-          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
+          if ("${{ github.ref }}" -like "refs/tags/v*")) {
             $tag = "${{ github.ref }}".SubString(11)
-            $version = "1.2.3.4"
-            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            $expectedFile = "dist/consul/Consul.$version.nupkg"
             if (-not (Test-Path -Path $expectedFile))
             {            
                 echo "Expected file $expectedFile doesn't exist"
