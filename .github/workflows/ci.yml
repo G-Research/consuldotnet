@@ -70,14 +70,7 @@ jobs:
       - name: Create NuGet package
         if: runner.os == 'Windows'
         run: |
-          if ("${{ github.ref }}" -like "refs/tags/v*") {
-            $tag = "${{ github.ref }}".SubString(11)
-            $version = (Select-Xml -path Consul/Consul.csproj -XPath "/Project/PropertyGroup/VersionPrefix/text()").node.Value
-            if (-not ($tag -eq $version)) {
-              echo "There is a mismatch between the project version ($version) and the tag ($tag)"
-              exit 1
-            }
-          } else {
+          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
             # WORKAROUND: Add letter prefix to ensure that MSBuild treats
             # the suffix as a string. e.g. '0313071' will fail as an invalid
             # version string, but 'G0313071' will succeeded. It looks like
@@ -85,7 +78,19 @@ jobs:
             $suffix = 'g' + $(git rev-parse --short HEAD)
             $params = "--version-suffix", $suffix
           }
+
           dotnet pack --configuration=Release --no-build @params Consul/Consul.csproj
+
+          if ("${{ github.ref }}" -like "refs/tags/v*") {
+            $tag = "${{ github.ref }}".SubString(11)
+            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            # Check whether the tag and the package version match together
+            if (-not (Test-Path -Path $expectedFile)) {
+                echo "Expected file $expectedFile doesn't exist"
+                exit 1
+            }
+          }
+
       - name: Upload NuGet package artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v2
