@@ -85,8 +85,7 @@ jobs:
             $tag = "${{ github.ref }}".SubString(11)
             $expectedFile = "dist/consul/Consul.$tag.nupkg"
             # Check whether the tag and the package version match together
-            if (-not (Test-Path -Path $expectedFile))
-            {            
+            if (-not (Test-Path -Path $expectedFile)) {
                 echo "Expected file $expectedFile doesn't exist"
                 exit 1
             }
