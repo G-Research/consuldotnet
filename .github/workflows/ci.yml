@@ -34,7 +34,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        os: [windows-2019]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -55,12 +55,6 @@ jobs:
           rm consul.zip
       - name: Build
         run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true
-      - name: Run tests
-        shell: bash
-        run: |
-          cd Consul.Test
-          ./consul agent -dev -config-file test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test --configuration=Release --no-build -v=Normal
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v2
