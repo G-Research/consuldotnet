@@ -77,7 +77,7 @@ jobs:
           
           if ("${{ github.ref }}" -like "refs/tags/v*") {
             $tag = "${{ github.ref }}".SubString(11)
-            $expectedFile = "dist/consul/Consul.$version.nupkg"
+            $expectedFile = "dist/consul/Consul.$tag.nupkg"
             if (-not (Test-Path -Path $expectedFile))
             {            
                 echo "Expected file $expectedFile doesn't exist"
