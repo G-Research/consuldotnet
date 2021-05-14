@@ -1,0 +1,25 @@
+<Project>
+    <PropertyGroup>
+        <Authors>PlayFab,G-Research</Authors>
+        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+        <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <SignAssembly>true</SignAssembly>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PublicSign>true</PublicSign>
+        <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
+        <PackageOutputPath>../dist</PackageOutputPath>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
+        <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+</Project>
