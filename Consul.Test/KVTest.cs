@@ -27,24 +27,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class KVTest : IDisposable
+    public class KVTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public KVTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         private static readonly Random Random = new Random();
 
         internal static string GenerateTestKeyName()

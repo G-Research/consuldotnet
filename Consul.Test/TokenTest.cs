@@ -22,24 +22,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class TokenTest : IDisposable
+    public class TokenTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public TokenTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [SkippableFact]
         public async Task Token_CreateDelete()
         {

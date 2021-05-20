@@ -24,24 +24,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class HealthTest : IDisposable
+    public class HealthTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public HealthTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Health_GetLocalNode()
         {
