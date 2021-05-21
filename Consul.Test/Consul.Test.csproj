@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netcoreapp2.1;netcoreapp3.1;net461</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PublicSign>true</PublicSign>
     <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
