@@ -40,11 +40,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup .NET Core SDK
-        if: runner.os != 'Windows'
+      - name: Setup .NET Core SDK v2.1.x
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.404
+          dotnet-version: 2.1.x
+      - name: Setup .NET Core SDK v3.1.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup .NET SDK v5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
       - name: Download Consul
         shell: bash
         run: |

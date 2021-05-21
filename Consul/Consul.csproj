@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>1.6.10.1</VersionPrefix>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netstandard2.0;net461</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
     <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
@@ -32,6 +31,7 @@
   </ItemGroup>
 
   <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' ">
+  <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' And '$(OS)' == 'Windows_NT'">
     <ItemGroup>
       <BuildArtifacts Include="$(OutputPath)$(AssemblyName).*" />
       <ArtifactsToMerge Include="$(OutputPath)Newtonsoft.Json.dll" />
