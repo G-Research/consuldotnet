@@ -30,7 +30,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' ">
   <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' And '$(OS)' == 'Windows_NT'">
     <ItemGroup>
       <BuildArtifacts Include="$(OutputPath)$(AssemblyName).*" />
