@@ -24,10 +24,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Filtering;
-#if !(NETSTANDARD || NETCOREAPP)
-    using System.Security.Permissions;
-    using System.Runtime.Serialization;
-#endif
 
 namespace Consul
 {

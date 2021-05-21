@@ -18,10 +18,6 @@
 
 using System;
 using System.Net;
-#if !(NETSTANDARD || NETCOREAPP)
-    using System.Security.Permissions;
-    using System.Runtime.Serialization;
-#endif
 
 namespace Consul
 {

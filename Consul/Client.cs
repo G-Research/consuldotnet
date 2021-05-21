@@ -24,10 +24,6 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using Consul.Filtering;
 using Newtonsoft.Json;
-#if !(NETSTANDARD || NETCOREAPP)
-using System.Security.Permissions;
-using System.Runtime.Serialization;
-#endif
 
 namespace Consul
 {
