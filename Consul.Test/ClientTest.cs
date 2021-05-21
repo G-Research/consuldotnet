@@ -264,7 +264,7 @@ namespace Consul.Test
                 Assert.Equal(TimeSpan.FromSeconds(30), c.HttpClient.Timeout);
             }
 
-#if !NETSTANDARD || NETCOREAPP
+#if !(NETSTANDARD || NETCOREAPP)
             using (var c = new ConsulClient(cfgAction,
                 (client) => { client.Timeout = TimeSpan.FromSeconds(30); },
                 (handler) => { handler.Proxy = new WebProxy("127.0.0.1", 8080); }))

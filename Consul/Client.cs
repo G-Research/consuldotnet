@@ -398,7 +398,7 @@ namespace Consul
         /// <param name="configOverride">The Action to modify the default configuration with</param>
         /// <param name="clientOverride">The Action to modify the HttpClient with</param>
         /// <param name="handlerOverride">The Action to modify the WebRequestHandler with</param>
-#if !NETSTANDARD || NETCOREAPP
+#if !(NETSTANDARD || NETCOREAPP)
         public ConsulClient(Action<ConsulClientConfiguration> configOverride, Action<HttpClient> clientOverride, Action<WebRequestHandler> handlerOverride)
 #else
         public ConsulClient(Action<ConsulClientConfiguration> configOverride, Action<HttpClient> clientOverride, Action<HttpClientHandler> handlerOverride)
@@ -522,7 +522,7 @@ namespace Consul
             ApplyConfig(sender as ConsulClientConfiguration, HttpHandler, HttpClient);
 
         }
-#if !NETSTANDARD || NETCOREAPP
+#if !(NETSTANDARD || NETCOREAPP)
         void ApplyConfig(ConsulClientConfiguration config, WebRequestHandler handler, HttpClient client)
 #else
         void ApplyConfig(ConsulClientConfiguration config, HttpClientHandler handler, HttpClient client)
@@ -555,7 +555,7 @@ namespace Consul
                 }
             }
 #endif
-#if !NETSTANDARD || NETCOREAPP
+#if !(NETSTANDARD || NETCOREAPP)
 #pragma warning disable CS0618 // Type or member is obsolete
             if (config.DisableServerCertificateValidation)
 #pragma warning restore CS0618 // Type or member is obsolete
