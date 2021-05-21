@@ -18,7 +18,7 @@
 
 using System;
 using System.Net;
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     using System.Security.Permissions;
     using System.Runtime.Serialization;
 #endif

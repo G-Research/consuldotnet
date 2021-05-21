@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace Consul
 {
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class LockHeldException : Exception
@@ -42,13 +42,13 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected LockHeldException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class LockNotHeldException : Exception
@@ -66,13 +66,13 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected LockNotHeldException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class LockInUseException : Exception
@@ -90,13 +90,13 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected LockInUseException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class LockConflictException : Exception
@@ -114,13 +114,13 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected LockConflictException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class LockMaxAttemptsReachedException : Exception
@@ -128,7 +128,7 @@ namespace Consul
         public LockMaxAttemptsReachedException() { }
         public LockMaxAttemptsReachedException(string message) : base(message) { }
         public LockMaxAttemptsReachedException(string message, Exception inner) : base(message, inner) { }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected LockMaxAttemptsReachedException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }

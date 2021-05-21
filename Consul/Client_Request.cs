@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     using System.Security.Permissions;
     using System.Runtime.Serialization;
 #endif

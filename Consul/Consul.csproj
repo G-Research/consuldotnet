@@ -31,7 +31,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' And '$(OS)' == 'Windows_NT'">
+  <Target Name="ILMerge" AfterTargets="AfterBuild" Condition=" '$(TargetFramework)' == 'net461' ">
     <ItemGroup>
       <BuildArtifacts Include="$(OutputPath)$(AssemblyName).*" />
       <ArtifactsToMerge Include="$(OutputPath)Newtonsoft.Json.dll" />
