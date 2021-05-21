@@ -269,7 +269,7 @@ namespace Consul
         {
             internal readonly bool skipClientDispose;
             internal readonly HttpClient HttpClient;
-#if NETSTANDARD
+#if CORECLR
             internal readonly HttpClientHandler HttpHandler;
 #else
             internal readonly WebRequestHandler HttpHandler;
@@ -279,7 +279,7 @@ namespace Consul
             public ConsulClientConfigurationContainer()
             {
                 Config = new ConsulClientConfiguration();
-#if NETSTANDARD
+#if CORECLR
                 HttpHandler = new HttpClientHandler();
 #else
                 HttpHandler = new WebRequestHandler();
@@ -301,7 +301,7 @@ namespace Consul
             public ConsulClientConfigurationContainer(ConsulClientConfiguration config)
             {
                 Config = config;
-#if NETSTANDARD
+#if CORECLR
                 HttpHandler = new HttpClientHandler();
 #else
                 HttpHandler = new WebRequestHandler();
@@ -363,7 +363,7 @@ namespace Consul
         private ConsulClientConfigurationContainer ConfigContainer;
 
         internal HttpClient HttpClient { get { return ConfigContainer.HttpClient; } }
-#if NETSTANDARD
+#if CORECLR
         internal HttpClientHandler HttpHandler { get { return ConfigContainer.HttpHandler; } }
 #else
         internal WebRequestHandler HttpHandler { get { return ConfigContainer.HttpHandler; } }
@@ -402,7 +402,7 @@ namespace Consul
         /// <param name="configOverride">The Action to modify the default configuration with</param>
         /// <param name="clientOverride">The Action to modify the HttpClient with</param>
         /// <param name="handlerOverride">The Action to modify the WebRequestHandler with</param>
-#if !NETSTANDARD
+#if !CORECLR
         public ConsulClient(Action<ConsulClientConfiguration> configOverride, Action<HttpClient> clientOverride, Action<WebRequestHandler> handlerOverride)
 #else
         public ConsulClient(Action<ConsulClientConfiguration> configOverride, Action<HttpClient> clientOverride, Action<HttpClientHandler> handlerOverride)
@@ -526,7 +526,7 @@ namespace Consul
             ApplyConfig(sender as ConsulClientConfiguration, HttpHandler, HttpClient);
 
         }
-#if !NETSTANDARD
+#if !CORECLR
         void ApplyConfig(ConsulClientConfiguration config, WebRequestHandler handler, HttpClient client)
 #else
         void ApplyConfig(ConsulClientConfiguration config, HttpClientHandler handler, HttpClient client)
@@ -559,7 +559,7 @@ namespace Consul
                 }
             }
 #endif
-#if !NETSTANDARD
+#if !CORECLR
 #pragma warning disable CS0618 // Type or member is obsolete
             if (config.DisableServerCertificateValidation)
 #pragma warning restore CS0618 // Type or member is obsolete
