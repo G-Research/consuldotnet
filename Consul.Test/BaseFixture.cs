@@ -30,36 +30,30 @@ namespace Consul.Test
         /// This aims to workaround it in a not so elegant way. https://github.com/hashicorp/consul/issues/819
         /// </summary>
         /// <returns></returns>
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            if (_ready) return Task.CompletedTask;
+            if (_ready) return;
 
             var cancelToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
 
-            var initialize = Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 while (!_ready)
                 {
+                    cancelToken.ThrowIfCancellationRequested();
                     try
                     {
-                        cancelToken.ThrowIfCancellationRequested();
                         var leader = await _client.Status.Leader();
                         if (!string.IsNullOrEmpty(leader))
                         {
                             _ready = true;
                         }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
                     catch
                     {
                     }
                 }
             }, cancelToken);
-
-            return initialize;
         }
     }
 }
