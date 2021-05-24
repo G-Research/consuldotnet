@@ -6,6 +6,7 @@ namespace Consul.Test
     public class BaseFixture : IAsyncLifetime
     {
         protected ConsulClient _client;
+        private static bool _ready;
 
         public BaseFixture()
         {
@@ -29,16 +30,14 @@ namespace Consul.Test
         /// <returns></returns>
         public async Task InitializeAsync()
         {
-            bool ready = false;
-
-            while (!ready)
+            while (!_ready)
             {
                 try
                 {
                     var leader = await _client.Status.Leader();
                     if (!string.IsNullOrEmpty(leader))
                     {
-                        ready = true;
+                        _ready = true;
                     }
                 }
                 catch
