@@ -49,7 +49,7 @@ namespace Consul.Test
                             _ready = true;
                         }
                     }
-                    catch(OperationCanceledException)
+                    catch (OperationCanceledException)
                     {
                         break;
                     }
