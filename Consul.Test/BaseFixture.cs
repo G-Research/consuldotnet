@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -28,22 +30,36 @@ namespace Consul.Test
         /// This aims to workaround it in a not so elegant way. https://github.com/hashicorp/consul/issues/819
         /// </summary>
         /// <returns></returns>
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            while (!_ready)
+            if (_ready) return Task.CompletedTask;
+
+            var cancelToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+
+            var initialize = Task.Run(async () =>
             {
-                try
+                while (!_ready)
                 {
-                    var leader = await _client.Status.Leader();
-                    if (!string.IsNullOrEmpty(leader))
+                    try
                     {
-                        _ready = true;
+                        cancelToken.ThrowIfCancellationRequested();
+                        var leader = await _client.Status.Leader();
+                        if (!string.IsNullOrEmpty(leader))
+                        {
+                            _ready = true;
+                        }
+                    }
+                    catch(OperationCanceledException)
+                    {
+                        break;
+                    }
+                    catch
+                    {
                     }
                 }
-                catch
-                {
-                }
-            }
+            }, cancelToken);
+
+            return initialize;
         }
     }
 }
