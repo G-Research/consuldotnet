@@ -25,24 +25,8 @@ using S = Consul.Filtering.Selectors;
 
 namespace Consul.Test
 {
-    public class FilterTests : IDisposable
+    public class FilterTests : BaseFixture
     {
-        private ConsulClient _client;
-
-        public FilterTests()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         private static void CheckEncoded(string expected, IEncodable expression) =>
             Assert.Equal(expected, expression.Encode());
 
