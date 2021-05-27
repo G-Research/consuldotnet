@@ -30,25 +30,10 @@ namespace Consul.Test
     // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
     [Collection("SemaphoreTest")]
-    public class SemaphoreTest : IDisposable
+    public class SemaphoreTest : BaseFixture
     {
-        private ConsulClient _client;
         const int DefaultSessionTTLSeconds = 10;
         const int LockWaitTimeSeconds = 15;
-
-        public SemaphoreTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
 
         [Fact]
         public async Task Semaphore_BadLimit()

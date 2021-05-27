@@ -25,24 +25,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class SessionTest : IDisposable
+    public class SessionTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public SessionTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Session_CreateDestroy()
         {

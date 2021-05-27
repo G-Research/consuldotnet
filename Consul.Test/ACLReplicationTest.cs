@@ -23,24 +23,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class ACLReplicationTest : IDisposable
+    public class ACLReplicationTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public ACLReplicationTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [SkippableFact]
         public async Task ACLReplication_GetStatus()
         {

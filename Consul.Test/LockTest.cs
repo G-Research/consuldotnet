@@ -29,24 +29,8 @@ namespace Consul.Test
     // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
     [Collection("LockTest")]
-    public class LockTest : IDisposable
+    public class LockTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public LockTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Lock_AcquireRelease()
         {
