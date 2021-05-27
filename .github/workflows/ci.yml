@@ -85,7 +85,6 @@ jobs:
           fi
           echo "::set-output name=framework::${dotnet[0]}"
           echo "::set-output name=version::${dotnet[1]}"
-          echo "::set-output name=channel::${dotnet[2]}"
           echo "::set-output name=libframework::$libframework"
       - name: Setup old .NET SDK
         uses: actions/setup-dotnet@v1
@@ -109,9 +108,9 @@ jobs:
           unzip consul.zip
           rm consul.zip
       - name: Build library
-        run: dotnet build --framework ${{ steps.dotnet.outputs.libframework }} --configuration=Release -p:Channel=${{ steps.dotnet.outputs.channel }} ${{ matrix.component }}
+        run: dotnet build --framework ${{ steps.dotnet.outputs.libframework }} --configuration=Release ${{ matrix.component }}
       - name: Build tests
-        run: dotnet build --no-dependencies --framework ${{ steps.dotnet.outputs.framework }} --configuration=Release -p:Channel=${{ steps.dotnet.outputs.channel }} ${{ matrix.component }}.Test
+        run: dotnet build --no-dependencies --framework ${{ steps.dotnet.outputs.framework }} --configuration=Release ${{ matrix.component }}.Test
       - name: Run tests
         shell: bash
         run: |
@@ -124,7 +123,7 @@ jobs:
           then
             logger='--logger "GitHubActions;report-warnings=false"'
           fi
-          dotnet test --framework ${{ steps.dotnet.outputs.framework }} --configuration=Release -p:Channel=${{ steps.dotnet.outputs.channel }} -v normal --no-build $logger
+          dotnet test --framework ${{ steps.dotnet.outputs.framework }} --configuration=Release -v normal --no-build $logger
       - name: Upload Consul logs
         if: failure() && matrix.component == 'Consul'
         uses: actions/upload-artifact@v2
