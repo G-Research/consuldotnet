@@ -23,24 +23,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class AuthMethodTest : IDisposable
+    public class AuthMethodTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public AuthMethodTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [SkippableFact]
         public async Task AuthMethod_CreateDelete()
         {

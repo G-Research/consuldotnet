@@ -17,30 +17,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
 {
-    public class StatusTest : IDisposable
+    public class StatusTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public StatusTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Status_Leader()
         {

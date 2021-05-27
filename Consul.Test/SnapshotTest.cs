@@ -17,7 +17,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,24 +28,8 @@ namespace Consul.Test
     /// Snapshot tests mutate global state of the consul client so we avoid running them in parallel with other tests.
     /// </summary>
     [Collection(nameof(ExclusiveCollection))]
-    public class SnapshotTest : IDisposable
+    public class SnapshotTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public SnapshotTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Snapshot_TakeRestore()
         {

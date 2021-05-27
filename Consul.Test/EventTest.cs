@@ -24,24 +24,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class EventTest : IDisposable
+    public class EventTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public EventTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Event_FireList()
         {

@@ -17,32 +17,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
 {
-    public class OperatorTest : IDisposable
+    public class OperatorTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public OperatorTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Operator_GetRaftGetConfiguration()
         {

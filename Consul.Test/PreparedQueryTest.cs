@@ -17,32 +17,14 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
 {
-    public class PreparedQueryTest : IDisposable
+    public class PreparedQueryTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public PreparedQueryTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task PreparedQuery_Test()
         {

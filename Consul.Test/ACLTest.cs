@@ -24,24 +24,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class ACLTest : IDisposable
+    public class ACLTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public ACLTest()
-        {
-            _client = new ConsulClient(c =>
-              {
-                  c.Token = TestHelper.MasterToken;
-                  c.Address = TestHelper.HttpUri;
-              });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [SkippableFact]
         public async Task ACL_CreateDestroyLegacyToken()
         {

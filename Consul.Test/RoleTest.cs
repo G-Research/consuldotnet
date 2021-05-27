@@ -22,24 +22,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class RoleTest : IDisposable
+    public class RoleTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public RoleTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [SkippableFact]
         public async Task Role_CreateDelete()
         {
