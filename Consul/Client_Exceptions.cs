@@ -18,7 +18,7 @@
 
 using System;
 using System.Net;
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     using System.Security.Permissions;
     using System.Runtime.Serialization;
 #endif
@@ -28,7 +28,7 @@ namespace Consul
     /// <summary>
     /// Represents errors that occur while sending data to or fetching data from the Consul agent.
     /// </summary>
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class ConsulRequestException : Exception
@@ -37,7 +37,7 @@ namespace Consul
         public ConsulRequestException() { }
         public ConsulRequestException(string message, HttpStatusCode statusCode) : base(message) { StatusCode = statusCode; }
         public ConsulRequestException(string message, HttpStatusCode statusCode, Exception inner) : base(message, inner) { StatusCode = statusCode; }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected ConsulRequestException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
@@ -55,7 +55,7 @@ namespace Consul
     /// <summary>
     /// Represents errors that occur during initalization of the Consul client's configuration.
     /// </summary>
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class ConsulConfigurationException : Exception
@@ -63,7 +63,7 @@ namespace Consul
         public ConsulConfigurationException() { }
         public ConsulConfigurationException(string message) : base(message) { }
         public ConsulConfigurationException(string message, Exception inner) : base(message, inner) { }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected ConsulConfigurationException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }

@@ -22,10 +22,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
-#if !(CORECLR || PORTABLE || PORTABLE40)
-    using System.Security.Permissions;
-    using System.Runtime.Serialization;
-#endif
 
 namespace Consul
 {

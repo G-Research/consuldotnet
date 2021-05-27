@@ -24,14 +24,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 #endif
 
 namespace Consul
 {
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreLimitConflictException : Exception
@@ -57,7 +57,7 @@ namespace Consul
             LocalLimit = localLimit;
         }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreLimitConflictException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
@@ -73,7 +73,7 @@ namespace Consul
 #endif
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreHeldException : Exception
@@ -91,14 +91,14 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreHeldException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreNotHeldException : Exception
@@ -116,14 +116,14 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreNotHeldException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreInUseException : Exception
@@ -142,7 +142,7 @@ namespace Consul
         {
         }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreInUseException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
@@ -150,7 +150,7 @@ namespace Consul
 
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreConflictException : Exception
@@ -168,14 +168,14 @@ namespace Consul
             : base(message, inner)
         {
         }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreConflictException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
 #endif
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SemaphoreMaxAttemptsReachedException : Exception
@@ -183,7 +183,7 @@ namespace Consul
         public SemaphoreMaxAttemptsReachedException() { }
         public SemaphoreMaxAttemptsReachedException(string message) : base(message) { }
         public SemaphoreMaxAttemptsReachedException(string message, Exception inner) : base(message, inner) { }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SemaphoreMaxAttemptsReachedException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }

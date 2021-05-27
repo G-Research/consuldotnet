@@ -61,7 +61,7 @@ namespace Consul.Test
             Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", string.Empty);
 
 
-#if !CORECLR
+#if !(NETSTANDARD || NETCOREAPP)
             Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
                 SslPolicyErrors.RemoteCertificateChainErrors));
             ServicePointManager.ServerCertificateValidationCallback = null;
@@ -188,7 +188,7 @@ namespace Consul.Test
 #pragma warning restore CS0618 // Type or member is obsolete
                 await client.KV.Put(new KVPair("kv/reuseconfig") { Flags = 1000 });
                 Assert.Equal<ulong>(1000, (await client.KV.Get("kv/reuseconfig")).Response.Flags);
-#if !CORECLR
+#if !(NETSTANDARD || NETCOREAPP)
                 Assert.True(client.HttpHandler.ServerCertificateValidationCallback(null, null, null,
                     SslPolicyErrors.RemoteCertificateChainErrors));
 #endif
@@ -203,7 +203,7 @@ namespace Consul.Test
 #pragma warning restore CS0618 // Type or member is obsolete
                 await client.KV.Put(new KVPair("kv/reuseconfig") { Flags = 2000 });
                 Assert.Equal<ulong>(2000, (await client.KV.Get("kv/reuseconfig")).Response.Flags);
-#if !CORECLR
+#if !(NETSTANDARD || NETCOREAPP)
                 Assert.Null(client.HttpHandler.ServerCertificateValidationCallback);
 #endif
             }
@@ -247,7 +247,7 @@ namespace Consul.Test
                 Assert.Equal(TimeSpan.FromSeconds(30), c.HttpClient.Timeout);
             }
 
-#if !CORECLR
+#if !(NETSTANDARD || NETCOREAPP)
             using (var c = new ConsulClient(cfgAction,
                 (client) => { client.Timeout = TimeSpan.FromSeconds(30); },
                 (handler) => { handler.Proxy = new WebProxy("127.0.0.1", 8080); }))

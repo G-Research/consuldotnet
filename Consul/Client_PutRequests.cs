@@ -22,10 +22,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-#if !(CORECLR || PORTABLE || PORTABLE40)
-    using System.Security.Permissions;
-    using System.Runtime.Serialization;
-#endif
 
 namespace Consul
 {

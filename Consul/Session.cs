@@ -89,7 +89,7 @@ namespace Consul
         }
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SessionExpiredException : Exception
@@ -97,7 +97,7 @@ namespace Consul
         public SessionExpiredException() { }
         public SessionExpiredException(string message) : base(message) { }
         public SessionExpiredException(string message, Exception inner) : base(message, inner) { }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SessionExpiredException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
@@ -105,7 +105,7 @@ namespace Consul
 
     }
 
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
     [Serializable]
 #endif
     public class SessionCreationException : Exception
@@ -113,7 +113,7 @@ namespace Consul
         public SessionCreationException() { }
         public SessionCreationException(string message) : base(message) { }
         public SessionCreationException(string message, Exception inner) : base(message, inner) { }
-#if !(CORECLR || PORTABLE || PORTABLE40)
+#if !(NETSTANDARD || NETCOREAPP)
         protected SessionCreationException(
           SerializationInfo info,
           StreamingContext context) : base(info, context) { }
