@@ -18,7 +18,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -29,24 +28,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class ClientTest : IDisposable
+    public class ClientTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public ClientTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public void Client_DefaultConfig_env()
         {

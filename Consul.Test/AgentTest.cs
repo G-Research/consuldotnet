@@ -18,30 +18,13 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
 {
-    public class AgentTest : IDisposable
+    public class AgentTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public AgentTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Agent_GetSelf()
         {

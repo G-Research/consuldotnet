@@ -23,24 +23,8 @@ using Xunit;
 
 namespace Consul.Test
 {
-    public class CoordinateTest : IDisposable
+    public class CoordinateTest : BaseFixture
     {
-        private ConsulClient _client;
-
-        public CoordinateTest()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-
         [Fact]
         public async Task Coordinate_GetDatacenters()
         {
