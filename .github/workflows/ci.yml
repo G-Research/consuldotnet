@@ -67,7 +67,7 @@ jobs:
         run: |
           cd Consul.Test
           ./consul agent -dev -config-file test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test --configuration=Release --logger GitHubActions --no-build -v=Normal
+          dotnet test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v2
