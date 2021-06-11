@@ -1,7 +1,13 @@
 name: CI
+
 on:
   push:
   pull_request:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+    
 jobs:
   Consul_AspNetCore:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
@@ -70,3 +76,52 @@ jobs:
         with:
           name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
           path: consul*.log
+
+  package:
+    runs-on: ubuntu-18.04
+    needs: [Consul_AspNetCore, Consul]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Create NuGet package
+      shell: bash
+      run: |
+        if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
+          # WORKAROUND: Add letter prefix to ensure that MSBuild treats
+          # the suffix as a string. e.g. '0313071' will fail as an invalid
+          # version string, but 'G0313071' will succeeded. It looks like
+          # the parser does not like numbers with a leading zero.
+          $suffix = 'g' + $(git rev-parse --short HEAD)
+          $params = "--version-suffix", $suffix
+        }
+
+        dotnet pack --configuration=Release --output dist
+
+        if ("${{ github.ref }}" -like "refs/tags/v*") {
+            $tag = "${{ github.ref }}".SubString(11)
+            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            # Check whether the tag and the package version match together
+            if (-not (Test-Path -Path $expectedFile)) {
+                echo "Expected file $expectedFile doesn't exist"
+                exit 1
+            }
+        }
+    - name: Upload NuGet package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: dist/*.nupkg
+
+  # Publish NuGet package when a tag is pushed.
+  # Tests need to succeed for all components and on all platforms first,
+  # including having a tag name that matches the version number.
+  publish:
+    if: github.ref == 'refs/heads/master' && startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download NuGet package artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: dist
+      - name: Publish to NuGet
+        run: dotnet nuget push dist/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
