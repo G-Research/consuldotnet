@@ -78,13 +78,12 @@ jobs:
           path: consul*.log
 
   package:
-    runs-on: ubuntu-18.04
+    runs-on: windows-2019
     needs: [Consul_AspNetCore, Consul]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Create NuGet package
-      shell: bash
       run: |
         if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
           # WORKAROUND: Add letter prefix to ensure that MSBuild treats
