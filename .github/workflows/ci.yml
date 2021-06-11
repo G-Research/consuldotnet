@@ -98,7 +98,7 @@ jobs:
 
         if ("${{ github.ref }}" -like "refs/tags/v*") {
             $tag = "${{ github.ref }}".SubString(11)
-            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            $expectedFile = "dist/Consul.$tag.nupkg"
             # Check whether the tag and the package version match together
             if (-not (Test-Path -Path $expectedFile)) {
                 echo "Expected file $expectedFile doesn't exist"
@@ -116,11 +116,13 @@ jobs:
   publish:
     if: github.ref == 'refs/heads/master' && startsWith(github.ref, 'refs/tags/v')
     needs: package
-    runs-on: ubuntu-18.04
+    runs-on: windows-2019
     steps:
       - name: Download NuGet package artifact
         uses: actions/download-artifact@v2
         with:
           path: dist
       - name: Publish to NuGet
-        run: dotnet nuget push dist/Consul.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: |
+          $tag = "${{ github.ref }}".SubString(11)
+          dotnet nuget push "dist/Consul.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
