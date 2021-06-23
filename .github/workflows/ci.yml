@@ -131,3 +131,4 @@ jobs:
         run: |
           $tag = "${{ github.ref }}".SubString(11)
           dotnet nuget push "dist/Consul.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push "dist/Consul.AspNetCore.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
