@@ -99,7 +99,7 @@ jobs:
           $params = "--version-suffix", $suffix
         }
 
-        dotnet pack --configuration=Release --output dist
+        dotnet pack --configuration=Release --output dist @params
 
         if ("${{ github.ref }}" -like "refs/tags/v*") {
             $tag = "${{ github.ref }}".SubString(11)
