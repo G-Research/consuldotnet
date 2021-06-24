@@ -1,4 +1,4 @@
-# Consul.NET
+![Consul.NET](logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg)
 
 ![CI](https://github.com/G-Research/consuldotnet/workflows/CI/badge.svg)
 [![](https://img.shields.io/nuget/v/consul)](https://www.nuget.org/packages/Consul/)
