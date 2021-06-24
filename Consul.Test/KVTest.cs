@@ -246,32 +246,23 @@ namespace Consul.Test
             getRequest = await _client.KV.Get(key);
             Assert.Null(getRequest.Response);
         }
+
         [Fact]
         public async Task KV_WatchGet_Cancel()
         {
             var key = GenerateTestKeyName();
-
-            var value = Encoding.UTF8.GetBytes("test");
 
             var getRequest = await _client.KV.Get(key);
             Assert.Null(getRequest.Response);
 
             using (var cts = new CancellationTokenSource())
             {
-                cts.CancelAfter(1000);
+                cts.Cancel();
 
-                try
+                await Assert.ThrowsAsync<TaskCanceledException>(async () => await _client.KV.Get(key, new QueryOptions
                 {
-                    while (!cts.IsCancellationRequested)
-                    {
-                        getRequest = await _client.KV.Get(key, new QueryOptions() { WaitIndex = getRequest.LastIndex }, cts.Token);
-                    }
-                    Assert.True(false, "A cancellation exception was not thrown when one was expected.");
-                }
-                catch (TaskCanceledException ex)
-                {
-                    Assert.IsType<TaskCanceledException>(ex);
-                }
+                    WaitIndex = getRequest.LastIndex
+                }, cts.Token));
             }
         }
 

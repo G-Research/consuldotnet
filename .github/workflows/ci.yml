@@ -5,10 +5,10 @@ on:
   pull_request:
 
 env:
-  CONSUL_VERSION: 1.6.10
-
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+    
 jobs:
-
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
@@ -25,15 +25,37 @@ jobs:
       - name: Check format
         run: dotnet format --check
 
-  # Build and test on all major platforms.
-  # Repack to avoid Newtonsoft.Json dependency in .NET Framework (This is to
-  # prevent issues with mismatched JSON.NET versions in user projects).
-  # Create a NuGet package on Windows only, as we build for .NET Framework 4.6.1
-  # and for .NET Standard 2.0.
-  build:
+  Consul_AspNetCore:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
+        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        framework: [netcoreapp3.1, net5.0]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK v3.1.x
+        if: matrix.framework == 'netcoreapp3.1'
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup .NET SDK v5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Build
+        run: dotnet build Consul.AspNetCore.Test --configuration=Release -p:TreatWarningsAsErrors=true --framework=${{ matrix.framework }}
+      - name: Run tests
+        shell: bash
+        run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+  Consul:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
+    strategy:
+      matrix:      
+        consul: [1.6.10, 1.7.10, 1.8.6, 1.9.0]
+        framework: [net461, netcoreapp2.1, netcoreapp3.1, net5.0]
         os: [ubuntu-18.04, windows-2019, macos-10.15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -41,10 +63,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup .NET Core SDK v2.1.x
+        if: matrix.framework == 'netcoreapp2.1'
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 2.1.x
       - name: Setup .NET Core SDK v3.1.x
+        if: matrix.framework == 'netcoreapp3.1'
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
@@ -57,65 +81,76 @@ jobs:
         run: |
           cd Consul.Test
           SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
-          curl -sSL https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_${SYSTEM}_amd64.zip -o consul.zip
+          curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}/consul_${{ matrix.consul }}_${SYSTEM}_amd64.zip -o consul.zip
           unzip consul.zip
           rm consul.zip
       - name: Build
-        run: dotnet build --configuration=Release -p:TreatWarningsAsErrors=true
+        run: dotnet build Consul.Test --configuration=Release -p:TreatWarningsAsErrors=true --framework=${{ matrix.framework }}
       - name: Run tests
         shell: bash
         run: |
-          cd Consul.Test
-          ./consul agent -dev -config-file test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal
+          ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
+          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: consul-logs-${{ matrix.os }}
-          path: Consul.Test/consul*.log
-      - name: Create NuGet package
-        if: runner.os == 'Windows'
-        run: |
-          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
-            # WORKAROUND: Add letter prefix to ensure that MSBuild treats
-            # the suffix as a string. e.g. '0313071' will fail as an invalid
-            # version string, but 'G0313071' will succeeded. It looks like
-            # the parser does not like numbers with a leading zero.
-            $suffix = 'g' + $(git rev-parse --short HEAD)
-            $params = "--version-suffix", $suffix
-          }
+          name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
+          path: consul*.log
 
-          dotnet pack --configuration=Release --no-build @params Consul/Consul.csproj
+  package:
+    runs-on: windows-2019
+    needs: [Consul_AspNetCore, Consul]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Create NuGet package
+      run: |
+        if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
+          # WORKAROUND: Add letter prefix to ensure that MSBuild treats
+          # the suffix as a string. e.g. '0313071' will fail as an invalid
+          # version string, but 'G0313071' will succeeded. It looks like
+          # the parser does not like numbers with a leading zero.
+          $suffix = 'g' + $(git rev-parse --short HEAD)
+          $params = "--version-suffix", $suffix
+        }
 
-          if ("${{ github.ref }}" -like "refs/tags/v*") {
+        dotnet pack --configuration=Release --output dist @params
+
+        if ("${{ github.ref }}" -like "refs/tags/v*") {
             $tag = "${{ github.ref }}".SubString(11)
-            $expectedFile = "dist/consul/Consul.$tag.nupkg"
+            $expectedConsulFile = "dist/Consul.$tag.nupkg"
+            $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
+
             # Check whether the tag and the package version match together
-            if (-not (Test-Path -Path $expectedFile)) {
-                echo "Expected file $expectedFile doesn't exist"
+            if (-not (Test-Path -Path $expectedConsulFile)) {
+                echo "::error ::Expected file $expectedConsulFile doesn't exist"
                 exit 1
             }
-          }
-
-      - name: Upload NuGet package artifact
-        if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v2
-        with:
-          name: nuget-package
-          path: dist/consul
+            if (-not (Test-Path -Path $expectedConsulAspNetCoreFile)) {
+                echo "::error ::Expected file $expectedConsulAspNetCoreFile doesn't exist"
+                exit 1
+            }
+        }
+    - name: Upload NuGet package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: dist/*.nupkg
 
   # Publish NuGet package when a tag is pushed.
-  # Tests need to succeed on all platforms first, including having a tag name that matches the version number.
+  # Tests need to succeed for all components and on all platforms first,
+  # including having a tag name that matches the version number.
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
-    runs-on: ubuntu-18.04
+    needs: package
+    runs-on: windows-2019
     steps:
       - name: Download NuGet package artifact
         uses: actions/download-artifact@v2
         with:
-          name: nuget-package
-          path: dist/consul
+          path: dist
       - name: Publish to NuGet
-        run: dotnet nuget push dist/consul/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: |
+          $tag = "${{ github.ref }}".SubString(11)
+          dotnet nuget push "dist/Consul.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push "dist/Consul.AspNetCore.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
