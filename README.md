@@ -2,6 +2,7 @@
 
 ![CI](https://github.com/G-Research/consuldotnet/workflows/CI/badge.svg)
 [![](https://img.shields.io/nuget/v/consul)](https://www.nuget.org/packages/Consul/)
+[![](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
 
 * Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
 * .NET: >= 4.6.1 - .NET Core: >= 2.0.0
@@ -200,6 +201,19 @@ Since Consul has already a version that consists of three numbers (e.g. 1.6.1), 
 
 Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
 For example version `1.6.1.0` is going to be normalised to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
+
+## Preview versions
+
+Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ for now. To pull preview versions into your project, use the following `NuGet.config` file:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="consuldotnet-preview" value="https://f.feedz.io/consuldotnet/preview/nuget/index.json" />
+  </packageSources>
+</configuration>
+```
 
 ## Release process
 
