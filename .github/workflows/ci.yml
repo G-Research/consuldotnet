@@ -103,10 +103,16 @@ jobs:
 
         if ("${{ github.ref }}" -like "refs/tags/v*") {
             $tag = "${{ github.ref }}".SubString(11)
-            $expectedFile = "dist/Consul.$tag.nupkg"
+            $expectedConsulFile = "dist/Consul.$tag.nupkg"
+            $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
+
             # Check whether the tag and the package version match together
-            if (-not (Test-Path -Path $expectedFile)) {
-                echo "Expected file $expectedFile doesn't exist"
+            if (-not (Test-Path -Path $expectedConsulFile)) {
+                echo "::error ::Expected file $expectedConsulFile doesn't exist"
+                exit 1
+            }
+            if (-not (Test-Path -Path $expectedConsulAspNetCoreFile)) {
+                echo "::error ::Expected file $expectedConsulAspNetCoreFile doesn't exist"
                 exit 1
             }
         }
