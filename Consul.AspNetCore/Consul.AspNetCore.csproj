@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>1.6.10.1</VersionPrefix>
+    <VersionPrefix>1.6.10.2</VersionPrefix>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
     <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
