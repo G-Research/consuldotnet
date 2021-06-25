@@ -1,21 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.6.10.2</VersionPrefix>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
-    <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
-    <Authors>PlayFab,G-Research</Authors>
+    <Authors>PlayFab,$(Authors)</Authors>
     <Description>Consul.NET is a .NET client library for the Consul HTTP API</Description>
     <PackageOutputPath>../dist/consul</PackageOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PublicSign>true</PublicSign>
-    <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>

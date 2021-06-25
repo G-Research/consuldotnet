@@ -46,7 +46,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Build
-        run: dotnet build Consul.AspNetCore.Test --configuration=Release -p:TreatWarningsAsErrors=true --framework=${{ matrix.framework }}
+        run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
       - name: Run tests
         shell: bash
         run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
@@ -85,7 +85,7 @@ jobs:
           unzip consul.zip
           rm consul.zip
       - name: Build
-        run: dotnet build Consul.Test --configuration=Release -p:TreatWarningsAsErrors=true --framework=${{ matrix.framework }}
+        run: dotnet build Consul.Test --configuration=Release --framework=${{ matrix.framework }}
       - name: Run tests
         shell: bash
         run: |
