@@ -151,9 +151,7 @@ jobs:
           name: nuget-packages
           path: dist
       - name: Publish to NuGet
-        run: |
-          dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
-          dotnet nuget push "dist/Consul.AspNetCore.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
+        run: dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
 
   # Publish NuGet packages when a tag is pushed.
   # Tests need to succeed for all components and on all platforms first,
@@ -169,7 +167,4 @@ jobs:
           name: nuget-packages
           path: dist
       - name: Publish to NuGet
-        run: |
-          $tag = "${{ github.ref }}".SubString(11)
-          dotnet nuget push "dist/Consul.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-          dotnet nuget push "dist/Consul.AspNetCore.$tag.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
