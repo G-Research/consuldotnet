@@ -137,13 +137,29 @@ jobs:
       with:
         path: dist/*.nupkg
 
+  # Publish NuGet package to the preview feed when there is a push to master.
+  # Tests need to succeed for all components and on all platforms first.
+  publish-preview:
+    if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
+    needs: package
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download NuGet package artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: dist
+      - name: Publish to NuGet
+        run: |
+          dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
+          dotnet nuget push "dist/Consul.AspNetCore.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
+
   # Publish NuGet package when a tag is pushed.
   # Tests need to succeed for all components and on all platforms first,
   # including having a tag name that matches the version number.
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
+  publish-release:
+    if: ${{ !github.event.repository.fork && startsWith(github.ref, 'refs/tags/v') }}
     needs: package
-    runs-on: windows-2019
+    runs-on: ubuntu-18.04
     steps:
       - name: Download NuGet package artifact
         uses: actions/download-artifact@v2
