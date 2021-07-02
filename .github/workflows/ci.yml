@@ -7,7 +7,7 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-    
+
 jobs:
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
@@ -53,7 +53,7 @@ jobs:
   Consul:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
-      matrix:      
+      matrix:
         consul: [1.6.10, 1.7.14, 1.8.13, 1.9.7, 1.10.0]
         framework: [net461, netcoreapp2.1, netcoreapp3.1, net5.0]
         os: [ubuntu-18.04, windows-2019, macos-10.15]
@@ -102,41 +102,41 @@ jobs:
     runs-on: windows-2019
     needs: [Consul_AspNetCore, Consul]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Create NuGet packages
-      run: |
-        if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
-          # WORKAROUND: Add letter prefix to ensure that MSBuild treats
-          # the suffix as a string. e.g. '0313071' will fail as an invalid
-          # version string, but 'G0313071' will succeeded. It looks like
-          # the parser does not like numbers with a leading zero.
-          $suffix = 'g' + $(git rev-parse --short HEAD)
-          $params = "--version-suffix", $suffix
-        }
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Create NuGet packages
+        run: |
+          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
+            # WORKAROUND: Add letter prefix to ensure that MSBuild treats
+            # the suffix as a string. e.g. '0313071' will fail as an invalid
+            # version string, but 'G0313071' will succeeded. It looks like
+            # the parser does not like numbers with a leading zero.
+            $suffix = 'g' + $(git rev-parse --short HEAD)
+            $params = "--version-suffix", $suffix
+          }
 
-        dotnet pack --configuration=Release --output dist @params
+          dotnet pack --configuration=Release --output dist @params
 
-        if ("${{ github.ref }}" -like "refs/tags/v*") {
-            $tag = "${{ github.ref }}".SubString(11)
-            $expectedConsulFile = "dist/Consul.$tag.nupkg"
-            $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
+          if ("${{ github.ref }}" -like "refs/tags/v*") {
+              $tag = "${{ github.ref }}".SubString(11)
+              $expectedConsulFile = "dist/Consul.$tag.nupkg"
+              $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
 
-            # Check whether the tag and the package version match together
-            if (-not (Test-Path -Path $expectedConsulFile)) {
-                echo "::error ::Expected file $expectedConsulFile doesn't exist"
-                exit 1
-            }
-            if (-not (Test-Path -Path $expectedConsulAspNetCoreFile)) {
-                echo "::error ::Expected file $expectedConsulAspNetCoreFile doesn't exist"
-                exit 1
-            }
-        }
-    - name: Upload NuGet package artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: nuget-packages
-        path: dist/*.nupkg
+              # Check whether the tag and the package version match together
+              if (-not (Test-Path -Path $expectedConsulFile)) {
+                  echo "::error ::Expected file $expectedConsulFile doesn't exist"
+                  exit 1
+              }
+              if (-not (Test-Path -Path $expectedConsulAspNetCoreFile)) {
+                  echo "::error ::Expected file $expectedConsulAspNetCoreFile doesn't exist"
+                  exit 1
+              }
+          }
+      - name: Upload NuGet package artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuget-packages
+          path: dist/*.nupkg
 
   # Publish NuGet packages to the preview feed when there is a push to master.
   # Tests need to succeed for all components and on all platforms first.
