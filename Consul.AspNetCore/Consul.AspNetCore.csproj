@@ -2,21 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>1.6.10.2</VersionPrefix>
-    <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
-    <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
-    <Authors>G-Research</Authors>
+    <PackageTags>$(PackageTags);aspnetcore;asp</PackageTags>
     <Description>Consul Service registration for ASP.NET Core</Description>
     <PackageOutputPath>../dist/consul.aspnetcore</PackageOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PublicSign>true</PublicSign>
-    <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
