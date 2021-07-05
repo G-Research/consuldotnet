@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>1.6.10.2</VersionPrefix>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
+    <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
+    <Authors>G-Research</Authors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PublicSign>true</PublicSign>
+    <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+</Project>
