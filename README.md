@@ -1,7 +1,7 @@
 ![Consul.NET](logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg)
 
-![CI](https://github.com/G-Research/consuldotnet/workflows/CI/badge.svg)
-[![](https://img.shields.io/nuget/v/consul)](https://www.nuget.org/packages/Consul/)
+[![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml)
+[![](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
 [![](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
 
 * Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
