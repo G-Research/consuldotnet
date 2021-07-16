@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>1.6.10.2</VersionPrefix>
+    <VersionPrefix>1.6.10.3</VersionPrefix>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
     <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
