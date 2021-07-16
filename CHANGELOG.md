@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.6.10.2
+* Add support for net5.0 (#85).
+* Use ILRepack instead of ILMerge so .NETFramework builds on all platforms (#92).
+* Many CI and build improvements (#101, #96, #89, #100, #95).
+* Initial release of Consul.AspNetCore after retrieving ownership.
+
 ## 1.6.10.1
 * Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
 * Compatibility with Consul 1.7.x - RoleLink & PolicyLink (#31)
