@@ -72,7 +72,7 @@ You should see `Hello Consul` in the output of your program. You should
 also see the following lines in your command prompt, if you're running
 a local Consul server:
 
-```
+```log
 [DEBUG] http: Request /v1/kv/hello (6.0039ms)
 [DEBUG] http: Request /v1/kv/hello (0)
 ```
@@ -200,13 +200,13 @@ The version number indicates which version of Consul is supported in terms of AP
 Since Consul has already a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to indicate patch releases of Consul.NET.
 
 Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
-For example version `1.6.1.0` is going to be normalised to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
+For example version `1.6.1.0` is going to be normalized to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
 
 ## Preview versions
 
 Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ for now. To pull preview versions into your project, use the following `NuGet.config` file:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
@@ -217,5 +217,7 @@ Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ fo
 
 ## Release process
 
-Before making a new release the version in the [csproj](Consul/Consul.csproj), in the [README](README.md), in the [CI pipeline](.github/workflows/ci.yml) and in the [CHANGELOG](CHANGELOG.md) files should be updated.
-The new versions can be released using the [releases](https://github.com/G-Research/consuldotnet/releases) page.
+1. Before making a new release, make sure that the version in [Directory.Build.props](Directory.Build.props) is up to date.
+2. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes contained in the new version. This list of changes should be committed to the [CHANGELOG](CHANGELOG.md) file for posterity.
+3. When the draft release is ready, publish the it from the GitHub web UI. This will trigger GitHub to push a new tag (as specified in the new Release entry) which will build and push a new stable release to NuGet.org.
+4. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the version in [Directory.Build.props](Directory.Build.props) to the next unreleased version number, so that nightly build versioning can benefit.
