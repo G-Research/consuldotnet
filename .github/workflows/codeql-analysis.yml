@@ -33,8 +33,6 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
-        framework: [netcoreapp3.1, net5.0]
-        consul: [1.6.10, 1.7.14, 1.8.13, 1.9.7, 1.10.0]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
@@ -55,33 +53,16 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    # - name: Autobuild
-    #   uses: github/codeql-action/autobuild@v1
-    
-    # Consul_AspNetCore
-    - name: Setup .NET Core SDK v3.1.x
-      if: matrix.framework == 'netcoreapp3.1'
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET SDK v5.0.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Build
-      run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
-      
-    # Consul
-    - name: Download Consul
-      shell: bash
-      run: |
-        cd Consul.Test
-        SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
-        curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}/consul_${{ matrix.consul }}_${SYSTEM}_amd64.zip -o consul.zip
-        unzip consul.zip
-        rm consul.zip
-    - name: Build
-      run: dotnet build Consul.Test --configuration=Release --framework=${{ matrix.framework }}
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    # # Consul_AspNetCore
+    # - name: Setup .NET SDK v5.0.x
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: 5.0.x
+    # - name: Build
+    #   run: dotnet build Consul.AspNetCore.Test --configuration=Release
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
