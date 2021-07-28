@@ -34,6 +34,13 @@ namespace Consul
         public Dictionary<string, string> TaggedAddresses { get; set; }
     }
 
+    public class ServiceTaggedAddress
+    {
+        public string Address { get; set; }
+
+        public int Port { get; set; }
+    }
+
     public class CatalogService
     {
         public string Node { get; set; }
@@ -43,6 +50,7 @@ namespace Consul
         public string ServiceAddress { get; set; }
         public string[] ServiceTags { get; set; }
         public int ServicePort { get; set; }
+        public Dictionary<string, ServiceTaggedAddress> ServiceTaggedAddresses { get; set; }
         public bool ServiceEnableTagOverride { get; set; }
         public IDictionary<string, string> ServiceMeta { get; set; }
     }
