@@ -146,7 +146,7 @@ namespace Consul
         public int Port { get; set; }
         public string Address { get; set; }
 
-        public Dictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
+        public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
         public bool EnableTagOverride { get; set; }
         public IDictionary<string, string> Meta { get; set; }
     }
