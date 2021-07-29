@@ -9,7 +9,6 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/G-Research/consuldotnet</RepositoryUrl>
     <Authors>G-Research</Authors>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PublicSign>true</PublicSign>
     <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
