@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fix DLL versioning showing 0.0.0.0 (#112)
 
 ## 1.6.10.1
 * Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
