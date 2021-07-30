@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.6.10.2
+* Add support for net5.0 (#85).
+* Use ILRepack instead of ILMerge so .NETFramework builds on all platforms (#92)
+* Many CI and build improvements (#101, #96, #89, #100, #95):
+  * Unit tests are now run against several versions of the Consul server (1.6.10, 1.7.14, 1.8.14, 1.9.8, 1.10.1, as of this writing).
+  * Mono on Unix is used for test runs of target `net461`.
+* Initial release of Consul.AspNetCore after retrieving ownership. The versioning of both Consul.AspNetCore and Consul packages are aligned for simplicity.
+
 ## 1.6.10.1
 * Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
 * Compatibility with Consul 1.7.x - RoleLink & PolicyLink (#31)
