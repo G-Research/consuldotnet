@@ -1,14 +1,15 @@
 # Changelog
 
 ## Unreleased
+* Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures
 
 ## 1.6.10.1
 * Add GRPC and GRPCUseTLS to the agent service check parameters (#22)
 * Compatibility with Consul 1.7.x - RoleLink & PolicyLink (#31)
-* Added the possibility to specify more http request options and meta-data when registering service checks (#39) 
+* Added the possibility to specify more http request options and meta-data when registering service checks (#39)
   It is now possible to specify the http Header(s) (`Headers`), `Method` and `Body` to be used for a given service check.
   A given service check might also now have an identifier (`ID`), `Name` and a description (`Notes`) associated.
-* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures (#42)   
+* Added the `Type` field to the `AgentCheck` and `HealthCheck` structures (#42)
 * Fix issue #24 removing constructor's Obsolete attribute for HttpClient injection (#32)
 * Added asp net core integration - Consul.AspNetCore (#17)(#45)
 * Fixed lock and semaphore timeouts logic (#64)
