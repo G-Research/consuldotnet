@@ -85,12 +85,7 @@ namespace Consul.Test
                 ID = svcID,
                 Service = "redis",
                 Tags = new[] { "master", "v1" },
-                Port = 8000,
-                TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
-                {
-                    {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                    {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                }
+                Port = 8000
             };
 
             var check = new AgentCheck
