@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fix DLL versioning showing 0.0.0.0 (#112)
 
 ## 1.6.10.2
 * Add support for net5.0 (#85).
