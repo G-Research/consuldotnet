@@ -12,6 +12,6 @@
     <PublicSign>true</PublicSign>
     <AssemblyOriginatorKeyFile>../assets/consuldotnet.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <Copyright>Copyright 2015-2020 PlayFab, Inc.; Copyright 2020-$([System.DateTime]::Now.ToString('yyyy')) G-Research Limited</Copyright>
+    <Copyright>G-Research</Copyright>
   </PropertyGroup>
 </Project>
