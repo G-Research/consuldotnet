@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 1.6.10.3
 * Fix DLL versioning showing 0.0.0.0 (#112)
 
 ## 1.6.10.2
