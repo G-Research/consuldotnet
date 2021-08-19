@@ -1,17 +1,4 @@
-using System.Reflection;
 using System.Runtime.CompilerServices;
-
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("Consul.NET")]
-[assembly: AssemblyDescription(".NET API for Consul (http://www.consul.io/)")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("G-Research Limited")]
-[assembly: AssemblyProduct("Consul.NET")]
-[assembly: AssemblyCopyright("Copyright 2015 PlayFab, Inc.; Copyright 2020 G-Research Limited")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("Consul.Test, PublicKey=" +
     "002400000480000094000000060200000024000052534131000400000100010045f6337bf03a95" +
