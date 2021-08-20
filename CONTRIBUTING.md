@@ -19,7 +19,7 @@ submitting an issue to our [GitHub](https://github.com/G-Research/consuldotnet/i
 
 ## <a name="feature"></a> Want a Feature?
 
-You can request a new feature by submitting an issue to our [GitHub](https://github.com/G-Research/consuldotnet/issues) Repository. If you
+You can request a new feature by submitting an issue to our [GitHub](https://github.com/G-Research/consuldotnet/issues) repository. If you
 would like to implement a new feature then consider what kind of change it is:
 
 * **Major Changes** that you wish to contribute to the project should be discussed first in an issue, so that we can better coordinate our efforts,
