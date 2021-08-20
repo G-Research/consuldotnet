@@ -13,7 +13,7 @@ today! Here are the guidelines we'd like you to follow:
 ## <a name="issue"></a> Found an Issue?
 
 If you find a bug in the source code or a mistake in the documentation, you can help us by
-submitting an issue to our [GitHub](https://github.com/G-Research/consuldotnet/issues) Repository. Even better you can submit a Pull Request with a fix.
+submitting an issue to our [GitHub](https://github.com/G-Research/consuldotnet/issues) repository. Even better you can submit a Pull Request with a fix.
 
 **Please see the [Submission Guidelines](#submit) below.**
 
