@@ -560,7 +560,9 @@ namespace Consul
             if (config.DisableServerCertificateValidation)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
+#pragma warning disable CA5359 // The ServerCertificateValidationCallback is set to a function that accepts any server certificate...
                 handler.ServerCertificateValidationCallback += (certSender, cert, chain, sslPolicyErrors) => { return true; };
+#pragma warning restore CA5359
             }
             else
             {
