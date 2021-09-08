@@ -1,0 +1,5 @@
+name: "Security and Quality"
+
+# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+queries:
+  - uses: security-and-quality
