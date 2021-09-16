@@ -4,7 +4,6 @@ We'd love for you to contribute to our source code and to make Consul.NET even b
 today! Here are the guidelines we'd like you to follow:
 
  - [Code of Conduct](CODE_OF_CONDUCT.md)
- - [Question or Problem?](#question)
  - [Issues and Bugs](#issue)
  - [Feature Requests](#feature)
  - [Submission Guidelines](#submit)
@@ -59,7 +58,7 @@ Before you submit your pull request consider the following guidelines:
 
 * Create your patch, **including appropriate test cases**.
 * Follow our [Coding Rules](#rules).
-* Run the test suite, as described below.
+* Run the test suite using the development environment described below.
 * Commit your changes using a descriptive commit message.
 
     ```shell
