@@ -103,7 +103,9 @@ namespace Consul
         public override bool Equals(object other)
         {
             // other could be a reference type, the is operator will return false if null
-            return other is KVTxnVerb && Equals(other as KVTxnVerb);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((KVTxnVerb)other);
         }
 
         public override int GetHashCode()
