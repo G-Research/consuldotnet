@@ -74,7 +74,9 @@ namespace Consul
         public override bool Equals(object other)
         {
             // other could be a reference type, the is operator will return false if null
-            return other is HealthStatus && Equals(other as HealthStatus);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((HealthStatus)other);
         }
 
         public override int GetHashCode()
