@@ -65,8 +65,9 @@ namespace Consul
         public override bool Equals(object other)
 #pragma warning restore CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member
         {
-            var a = other as ACLType;
-            return a != null && Equals(a);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((ACLType)other);
         }
 
 #pragma warning disable CS0809 // Obsolete member 'ACLType.Equals(object)' overrides non-obsolete member

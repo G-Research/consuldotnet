@@ -51,8 +51,9 @@ namespace Consul
         public override bool Equals(object other)
         {
             // other could be a reference type, the is operator will return false if null
-            var a = other as SessionBehavior;
-            return a != null && Equals(a);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((SessionBehavior)other);
         }
 
         public override int GetHashCode()
