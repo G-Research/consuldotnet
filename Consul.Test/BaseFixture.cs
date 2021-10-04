@@ -43,17 +43,19 @@ namespace Consul.Test
         {
             if (_ready) return;
 
-            var cancelToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
+            var cancelToken = new CancellationTokenSource(TimeSpan.FromSeconds(15)).Token;
 
             await Task.Run(async () =>
             {
                 while (!_ready)
                 {
                     cancelToken.ThrowIfCancellationRequested();
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
                     try
                     {
+                        var peers = await _client.Status.Peers();
                         var leader = await _client.Status.Leader();
-                        if (!string.IsNullOrEmpty(leader))
+                        if (peers.Length == 1 && peers[0] == leader)
                         {
                             _ready = true;
                         }
