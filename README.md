@@ -222,3 +222,4 @@ Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ fo
 3. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes contained in the new version from the [CHANGELOG](CHANGELOG.md).
 4. When the draft release is ready, publish it from the GitHub web UI. Be aware, clicking **Publish** will trigger GitHub to push a new tag (as specified in the new Release entry) which will instruct the CI to build and push a new stable release to NuGet.org.
 5. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the minor version in [Directory.Build.props](Directory.Build.props) to the next unreleased version number, so that nightly build versioning can benefit.
+
