@@ -50,7 +50,6 @@ namespace Consul.Test
                 while (!_ready)
                 {
                     cancelToken.ThrowIfCancellationRequested();
-                    await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
                     try
                     {
                         var peers = await _client.Status.Peers();
@@ -63,6 +62,8 @@ namespace Consul.Test
                     catch
                     {
                     }
+
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
                 }
             }, cancelToken);
         }
