@@ -168,25 +168,6 @@ namespace Consul.Test
 
             var services = await _client.Catalog.Service("redis");
 
-            var dereg = new CatalogDeregistration
-            {
-                Datacenter = "dc1",
-                Node = "foobar",
-                Address = "192.168.10.10",
-                CheckID = "service:" + svcID
-            };
-
-            await _client.Catalog.Deregister(dereg);
-
-            dereg = new CatalogDeregistration
-            {
-                Datacenter = "dc1",
-                Node = "foobar",
-                Address = "192.168.10.10"
-            };
-
-            await _client.Catalog.Deregister(dereg);
-
             Assert.True(services.Response.Length > 0);
             Assert.True(services.Response[0].ServiceTaggedAddresses.Count > 0);
             Assert.True(services.Response[0].ServiceTaggedAddresses.ContainsKey("wan"));
