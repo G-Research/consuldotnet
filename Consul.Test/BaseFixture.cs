@@ -23,7 +23,7 @@ namespace Consul.Test
             var timeout = TimeSpan.FromSeconds(15);
             var cancelToken = new CancellationTokenSource(timeout).Token;
             Exception exception = null;
-            for (var i = 0;; i++)
+            for (var i = 0; ; i++)
             {
                 if (i > 0)
                     await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
