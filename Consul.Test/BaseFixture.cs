@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,7 +11,62 @@ namespace Consul.Test
     public class BaseFixture : IAsyncLifetime
     {
         protected ConsulClient _client;
-        private static bool _ready;
+
+        private static readonly Lazy<Task> _ready = new Lazy<Task>(async () =>
+        {
+            var client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            });
+
+            var timeout = TimeSpan.FromSeconds(15);
+            var cancelToken = new CancellationTokenSource(timeout).Token;
+            Exception exception = null;
+            for (var i = 0;; i++)
+            {
+                if (i > 0)
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
+
+                if (cancelToken.IsCancellationRequested)
+                {
+                    if (exception != null)
+                    {
+                        // rethrow exception preserving its stack trace
+                        ExceptionDispatchInfo.Capture(exception).Throw();
+                    }
+                    else
+                    {
+                        throw new OperationCanceledException($"Consul server is still not responding after {timeout}");
+                    }
+                }
+
+                try
+                {
+                    // single instance of test server is expected
+                    var peers = await client.Status.Peers();
+                    var leader = await client.Status.Leader();
+                    if (peers.Length != 1 || peers.Single() != leader)
+                        continue;
+
+                    // test basic functionality
+                    var sessionRequest = await client.Session.Create(new SessionEntry());
+                    if (string.IsNullOrWhiteSpace(sessionRequest.Response))
+                        continue;
+
+                    await client.Session.Destroy(sessionRequest.Response);
+                    break;
+                }
+                catch(OperationCanceledException)
+                {
+                    // ignore
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            }
+        });
 
         static BaseFixture()
         {
@@ -41,28 +98,7 @@ namespace Consul.Test
         /// <returns></returns>
         public async Task InitializeAsync()
         {
-            if (_ready) return;
-
-            var cancelToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token;
-
-            await Task.Run(async () =>
-            {
-                while (!_ready)
-                {
-                    cancelToken.ThrowIfCancellationRequested();
-                    try
-                    {
-                        var leader = await _client.Status.Leader();
-                        if (!string.IsNullOrEmpty(leader))
-                        {
-                            _ready = true;
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }, cancelToken);
+            await _ready.Value;
         }
     }
 }
