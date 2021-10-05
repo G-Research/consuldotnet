@@ -24,7 +24,7 @@ namespace Consul.Test
             var cancelToken = new CancellationTokenSource(timeout).Token;
             Exception exception = null;
             var firstIteration = true;
-            while(true)
+            while (true)
             {
                 if (!firstIteration)
                     await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
