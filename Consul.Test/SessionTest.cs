@@ -153,7 +153,7 @@ namespace Consul.Test
                 var destroyResponse = await _client.Session.Destroy(id);
                 var renewTask = _client.Session.RenewPeriodic(initialTTL, id, WriteOptions.Default, ct);
                 Assert.True(destroyResponse.Response);
-                renewTask.Wait(10000);
+                renewTask.Wait(4 * (int)initialTTL.TotalMilliseconds);
             }
             catch (AggregateException ae)
             {
