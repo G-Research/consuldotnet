@@ -57,7 +57,7 @@ namespace Consul.Test
                     await client.Session.Destroy(sessionRequest.Response);
                     break;
                 }
-                catch(OperationCanceledException)
+                catch (OperationCanceledException)
                 {
                     // ignore
                 }
