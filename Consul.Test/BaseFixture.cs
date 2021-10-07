@@ -94,11 +94,9 @@ namespace Consul.Test
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// With parallel testing on the CI, sometimes the tests start before the consul server finished properly initializing
-        /// This aims to workaround it in a not so elegant way. https://github.com/hashicorp/consul/issues/819
-        /// </summary>
-        /// <returns></returns>
+        /// https://github.com/hashicorp/consul/issues/819
+        /// With parallel testing on the CI, sometimes the tests start before the consul server finished properly initializing.
+        /// So before we let any test run, we try some basic functionality (like session creation) to assure that the test server is ready.
         public async Task InitializeAsync()
         {
             await _ready.Value;
