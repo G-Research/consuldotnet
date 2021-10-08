@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -165,6 +166,33 @@ namespace Consul.Test
 
             await _client.Agent.ServiceDeregister(svcID1);
             await _client.Agent.ServiceDeregister(svcID2);
+        }
+
+        [Fact]
+        public async Task Agent_ServiceTaggedAddresses()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                {
+                    {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                    {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var services = await _client.Agent.Services();
+            Assert.True(services.Response.ContainsKey(svcID));
+            Assert.True(services.Response[svcID].TaggedAddresses.Count > 0);
+            Assert.True(services.Response[svcID].TaggedAddresses.ContainsKey("wan"));
+            Assert.True(services.Response[svcID].TaggedAddresses.ContainsKey("lan"));
+
+
+            await _client.Agent.ServiceDeregister(svcID);
         }
 
         [Fact]

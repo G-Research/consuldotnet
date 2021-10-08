@@ -72,6 +72,34 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Health_GetServiceWithTaggedAddresses()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                {
+                    {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                    {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var checks = await _client.Health.Service(svcID, "", false);
+            Assert.NotEqual((ulong)0, checks.LastIndex);
+            Assert.NotEmpty(checks.Response);
+
+            Assert.True(checks.Response[0].Service.TaggedAddresses.Count > 0);
+            Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("wan"));
+            Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("lan"));
+
+            await _client.Agent.ServiceDeregister(svcID);
+        }
+
+        [Fact]
         public async Task Health_GetState()
         {
             var checks = await _client.Health.State(HealthStatus.Any);
