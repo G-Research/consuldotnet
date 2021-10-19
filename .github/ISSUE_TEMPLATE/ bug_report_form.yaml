@@ -47,7 +47,7 @@ body:
     attributes:
       label: Environment
       description: Please complete the following information
-      placeholder: |
+      value: |
         - OS:       <!-- [e.g. Windows] -->
         - Consul Version:   <!-- [e.g. 1.7.2] -->
         - consultdotnet Version   <!-- [e.g. 1.6.1.1] -->
