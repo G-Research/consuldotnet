@@ -1,6 +1,6 @@
 name: Bug Report Form
 description: Create a report to help us improve
-title: "[Bug]: Summary of item"
+title: "[Bug]: <Summary of item>"
 labels: ["bug"]
 body:
   - type: markdown
