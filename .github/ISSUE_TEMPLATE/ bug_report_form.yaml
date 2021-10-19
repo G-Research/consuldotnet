@@ -1,0 +1,20 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Bug]: Summary of item"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this! Please provide as much info as you can about the issue, so we can best help you. 
+        As a general guidance, pointers from https://stackoverflow.com/help/mcve can help you craft a good bug report.
+
+        If this is a question about the Consul API or Consul itself, please ask on [StackOverflow](https://stackoverflow.com/questions/tagged/consul).
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
