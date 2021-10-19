@@ -68,7 +68,9 @@ namespace Consul
         public override bool Equals(object other)
         {
             // other could be a reference type, the is operator will return false if null
-            return other is TTLStatus && Equals(other as TTLStatus);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((TTLStatus)other);
         }
 
         public override int GetHashCode()
@@ -145,6 +147,8 @@ namespace Consul
         public string[] Tags { get; set; }
         public int Port { get; set; }
         public string Address { get; set; }
+
+        public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
         public bool EnableTagOverride { get; set; }
         public IDictionary<string, string> Meta { get; set; }
     }
@@ -203,6 +207,9 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IDictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
     }
 
     /// <summary>

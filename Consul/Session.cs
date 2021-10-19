@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -51,8 +52,9 @@ namespace Consul
         public override bool Equals(object other)
         {
             // other could be a reference type, the is operator will return false if null
-            var a = other as SessionBehavior;
-            return a != null && Equals(a);
+            return other != null &&
+                   GetType() == other.GetType() &&
+                   Equals((SessionBehavior)other);
         }
 
         public override int GetHashCode()
@@ -213,32 +215,29 @@ namespace Consul
                 {
                     throw new ArgumentNullException(nameof(q));
                 }
-                var waitDuration = (int)(initialTTL.TotalMilliseconds / 2);
-                var lastRenewTime = DateTime.Now;
+                var waitDuration = TimeSpan.FromMilliseconds(initialTTL.TotalMilliseconds / 2);
+                var sw = Stopwatch.StartNew();
+                var ttl = initialTTL;
+
                 Exception lastException = new SessionExpiredException(string.Format("Session expired: {0}", id));
                 try
                 {
                     while (!ct.IsCancellationRequested)
                     {
-                        if (DateTime.Now.Subtract(lastRenewTime) > initialTTL)
+                        if (sw.Elapsed > ttl)
                         {
                             throw lastException;
-                        }
-                        try
-                        {
-                            await Task.Delay(waitDuration, ct).ConfigureAwait(false);
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            // Ignore OperationCanceledException because it means the wait cancelled in response to a CancellationToken being cancelled.
                         }
 
                         try
                         {
+                            await Task.Delay(waitDuration, ct).ConfigureAwait(false);
+
                             var res = await Renew(id, q).ConfigureAwait(false);
-                            initialTTL = res.Response.TTL ?? TimeSpan.Zero;
-                            waitDuration = (int)(initialTTL.TotalMilliseconds / 2);
-                            lastRenewTime = DateTime.Now;
+                            // Handle the server updating the TTL
+                            ttl = res.Response.TTL ?? TimeSpan.Zero;
+                            waitDuration = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
+                            sw = Stopwatch.StartNew();
                         }
                         catch (SessionExpiredException)
                         {
@@ -250,7 +249,7 @@ namespace Consul
                         }
                         catch (Exception ex)
                         {
-                            waitDuration = 1000;
+                            waitDuration = TimeSpan.FromSeconds(1);
                             lastException = ex;
                         }
                     }
