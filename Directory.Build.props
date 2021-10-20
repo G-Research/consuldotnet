@@ -2,6 +2,7 @@
   <PropertyGroup>
     <VersionPrefix>1.6.10.3</VersionPrefix>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <PackageTags>Consul;service discovery;distributed locking;health checking</PackageTags>
     <PackageReleaseNotes>https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/G-Research/consuldotnet</PackageProjectUrl>

@@ -323,7 +323,7 @@ namespace Consul
         {
             if (se == null)
             {
-                return Create(null, q);
+                return Create(null, q, ct);
             }
             var noChecksEntry = new SessionEntry()
             {
