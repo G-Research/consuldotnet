@@ -36,13 +36,6 @@ body:
     validations:
       required: true
   - type: textarea
-    id: logs
-    attributes:
-      label: Logs
-      description: If applicable, add screenshots to help explain your problem.
-    validations:
-      required: false
-  - type: textarea
     id: environment
     attributes:
       label: Environment
@@ -53,6 +46,13 @@ body:
         - consultdotnet Version   <!-- [e.g. 1.6.1.1] -->
     validations:
       required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
   - type: textarea
     id: context
     attributes:
