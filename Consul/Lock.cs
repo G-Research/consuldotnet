@@ -308,7 +308,7 @@ namespace Consul
 
                         // If the code executes this far, no other session has the lock, so try to lock it
                         var kvPair = LockEntry(LockSession);
-                        var locked = (await _client.KV.Acquire(kvPair).ConfigureAwait(false)).Response;
+                        var locked = (await _client.KV.Acquire(kvPair, ct).ConfigureAwait(false)).Response;
 
                         // KV acquisition succeeded, so the session now holds the lock
                         if (locked)
@@ -727,7 +727,7 @@ namespace Consul
             }
             finally
             {
-                await l.Release().ConfigureAwait(false);
+                await l.Release(ct).ConfigureAwait(false);
             }
 
         }

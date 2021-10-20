@@ -348,7 +348,7 @@ namespace Consul
                         LockSession = Opts.Session;
                     }
 
-                    var contender = (await _client.KV.Acquire(ContenderEntry(LockSession)).ConfigureAwait(false)).Response;
+                    var contender = (await _client.KV.Acquire(ContenderEntry(LockSession), ct).ConfigureAwait(false)).Response;
                     if (!contender)
                     {
                         DisposeCancellationTokenSource();
@@ -381,7 +381,7 @@ namespace Consul
                         QueryResult<KVPair[]> pairs;
                         try
                         {
-                            pairs = await _client.KV.List(Opts.Prefix, qOpts).ConfigureAwait(false);
+                            pairs = await _client.KV.List(Opts.Prefix, qOpts, ct).ConfigureAwait(false);
                         }
                         catch (Exception ex)
                         {
@@ -424,7 +424,7 @@ namespace Consul
                         }
 
                         // Handle the case of not getting the lock
-                        if (!(await _client.KV.CAS(newLock).ConfigureAwait(false)).Response)
+                        if (!(await _client.KV.CAS(newLock, ct).ConfigureAwait(false)).Response)
                         {
                             continue;
                         }
@@ -442,7 +442,7 @@ namespace Consul
                 if (ct.IsCancellationRequested || (!IsHeld && !string.IsNullOrEmpty(Opts.Session)))
                 {
                     DisposeCancellationTokenSource();
-                    await _client.KV.Delete(ContenderEntry(LockSession).Key).ConfigureAwait(false);
+                    await _client.KV.Delete(ContenderEntry(LockSession).Key, ct).ConfigureAwait(false);
                     if (_sessionRenewTask != null)
                     {
                         try

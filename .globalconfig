@@ -1,0 +1,8 @@
+# Top level entry required to mark this as a global AnalyzerConfig file
+is_global = true
+
+#### Diagnostic configuration ####
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-options
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/categories
+dotnet_analyzer_diagnostic.category-reliability.severity = warning
+dotnet_analyzer_diagnostic.category-security.severity = warning
