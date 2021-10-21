@@ -37,8 +37,12 @@ namespace Consul.Test
 
             for (var i = 0; i < keyChars.Length; i++)
             {
-                keyChars[i] = Convert.ToChar(Random.Next(65, 91));
+                lock (Random)
+                {
+                    keyChars[i] = Convert.ToChar(Random.Next(65, 91));
+                }
             }
+
             return new string(keyChars);
         }
 
