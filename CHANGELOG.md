@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures
+* Added filtering abilities into Agent.Services
 
 ## 1.6.10.3
 * Fix DLL versioning showing 0.0.0.0 (#112)

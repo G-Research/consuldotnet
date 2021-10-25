@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Filtering;
 using Newtonsoft.Json;
 
 namespace Consul
@@ -386,9 +387,19 @@ namespace Consul
         /// Services returns the locally registered services
         /// </summary>
         /// <returns>A map of the registered services and service data</returns>
-        public Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken))
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<Dictionary<string, AgentService>>("/v1/agent/services").Execute(ct);
+            return await Services(null, ct);
+        }
+
+        /// <summary>
+        /// Services returns the locally registered services
+        /// </summary>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <returns>A map of the registered services and service data</returns>
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken))
+        {
+            return await _client.Get<Dictionary<string, AgentService>>("/v1/agent/services", null, filter).Execute(ct);
         }
 
         /// <summary>
