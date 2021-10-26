@@ -58,7 +58,6 @@ namespace Consul
             else
             {
                 var outDuration = new StringBuilder();
-                var appendSUnit = false;
                 if ((int)ts.TotalHours > 0)
                 {
                     outDuration.Append(ts.TotalHours.ToString("#h"));
@@ -72,7 +71,6 @@ namespace Consul
                 if (ts.Seconds > 0 || outDuration.Length > 0)
                 {
                     outDuration.Append(ts.ToString("%s"));
-                    appendSUnit = true;
                 }
 
                 if (ts.Milliseconds > 0)
@@ -81,11 +79,7 @@ namespace Consul
                     outDuration.Append(ts.ToString("fff"));
                 }
 
-                if (appendSUnit)
-                {
-                    outDuration.Append("s");
-                }
-
+                outDuration.Append("s");
                 return outDuration.ToString();
             }
         }
