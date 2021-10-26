@@ -72,7 +72,7 @@ namespace Consul
 
     public class KVPairConverter : JsonConverter
     {
-        static Lazy<string[]> objProps = new Lazy<string[]>(() => typeof(KVPair).GetRuntimeProperties().Select(p => p.Name).ToArray());
+        static readonly Lazy<string[]> ObjProps = new Lazy<string[]>(() => typeof(KVPair).GetRuntimeProperties().Select(p => p.Name).ToArray());
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -90,7 +90,7 @@ namespace Consul
                 if (reader.TokenType == JsonToken.PropertyName)
                 {
                     string jsonPropName = reader.Value.ToString();
-                    var propName = objProps.Value.FirstOrDefault(p => p.Equals(jsonPropName, StringComparison.OrdinalIgnoreCase));
+                    var propName = ObjProps.Value.FirstOrDefault(p => p.Equals(jsonPropName, StringComparison.OrdinalIgnoreCase));
                     if (propName != null)
                     {
                         PropertyInfo pi = result.GetType().GetRuntimeProperty(propName);

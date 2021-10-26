@@ -35,7 +35,7 @@ namespace Consul.Test
         /// <param name="failureMessage">Message shown when the condition does not become true</param>
         public static async Task WaitFor(Func<bool> condition, string failureMessage)
         {
-            var cancellationToken = new CancellationTokenSource(_defaultTimeout).Token;
+            var cancellationToken = new CancellationTokenSource(DefaultTimeout).Token;
             while (!condition())
             {
                 try
@@ -56,7 +56,7 @@ namespace Consul.Test
         /// <param name="task">The task to wait for</param>
         public static async Task WithTimeout(Task task)
         {
-            var timeoutTask = Task.Delay(_defaultTimeout);
+            var timeoutTask = Task.Delay(DefaultTimeout);
             var completedTask = await Task.WhenAny(new[] { task, timeoutTask });
             if (completedTask == timeoutTask)
             {
@@ -68,6 +68,6 @@ namespace Consul.Test
 
         // The default timeout should allow plenty of time for tests to complete when running on a CI host under load.
         // It isn't intended to be used as a performance check but rather to catch when a test is hanging.
-        private static readonly TimeSpan _defaultTimeout = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes(5);
     }
 }

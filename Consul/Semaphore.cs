@@ -787,7 +787,7 @@ namespace Consul
         /// <summary>
         /// DefaultSemaphoreSessionTTL is the default session TTL if no Session is provided when creating a new Semaphore. This is used because we do not have any other check to depend upon.
         /// </summary>
-        private readonly TimeSpan DefaultLockSessionTTL = TimeSpan.FromSeconds(15);
+        private readonly TimeSpan _defaultLockSessionTTL = TimeSpan.FromSeconds(15);
 
         private string _prefix;
 
@@ -839,7 +839,7 @@ namespace Consul
             Prefix = prefix;
             Limit = limit;
             SessionName = DefaultLockSessionName;
-            SessionTTL = DefaultLockSessionTTL;
+            SessionTTL = _defaultLockSessionTTL;
             MonitorRetryTime = Semaphore.DefaultMonitorRetryTime;
             SemaphoreWaitTime = Semaphore.DefaultSemaphoreWaitTime;
         }

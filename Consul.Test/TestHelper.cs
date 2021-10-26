@@ -26,8 +26,6 @@ namespace Consul.Test
     /// </summary>
     public static class TestHelper
     {
-        private static IConfigurationRoot _config;
-
         public static string BindingAddress { get; }
         public static string HttpPort { get; }
         public static string MasterToken { get; }
@@ -39,13 +37,13 @@ namespace Consul.Test
         /// </summary>
         static TestHelper()
         {
-            _config = new ConfigurationBuilder()
+            IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, false)
                 .Build();
 
-            BindingAddress = _config["binding_address"];
-            HttpPort = _config["http_port"];
-            MasterToken = _config["master_token"];
+            BindingAddress = config["binding_address"];
+            HttpPort = config["http_port"];
+            MasterToken = config["master_token"];
 
             HttpAddr = $"http://{BindingAddress}:{HttpPort}";
             HttpUri = new Uri(HttpAddr);
