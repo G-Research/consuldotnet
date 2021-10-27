@@ -29,20 +29,11 @@ namespace Consul
 {
     public class SessionBehavior : IEquatable<SessionBehavior>
     {
-        private static readonly SessionBehavior release = new SessionBehavior() { Behavior = "release" };
-        private static readonly SessionBehavior delete = new SessionBehavior() { Behavior = "delete" };
-
         public string Behavior { get; private set; }
 
-        public static SessionBehavior Release
-        {
-            get { return release; }
-        }
+        public static SessionBehavior Release { get; } = new SessionBehavior { Behavior = "release" };
 
-        public static SessionBehavior Delete
-        {
-            get { return delete; }
-        }
+        public static SessionBehavior Delete { get; } = new SessionBehavior { Behavior = "delete" };
 
         public bool Equals(SessionBehavior other)
         {

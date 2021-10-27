@@ -12,7 +12,7 @@ namespace Consul.Test
     {
         protected ConsulClient _client;
 
-        private static readonly Lazy<Task> _ready = new Lazy<Task>(async () =>
+        private static readonly Lazy<Task> Ready = new Lazy<Task>(async () =>
         {
             var client = new ConsulClient(c =>
             {
@@ -99,7 +99,7 @@ namespace Consul.Test
         /// So before we let any test run, we try some basic functionality (like session creation) to assure that the test server is ready.
         public async Task InitializeAsync()
         {
-            await _ready.Value;
+            await Ready.Value;
         }
     }
 }

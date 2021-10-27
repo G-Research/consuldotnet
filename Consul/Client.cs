@@ -37,11 +37,11 @@ namespace Consul
         private bool _disableServerCertificateValidation;
         private X509Certificate2 _clientCertificate;
 
-        internal event EventHandler Updated;
+        internal event EventHandler _updated;
 
-        internal static Lazy<bool> _clientCertSupport = new Lazy<bool>(() => { return Type.GetType("Mono.Runtime") == null; });
+        internal static Lazy<bool> ClientCertSupport = new Lazy<bool>(() => { return Type.GetType("Mono.Runtime") == null; });
 
-        internal bool ClientCertificateSupported { get { return _clientCertSupport.Value; } }
+        internal bool ClientCertificateSupported => ClientCertSupport.Value;
 
 #if NETSTANDARD || NETCOREAPP
         [Obsolete("Use of DisableServerCertificateValidation should be converted to setting the HttpHandler's ServerCertificateCustomValidationCallback in the ConsulClient constructor" +
@@ -245,7 +245,7 @@ namespace Consul
             // Make a temporary copy of the event to avoid possibility of
             // a race condition if the last subscriber unsubscribes
             // immediately after the null check and before the event is raised.
-            EventHandler handler = Updated;
+            EventHandler handler = _updated;
 
             // Event will be null if there are no subscribers
             handler?.Invoke(this, e);
@@ -263,12 +263,12 @@ namespace Consul
         /// </summary>
         private class ConsulClientConfigurationContainer
         {
-            internal readonly bool skipClientDispose;
-            internal readonly HttpClient HttpClient;
+            internal readonly bool _skipClientDispose;
+            internal readonly HttpClient _httpClient;
 #if NETSTANDARD || NETCOREAPP
-            internal readonly HttpClientHandler HttpHandler;
+            internal readonly HttpClientHandler _httpHandler;
 #else
-            internal readonly WebRequestHandler HttpHandler;
+            internal readonly WebRequestHandler _httpHandler;
 #endif
             public readonly ConsulClientConfiguration Config;
 
@@ -276,59 +276,59 @@ namespace Consul
             {
                 Config = new ConsulClientConfiguration();
 #if NETSTANDARD || NETCOREAPP
-                HttpHandler = new HttpClientHandler();
+                _httpHandler = new HttpClientHandler();
 #else
-                HttpHandler = new WebRequestHandler();
+                _httpHandler = new WebRequestHandler();
 #endif
-                HttpClient = new HttpClient(HttpHandler);
-                HttpClient.Timeout = TimeSpan.FromMinutes(15);
-                HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpClient.DefaultRequestHeaders.Add("Keep-Alive", "true");
+                _httpClient = new HttpClient(_httpHandler);
+                _httpClient.Timeout = TimeSpan.FromMinutes(15);
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _httpClient.DefaultRequestHeaders.Add("Keep-Alive", "true");
             }
 
             #region Old style config handling
             public ConsulClientConfigurationContainer(ConsulClientConfiguration config, HttpClient client)
             {
-                skipClientDispose = true;
+                _skipClientDispose = true;
                 Config = config;
-                HttpClient = client;
+                _httpClient = client;
             }
 
             public ConsulClientConfigurationContainer(ConsulClientConfiguration config)
             {
                 Config = config;
 #if NETSTANDARD || NETCOREAPP
-                HttpHandler = new HttpClientHandler();
+                _httpHandler = new HttpClientHandler();
 #else
-                HttpHandler = new WebRequestHandler();
+                _httpHandler = new WebRequestHandler();
 #endif
-                HttpClient = new HttpClient(HttpHandler);
-                HttpClient.Timeout = TimeSpan.FromMinutes(15);
-                HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpClient.DefaultRequestHeaders.Add("Keep-Alive", "true");
+                _httpClient = new HttpClient(_httpHandler);
+                _httpClient.Timeout = TimeSpan.FromMinutes(15);
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _httpClient.DefaultRequestHeaders.Add("Keep-Alive", "true");
             }
             #endregion
 
             #region IDisposable Support
-            private bool disposedValue = false; // To detect redundant calls
+            private bool _disposedValue = false; // To detect redundant calls
 
             protected virtual void Dispose(bool disposing)
             {
-                if (!disposedValue)
+                if (!_disposedValue)
                 {
                     if (disposing)
                     {
-                        if (HttpClient != null && !skipClientDispose)
+                        if (_httpClient != null && !_skipClientDispose)
                         {
-                            HttpClient.Dispose();
+                            _httpClient.Dispose();
                         }
-                        if (HttpHandler != null)
+                        if (_httpHandler != null)
                         {
-                            HttpHandler.Dispose();
+                            _httpHandler.Dispose();
                         }
                     }
 
-                    disposedValue = true;
+                    _disposedValue = true;
                 }
             }
 
@@ -348,7 +348,7 @@ namespace Consul
 
             public void CheckDisposed()
             {
-                if (disposedValue)
+                if (_disposedValue)
                 {
                     throw new ObjectDisposedException(typeof(ConsulClientConfigurationContainer).FullName.ToString());
                 }
@@ -356,17 +356,16 @@ namespace Consul
             #endregion
         }
 
-        private ConsulClientConfigurationContainer ConfigContainer;
+        private ConsulClientConfigurationContainer _configContainer;
 
-        internal HttpClient HttpClient { get { return ConfigContainer.HttpClient; } }
+        internal HttpClient HttpClient { get { return _configContainer._httpClient; } }
 #if NETSTANDARD || NETCOREAPP
-        internal HttpClientHandler HttpHandler { get { return ConfigContainer.HttpHandler; } }
+        internal HttpClientHandler HttpHandler { get { return _configContainer._httpHandler; } }
 #else
-        internal WebRequestHandler HttpHandler { get { return ConfigContainer.HttpHandler; } }
+        internal WebRequestHandler HttpHandler { get { return _configContainer._httpHandler; } }
 #endif
-        public ConsulClientConfiguration Config { get { return ConfigContainer.Config; } }
+        public ConsulClientConfiguration Config { get { return _configContainer.Config; } }
 
-        internal readonly JsonSerializer serializer = new JsonSerializer();
 
         #region New style config with Actions
         /// <summary>
@@ -407,11 +406,11 @@ namespace Consul
             var ctr = new ConsulClientConfigurationContainer();
 
             configOverride?.Invoke(ctr.Config);
-            ApplyConfig(ctr.Config, ctr.HttpHandler, ctr.HttpClient);
-            handlerOverride?.Invoke(ctr.HttpHandler);
-            clientOverride?.Invoke(ctr.HttpClient);
+            ApplyConfig(ctr.Config, ctr._httpHandler, ctr._httpClient);
+            handlerOverride?.Invoke(ctr._httpHandler);
+            clientOverride?.Invoke(ctr._httpClient);
 
-            ConfigContainer = ctr;
+            _configContainer = ctr;
 
             InitializeEndpoints();
         }
@@ -424,11 +423,11 @@ namespace Consul
         /// <param name="config">A Consul client configuration</param>
         public ConsulClient(ConsulClientConfiguration config)
         {
-            config.Updated += HandleConfigUpdateEvent;
+            config._updated += HandleConfigUpdateEvent;
             var ctr = new ConsulClientConfigurationContainer(config);
-            ApplyConfig(ctr.Config, ctr.HttpHandler, ctr.HttpClient);
+            ApplyConfig(ctr.Config, ctr._httpHandler, ctr._httpClient);
 
-            ConfigContainer = ctr;
+            _configContainer = ctr;
             InitializeEndpoints();
         }
 
@@ -441,11 +440,11 @@ namespace Consul
         public ConsulClient(ConsulClientConfiguration config, HttpClient client)
         {
             var ctr = new ConsulClientConfigurationContainer(config, client);
-            if (!ctr.HttpClient.DefaultRequestHeaders.Accept.Contains(new MediaTypeWithQualityHeaderValue("application/json")))
+            if (!ctr._httpClient.DefaultRequestHeaders.Accept.Contains(new MediaTypeWithQualityHeaderValue("application/json")))
             {
                 throw new ArgumentException("HttpClient must accept the application/json content type", nameof(client));
             }
-            ConfigContainer = ctr;
+            _configContainer = ctr;
             InitializeEndpoints();
         }
         #endregion
@@ -475,22 +474,22 @@ namespace Consul
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
-                    Config.Updated -= HandleConfigUpdateEvent;
-                    if (ConfigContainer != null)
+                    Config._updated -= HandleConfigUpdateEvent;
+                    if (_configContainer != null)
                     {
-                        ConfigContainer.Dispose();
+                        _configContainer.Dispose();
                     }
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 
@@ -510,7 +509,7 @@ namespace Consul
 
         public void CheckDisposed()
         {
-            if (disposedValue)
+            if (_disposedValue)
             {
                 throw new ObjectDisposedException(typeof(ConsulClient).FullName.ToString());
             }
