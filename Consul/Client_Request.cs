@@ -55,7 +55,7 @@ namespace Consul
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
 
-        protected Stopwatch timer = new Stopwatch();
+        internal readonly JsonSerializer _serializer = new JsonSerializer();
 
         internal ConsulRequest(ConsulClient client, string url, HttpMethod method)
         {
@@ -108,7 +108,7 @@ namespace Consul
             {
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    return Client.serializer.Deserialize<TOut>(jsonReader);
+                    return _serializer.Deserialize<TOut>(jsonReader);
                 }
             }
         }

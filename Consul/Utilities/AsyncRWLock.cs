@@ -28,52 +28,52 @@ namespace Consul
     // Async reader/writer lock as outlined by Stephen Toub: https://blogs.msdn.microsoft.com/pfxteam/2012/02/12/building-async-coordination-primitives-part-7-asyncreaderwriterlock/
     internal class AsyncReaderWriterLock
     {
-        private readonly Task<Releaser> m_readerReleaser;
-        private readonly Task<Releaser> m_writerReleaser;
+        private readonly Task<Releaser> _readerReleaser;
+        private readonly Task<Releaser> _writerReleaser;
 
-        private readonly Queue<TaskCompletionSource<Releaser>> m_waitingWriters =
+        private readonly Queue<TaskCompletionSource<Releaser>> _waitingWriters =
             new Queue<TaskCompletionSource<Releaser>>();
-        private TaskCompletionSource<Releaser> m_waitingReader =
+        private TaskCompletionSource<Releaser> _waitingReader =
             new TaskCompletionSource<Releaser>();
-        private int m_readersWaiting;
-        private int m_status;
+        private int _readersWaiting;
+        private int _status;
 
         public AsyncReaderWriterLock()
         {
-            m_readerReleaser = Task.FromResult(new Releaser(this, false));
-            m_writerReleaser = Task.FromResult(new Releaser(this, true));
+            _readerReleaser = Task.FromResult(new Releaser(this, false));
+            _writerReleaser = Task.FromResult(new Releaser(this, true));
         }
 
         public Task<Releaser> ReaderLockAsync()
         {
-            lock (m_waitingWriters)
+            lock (_waitingWriters)
             {
-                if (m_status >= 0 && m_waitingWriters.Count == 0)
+                if (_status >= 0 && _waitingWriters.Count == 0)
                 {
-                    ++m_status;
-                    return m_readerReleaser;
+                    ++_status;
+                    return _readerReleaser;
                 }
                 else
                 {
-                    ++m_readersWaiting;
-                    return m_waitingReader.Task.ContinueWith(t => t.Result);
+                    ++_readersWaiting;
+                    return _waitingReader.Task.ContinueWith(t => t.Result);
                 }
             }
         }
 
         public Task<Releaser> WriterLockAsync()
         {
-            lock (m_waitingWriters)
+            lock (_waitingWriters)
             {
-                if (m_status == 0)
+                if (_status == 0)
                 {
-                    m_status = -1;
-                    return m_writerReleaser;
+                    _status = -1;
+                    return _writerReleaser;
                 }
                 else
                 {
                     var waiter = new TaskCompletionSource<Releaser>();
-                    m_waitingWriters.Enqueue(waiter);
+                    _waitingWriters.Enqueue(waiter);
                     return waiter.Task;
                 }
             }
@@ -85,13 +85,13 @@ namespace Consul
         {
             TaskCompletionSource<Releaser> toWake = null;
 
-            lock (m_waitingWriters)
+            lock (_waitingWriters)
             {
-                --m_status;
-                if (m_status == 0 && m_waitingWriters.Count > 0)
+                --_status;
+                if (_status == 0 && _waitingWriters.Count > 0)
                 {
-                    m_status = -1;
-                    toWake = m_waitingWriters.Dequeue();
+                    _status = -1;
+                    toWake = _waitingWriters.Dequeue();
                 }
             }
 
@@ -105,21 +105,21 @@ namespace Consul
             TaskCompletionSource<Releaser> toWake = null;
             bool toWakeIsWriter = false;
 
-            lock (m_waitingWriters)
+            lock (_waitingWriters)
             {
-                if (m_waitingWriters.Count > 0)
+                if (_waitingWriters.Count > 0)
                 {
-                    toWake = m_waitingWriters.Dequeue();
+                    toWake = _waitingWriters.Dequeue();
                     toWakeIsWriter = true;
                 }
-                else if (m_readersWaiting > 0)
+                else if (_readersWaiting > 0)
                 {
-                    toWake = m_waitingReader;
-                    m_status = m_readersWaiting;
-                    m_readersWaiting = 0;
-                    m_waitingReader = new TaskCompletionSource<Releaser>();
+                    toWake = _waitingReader;
+                    _status = _readersWaiting;
+                    _readersWaiting = 0;
+                    _waitingReader = new TaskCompletionSource<Releaser>();
                 }
-                else m_status = 0;
+                else _status = 0;
             }
 
             if (toWake != null)
@@ -128,21 +128,21 @@ namespace Consul
 
         public struct Releaser : IDisposable
         {
-            private readonly AsyncReaderWriterLock m_toRelease;
-            private readonly bool m_writer;
+            private readonly AsyncReaderWriterLock _toRelease;
+            private readonly bool _writer;
 
             internal Releaser(AsyncReaderWriterLock toRelease, bool writer)
             {
-                m_toRelease = toRelease;
-                m_writer = writer;
+                _toRelease = toRelease;
+                _writer = writer;
             }
 
             public void Dispose()
             {
-                if (m_toRelease != null)
+                if (_toRelease != null)
                 {
-                    if (m_writer) m_toRelease.WriterRelease();
-                    else m_toRelease.ReaderRelease();
+                    if (_writer) _toRelease.WriterRelease();
+                    else _toRelease.ReaderRelease();
                 }
             }
         }

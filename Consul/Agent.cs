@@ -33,32 +33,19 @@ namespace Consul
     /// </summary>
     public class TTLStatus : IEquatable<TTLStatus>
     {
-        private static readonly TTLStatus passingStatus = new TTLStatus() { Status = "passing", LegacyStatus = "pass" };
-        private static readonly TTLStatus warningStatus = new TTLStatus() { Status = "warning", LegacyStatus = "warn" };
-        private static readonly TTLStatus criticalStatus = new TTLStatus() { Status = "critical", LegacyStatus = "fail" };
-
         public string Status { get; private set; }
         internal string LegacyStatus { get; private set; }
 
-        public static TTLStatus Pass
-        {
-            get { return passingStatus; }
-        }
+        public static TTLStatus Pass { get; } = new TTLStatus() { Status = "passing", LegacyStatus = "pass" };
 
-        public static TTLStatus Warn
-        {
-            get { return warningStatus; }
-        }
+        public static TTLStatus Warn { get; } = new TTLStatus() { Status = "warning", LegacyStatus = "warn" };
 
-        public static TTLStatus Critical
-        {
-            get { return criticalStatus; }
-        }
+        public static TTLStatus Critical { get; } = new TTLStatus() { Status = "critical", LegacyStatus = "fail" };
 
         [Obsolete("Use TTLStatus.Critical instead. This status will be an error in 0.7.0+", true)]
         public static TTLStatus Fail
         {
-            get { return criticalStatus; }
+            get { return Critical; }
         }
 
         public bool Equals(TTLStatus other)
@@ -633,26 +620,26 @@ namespace Consul
         /// </summary>
         public class LogStream : IEnumerable<Task<string>>, IDisposable
         {
-            private Stream m_stream;
-            private StreamReader m_streamreader;
+            private readonly Stream _stream;
+            private readonly StreamReader _streamreader;
             internal LogStream(Stream s)
             {
-                m_stream = s;
-                m_streamreader = new StreamReader(s);
+                _stream = s;
+                _streamreader = new StreamReader(s);
             }
 
             public void Dispose()
             {
-                m_streamreader.Dispose();
-                m_stream.Dispose();
+                _streamreader.Dispose();
+                _stream.Dispose();
             }
 
             public IEnumerator<Task<string>> GetEnumerator()
             {
 
-                while (!m_streamreader.EndOfStream)
+                while (!_streamreader.EndOfStream)
                 {
-                    yield return m_streamreader.ReadLineAsync();
+                    yield return _streamreader.ReadLineAsync();
                 }
             }
 

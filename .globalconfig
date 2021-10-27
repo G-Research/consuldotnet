@@ -6,3 +6,15 @@ is_global = true
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/categories
 dotnet_analyzer_diagnostic.category-reliability.severity = warning
 dotnet_analyzer_diagnostic.category-security.severity = warning
+
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview#code-style-analysis
+dotnet_diagnostic.IDE1006.severity = warning
+
+# "Async" suffix enforcement is suppressed because there are too many public methods that are missing it
+dotnet_naming_rule.async_methods_must_end_with_async.severity = none 
+dotnet_naming_rule.async_methods_must_end_with_async.symbols = method_symbols
+dotnet_naming_rule.async_methods_must_end_with_async.style = end_in_async_style
+dotnet_naming_symbols.method_symbols.applicable_kinds = method
+dotnet_naming_symbols.method_symbols.required_modifiers = async
+dotnet_naming_style.end_in_async_style.capitalization = pascal_case
+dotnet_naming_style.end_in_async_style.required_suffix = Async
