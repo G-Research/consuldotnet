@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Consul.Filtering;
 using Xunit;
 
 namespace Consul.Test
@@ -510,6 +512,37 @@ namespace Consul.Test
 
                 await TimeoutUtils.WithTimeout(logsTask);
             }
+        }
+
+        [Fact]
+        public async Task Agent_FilterServices()
+        {
+            var svcID1 = KVTest.GenerateTestKeyName();
+            var svcID2 = KVTest.GenerateTestKeyName();
+            var uniqueMeta = KVTest.GenerateTestKeyName();
+
+            var reg1 = new AgentServiceRegistration
+            {
+                Name = svcID1,
+                Meta = new Dictionary<string, string> { { uniqueMeta, "bar1" } },
+            };
+
+            var reg2 = new AgentServiceRegistration
+            {
+                Name = svcID2,
+                Meta = new Dictionary<string, string> { { uniqueMeta, "bar2" } },
+            };
+
+            await _client.Agent.ServiceRegister(reg1);
+            await _client.Agent.ServiceRegister(reg2);
+
+            var idSelector = new StringFieldSelector("ID");
+            var metaSelector = new MetaSelector();
+
+            Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID1, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar1")).Response.Keys.Single());
+            Assert.Equal(svcID2, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar2")).Response.Keys.Single());
         }
     }
 }

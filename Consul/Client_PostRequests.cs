@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -52,7 +53,7 @@ namespace Consul
         public async Task<WriteResult<TOut>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult<TOut>();
 
             HttpContent content = null;
@@ -86,8 +87,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -140,7 +139,7 @@ namespace Consul
         public async Task<WriteResult> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult();
 
             HttpContent content = null;
@@ -183,8 +182,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -238,7 +235,7 @@ namespace Consul
         public async Task<WriteResult<TOut>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult<TOut>();
 
             HttpContent content = null;
@@ -286,8 +283,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -339,7 +334,7 @@ namespace Consul
         public async Task<WriteResult<string>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult<string>();
 
             HttpContent content = null;
@@ -378,8 +373,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 

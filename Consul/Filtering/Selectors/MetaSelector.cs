@@ -24,6 +24,10 @@ namespace Consul.Filtering
 
         public string Prefix { get; }
 
+        public MetaSelector() : this(null)
+        {
+        }
+
         public MetaSelector(string prefix)
         {
             Prefix = prefix;

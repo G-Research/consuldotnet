@@ -43,9 +43,10 @@ namespace Consul
             {"m", Minute},
             {"h", Hour}
         };
+
         internal static string ToGoDuration(this TimeSpan ts)
         {
-            if (ts == TimeSpan.Zero)
+            if (ts.TotalMilliseconds < 1)
             {
                 return "0";
             }
@@ -61,26 +62,28 @@ namespace Consul
                 {
                     outDuration.Append(ts.TotalHours.ToString("#h"));
                 }
-                if (ts.Minutes > 0)
+
+                if (ts.Minutes > 0 || outDuration.Length > 0)
                 {
                     outDuration.Append(ts.ToString("%m'm'"));
                 }
-                if (ts.Seconds > 0)
+
+                if (ts.Seconds > 0 || outDuration.Length > 0)
                 {
                     outDuration.Append(ts.ToString("%s"));
                 }
+
                 if (ts.Milliseconds > 0)
                 {
                     outDuration.Append(".");
                     outDuration.Append(ts.ToString("fff"));
                 }
-                if (ts.Seconds > 0)
-                {
-                    outDuration.Append("s");
-                }
+
+                outDuration.Append("s");
                 return outDuration.ToString();
             }
         }
+
         internal static TimeSpan FromGoDuration(string value)
         {
             const string pattern = @"([0-9]*(?:\.[0-9]*)?)([a-z]+)";
@@ -101,6 +104,7 @@ namespace Consul
             {
                 throw new ArgumentException("Invalid duration", value);
             }
+
             double time = 0;
 
             foreach (Match match in matches)

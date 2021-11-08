@@ -25,6 +25,10 @@ namespace Consul.Filtering
         public string Prefix { get; }
         public string Name { get; }
 
+        public StringFieldSelector(string name) : this(null, name)
+        {
+        }
+
         public StringFieldSelector(string prefix, string name)
         {
             Prefix = prefix;

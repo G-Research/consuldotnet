@@ -30,41 +30,20 @@ namespace Consul
     /// </summary>
     public class HealthStatus : IEquatable<HealthStatus>
     {
-        private static readonly HealthStatus passing = new HealthStatus() { Status = "passing" };
-        private static readonly HealthStatus warning = new HealthStatus() { Status = "warning" };
-        private static readonly HealthStatus critical = new HealthStatus() { Status = "critical" };
-        private static readonly HealthStatus maintenance = new HealthStatus() { Status = "maintenance" };
-        private static readonly HealthStatus any = new HealthStatus() { Status = "any" };
-
         public const string NodeMaintenance = "_node_maintenance";
         public const string ServiceMaintenancePrefix = "_service_maintenance:";
 
         public string Status { get; private set; }
 
-        public static HealthStatus Passing
-        {
-            get { return passing; }
-        }
+        public static HealthStatus Passing { get; } = new HealthStatus() { Status = "passing" };
 
-        public static HealthStatus Warning
-        {
-            get { return warning; }
-        }
+        public static HealthStatus Warning { get; } = new HealthStatus() { Status = "warning" };
 
-        public static HealthStatus Critical
-        {
-            get { return critical; }
-        }
+        public static HealthStatus Critical { get; } = new HealthStatus() { Status = "critical" };
 
-        public static HealthStatus Maintenance
-        {
-            get { return maintenance; }
-        }
+        public static HealthStatus Maintenance { get; } = new HealthStatus() { Status = "maintenance" };
 
-        public static HealthStatus Any
-        {
-            get { return any; }
-        }
+        public static HealthStatus Any { get; } = new HealthStatus() { Status = "any" };
 
         public bool Equals(HealthStatus other)
         {

@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -66,7 +67,7 @@ namespace Consul
         public async Task<QueryResult<TOut>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new QueryResult<TOut>();
 
             var message = new HttpRequestMessage(HttpMethod.Get, BuildConsulUri(Endpoint, Params));
@@ -97,8 +98,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -110,7 +109,7 @@ namespace Consul
         public async Task<QueryResult<Stream>> ExecuteStreaming(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new QueryResult<Stream>();
 
             var message = new HttpRequestMessage(HttpMethod.Get, BuildConsulUri(Endpoint, Params));
@@ -130,8 +129,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -262,7 +259,7 @@ namespace Consul
         public async Task<QueryResult<string>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new QueryResult<string>();
 
             var message = new HttpRequestMessage(HttpMethod.Get, BuildConsulUri(Endpoint, Params));
@@ -294,9 +291,7 @@ namespace Consul
                 }
             }
 
-            timer.Stop();
             result.RequestTime = timer.Elapsed;
-
             return result;
         }
 

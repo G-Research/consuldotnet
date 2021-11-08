@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -50,7 +51,7 @@ namespace Consul
         public async Task<WriteResult<TOut>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult<TOut>();
 
             var message = new HttpRequestMessage(HttpMethod.Put, BuildConsulUri(Endpoint, Params));
@@ -81,8 +82,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -132,7 +131,7 @@ namespace Consul
         public async Task<WriteResult> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult();
 
             var message = new HttpRequestMessage(HttpMethod.Put, BuildConsulUri(Endpoint, Params));
@@ -158,8 +157,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -212,7 +209,7 @@ namespace Consul
         public async Task<WriteResult> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult();
 
             HttpContent content;
@@ -255,8 +252,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 
@@ -310,7 +305,7 @@ namespace Consul
         public async Task<WriteResult<TOut>> Execute(CancellationToken ct)
         {
             Client.CheckDisposed();
-            timer.Start();
+            var timer = Stopwatch.StartNew();
             var result = new WriteResult<TOut>();
 
             HttpContent content = null;
@@ -362,8 +357,6 @@ namespace Consul
             }
 
             result.RequestTime = timer.Elapsed;
-            timer.Stop();
-
             return result;
         }
 

@@ -25,7 +25,7 @@ namespace Consul.Test
     public class UtilTest
     {
         [Fact]
-        public void GoDurationParsing()
+        public void TestToGoDuration()
         {
             Assert.Equal("150ms", new TimeSpan(0, 0, 0, 0, 150).ToGoDuration());
             Assert.Equal("26h3m4.005s", new TimeSpan(1, 2, 3, 4, 5).ToGoDuration());
@@ -33,6 +33,24 @@ namespace Consul.Test
             Assert.Equal("3m4.005s", new TimeSpan(0, 0, 3, 4, 5).ToGoDuration());
             Assert.Equal("4.005s", new TimeSpan(0, 0, 0, 4, 5).ToGoDuration());
             Assert.Equal("5ms", new TimeSpan(0, 0, 0, 0, 5).ToGoDuration());
+            Assert.Equal("1m0.001s", new TimeSpan(0, 0, 1, 0, 1).ToGoDuration());
+            Assert.Equal("1h0m0.001s", new TimeSpan(0, 1, 0, 0, 1).ToGoDuration());
+            Assert.Equal("0", TimeSpan.FromMilliseconds(0.1).ToGoDuration());
+            Assert.Equal("0", TimeSpan.Zero.ToGoDuration());
+        }
+
+        [Fact]
+        public void TestFromGoDuration()
+        {
+            Assert.Equal(new TimeSpan(0, 0, 0, 0, 150), Extensions.FromGoDuration("150ms"));
+            Assert.Equal(new TimeSpan(1, 2, 3, 4, 5), Extensions.FromGoDuration("26h3m4.005s"));
+            Assert.Equal(new TimeSpan(0, 2, 3, 4, 5), Extensions.FromGoDuration("2h3m4.005s"));
+            Assert.Equal(new TimeSpan(0, 0, 3, 4, 5), Extensions.FromGoDuration("3m4.005s"));
+            Assert.Equal(new TimeSpan(0, 0, 0, 4, 5), Extensions.FromGoDuration("4.005s"));
+            Assert.Equal(new TimeSpan(0, 0, 0, 0, 5), Extensions.FromGoDuration("5ms"));
+            Assert.Equal(new TimeSpan(0, 0, 1, 0, 1), Extensions.FromGoDuration("1m0.001s"));
+            Assert.Equal(new TimeSpan(0, 1, 0, 0, 1), Extensions.FromGoDuration("1h0m0.001s"));
+            Assert.Equal(TimeSpan.FromMilliseconds(0.0), Extensions.FromGoDuration("0s"));
         }
     }
 }
