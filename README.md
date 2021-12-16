@@ -1,4 +1,4 @@
-<p align="left"><img width="500" height="250" src=logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg/></p>
+<p align="left"><img width="500" height="250" src=logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg alt="Consul.NET"/></p>
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
