@@ -3,7 +3,7 @@
 ## Unreleased
 
 ## 1.6.10.4
-* Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures
+* Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures (#111)
 * Added filtering abilities into Agent.Services
 
 ## 1.6.10.3
