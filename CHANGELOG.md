@@ -1,8 +1,12 @@
 # Changelog
 
 ## Unreleased
-* Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures
-* Added filtering abilities into Agent.Services
+
+## 1.6.10.4
+* Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures (#111)
+* Fix the equality check (#123)
+* Added filtering abilities into Agent.Services (#128)
+* Fixed serialization of TimeSpan to GoDuration (#129)
 
 ## 1.6.10.3
 * Fix DLL versioning showing 0.0.0.0 (#112)
