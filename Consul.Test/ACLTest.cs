@@ -30,6 +30,9 @@ namespace Consul.Test
         public async Task ACL_CreateDestroyLegacyToken()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
 #pragma warning disable CS0618 // Type or member is obsolete
             var aclEntry = new ACLEntry
@@ -60,6 +63,9 @@ namespace Consul.Test
         public async Task ACL_CreateCloneUpdateDestroyLegacyToken()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
 #pragma warning disable CS0618 // Type or member is obsolete
             var newAclEntry = new ACLEntry
@@ -102,6 +108,9 @@ namespace Consul.Test
         public async Task ACL_GetLegacyTokenInfo()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
 #pragma warning disable CS0618 // Type or member is obsolete
             var aclEntry = await _client.ACL.Info(TestHelper.MasterToken);
@@ -117,6 +126,9 @@ namespace Consul.Test
         public async Task ACL_ListLegacyTokens()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
 #pragma warning disable CS0618 // Type or member is obsolete
             var aclList = await _client.ACL.List();
@@ -131,6 +143,9 @@ namespace Consul.Test
         public async Task ACL_TranslateRule()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
             var legacyRule = "agent \"\" {\n policy = \"read\"\n}";
             var newRule = "agent_prefix \"\" {\n  policy = \"read\"\n}";
@@ -146,6 +161,9 @@ namespace Consul.Test
         public async Task ACL_CreateTranslateLegacyTokenRuleDestroy()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var info = await _client.Agent.Self();
+            var version = new Version(info.Response["Config"]["Version"]);
+            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
 
             var uniqueTokenName = "API Test " + DateTime.Now.ToLongTimeString();
 #pragma warning disable CS0618 // Type or member is obsolete
