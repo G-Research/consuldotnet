@@ -574,8 +574,10 @@ namespace Consul.Test
             var stopwatch = Stopwatch.StartNew();
             await Assert.ThrowsAsync<LockMaxAttemptsReachedException>(
                 async () => await oneShotLock.Acquire(CancellationToken.None));
+            var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
             Assert.False(oneShotLock.IsHeld);
-            Assert.True(stopwatch.ElapsedMilliseconds < oneShotLockOptions.LockRetryTime.TotalMilliseconds);
+            // https://github.com/dotnet/runtime/issues/45585
+            Assert.True(elapsedMilliseconds < oneShotLockOptions.LockRetryTime.TotalMilliseconds * 0.9);
         }
 
         [Fact]
@@ -600,8 +602,10 @@ namespace Consul.Test
             var stopwatch = Stopwatch.StartNew();
             await Assert.ThrowsAsync<LockMaxAttemptsReachedException>(
                 async () => await oneShotLock.Acquire(CancellationToken.None));
+            var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
             Assert.False(oneShotLock.IsHeld);
-            Assert.True(stopwatch.ElapsedMilliseconds > oneShotLockOptions.LockRetryTime.TotalMilliseconds);
+            // https://github.com/dotnet/runtime/issues/45585
+            Assert.True(elapsedMilliseconds > oneShotLockOptions.LockRetryTime.TotalMilliseconds * 0.9);
         }
     }
 }
