@@ -336,10 +336,13 @@ namespace Consul
                             continue;
                         }
 
-                        // If the session is null and the lock failed to acquire, then it means
-                        // a lock-delay is in effect and a timed wait must be used to avoid a hot loop.
-                        try { await Task.Delay(Opts.LockRetryTime, ct).ConfigureAwait(false); }
-                        catch (TaskCanceledException) { /* Ignore TaskTaskCanceledException */}
+                        if (!(Opts.LockTryOnce && Opts.LockWaitTime == TimeSpan.Zero))
+                        {
+                            // If the session is null and the lock failed to acquire, then it means
+                            // a lock-delay is in effect and a timed wait must be used to avoid a hot loop.
+                            try { await Task.Delay(Opts.LockRetryTime, ct).ConfigureAwait(false); }
+                            catch (TaskCanceledException) { /* Ignore TaskTaskCanceledException */}
+                        }
                     }
                     DisposeCancellationTokenSource();
                     throw new LockNotHeldException("Unable to acquire the lock with Consul");
@@ -607,6 +610,15 @@ namespace Consul
         }
         public TimeSpan LockWaitTime { get; set; }
         public TimeSpan MonitorRetryTime { get; set; }
+
+        /// <summary>
+        /// When set to false, <see cref="Lock.Acquire"/> will block forever until the lock is acquired. LockWaitTime is ignored in this case.
+        /// <br/>
+        /// When set to true, <see cref="Lock.Acquire"/> the lock within a timestamp (It is analogous to <c>SemaphoreSlim.Wait(Timespan timeout)</c>. 
+        /// Under the hood, it attempts to acquire the lock multiple times if needed (due to the HTTP Long Poll returning early),
+        /// and will do so as many times as it can within the bounds set by LockWaitTime.
+        /// If LockWaitTime is set to 0, there will be only single attempt to acquire the lock.
+        /// </summary>
         public bool LockTryOnce { get; set; }
 
         public LockOptions(string key)
