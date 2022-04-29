@@ -19,8 +19,7 @@ jobs:
       - name: Setup .NET SDK v6.0.x
         uses: actions/setup-dotnet@v1
         with:
-          # Pin .NET SDK 6.0.102 for now to avoid dotnet format regression https://github.com/dotnet/format/issues/1519
-          dotnet-version: 6.0.102
+          dotnet-version: 6.0.x
       - name: Check format
         run: dotnet format --verify-no-changes
 
