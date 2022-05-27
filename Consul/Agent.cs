@@ -374,9 +374,9 @@ namespace Consul
         /// Services returns the locally registered services
         /// </summary>
         /// <returns>A map of the registered services and service data</returns>
-        public Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken))
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken))
         {
-            return Services(null, ct);
+            return await Services(null, ct).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -384,9 +384,9 @@ namespace Consul
         /// </summary>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
         /// <returns>A map of the registered services and service data</returns>
-        public Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken))
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<Dictionary<string, AgentService>>("/v1/agent/services", null, filter).Execute(ct);
+            return await _client.Get<Dictionary<string, AgentService>>("/v1/agent/services", null, filter).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
