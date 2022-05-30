@@ -551,5 +551,61 @@ namespace Consul.Test
                 }
             }
         }
+
+        [Fact]
+        public async Task Lock_TryAcquireOnceWithLockDelayZeroWaitTime_NoRetryWait()
+        {
+            const string keyName = "test/lock/acquireoncewithlockdelay_noretrywait";
+
+            var lockKey = (Lock)_client.CreateLock(keyName);
+            await lockKey.Acquire(CancellationToken.None);
+            Assert.True(lockKey.IsHeld);
+            await _client.Session.Destroy(lockKey.LockSession);
+
+            var oneShotLockOptions = new LockOptions(keyName)
+            {
+                LockTryOnce = true,
+                LockWaitTime = TimeSpan.Zero,
+                LockRetryTime = TimeSpan.FromSeconds(15)
+            };
+
+            var oneShotLock = (Lock)_client.CreateLock(oneShotLockOptions);
+
+            var stopwatch = Stopwatch.StartNew();
+            await Assert.ThrowsAsync<LockMaxAttemptsReachedException>(
+                async () => await oneShotLock.Acquire(CancellationToken.None));
+            var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            Assert.False(oneShotLock.IsHeld);
+            // https://github.com/dotnet/runtime/issues/45585
+            Assert.True(elapsedMilliseconds < oneShotLockOptions.LockRetryTime.TotalMilliseconds * 0.9);
+        }
+
+        [Fact]
+        public async Task Lock_TryAcquireOnceWithLockDelayNonZeroWaitTime_EnsureRetryWait()
+        {
+            const string keyName = "test/lock/acquireoncewithlockdelay_ensureretrywait";
+
+            var lockKey = (Lock)_client.CreateLock(keyName);
+            await lockKey.Acquire(CancellationToken.None);
+            Assert.True(lockKey.IsHeld);
+            await _client.Session.Destroy(lockKey.LockSession);
+
+            var oneShotLockOptions = new LockOptions(keyName)
+            {
+                LockTryOnce = true,
+                LockWaitTime = TimeSpan.FromSeconds(1),
+                LockRetryTime = TimeSpan.FromSeconds(5)
+            };
+
+            var oneShotLock = (Lock)_client.CreateLock(oneShotLockOptions);
+
+            var stopwatch = Stopwatch.StartNew();
+            await Assert.ThrowsAsync<LockMaxAttemptsReachedException>(
+                async () => await oneShotLock.Acquire(CancellationToken.None));
+            var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            Assert.False(oneShotLock.IsHeld);
+            // https://github.com/dotnet/runtime/issues/45585
+            Assert.True(elapsedMilliseconds > oneShotLockOptions.LockRetryTime.TotalMilliseconds * 0.9);
+        }
     }
 }

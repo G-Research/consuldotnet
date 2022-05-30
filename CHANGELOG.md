@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.6.10.5
+* Check for LockTryOnce before delay (#21)
+* Add support for building and testing with .NET 6 (#135)
+
 ## 1.6.10.4
 * Added the `TaggedAddresses` field to the `AgentService`, `CatalogService` and `AgentServiceRegistration` structures (#111)
 * Fix the equality check (#123)
