@@ -353,7 +353,7 @@ namespace Consul
                 {
                     if (_nodeName == null)
                     {
-                        _nodeName = (await Self(ct)).Response["Config"]["NodeName"];
+                        _nodeName = (await Self(ct).ConfigureAwait(false)).Response["Config"]["NodeName"];
                     }
                 }
             }
@@ -376,7 +376,7 @@ namespace Consul
         /// <returns>A map of the registered services and service data</returns>
         public async Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken))
         {
-            return await Services(null, ct);
+            return await Services(null, ct).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Consul
         /// <returns>A map of the registered services and service data</returns>
         public async Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken))
         {
-            return await _client.Get<Dictionary<string, AgentService>>("/v1/agent/services", null, filter).Execute(ct);
+            return await _client.Get<Dictionary<string, AgentService>>("/v1/agent/services", null, filter).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -600,7 +600,7 @@ namespace Consul
             }
 
             var req = _client.Put<List<TxnOp>, TxnResponse>("/v1/txn", txnOps, q);
-            var txnRes = await req.Execute(ct);
+            var txnRes = await req.Execute(ct).ConfigureAwait(false);
 
             var res = new WriteResult<KVTxnResponse>(txnRes, new KVTxnResponse(txnRes.Response));
 

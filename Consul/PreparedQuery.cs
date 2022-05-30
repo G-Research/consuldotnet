@@ -244,7 +244,7 @@ namespace Consul
 
         public async Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            var res = await _client.DeleteReturning<string>(string.Format("/v1/query/{0}", queryID), q).Execute(ct);
+            var res = await _client.DeleteReturning<string>(string.Format("/v1/query/{0}", queryID), q).Execute(ct).ConfigureAwait(false);
             return new WriteResult(res);
         }
 
