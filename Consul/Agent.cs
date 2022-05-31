@@ -353,7 +353,7 @@ namespace Consul
                 {
                     if (_nodeName == null)
                     {
-                        _nodeName = (await Self(ct)).Response["Config"]["NodeName"];
+                        _nodeName = (await Self(ct).ConfigureAwait(false)).Response["Config"]["NodeName"];
                     }
                 }
             }
