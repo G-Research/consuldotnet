@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.6.10.6
+* Enforce ConfigureAwait(false) on the whole library (#148)
+* Resolve synchronous access deadlock by adding ‘ConfigureAwait(false)’ (#146)
+
 ## 1.6.10.5
 * Check for LockTryOnce before delay (#21)
 * Add support for building and testing with .NET 6 (#135)
