@@ -57,7 +57,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.11, 1.11.6, 1.12.1]
+        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.11, 1.11.6, 1.12.2]
         framework: [net461, netcoreapp2.1, netcoreapp3.1, net5.0, net6.0]
         os: [ubuntu-18.04, windows-2019, macos-10.15]
       fail-fast: false
