@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Add support for `replace-existing-checks` parameter of service registration endpoint that allows to replace existing checks when re-registering a service
 
 ## 1.6.10.6
 * Enforce ConfigureAwait(false) on the whole library (#148)

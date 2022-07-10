@@ -410,7 +410,23 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put("/v1/agent/service/register", service, null).Execute(ct);
+            return ServiceRegister(service, replaceExistingChecks: false, ct);
+        }
+
+        /// <summary>
+        /// ServiceRegister is used to register a new service with the local agent
+        /// </summary>
+        /// <param name="service">A service registration object</param>
+        /// <param name="replaceExistingChecks">Missing health checks from the request will be deleted from the agent.</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default(CancellationToken))
+        {
+            var req = _client.Put("/v1/agent/service/register", service, null);
+            if (replaceExistingChecks)
+            {
+                req.Params["replace-existing-checks"] = "true";
+            }
+            return req.Execute(ct);
         }
 
         /// <summary>
