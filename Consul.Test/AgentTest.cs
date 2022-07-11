@@ -545,8 +545,10 @@ namespace Consul.Test
             Assert.Equal(svcID2, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar2")).Response.Keys.Single());
         }
 
-        [Fact]
-        public async Task Agent_ReRegister()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Agent_ReRegister_ReplaceExistingChecks(bool replaceExistingChecks)
         {
             var svcID = KVTest.GenerateTestKeyName();
             var check1Name = svcID + "1";
@@ -582,58 +584,20 @@ namespace Consul.Test
             };
 
             await _client.Agent.ServiceRegister(registration1);
-            await _client.Agent.ServiceRegister(registration2);
+            await _client.Agent.ServiceRegister(registration2, replaceExistingChecks: replaceExistingChecks);
 
             var checks = await _client.Agent.Checks();
-            Assert.Contains(check1Name, checks.Response.Values.Select(c => c.Name));
-            Assert.Contains(check2Name, checks.Response.Values.Select(c => c.Name));
-            Assert.Contains(check3Name, checks.Response.Values.Select(c => c.Name));
 
-            await _client.Agent.ServiceDeregister(svcID);
-        }
-
-        [Fact]
-        public async Task Agent_ReRegister_ReplaceExistingChecks()
-        {
-            var svcID = KVTest.GenerateTestKeyName();
-            var check1Name = svcID + "1";
-            var check2Name = svcID + "2";
-            var check3Name = svcID + "3";
-            var registration1 = new AgentServiceRegistration
+            if (replaceExistingChecks)
             {
-                Name = svcID,
-                Port = 8000,
-                Checks = new[]
-                {
-                    new AgentServiceCheck
-                    {
-                        Name = check1Name,
-                        TTL = TimeSpan.FromSeconds(15)
-                    },
-                    new AgentServiceCheck
-                    {
-                        Name = check2Name,
-                        TTL = TimeSpan.FromSeconds(15)
-                    }
-                }
-            };
-            var registration2 = new AgentServiceRegistration
+                Assert.DoesNotContain(check1Name, checks.Response.Values.Select(c => c.Name));
+                Assert.DoesNotContain(check2Name, checks.Response.Values.Select(c => c.Name));
+            }
+            else
             {
-                Name = svcID,
-                Port = 8000,
-                Check = new AgentServiceCheck
-                {
-                    Name = check3Name,
-                    TTL = TimeSpan.FromSeconds(15)
-                }
-            };
-
-            await _client.Agent.ServiceRegister(registration1);
-            await _client.Agent.ServiceRegister(registration2, replaceExistingChecks: true);
-
-            var checks = await _client.Agent.Checks();
-            Assert.DoesNotContain(check1Name, checks.Response.Values.Select(c => c.Name));
-            Assert.DoesNotContain(check2Name, checks.Response.Values.Select(c => c.Name));
+                Assert.Contains(check1Name, checks.Response.Values.Select(c => c.Name));
+                Assert.Contains(check2Name, checks.Response.Values.Select(c => c.Name));
+            }
             Assert.Contains(check3Name, checks.Response.Values.Select(c => c.Name));
 
             await _client.Agent.ServiceDeregister(svcID);
