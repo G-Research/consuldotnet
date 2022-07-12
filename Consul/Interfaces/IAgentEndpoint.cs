@@ -48,6 +48,7 @@ namespace Consul
         Task<QueryResult<Dictionary<string, Dictionary<string, dynamic>>>> Self(CancellationToken ct = default(CancellationToken));
         Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default(CancellationToken));
         Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken));
         Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default(CancellationToken));

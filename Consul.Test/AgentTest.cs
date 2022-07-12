@@ -544,5 +544,63 @@ namespace Consul.Test
             Assert.Equal(svcID1, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar1")).Response.Keys.Single());
             Assert.Equal(svcID2, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar2")).Response.Keys.Single());
         }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Agent_ReRegister_ReplaceExistingChecks(bool replaceExistingChecks)
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var check1Name = svcID + "1";
+            var check2Name = svcID + "2";
+            var check3Name = svcID + "3";
+            var registration1 = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check1Name,
+                        TTL = TimeSpan.FromSeconds(15)
+                    },
+                    new AgentServiceCheck
+                    {
+                        Name = check2Name,
+                        TTL = TimeSpan.FromSeconds(15)
+                    }
+                }
+            };
+            var registration2 = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    Name = check3Name,
+                    TTL = TimeSpan.FromSeconds(15)
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration1);
+            await _client.Agent.ServiceRegister(registration2, replaceExistingChecks: replaceExistingChecks);
+
+            var checks = await _client.Agent.Checks();
+
+            if (replaceExistingChecks)
+            {
+                Assert.DoesNotContain(check1Name, checks.Response.Values.Select(c => c.Name));
+                Assert.DoesNotContain(check2Name, checks.Response.Values.Select(c => c.Name));
+            }
+            else
+            {
+                Assert.Contains(check1Name, checks.Response.Values.Select(c => c.Name));
+                Assert.Contains(check2Name, checks.Response.Values.Select(c => c.Name));
+            }
+            Assert.Contains(check3Name, checks.Response.Values.Select(c => c.Name));
+
+            await _client.Agent.ServiceDeregister(svcID);
+        }
     }
 }
