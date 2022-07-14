@@ -96,7 +96,7 @@ namespace Consul
                 case "management":
                     return ACLType.Management;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(reader), type,
+                    throw new ArgumentOutOfRangeException(nameof(type), type,
                         "Unknown ACL token type value found during deserialization");
             }
         }
