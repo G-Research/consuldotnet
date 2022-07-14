@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
-    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'netcoreapp2.1'" >true</CopyLocalLockFileAssemblies>
+    <TargetFrameworks>net461;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
