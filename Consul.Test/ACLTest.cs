@@ -29,7 +29,7 @@ namespace Consul.Test
         async Task SkipIfAclNotSupportedAsync()
         {
             var info = await _client.Agent.Self();
-            var version = new Version(info.Response["Config"]["Version"]);
+            var version = new Version(info.Response["Config"]["Version"].GetString());
             Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
         }
 

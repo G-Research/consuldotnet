@@ -30,7 +30,7 @@ namespace Consul.Test
         public async Task Health_GetLocalNode()
         {
             var info = await _client.Agent.Self();
-            var checks = await _client.Health.Node((string)info.Response["Config"]["NodeName"]);
+            var checks = await _client.Health.Node(info.Response["Config"]["NodeName"].GetString());
 
             Assert.NotEqual((ulong)0, checks.LastIndex);
             Assert.NotEmpty(checks.Response);

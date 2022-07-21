@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
+
 
 namespace Consul
 {
@@ -54,8 +56,6 @@ namespace Consul
         internal Dictionary<string, string> Params { get; set; }
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
-
-        internal readonly JsonSerializer _serializer = new JsonSerializer();
 
         internal ConsulRequest(ConsulClient client, string url, HttpMethod method)
         {
@@ -102,20 +102,14 @@ namespace Consul
             return builder.Uri;
         }
 
-        protected TOut Deserialize<TOut>(Stream stream)
+        protected ValueTask<TOut> Deserialize<TOut>(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
-            {
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    return _serializer.Deserialize<TOut>(jsonReader);
-                }
-            }
+            return JsonSerializer.DeserializeAsync<TOut>(stream);
         }
 
         protected byte[] Serialize(object value)
         {
-            return System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
+            return System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value));
         }
     }
 }

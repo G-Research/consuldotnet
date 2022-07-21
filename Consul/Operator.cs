@@ -19,9 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -115,15 +115,6 @@ namespace Consul
         }
 
         /// <summary>
-        /// KeyringRequest is used for performing Keyring operations
-        /// </summary>
-        private class KeyringRequest
-        {
-            [JsonProperty]
-            internal string Key { get; set; }
-        }
-
-        /// <summary>
         /// RaftGetConfiguration is used to query the current Raft peer set.
         /// </summary>
         public Task<QueryResult<RaftConfiguration>> RaftGetConfiguration(CancellationToken ct = default(CancellationToken))
@@ -179,7 +170,7 @@ namespace Consul
         /// </summary>
         public Task<WriteResult> KeyringInstall(string key, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Post("/v1/operator/keyring", new KeyringRequest() { Key = key }, q).Execute(ct);
+            return _client.Post("/v1/operator/keyring", new { Key = key }, q).Execute(ct);
         }
 
         /// <summary>
@@ -211,7 +202,7 @@ namespace Consul
         /// </summary>
         public Task<WriteResult> KeyringRemove(string key, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.DeleteAccepting("/v1/operator/keyring", new KeyringRequest() { Key = key }, q).Execute(ct);
+            return _client.DeleteAccepting("/v1/operator/keyring", new { Key = key }, q).Execute(ct);
         }
 
         /// <summary>
@@ -227,7 +218,7 @@ namespace Consul
         /// </summary>
         public Task<WriteResult> KeyringUse(string key, WriteOptions q, CancellationToken ct = default(CancellationToken))
         {
-            return _client.Put("/v1/operator/keyring", new KeyringRequest() { Key = key }, q).Execute(ct);
+            return _client.Put("/v1/operator/keyring", new { Key = key }, q).Execute(ct);
         }
     }
 
