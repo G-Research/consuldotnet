@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -178,8 +179,8 @@ namespace Consul.Test
             Assert.False(string.IsNullOrEmpty(newToken.Response.AccessorID));
             Assert.Equal(tokenEntry.Description, newToken.Response.Description);
             Assert.Equal(tokenEntry.SecretID, newToken.Response.SecretID);
-            Assert.Equal(tokenEntry.ServiceIdentities[0].ServiceName, newToken.Response.ServiceIdentities[0].ServiceName);
-            Assert.Equal(tokenEntry.ServiceIdentities[1].ServiceName, newToken.Response.ServiceIdentities[1].ServiceName);
+            Assert.Equal(tokenEntry.ServiceIdentities[0].ServiceName, newToken.Response.ServiceIdentities.OrderBy(x => x.ServiceName).ToArray()[0].ServiceName);
+            Assert.Equal(tokenEntry.ServiceIdentities[1].ServiceName, newToken.Response.ServiceIdentities.OrderBy(x => x.ServiceName).ToArray()[1].ServiceName);
             Assert.Equal(tokenEntry.Local, newToken.Response.Local);
 
             var deleteResponse = await _client.Token.Delete(newToken.Response.AccessorID);
