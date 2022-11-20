@@ -1,0 +1,25 @@
+image: gitpod/workspace-dotnet:latest
+
+vscode:
+  extensions:
+    - muhammad-sammy.csharp
+
+tasks: # TODO: update this
+  - name: Restore & Build
+    init: |
+      dotnet dev-certs https
+      dotnet restore
+      dotnet build
+  - name: Run
+    command: dotnet run
+
+## List the start-up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+#tasks:
+#  - init: echo 'init script' # runs during prebuild
+#    command: echo 'start script'
+
+## List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+#ports:
+#  - port: 3000
+#    onOpen: open-preview
+# TODO: create another repository for providing a demo using GitPod
