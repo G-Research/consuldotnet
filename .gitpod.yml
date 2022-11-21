@@ -14,14 +14,14 @@ ports:
 #tasks:
 #  - init: echo 'init script' # runs during prebuild
 #    command: echo 'start script'
-tasks: # TODO: update this to install Consul + Build project ?? (check with J.)
-  - name: Restore & Build
-    init: |
-      dotnet dev-certs https
-      dotnet restore
-      dotnet build
-  - name: Run
-    command: dotnet run
+#tasks: # TODO: update this to install Consul + Build project ?? (check with J.)
+#  - name: Restore & Build
+#    init: |
+#      dotnet dev-certs https
+#      dotnet restore
+#      dotnet build
+#  - name: Run
+#    command: dotnet run
 
 
 # TODO: providing a demo using GitPod => add Samples/ in same repository that can be run in the same workspace
