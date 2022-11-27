@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Check format
@@ -36,16 +36,16 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup .NET Core SDK v3.1.x
         if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Build
@@ -67,21 +67,21 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup .NET Core SDK v2.1.x
         if: matrix.framework == 'netcoreapp2.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 2.1.x
       - name: Setup .NET Core SDK v3.1.x
         if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Download Consul
@@ -113,7 +113,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Create NuGet packages
