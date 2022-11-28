@@ -154,7 +154,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nuget-packages
           path: dist
@@ -170,7 +170,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nuget-packages
           path: dist
