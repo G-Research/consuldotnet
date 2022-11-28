@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET SDK v6.0.x
         uses: actions/setup-dotnet@v3
         with:
@@ -33,7 +33,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET Core SDK v3.1.x
         if: matrix.framework == 'netcoreapp3.1'
         uses: actions/setup-dotnet@v3
@@ -64,7 +64,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET Core SDK v2.1.x
         if: matrix.framework == 'netcoreapp2.1'
         uses: actions/setup-dotnet@v3
@@ -111,7 +111,7 @@ jobs:
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET SDK v6.0.x
         uses: actions/setup-dotnet@v3
         with:
