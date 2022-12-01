@@ -84,12 +84,22 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
+      - name: Setup Consul Enterprise URL
+        if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
+        run: |
+          echo "ENTERPRISE=1" >> $GITHUB_ENV
       - name: Download Consul
         shell: bash
         run: |
           cd Consul.Test
           SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
-          curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}/consul_${{ matrix.consul }}_${SYSTEM}_amd64.zip -o consul.zip
+          if [[ $ENTERPRISE == 1 ]]
+          then
+            curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}+ent/consul_${{ matrix.consul }}+ent_${SYSTEM}_amd64.zip -o consul.zip
+          else 
+            curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}/consul_${{ matrix.consul }}_${SYSTEM}_amd64.zip -o consul.zip
+          fi
+
           unzip consul.zip
           rm consul.zip
       - name: Build
