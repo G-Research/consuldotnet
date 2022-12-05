@@ -602,5 +602,36 @@ namespace Consul.Test
 
             await _client.Agent.ServiceDeregister(svcID);
         }
+
+        [Fact]
+        public async Task Agent_Register_UseCustomCheckId()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var check1Id = svcID + "_checkId";
+            var check1Name = svcID + "_checkName";
+            var registration1 = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check1Name,
+                        CheckId = check1Id,
+                        TTL = TimeSpan.FromSeconds(15),
+                    },
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration1);
+
+            var checks = await _client.Agent.Checks();
+            Assert.Contains(check1Id, checks.Response.Keys);
+
+            var check = checks.Response[check1Id];
+            Assert.Equal(check.Name, check1Name);
+            Assert.Equal(check.CheckID, check1Id);
+        }
     }
 }
