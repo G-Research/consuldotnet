@@ -618,7 +618,7 @@ namespace Consul.Test
                     new AgentServiceCheck
                     {
                         Name = check1Name,
-                        CheckId = check1Id,
+                        CheckID = check1Id,
                         TTL = TimeSpan.FromSeconds(15),
                     },
                 }

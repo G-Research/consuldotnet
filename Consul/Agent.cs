@@ -220,7 +220,7 @@ namespace Consul
         public string ID { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CheckId { get; set; }
+        public string CheckID { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
