@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 1.6.10.8
+* Add `CheckId` to the `AgentServiceCheck` and mark the `ID` as obsolete (#185)
+
 ## 1.6.10.7
 * Add support for `replace-existing-checks` parameter of service registration endpoint that allows to replace existing checks when re-registering a service (#155)
 * Update Newtonsoft.Json reference to version 13.0.1 (#160)
