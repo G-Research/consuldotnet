@@ -59,6 +59,10 @@ namespace Consul.Test
                     Service = "sql",
                     Near = "_agent",
                     OnlyPassing = true
+                },
+                DNS = new QueryDNSOptions
+                {
+                    TTL = TimeSpan.FromSeconds(5)
                 }
             };
 
