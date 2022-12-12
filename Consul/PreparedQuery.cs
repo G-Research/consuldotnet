@@ -58,6 +58,7 @@ namespace Consul
         /// <summary>
         /// TTL is the time to live for the served DNS results.
         /// </summary>
+        [JsonConverter(typeof(DurationTimespanConverter))]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TimeSpan? TTL { get; set; }
     }

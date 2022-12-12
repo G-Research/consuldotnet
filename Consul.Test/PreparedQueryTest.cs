@@ -17,6 +17,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -59,6 +60,10 @@ namespace Consul.Test
                     Service = "sql",
                     Near = "_agent",
                     OnlyPassing = true
+                },
+                DNS = new QueryDNSOptions
+                {
+                    TTL = TimeSpan.FromSeconds(5)
                 }
             };
 
