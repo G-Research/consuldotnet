@@ -1,4 +1,4 @@
-image: gitpod/workspace-dotnet:latest
+image: gitpod/workspace-dotnet:latest # TODO: check if we need to add versioning
 
 vscode:
   extensions:
