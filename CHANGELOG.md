@@ -3,6 +3,7 @@
 ## Unreleased
 
 ## 1.6.10.8
+* Fix to correctly handle query TTL (#187)
 * Add `CheckId` to the `AgentServiceCheck` and mark the `ID` as obsolete (#185)
 
 ## 1.6.10.7
