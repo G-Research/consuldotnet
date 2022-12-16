@@ -1,27 +1,51 @@
-image: gitpod/workspace-dotnet:latest # TODO: check if we need to add versioning
+image:
+  file: .gitpod.Dockerfile
 
+# Adding vscode C# extension
 vscode:
   extensions:
     - muhammad-sammy.csharp
 
-## List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+# Ports to expose
 ports:
-  - name: Consul Dev Server
+  - name: Consul Dev Server UI
     port: 8500
     onOpen: open-preview
 
-## List the start-up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
-#tasks:
-#  - init: echo 'init script' # runs during prebuild
-#    command: echo 'start script'
-#tasks: # TODO: update this to install Consul + Build project ?? (check with J.)
-#  - name: Restore & Build
-#    init: |
-#      dotnet dev-certs https
-#      dotnet restore
-#      dotnet build
-#  - name: Run
-#    command: dotnet run
+# Start-up tasks
+tasks:
+  - name: .NET platform
+    before: |
+      dotnet --version
+    init: |
+      dotnet build
+    command: |
+      dotnet run
+  - name: Consul Server
+    before: |
+      consul --version
+    command: |
+      cd Consul.Test/
+      consul agent -dev -config-file test_config.json
+    openMode: split-right
 
+# TODO: customize pre-builds
+# Configuring pre-builds
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false
 
 # TODO: providing a demo using GitPod => add Samples/ in same repository that can be run in the same workspace
