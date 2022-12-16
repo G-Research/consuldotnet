@@ -3,11 +3,11 @@
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
 [![Feedz](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
-[![Boxed.Mapping NuGet Package Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
+[![Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
 
 [![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
-[![contributors](https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors)](https://github.com/G-Research/consuldotnet/graphs/contributors)
-[![license](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
+[![Contributors](https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors)](https://github.com/G-Research/consuldotnet/graphs/contributors)
+[![License](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
 [![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
 
 * Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
