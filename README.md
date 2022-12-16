@@ -1,16 +1,14 @@
 <p align="left"><img width="500" height="250" src=logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg alt="Consul.NET"/></p>
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
-[![](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
-[![](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
+[![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
+[![Feedz](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
 [![Boxed.Mapping NuGet Package Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
-[![contributors](https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors)](https://github.com/G-Research/consuldotnet/graphs/contributors)
 [![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
+[![contributors](https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors)](https://github.com/G-Research/consuldotnet/graphs/contributors)
 [![license](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
+[![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
 
 * Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
 * .NET: >= 4.6.1 - .NET Core: >= 2.0.0
@@ -205,39 +203,29 @@ Github issue with details of the problem.
 ## Versioning
 
 The version number indicates which version of Consul is supported in terms of API features.
-Since Consul has already a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to
-indicate patch releases of Consul.NET.
+Since Consul has already a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to indicate patch releases of Consul.NET.
 
 Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
-For example version `1.6.1.0` is going to be normalized to `1.6.1`. So to avoid problems, versions and tags with zero in
-the fourth part should be avoided and explicit three part version should be used instead.
+For example version `1.6.1.0` is going to be normalized to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
 
 ## Preview versions
 
-Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ for now. To pull preview versions into
-your project, use the following `NuGet.config` file:
+Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ for now. To pull preview versions into your project, use the following `NuGet.config` file:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-    <packageSources>
-        <add key="consuldotnet-preview" value="https://f.feedz.io/consuldotnet/preview/nuget/index.json"/>
-    </packageSources>
+  <packageSources>
+    <add key="consuldotnet-preview" value="https://f.feedz.io/consuldotnet/preview/nuget/index.json" />
+  </packageSources>
 </configuration>
 ```
 
 ## Release process
 
-1. Before making a new release, make sure that the version in [Directory.Build.props](Directory.Build.props) is up to
-   date.
-2. Head over to the [CHANGELOG](CHANGELOG.md) file. Replace `## Unreleased` with the new version name and add an
-   additional `## Unreleased` for future changes. Open and merge the PR for these changelog updates.
-3. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes
-   contained in the new version from the [CHANGELOG](CHANGELOG.md).
-4. When the draft release is ready, publish it from the GitHub web UI. You can either have GitHub create a new tag for
-   you from the GitHub Release page or push the tag yourself beforehand.
-   Be aware, clicking **Publish** will trigger GitHub to push a new tag (as specified in the new Release entry, if not
-   created by you already) which will instruct the CI to build and push a new stable release to NuGet.org.
-5. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step,
-   bump the minor version in [Directory.Build.props](Directory.Build.props) to the next unreleased version number, so
-   that nightly build versioning can benefit.
+1. Before making a new release, make sure that the version in [Directory.Build.props](Directory.Build.props) is up to date.
+2. Head over to the [CHANGELOG](CHANGELOG.md) file. Replace `## Unreleased` with the new version name and add an additional `## Unreleased` for future changes. Open and merge the PR for these changelog updates.
+3. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes contained in the new version from the [CHANGELOG](CHANGELOG.md).
+4. When the draft release is ready, publish it from the GitHub web UI. You can either have GitHub create a new tag for you from the GitHub Release page or push the tag yourself beforehand.
+Be aware, clicking **Publish** will trigger GitHub to push a new tag (as specified in the new Release entry, if not created by you already) which will instruct the CI to build and push a new stable release to NuGet.org.
+5. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the minor version in [Directory.Build.props](Directory.Build.props) to the next unreleased version number, so that nightly build versioning can benefit.
