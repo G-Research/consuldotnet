@@ -22,3 +22,11 @@ RUN CONSUL_VERSION=$(cat Directory.Build.props|grep -oP '(?<VersionPrefix>)\d{1,
     && sudo rm "consul_${CONSUL_VERSION}_linux_${CONSUL_ARCH}.zip" \
     && cd \
     && consul --version
+
+# Install Mono JIT compiler
+RUN sudo apt install -y gnupg ca-certificates \
+    && sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+    && echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list  \
+    && sudo apt update \
+    && sudo apt install -y mono-complete \
+    && mono --version
