@@ -14,13 +14,17 @@ ports:
 
 # Start-up tasks
 tasks:
-  - name: .NET platform
+  - name: Consul.NET Client
     before: |
       dotnet --version
     init: |
       dotnet build
+      cd Consul.Test/
+      dotnet build
     command: |
-      dotnet run
+      cd Consul.Test/
+      dotnet run --framework "net6.0"
+      cd ..
   - name: Consul Server
     before: |
       consul --version
@@ -29,7 +33,6 @@ tasks:
       consul agent -dev -config-file test_config.json
     openMode: split-right
 
-# TODO: customize pre-builds
 # Configuring pre-builds
 github:
   prebuilds:
@@ -47,5 +50,3 @@ github:
     addComment: false
     # add a "Review in Gitpod" button to the pull request's description (defaults to false)
     addBadge: false
-
-# TODO: providing a demo using GitPod => add Samples/ in same repository that can be run in the same workspace
