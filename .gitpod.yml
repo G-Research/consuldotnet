@@ -19,10 +19,11 @@ tasks:
       dotnet --version
     init: |
       dotnet build
-      cd Consul.Test/
+      cd Consul.Test/ && pwd
       dotnet build
+      cd ..
     command: |
-      cd Consul.Test/
+      cd Consul.Test/ && pwd
       dotnet run --framework "net6.0"
       cd ..
   - name: Consul Server
