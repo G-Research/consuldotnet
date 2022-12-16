@@ -3,9 +3,22 @@ FROM gitpod/workspace-full:latest
 USER gitpod
 
 # Install .NET SDK
-# Same version as: https://github.com/g-research/consuldotnet/blob/master/global.json
-# Docs: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script#options
-# Source: https://docs.microsoft.com/dotnet/core/install/linux-scripted-manual#scripted-install
-RUN mkdir -p /home/gitpod/dotnet && curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 6.0 --version latest --install-dir /home/gitpod/dotnet
+ADD global.json ./
+RUN mkdir -p /home/gitpod/dotnet \
+    && curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --jsonfile global.json --install-dir /home/gitpod/dotnet \
+    && rm global.json
 ENV DOTNET_ROOT=/home/gitpod/dotnet
 ENV PATH=$PATH:/home/gitpod/dotnet
+
+# Install Consul Server
+ADD Directory.Build.props ./
+RUN CONSUL_VERSION=$(cat Directory.Build.props|grep -oP '(?<VersionPrefix>)\d{1,3}\.\d{1,3}\.\d{1,3}') \
+    && CONSUL_ARCH=$(dpkg --print-architecture) \
+    && rm Directory.Build.props \
+    && echo "Installing Consul ${CONSUL_VERSION}_${CONSUL_ARCH} ..." \
+    && cd /usr/local/bin \
+    && sudo wget "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_${CONSUL_ARCH}.zip" \
+    && sudo unzip -o "consul_${CONSUL_VERSION}_linux_${CONSUL_ARCH}.zip" \
+    && sudo rm "consul_${CONSUL_VERSION}_linux_${CONSUL_ARCH}.zip" \
+    && cd \
+    && consul --version
