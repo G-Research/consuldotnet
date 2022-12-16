@@ -127,6 +127,10 @@ from the main (upstream) repository:
 
 Or just VS Code and latest stable .NET SDKs.
 
+Alternatively, You can use GitPod and start contributing directly.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
+
 ### <a name="rules"></a> Coding Rules
 
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
