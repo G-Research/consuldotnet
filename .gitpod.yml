@@ -14,7 +14,7 @@ ports:
 
 # Start-up tasks
 tasks:
-  - name: Consul.NET Client
+  - name: Consul.NET Client # this task is optional (used as workaround for OmniSharp/omnisharp-vscode/issues/4783)
     before: |
       dotnet --version
     init: |
