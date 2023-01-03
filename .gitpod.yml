@@ -1,0 +1,53 @@
+image:
+  file: .gitpod.Dockerfile
+
+# Adding vscode C# extension
+vscode:
+  extensions:
+    - muhammad-sammy.csharp
+
+# Ports to expose
+ports:
+  - name: Consul Dev Server UI
+    port: 8500
+    onOpen: open-preview
+
+# Start-up tasks
+tasks:
+  - name: Consul.NET Client # this task is optional (used as workaround for OmniSharp/omnisharp-vscode/issues/4783)
+    before: |
+      dotnet --version
+    init: |
+      dotnet build
+      cd Consul.Test/ && pwd
+      dotnet build
+      cd ..
+    command: |
+      cd Consul.Test/ && pwd
+      dotnet run --framework "net6.0"
+      cd ..
+  - name: Consul Server
+    before: |
+      consul --version
+    command: |
+      cd Consul.Test/
+      consul agent -dev -config-file test_config.json
+    openMode: split-right
+
+# Configuring pre-builds
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false
