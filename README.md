@@ -1,8 +1,14 @@
 <p align="left"><img width="500" height="250" src=logo/svg/Consul.NET_SignatureLogo_RGB-Black.svg alt="Consul.NET"/></p>
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
-[![](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
-[![](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
+[![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
+[![Feedz](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](#preview-versions)
+[![Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
+
+[![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
+[![Contributors](https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors)](https://github.com/G-Research/consuldotnet/graphs/contributors)
+[![License](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
+[![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
 
 * Consul API: [v1.6.10](https://github.com/hashicorp/consul/tree/v1.6.10/api)
 * .NET: >= 4.6.1 - .NET Core: >= 2.0.0
@@ -20,7 +26,7 @@ You'll need a running Consul Server on your local machine, or a Consul
 Agent connected to a Consul Server cluster. To run a local server:
 
 1. [Download a copy](https://www.consul.io/downloads.html) of the latest Windows
-version and unzip it into the `Consul.Test` folder.
+   version and unzip it into the `Consul.Test` folder.
 2. Open a command prompt and `cd` to the `Consul.Test` folder.
 3. Run `.\consul.exe agent -dev -config-file test_config.json`
 
@@ -220,6 +226,6 @@ Preview builds (aka 'nightly' builds) are distributed using https://feedz.io/ fo
 1. Before making a new release, make sure that the version in [Directory.Build.props](Directory.Build.props) is up to date.
 2. Head over to the [CHANGELOG](CHANGELOG.md) file. Replace `## Unreleased` with the new version name and add an additional `## Unreleased` for future changes. Open and merge the PR for these changelog updates.
 3. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes contained in the new version from the [CHANGELOG](CHANGELOG.md).
-4. When the draft release is ready, publish it from the GitHub web UI. You can either have GitHub create a new tag for you from the GitHub Release page or push the tag yourself beforehand. 
+4. When the draft release is ready, publish it from the GitHub web UI. You can either have GitHub create a new tag for you from the GitHub Release page or push the tag yourself beforehand.
 Be aware, clicking **Publish** will trigger GitHub to push a new tag (as specified in the new Release entry, if not created by you already) which will instruct the CI to build and push a new stable release to NuGet.org.
 5. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the minor version in [Directory.Build.props](Directory.Build.props) to the next unreleased version number, so that nightly build versioning can benefit.
