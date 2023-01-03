@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Check format
@@ -33,19 +33,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET Core SDK v3.1.x
         if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Build
@@ -57,31 +57,31 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.6, 1.13.3, 1.14.0]
+        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.8, 1.13.5, 1.14.3]
         framework: [net461, netcoreapp2.1, netcoreapp3.1, net5.0, net6.0]
         os: [ubuntu-18.04, windows-2019, macos-10.15]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET Core SDK v2.1.x
         if: matrix.framework == 'netcoreapp2.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 2.1.x
       - name: Setup .NET Core SDK v3.1.x
         if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Download Consul
@@ -101,7 +101,7 @@ jobs:
           dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
       - name: Upload Consul logs
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
           path: consul*.log
@@ -111,9 +111,9 @@ jobs:
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
       - name: Create NuGet packages
@@ -141,7 +141,7 @@ jobs:
               }
           }
       - name: Upload NuGet package artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: nuget-packages
           path: dist/*.nupkg
@@ -154,7 +154,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nuget-packages
           path: dist
@@ -170,7 +170,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nuget-packages
           path: dist

@@ -214,9 +214,13 @@ namespace Consul
     /// </summary>
     public class AgentServiceCheck
     {
-
+        // See https://github.com/G-Research/consuldotnet/issues/184
+        [Obsolete("Use CheckId instead")]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CheckID { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
