@@ -229,6 +229,44 @@ namespace Consul
         {
             return _client.Put("/v1/operator/keyring", new KeyringRequest() { Key = key }, q).Execute(ct);
         }
+
+        public Task<QueryResult<ConsulLicense>> GetConsulLicense(string datacenter = "", CancellationToken ct = default)
+        {
+            return _client.Get<ConsulLicense>("/v1/operator/license", new QueryOptions { Datacenter = datacenter }).Execute(ct);
+        }
+    }
+
+    public class ConsulLicense
+    {
+        public bool Valid { get; set; }
+        public License License { get; set; }
+        public string[] Warnings { get; set; }
+    }
+
+    public class License
+    {
+        [JsonProperty("license_id")]
+        public string LicenseId { get; set; }
+        [JsonProperty("customer_id")]
+        public string CustomerId { get; set; }
+        [JsonProperty("installation_id")]
+        public string InstallationId { get; set; }
+
+        [JsonProperty("issue_time")]
+        public string IssueTime { get; set; }
+        [JsonProperty("start_time")]
+        public string StartTime { get; set; }
+        [JsonProperty("expiration_time")]
+        public string ExpirationTime { get; set; }
+        public string Product { get; set; }
+        public Flags Flags { get; set; }
+        public string[] Features { get; set; }
+        public bool Temporary { get; set; }
+    }
+
+    public class Flags
+    {
+        public string Package { get; set; }
     }
 
     public partial class ConsulClient : IConsulClient

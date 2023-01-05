@@ -82,5 +82,12 @@ namespace Consul.Test
                 Assert.True(response.Keys.ContainsKey(newKey));
             }
         }
+
+        [SkippableFact]
+        public async Task Operator_GetLicense()
+        {
+            var license = await _client.Operator.GetConsulLicense();
+            Skip.If(license.StatusCode == System.Net.HttpStatusCode.NotFound, "This test requires an Enterprise Consul version");
+        }
     }
 }
