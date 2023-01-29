@@ -22,12 +22,12 @@ const config = {
     // url: 'https://consuldot.net', // prod TODO: update url
     // baseUrl: '/', // prod TODO: update base url
 
-    // url: 'https://naskio.github.io', // staging
-    // baseUrl: '/consuldotnet/', // staging
+    url: 'https://naskio.github.io', // staging
+    baseUrl: '/consuldotnet/', // staging
 
-    url: 'http://localhost:3000', // dev
+    // url: 'http://localhost:3000', // dev
     // baseUrl: '/', // dev
-    baseUrl: '/consuldotnet/', // dev for GitHub pages
+    // baseUrl: '/consuldotnet/', // dev for GitHub pages
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
