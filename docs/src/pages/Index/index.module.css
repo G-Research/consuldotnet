@@ -1,0 +1,90 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+/*banner*/
+
+.heroBanner {
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #00458d 0%, #00356d 100%);
+    color: white;
+}
+
+@media screen and (max-width: 996px) {
+    .heroBanner {
+        padding: 2rem;
+    }
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    overflow: hidden;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.darkButton, .darkButton:hover {
+    /*color: var(--ifm-color-gray-900);*/
+}
+
+.badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.badge {
+    margin: 0 0.5rem;
+}
+
+.previewLink {
+    color: #92c7ff;
+}
+
+.previewLink:hover {
+    color: #49a2ff;
+}
+
+.indexCtasGitHubButtonWrapper {
+    display: flex;
+}
+
+.indexCtasGitHubButton {
+    overflow: hidden;
+}
+
+/*banner*/
+
+
+/*features*/
+.features {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    width: 100%;
+}
+
+.featureIcon {
+    height: 200px;
+    width: 200px;
+}
+
+/*features*/
+
+
