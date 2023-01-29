@@ -220,8 +220,8 @@ const config = {
                 ],
                 logo: {
                     alt: 'G-Research Open-Source Software',
-                    // src: 'organization/logo/svg/GR-OSS.svg',
-                    src: 'organization/logo/svg/GR-OSS-Light.svg',
+                    src: 'organization/logo/svg/GR-OSS.svg',
+                    // src: 'organization/logo/svg/GR-OSS-Light.svg',
                     srcDark: 'organization/logo/svg/GR-OSS-Dark.svg',
                     href: 'https://opensource.gresearch.co.uk/',
                 },
