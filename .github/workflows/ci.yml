@@ -108,7 +108,7 @@ jobs:
         shell: bash
         run: |
           ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }} -e RUN_CONSUL_ENTERPRISE_TESTS=1
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3

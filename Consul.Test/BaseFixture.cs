@@ -102,4 +102,15 @@ namespace Consul.Test
             await Ready.Value;
         }
     }
+
+    public class EnterpriseOnlyFact : FactAttribute
+    {
+        public EnterpriseOnlyFact()
+        {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RUN_CONSUL_ENTERPRISE_TESTS")))
+            {
+                Skip = "Skipped; this test requires a consul enterprise server to run.";
+            }
+        }
+    }
 }
