@@ -159,8 +159,29 @@ const config = {
                         ],
                     },
                     {
+                        title: 'Contribute',
+                        items: [
+                            {
+                                label: 'Overview',
+                                to: '/docs/category/contributing',
+                            },
+                            {
+                                label: 'Found an Issue?',
+                                to: '/docs/contributing/report-issue',
+                            },
+                            {
+                                label: 'Want a Feature?',
+                                to: '/docs/contributing/request-feature',
+                            },
+                        ],
+                    },
+                    {
                         title: 'Community',
                         items: [
+                            {
+                                label: 'Help',
+                                to: '/docs/support',
+                            },
                             {
                                 label: 'Stack Overflow',
                                 href: 'https://stackoverflow.com/questions/tagged/consuldotnet',
@@ -169,19 +190,15 @@ const config = {
                                 label: 'GitHub Issues',
                                 href: 'https://github.com/G-Research/consuldotnet/issues',
                             },
-                            {
-                                label: 'Help',
-                                to: '/docs/support',
-                            },
-                            {
-                                label: 'Contribute',
-                                to: '/docs/category/contributing',
-                            },
                         ],
                     },
                     {
                         title: 'More',
                         items: [
+                            {
+                                label: 'Blog',
+                                to: '/blog',
+                            },
                             {
                                 label: 'GitHub',
                                 href: 'https://github.com/G-Research/consuldotnet',
@@ -193,27 +210,6 @@ const config = {
                             {
                                 label: 'G-Research Open-Source',
                                 href: 'https://opensource.gresearch.co.uk/',
-                            },
-                            {
-                                label: 'Blog',
-                                to: '/blog',
-                            },
-                        ],
-                    },
-                    {
-                        title: 'Legal',
-                        items: [
-                            {
-                                label: 'Terms & Conditions',
-                                href: 'https://www.gresearch.co.uk/terms-and-conditions/',
-                            },
-                            {
-                                label: 'Privacy Policy',
-                                href: 'https://www.gresearch.co.uk/privacy-policy/',
-                            },
-                            {
-                                label: 'Cookie Policy',
-                                href: 'https://www.gresearch.co.uk/cookie-policy/',
                             },
                         ],
                     },
