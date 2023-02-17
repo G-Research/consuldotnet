@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
-[![Feedz](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](https://naskio.github.io/consuldotnet/docs/roadmap/)
+[![Feedz](https://img.shields.io/feedz/vpre/consuldotnet/preview/consul)](https://naskio.github.io/consuldotnet/docs/next/)
 [![Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
 
 [![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
@@ -16,7 +16,7 @@
 
 Consul.NET is a .NET client library for the [Consul HTTP API](https://www.consul.io/).
 
-> *For further information, please visit the [Consul.NET website](https://naskio.github.io/consuldotnet/).*
+> *For further information, please visit the [🌐 Consul.NET website](https://naskio.github.io/consuldotnet/).*
 
 ## 📢 Introduction
 
@@ -37,13 +37,13 @@ dotnet add package Consul
 ```
 
 **[🚀 Getting Started](https://naskio.github.io/consuldotnet/docs/category/getting-started)**
-• **[🆕 Preview version](https://naskio.github.io/consuldotnet/docs/roadmap/)**
+• **[🆕 Preview version](https://naskio.github.io/consuldotnet/docs/next/)**
 
 ## 💕 Community
 
 If you have any questions, feature requests or bug reports, feel free to open an issue or a pull request.
 
-- [Website](https://naskio.github.io/consuldotnet/docs/) (Documentation)
+- [Website](https://naskio.github.io/consuldotnet/) (Documentation)
 - [GitHub Issues](https://github.com/G-Research/consuldotnet/issues) (Bug reports, feature requests, questions)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/consul) (Questions)
 - [Twitter](https://twitter.com/oss_gr) (Latest news)
