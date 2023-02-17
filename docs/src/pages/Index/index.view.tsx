@@ -69,8 +69,8 @@ function HomepageBanner() {
                 </div>
                 <div className={clsx('margin-top--md')}>
                     <iframe
-                        src="https://ghbtns.com/github-btn.html?user=G-Research&amp;repo=consuldotnet&amp;type=star&amp;count=true&amp;size=large"
-                        width={132}
+                        src="https://ghbtns.com/github-btn.html?user=G-Research&repo=consuldotnet&type=star&count=true&size=large"
+                        width={170}
                         height={30}
                         title="GitHub Stars"
                     />
