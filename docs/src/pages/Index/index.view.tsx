@@ -7,50 +7,11 @@ import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
 import styles from './index.module.css';
 import ConsulDotNetLogoSvg from '@site/static/project/logo/svg/Consul.NET_SignatureLogo_RGB-Color.svg';
-
-const badgeList: BadgeItem[] = [
-    {
-        alt: 'Downloads',
-        src: 'https://img.shields.io/nuget/dt/consul?label=Downloads',
-        href: 'https://www.nuget.org/packages/Consul/absoluteLatest',
-    },
-    {
-        alt: 'NuGet',
-        src: 'https://img.shields.io/nuget/vpre/consul',
-        href: 'https://www.nuget.org/packages/Consul/absoluteLatest',
-    },
-    // {
-    //     alt: 'Feedz',
-    //     src: 'https://img.shields.io/feedz/vpre/consuldotnet/preview/consul',
-    //     href: '#preview-versions',
-    // },
-    {
-        alt: 'CI',
-        src: 'https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push',
-        href: 'https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush',
-    },
-    {
-        alt: 'License',
-        src: 'https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License',
-        href: 'https://github.com/G-Research/consuldotnet/blob/master/LICENSE',
-    },
-    {
-        alt: 'Contributors',
-        src: 'https://img.shields.io/github/contributors/G-Research/consuldotnet.svg?label=Contributors',
-        href: 'https://github.com/G-Research/consuldotnet/graphs/contributors',
-    },
-    {
-        alt: 'Contribute with GitPod',
-        src: 'https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod',
-        href: 'https://gitpod.io/#https://github.com/G-Research/consuldotnet/',
-    },
-    // {
-    //     alt: 'Twitter Follow',
-    //     // src: "https://img.shields.io/twitter/follow/oss_gr.svg?label=Follow%20@oss_gr&style=social",
-    //     src: "https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter",
-    //     href: 'https://twitter.com/oss_gr',
-    // }
-];
+import {badgeList} from "@site/src/pages/Index/badges.data";
+import {FeatureList} from "@site/src/pages/Index/features.data";
+import MDXContent from '@theme/MDXContent';
+// @ts-ignore
+import SupportedAPIs from '@site/docs/2-guides/3-supported-apis.mdx';
 
 function Badge({alt, src, href}: BadgeItem) {
     return (
@@ -90,7 +51,7 @@ function HomepageBanner() {
                     {`dotnet add package Consul`}
                 </CodeBlock>
                 <p>{`Curious about what's next? try the `}
-                    <Link className={styles.previewLink} to='/docs/'>
+                    <Link className={styles.previewLink} to='/docs/roadmap/'>
                         preview version
                     </Link>
                 </p>
@@ -120,36 +81,6 @@ function HomepageBanner() {
 }
 
 
-const FeatureList: FeatureItem[] = [
-    {
-        title: 'Easy to Use',
-        Svg: require('@site/static/images/easy.svg').default,
-        description: (
-            <>
-                Consul.NET was designed by humans, for humans. It's meant to be intuitive, simple and easy to use.
-            </>
-        ),
-    },
-    {
-        title: 'Open-Source',
-        Svg: require('@site/static/images/community.svg').default,
-        description: (
-            <>
-                Consul.NET is open-source and free to use. It's developed by the community and for the community.
-            </>
-        ),
-    },
-    {
-        title: 'Production Ready',
-        Svg: require('@site/static/images/ready.svg').default,
-        description: (
-            <>
-                Consul.NET is used in production by many companies and is battle-tested.
-            </>
-        ),
-    },
-];
-
 function Feature({title, Svg, description}: FeatureItem) {
     return (
         <div className={clsx('col col--4')}>
@@ -178,6 +109,25 @@ function HomepageFeatures(): JSX.Element {
     );
 }
 
+function HomepageCompatibilities(): JSX.Element {
+    return (
+        <section className={styles.compatibilities}>
+            <div className="container">
+                <div className="text--center">
+                    <h1>Supported APIs</h1>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <MDXContent>
+                            <SupportedAPIs/>
+                        </MDXContent>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 export default function Home(): JSX.Element {
     const {siteConfig} = useDocusaurusContext();
     return (
@@ -187,6 +137,7 @@ export default function Home(): JSX.Element {
             <HomepageBanner/>
             <main>
                 <HomepageFeatures/>
+                <HomepageCompatibilities/>
             </main>
         </Layout>
     );

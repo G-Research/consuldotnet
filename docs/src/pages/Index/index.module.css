@@ -88,3 +88,34 @@
 /*features*/
 
 
+/*compatibilities*/
+.compatibilities {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.compatibilities table {
+    display: inline;
+    margin-left: auto;
+    margin-right: auto;
+    /*empty-cells: hide;*/
+    border-collapse: separate;
+}
+
+/*.compatibilities table td {*/
+/*    !*background-color: red !important;*!*/
+/*}*/
+
+/*th:empty, td:empty {*/
+/*    visibility: hidden;*/
+/*}*/
+
+td:first-child:not(:empty) {
+    color: var(--ifm-table-head-color);
+    font-weight: var(--ifm-table-head-font-weight);
+    /*font-style: italic;*/
+}
+
+/*compatibilities*/
+
+
