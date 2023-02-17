@@ -268,6 +268,9 @@ namespace Consul
         public string TCP { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string UDP { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(HealthStatusConverter))]
         public HealthStatus Status { get; set; }
 
