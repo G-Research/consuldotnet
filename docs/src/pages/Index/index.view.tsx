@@ -7,8 +7,8 @@ import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
 import styles from './index.module.css';
 import ConsulDotNetLogoSvg from '@site/static/project/logo/svg/Consul.NET_SignatureLogo_RGB-Color.svg';
-import {badgeList} from "@site/src/pages/Index/badges.data";
-import {FeatureList} from "@site/src/pages/Index/features.data";
+import badgeList from "@site/src/data/badges";
+import FeatureList from "@site/src/data/features";
 import MDXContent from '@theme/MDXContent';
 // @ts-ignore
 import SupportedAPIs from '@site/docs/2-guides/3-supported-apis.mdx';
@@ -35,12 +35,6 @@ function HomepageBanner() {
     return (
         <header className={clsx('hero hero--primary', styles.heroBanner)}>
             <div className="container">
-                {/*<img src={require('@site/static/project/logo/png/Consul.NET_SignatureLogo_RGB-Color.png').default}*/}
-                {/*     alt="Consul.NET logo"*/}
-                {/*     height="120"*/}
-                {/*     width="560"*/}
-                {/*     style={{objectFit: 'cover', objectPosition: 'center'}}*/}
-                {/*/>*/}
                 <div className={clsx(styles.logoContainer)}>
                     <ConsulDotNetLogoSvg fill='transparent' transform="scale(1.8 1.8)"/>
                 </div>
@@ -51,7 +45,7 @@ function HomepageBanner() {
                     {`dotnet add package Consul`}
                 </CodeBlock>
                 <p>{`Curious about what's next? try the `}
-                    <Link className={styles.previewLink} to='/docs/roadmap/'>
+                    <Link className={styles.previewLink} to='/docs/next/'>
                         preview version
                     </Link>
                 </p>

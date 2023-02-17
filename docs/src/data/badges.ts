@@ -1,6 +1,6 @@
 import {BadgeItem} from "@site/src/types";
 
-export const badgeList: BadgeItem[] = [
+const badgeList: BadgeItem[] = [
     {
         alt: 'Downloads',
         src: 'https://img.shields.io/nuget/dt/consul?label=Downloads',
@@ -53,3 +53,5 @@ export const badgeList: BadgeItem[] = [
         href: 'https://www.nuget.org/packages/Consul',
     },
 ];
+
+export default badgeList;

@@ -1,7 +1,7 @@
 import React from "react";
 import {FeatureItem} from "@site/src/types";
 
-export const FeatureList: FeatureItem[] = [
+const FeatureList: FeatureItem[] = [
     {
         title: 'Easy to Use',
         Svg: require('@site/static/images/easy.svg').default,
@@ -30,3 +30,5 @@ export const FeatureList: FeatureItem[] = [
         ),
     },
 ];
+
+export default FeatureList;
