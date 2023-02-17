@@ -1,4 +1,4 @@
-![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)
+[![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)](https://naskio.github.io/consuldotnet/)
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
@@ -16,7 +16,7 @@
 
 Consul.NET is a .NET client library for the [Consul HTTP API](https://www.consul.io/).
 
-> For further information, please visit the [Consul.NET website](https://naskio.github.io/consuldotnet/).
+> *For further information, please visit the [Consul.NET website](https://naskio.github.io/consuldotnet/).*
 
 ## 📢 Introduction
 
