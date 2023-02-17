@@ -47,7 +47,7 @@ If you have any questions, feature requests or bug reports, feel free to open an
 - [GitHub Issues](https://github.com/G-Research/consuldotnet/issues) (Bug reports, feature requests, questions)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/consul) (Questions)
 - [Twitter](https://twitter.com/oss_gr) (Latest news)
-- [G-Research Open-Source](https://opensource.gresearch.co.uk/) (Blog, news, events)
+- [G-Research Open-Source](https://opensource.gresearch.co.uk/) (More open-source projects)
 
 ## 🤝 Contributing
 
