@@ -1,3 +1,102 @@
 # Usage
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
+All operations are done using a `ConsulClient` object. First,
+instantiate a `ConsulClient` object, which connects to `localhost:8500`,
+the default Consul HTTP API port. Once you've got a `ConsulClient`
+object, various functionality is exposed as properties under the
+`ConsulClient`.
+
+All responses are wrapped in `QueryResponse` and `WriteResponse`
+classes, which provide metadata about the request, like how long it
+took and the monotonic Consul index when the operation occured.
+
+This API also assumes some knowledge of Consul, including things like
+[blocking queries and consistency modes](https://www.consul.io/docs/agent/http.html)
+
+### ACL
+
+The ACL endpoints are used to create, update, destroy, and query Legacy ACL tokens.
+
+### ACLReplication
+
+The ACLReplication endpoint is used to query the status of ACL Replication.
+
+### Agent
+
+The Agent endpoints are used to interact with the local Consul agent.
+Usually, services and checks are registered with an agent which then
+takes on the burden of keeping that data synchronized with the cluster.
+For example, the agent registers services and checks with the Catalog
+and performs anti-entropy to recover from outages.
+
+### AuthMethod
+
+The AuthMethod endpoints are used to create, update, destroy, and query ACL Auth Methods
+related to ACL Replication. **These are untested and a place-holder for future changes.**
+
+### Catalog
+
+The Catalog is the endpoint used to register and deregister nodes,
+services, and checks. It also provides query endpoints.
+
+### Event
+
+The Event endpoints are used to fire new events and to query the
+available events.
+
+### Health
+
+The Health endpoints are used to query health-related information. They
+are provided separately from the Catalog since users may prefer not to
+use the optional health checking mechanisms. Additionally, some of the
+query results from the Health endpoints are filtered while the Catalog
+endpoints provide the raw entries.
+
+### KV
+
+The KV endpoint is used to access Consul's simple key/value store,
+useful for storing service configuration or other metadata.
+
+### Policy
+
+The Policy endpoint is used to create, update, delete and read ACL Policies
+
+### Role
+
+The Role endpoint is used to create, update, delete and read ACL Roles
+
+### Query
+
+The Prepared Query endpoints are used to create, update, destroy, and
+execute prepared queries. Prepared queries allow you to register a
+complex service query and then execute it later via its ID or name to
+get a set of healthy nodes that provide a given service.
+
+### Session
+
+The Session endpoints are used to create, destroy, and query sessions.
+
+### Status
+
+The Status endpoints are used to get information about the status of the
+Consul cluster. This information is generally very low level and not
+often useful for clients.
+
+### Token
+
+The Token endpoint is used to create, update, clone, delete and read ACL Tokens
+
+### Additional Functions
+
+Functionality based on the Consul guides using the available primitives
+has been implemented as well, just like the Go API.
+
+### Lock
+
+Lock is used to implement client-side leader election for a distributed
+lock. It is an implementation of the [Consul Leader Election](https://consul.io/docs/guides/leader-election.html) guide.
+
+### Semaphore
+
+Semaphore is used to implement a distributed semaphore using the Consul
+KV primitives. It is an implementation of the [Consul Semaphore](https://www.consul.io/docs/guides/semaphore.html) guide.

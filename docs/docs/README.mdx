@@ -4,4 +4,11 @@ sidebar_position: 0
 
 # Introduction
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.
+Consul.NET is a .NET port of the Go Consul API, but reworked to use .NET idioms such as Tasks/CancellationTokens instead
+of Goroutines/Channels. The majority of the calls directly track
+the [HTTP API](https://www.consul.io/docs/agent/http.html), but this API does have additional functionality that is
+provided in the Go API, like Locks and Semaphores.
+
+[![Consul API: 1.6.10](https://img.shields.io/badge/Consul%20API%20version-1.6.10-red)](https://github.com/hashicorp/consul/tree/v1.6.10/api)
+
+> **Note:** This version indicates the version of the Consul API that is fully supported. Recent versions of Consul API still work, but some features may be missing. Read more about [Consul.NET versioning](./3-contributing/6-release-process.mdx#versioning) and the currently [Supported APIs](./2-guides/3-supported-apis.mdx).
