@@ -54,9 +54,9 @@ If you have any questions, feature requests or bug reports, feel free to open an
 We welcome contributions to Consul.NET. Please see
 our [📜 Contributing](https://naskio.github.io/consuldotnet/docs/category/contributing) guide for more information.
 
-[![Contributors](https://contrib.rocks/image?repo=G-Research/consuldotnet)](https://github.com/G-Research/consuldotnet/graphs/contributors)
+🙌 Thanks goes to these wonderful people:
 
-🙌 This project exists thanks to all the people who contribute.
+[![Contributors](https://contrib.rocks/image?repo=G-Research/consuldotnet)](https://github.com/G-Research/consuldotnet/graphs/contributors)
 
 ## 📄 License
 
