@@ -172,7 +172,7 @@ const config = {
                             },
                             {
                                 label: 'Stack Overflow',
-                                href: 'https://stackoverflow.com/questions/tagged/consuldotnet',
+                                href: 'https://stackoverflow.com/questions/tagged/c%23+consul',
                             },
                             {
                                 label: 'GitHub Issues',
