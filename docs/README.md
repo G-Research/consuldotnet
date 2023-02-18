@@ -1,7 +1,6 @@
 [![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)](https://naskio.github.io/consuldotnet/)
 
-This is the official website for the Consul.NET project.
-[🌐 Website](https://naskio.github.io/consuldotnet/)
+This is the official website for the Consul.NET project, published at [🌐 Website](https://naskio.github.io/consuldotnet/).
 
 > This website is built using the static website generator [Docusaurus 2](https://docusaurus.io/). Read
 > the [Docusaurus documentation](https://docusaurus.io/docs) to learn more.
