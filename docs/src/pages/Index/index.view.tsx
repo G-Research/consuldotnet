@@ -46,19 +46,19 @@ function HomepageBanner() {
                 </CodeBlock>
                 <p>{`Curious about what's next? try the `}
                     <Link className={styles.previewLink} to='/docs/next/'>
-                        preview version
+                        ⚡ preview version
                     </Link>
                 </p>
                 <div className={styles.buttons}>
                     <Link
                         className={clsx("button button--info button--lg", styles.darkButton)}
                         to="/docs/">
-                        Get Started
+                        📚 Read the Docs
                     </Link>
                     <Link
                         className={clsx("button button--primary button--lg", styles.darkButton)}
-                        to="/docs/">
-                        Try it on GitPod
+                        to="/docs/category/getting-started/">
+                        🚀 Get Started
                     </Link>
                 </div>
                 <div className={clsx('margin-top--md')}>
