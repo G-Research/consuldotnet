@@ -51,7 +51,10 @@ If you have any questions, feature requests or bug reports, feel free to open an
 ## 🤝 Contributing
 
 We welcome contributions to Consul.NET. Please see
-our [📜 Contributing](https://naskio.github.io/consuldotnet/docs/category/contributing) guide for more information.
+our [Contributing guide](https://naskio.github.io/consuldotnet/docs/category/contributing) for more information.
+
+**[⚡ Contributing](https://naskio.github.io/consuldotnet/docs/category/contributing)**
+• **[📜 Code of Conduct](./docs/docs/3-contributing/7-code-of-conduct.mdx)**
 
 🙌 Thanks goes to these wonderful people:
 
