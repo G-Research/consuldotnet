@@ -35,9 +35,6 @@ const config = {
     organizationName: 'naskio', // Usually your GitHub org/user's name.
     projectName: 'consuldotnet', // Usually your repo name.
 
-    // Even if you don't use internalization, you can use this field to set useful
-    // metadata like html lang. For example, if your site is Chinese, you may want
-    // to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'en',
         locales: ['en'],
@@ -49,12 +46,8 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    // path: 'content', (default is `docs`)
                     sidebarPath: require.resolve('./sidebars.js'),
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
-                    editUrl:
-                        'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+                    editUrl: 'https://github.com/naskio/consuldotnet/edit/docs-v0/docs/', // update this
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -94,16 +87,6 @@ const config = {
                         activeBaseRegex: `dummy-never-match`,
                     },
                     // right
-                    // {
-                    //     href: 'https://twitter.com/oss_gr',
-                    //     label: 'Twitter',
-                    //     position: 'right',
-                    // },
-                    // {
-                    //     href: 'https://github.com/G-Research/consuldotnet',
-                    //     label: 'GitHub',
-                    //     position: 'right',
-                    // },
                     {
                         href: 'https://github.com/G-Research/consuldotnet',
                         position: 'right',
@@ -116,15 +99,6 @@ const config = {
                         className: 'header-twitter-link',
                         'aria-label': 'Twitter',
                     },
-                    // {
-                    //     type: 'html',
-                    //     position: 'right',
-                    //     value: TwitterIcon,
-                    // },
-                    // { // TODO: add search
-                    //     type: 'search',
-                    //     position: 'right',
-                    // },
                 ],
             },
             footer: {
@@ -201,7 +175,6 @@ const config = {
                 logo: {
                     alt: 'G-Research Open-Source Software',
                     src: 'organization/logo/svg/GR-OSS.svg',
-                    // src: 'organization/logo/svg/GR-OSS-Light.svg',
                     srcDark: 'organization/logo/svg/GR-OSS-Dark.svg',
                     href: 'https://opensource.gresearch.co.uk/',
                 },
@@ -211,10 +184,6 @@ const config = {
                 // https://docusaurus.io/docs/api/themes/configuration#announcement-bar
                 id: 'announcement-bar--support-us-1', // increment on change
                 content: announcementBarContent,
-                // backgroundColor: '#92c7ff',
-                // textColor: '#000',
-                // backgroundColor: '#dbecff',
-                // textColor: '#000',
                 isCloseable: true,
             },
             colorMode: {
