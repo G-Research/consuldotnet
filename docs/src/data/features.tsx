@@ -1,5 +1,5 @@
 import React from "react";
-import {FeatureItem} from "@site/src/types";
+import {FeatureItem} from "@site/src/core/types";
 
 const FeatureList: FeatureItem[] = [
     {

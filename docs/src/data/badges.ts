@@ -1,4 +1,4 @@
-import {BadgeItem} from "@site/src/types";
+import {BadgeItem} from "@site/src/core/types";
 
 const badgeList: BadgeItem[] = [
     {
@@ -42,16 +42,16 @@ const badgeList: BadgeItem[] = [
     //     src: "https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter",
     //     href: 'https://twitter.com/oss_gr',
     // }
-    {
-        alt: '.NET: >= 4.6.1',
-        src: 'https://img.shields.io/badge/.NET%20version-%3E=4.6.1-blue',
-        href: 'https://www.nuget.org/packages/Consul',
-    },
-    {
-        alt: '.NET Core: >= 2.0.0',
-        src: 'https://img.shields.io/badge/.NET%20Core%20version-%3E=2.0.0-blueviolet',
-        href: 'https://www.nuget.org/packages/Consul',
-    },
+    // {
+    //     alt: '.NET Framework: >= 4.6.1',
+    //     src: 'https://img.shields.io/badge/.NET%20version-%3E=4.6.1-blue',
+    //     href: 'https://www.nuget.org/packages/Consul',
+    // },
+    // {
+    //     alt: '.NET Core: >= 2.0.0',
+    //     src: 'https://img.shields.io/badge/.NET%20Core%20version-%3E=2.0.0-blueviolet',
+    //     href: 'https://www.nuget.org/packages/Consul',
+    // },
 ];
 
 export default badgeList;

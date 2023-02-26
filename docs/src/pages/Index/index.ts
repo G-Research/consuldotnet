@@ -1,1 +1,1 @@
-export {default as default} from './index.view';
+export {default as default} from './Index.view';

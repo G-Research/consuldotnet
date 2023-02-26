@@ -1,31 +1,25 @@
 import React from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
-import {FeatureItem, BadgeItem} from "@site/src/types";
+import {FeatureItem} from "@site/src/core/types";
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
-import styles from './index.module.css';
+import styles from './Index.module.css';
 import ConsulDotNetLogoSvg from '@site/static/project/logo/svg/Consul.NET_SignatureLogo_RGB-Color.svg';
 import badgeList from "@site/src/data/badges";
 import FeatureList from "@site/src/data/features";
 import MDXContent from '@theme/MDXContent';
+import CustomBadge, {DotNetFrameworkBadge, DotNetCoreBadge} from "@site/src/components/CustomBadge";
 // @ts-ignore
 import SupportedAPIs from '@site/docs/2-guides/3-supported-apis.mdx';
 
-function Badge({alt, src, href}: BadgeItem) {
-    return (
-        <div className={clsx(styles.badge)}>
-            <a href={href} target="_blank" rel="noopener noreferrer">
-                <img src={src} alt={alt}/>
-            </a>
-        </div>
-    );
-}
-
 function HomepageBadges() {
     return <div className={clsx(styles.badges)}>{
-        badgeList.map((props, idx) => <Badge key={idx} {...props}/>)}
+        [...badgeList.map((props) => <CustomBadge {...props}/>), <DotNetFrameworkBadge/>, <DotNetCoreBadge/>]
+            .map((component, idx) => <div key={idx} className={clsx(styles.badge)}>
+                {component}
+            </div>)}
     </div>
 }
 

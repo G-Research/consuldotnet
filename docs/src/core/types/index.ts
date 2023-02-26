@@ -7,7 +7,8 @@ export type FeatureItem = {
 };
 
 export type BadgeItem = {
-    alt: string;
     src: string;
-    href: string;
+    alt: string;
+    href?: string;
+    inline?: boolean;
 };
