@@ -1,4 +1,4 @@
-[![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)](https://naskio.github.io/consuldotnet/)
+[![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)](https://consuldot.net/)
 
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
@@ -15,7 +15,7 @@
 
 Consul.NET is a .NET client library for the [Consul HTTP API](https://www.consul.io/).
 
-> *For further information, please visit the [🌐 Consul.NET website](https://naskio.github.io/consuldotnet/).*
+> *For further information, please visit the [🌐 Consul.NET website](https://consuldot.net/).*
 
 ## 📢 Introduction
 
@@ -24,8 +24,8 @@ of Goroutines/Channels. The majority of the calls directly track
 the [HTTP API](https://www.consul.io/docs/agent/http.html), but this API does have additional functionality that is
 provided in the Go API, like Locks and Semaphores.
 
-**[📖 Learn more about Consul.NET](https://naskio.github.io/consuldotnet/)**
-• **[📚 Documentation](https://naskio.github.io/consuldotnet/docs/)**
+**[📖 Learn more about Consul.NET](https://consuldot.net/)**
+• **[📚 Documentation](https://consuldot.net/docs/)**
 
 ## 📦 Installation
 
@@ -35,14 +35,14 @@ Consul.NET is available as a [NuGet package](https://www.nuget.org/packages/Cons
 dotnet add package Consul
 ```
 
-**[🚀 Getting Started](https://naskio.github.io/consuldotnet/docs/category/getting-started)**
-• **[🆕 Preview version](https://naskio.github.io/consuldotnet/docs/next/)**
+**[🚀 Getting Started](https://consuldot.net/docs/category/getting-started)**
+• **[🆕 Preview version](https://consuldot.net/docs/next/)**
 
 ## 💕 Community
 
 If you have any questions, feature requests or bug reports, feel free to open an issue or a pull request.
 
-- [Website](https://naskio.github.io/consuldotnet/) (Documentation)
+- [Website](https://consuldot.net/) (Documentation)
 - [GitHub Issues](https://github.com/G-Research/consuldotnet/issues) (Bug reports, feature requests, questions)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/c%23+consul) (Questions)
 - [Twitter](https://twitter.com/oss_gr) (Latest news)
@@ -51,10 +51,10 @@ If you have any questions, feature requests or bug reports, feel free to open an
 ## 🤝 Contributing
 
 We welcome contributions to Consul.NET. Please see
-our [Contributing guide](https://naskio.github.io/consuldotnet/docs/category/contributing) for more information.
+our [Contributing guide](https://consuldot.net/docs/category/contributing) for more information.
 
-**[⚡ Contributing](https://naskio.github.io/consuldotnet/docs/category/contributing)**
-• **[📜 Code of Conduct](https://naskio.github.io/consuldotnet/docs/contributing/code-of-conduct)**
+**[⚡ Contributing](https://consuldot.net/docs/category/contributing)**
+• **[📜 Code of Conduct](https://consuldot.net/docs/contributing/code-of-conduct)**
 
 🙌 Thanks goes to these wonderful people:
 
