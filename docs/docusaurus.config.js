@@ -41,20 +41,12 @@ const config = {
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
 
-    // url: 'https://consuldot.net', // prod TODO: update url
-    // baseUrl: '/', // prod TODO: update base url
-
-    url: 'https://naskio.github.io', // staging
-    baseUrl: '/consuldotnet/', // staging
-
-    // url: 'http://localhost:3000', // dev
-    // baseUrl: '/', // dev
-    // baseUrl: '/consuldotnet/', // dev for GitHub pages
+    url: 'https://consuldot.net',
+    baseUrl: '/',
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    // organizationName: 'G-Research', // TODO: update organization name.
-    organizationName: 'naskio', // Usually your GitHub org/user's name.
+    organizationName: 'G-Research', // Usually your GitHub org/user's name.
     projectName: 'consuldotnet', // Usually your repo name.
 
     customFields: {
@@ -76,7 +68,7 @@ const config = {
             ({
                 docs: {
                     sidebarPath: require.resolve('./sidebars.js'),
-                    editUrl: 'https://github.com/naskio/consuldotnet/edit/docs-v0/docs/', // update this
+                    editUrl: 'https://github.com/G-Research/consuldotnet/edit/master/docs/',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),

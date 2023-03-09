@@ -36,10 +36,6 @@
     gap: 1rem;
 }
 
-.darkButton, .darkButton:hover {
-    /*color: var(--ifm-color-gray-900);*/
-}
-
 .badges {
     display: flex;
     align-items: center;
@@ -98,24 +94,12 @@
     display: inline;
     margin-left: auto;
     margin-right: auto;
-    /*empty-cells: hide;*/
     border-collapse: separate;
 }
-
-/*.compatibilities table td {*/
-/*    !*background-color: red !important;*!*/
-/*}*/
-
-/*th:empty, td:empty {*/
-/*    visibility: hidden;*/
-/*}*/
 
 td:first-child:not(:empty) {
     color: var(--ifm-table-head-color);
     font-weight: var(--ifm-table-head-font-weight);
-    /*font-style: italic;*/
 }
 
 /*compatibilities*/
-
-
