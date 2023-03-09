@@ -73,7 +73,6 @@ jobs:
       - name: Build
         working-directory: ./docs
         env:
-          PREFIX_PATHS: 'true'
           CONSUL_DOT_NET_VERSION: ${{ steps.version.outputs.tag }}
         run: ${{ steps.detect-package-manager.outputs.manager }} run build
       - name: Upload artifact
