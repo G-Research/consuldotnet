@@ -4,11 +4,27 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
-// _TODO: extract version from tag in GitHub Pages (https://github.com/marketplace/actions/get-latest-tag)
-const consulDotNetVersion = `1.6.10.8`;
-const consulAPIVersion = `1.6.10`;
+require('dotenv').config();
+
 const dotNetFrameworkMinVersion = `4.6.1`;
 const dotNetCoreMinVersion = `2.0.0`;
+const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X.X`);
+const consulAPIVersion = clean_version(extract_consul_version(consulDotNetVersion));
+
+function clean_version(version) {
+    if (version) {
+        return version.replace(/^v/, ``);
+    }
+    return ``;
+}
+
+function extract_consul_version(consul_dot_net_version) {
+    if (consul_dot_net_version) {
+        const parts = consul_dot_net_version.split(".");
+        return parts.slice(0, 3).join(".");
+    }
+    return ``;
+}
 
 const announcementBarContent = `⭐️ If you like Consul.NET, give it a star on
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/G-Research/consuldotnet">GitHub</a>

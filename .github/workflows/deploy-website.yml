@@ -2,7 +2,7 @@ name: Deploy website to Pages
 
 on:
   push: # Runs on pushes targeting the default branch
-    branches: [$default-branch, docs-v0]
+    branches: [ $default-branch, docs-v0 ]
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 permissions: # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -24,6 +24,13 @@ jobs: # Build job
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      - name: 'Get current version'
+        id: version
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        with:
+          fallback: "X.X.X" # Optional fallback tag to use when no tag can be found
       - name: Detect package manager
         id: detect-package-manager
         working-directory: ./docs
@@ -67,6 +74,7 @@ jobs: # Build job
         working-directory: ./docs
         env:
           PREFIX_PATHS: 'true'
+          CONSUL_DOT_NET_VERSION: ${{ steps.version.outputs.tag }}
         run: ${{ steps.detect-package-manager.outputs.manager }} run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
