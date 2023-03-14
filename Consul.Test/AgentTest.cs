@@ -633,5 +633,75 @@ namespace Consul.Test
             Assert.Equal(check.Name, check1Name);
             Assert.Equal(check.CheckID, check1Id);
         }
+
+        [Fact]
+        public async Task Agent_Register_UseAliasCheck()
+        {
+            var ttl = TimeSpan.FromSeconds(5);
+            var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
+            var svcID = KVTest.GenerateTestKeyName();
+            var svcID1 = svcID + "1";
+            var svcID2 = svcID + "2";
+            var check1Id = svcID1 + "_checkId";
+            var check1Name = svcID1 + "_checkName";
+            var registration1 = new AgentServiceRegistration
+            {
+                ID = svcID1,
+                Name = svcID1,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check1Name,
+                        CheckID = check1Id,
+                        TTL = ttl,
+                    },
+                }
+            };
+
+            var check2Id = svcID2 + "_checkId";
+            var check2Name = svcID2 + "_checkName";
+            var registration2 = new AgentServiceRegistration
+            {
+                ID = svcID2,
+                Name = svcID2,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check2Name,
+                        CheckID = check2Id,
+                        AliasService = svcID1,
+                    },
+                },
+            };
+
+            await _client.Agent.ServiceRegister(registration1);
+            await _client.Agent.ServiceRegister(registration2);
+
+            var checks = await _client.Agent.Checks();
+            Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
+            Assert.NotEqual("test is ok", checks.Response[check1Id].Output);
+            Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
+            Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
+
+            await _client.Agent.PassTTL(check1Id, "test is ok");
+
+            // wait for some time to make sure the checks status propagates
+            await Task.Delay(delay);
+            checks = await _client.Agent.Checks();
+            Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
+            Assert.Equal("test is ok", checks.Response[check1Id].Output);
+            Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
+            Assert.Equal("All checks passing.", checks.Response[check2Id].Output);
+
+            // wait for checks to expire
+            await Task.Delay(ttl);
+            checks = await _client.Agent.Checks();
+            Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
+            Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
+        }
     }
 }
