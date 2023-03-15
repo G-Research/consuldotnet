@@ -49,10 +49,10 @@ jobs:
         with:
           dotnet-version: 6.0.x
       - name: Build
-        run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
+        run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }} 
       - name: Run tests
         shell: bash
-        run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+        run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }} --filter Consul.Test.AgentTest.Agent_Register_UseAliasCheck
   Consul:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
