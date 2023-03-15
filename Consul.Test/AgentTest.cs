@@ -638,8 +638,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(10);
-            var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
+            var ttl = TimeSpan.FromSeconds(5);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
             var svcID2 = svcID + "2";
@@ -682,9 +681,6 @@ namespace Consul.Test
             await _client.Agent.ServiceRegister(registration1);
             await _client.Agent.ServiceRegister(registration2);
 
-            // Just wait for some time to let the service to initialize
-            await Task.Delay(delay);
-
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
             Assert.NotEqual("test is ok", checks.Response[check1Id].Output);
@@ -693,9 +689,18 @@ namespace Consul.Test
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
 
-            // wait for some time to make sure the checks status propagates
-            await Task.Delay(delay);
-            checks = await _client.Agent.Checks();
+            while (true)
+            {
+                // wait for some time to make sure the checks status propagates
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                checks = await _client.Agent.Checks();
+                if (!checks.Response[check1Id].Status.Equals(HealthStatus.Passing) ||
+                    checks.Response[check2Id].Status.Equals(HealthStatus.Passing))
+                {
+                    break;
+                }
+            }
+
             Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
             Assert.Equal("test is ok", checks.Response[check1Id].Output);
             Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
