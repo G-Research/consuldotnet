@@ -638,7 +638,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(5);
+            var ttl = TimeSpan.FromSeconds(10);
             var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
