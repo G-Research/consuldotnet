@@ -22,12 +22,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Consul.Filtering;
+using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     public class AgentTest : BaseFixture
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public AgentTest(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public async Task Agent_GetSelf()
         {
@@ -637,9 +646,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            await Task.Delay(TimeSpan.FromSeconds(20));
-
-            var ttl = TimeSpan.FromSeconds(5);
+            var ttl = TimeSpan.FromSeconds(4);
             var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
@@ -680,8 +687,14 @@ namespace Consul.Test
                 },
             };
 
+            _testOutputHelper.WriteLine($"svcID = {svcID}");
+
             await _client.Agent.ServiceRegister(registration1);
             await _client.Agent.ServiceRegister(registration2);
+
+            _testOutputHelper.WriteLine($"registration1 = {JsonConvert.SerializeObject(registration1)}");
+            _testOutputHelper.WriteLine($"registration2 = {JsonConvert.SerializeObject(registration2)}");
+
 
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
