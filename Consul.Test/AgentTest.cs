@@ -645,7 +645,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(4);
+            var ttl = TimeSpan.FromSeconds(10);
             var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
@@ -690,6 +690,9 @@ namespace Consul.Test
 
             await _client.Agent.ServiceRegister(registration1);
             await _client.Agent.ServiceRegister(registration2);
+
+            // Just wait for some time to let the service to initialize
+            await Task.Delay(delay);
 
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
