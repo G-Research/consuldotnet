@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Consul.Filtering;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -691,10 +690,6 @@ namespace Consul.Test
 
             await _client.Agent.ServiceRegister(registration1);
             await _client.Agent.ServiceRegister(registration2);
-
-            _testOutputHelper.WriteLine($"registration1 = {JsonConvert.SerializeObject(registration1)}");
-            _testOutputHelper.WriteLine($"registration2 = {JsonConvert.SerializeObject(registration2)}");
-
 
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
