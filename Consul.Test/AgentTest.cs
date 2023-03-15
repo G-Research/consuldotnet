@@ -29,13 +29,6 @@ namespace Consul.Test
 {
     public class AgentTest : BaseFixture
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public AgentTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public async Task Agent_GetSelf()
         {
@@ -645,7 +638,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(10);
+            var ttl = TimeSpan.FromSeconds(5);
             var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
@@ -685,8 +678,6 @@ namespace Consul.Test
                     },
                 },
             };
-
-            _testOutputHelper.WriteLine($"svcID = {svcID}");
 
             await _client.Agent.ServiceRegister(registration1);
             await _client.Agent.ServiceRegister(registration2);
