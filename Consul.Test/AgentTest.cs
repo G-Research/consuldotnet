@@ -645,7 +645,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(20);
+            var ttl = TimeSpan.FromSeconds(10);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
             var svcID2 = svcID + "2";
@@ -696,6 +696,7 @@ namespace Consul.Test
             Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
+            // Calling PassTTL only once was not enough and the test was occasionally failing for some reason
             await _client.Agent.PassTTL(check1Id, "test is ok");
 
             while (true)
