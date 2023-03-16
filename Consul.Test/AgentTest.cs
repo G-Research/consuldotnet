@@ -696,6 +696,7 @@ namespace Consul.Test
             Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
+            await _client.Agent.PassTTL(check1Id, "test is ok");
 
             while (true)
             {
