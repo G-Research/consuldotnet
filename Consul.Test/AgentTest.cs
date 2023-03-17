@@ -29,13 +29,6 @@ namespace Consul.Test
 {
     public class AgentTest : BaseFixture
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public AgentTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public async Task Agent_GetSelf()
         {
@@ -688,11 +681,10 @@ namespace Consul.Test
                 },
             };
 
-            _testOutputHelper.WriteLine($"svcID = {svcID}");
-
             await _client.Agent.ServiceRegister(registration1);
             await Task.Delay(delay);
             await _client.Agent.ServiceRegister(registration2);
+
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
             Assert.NotEqual("test is ok", checks.Response[check1Id].Output);
@@ -700,6 +692,8 @@ namespace Consul.Test
             Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
+
+            // wait for some time to make sure the checks status propagates
             await Task.Delay(delay);
             checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
