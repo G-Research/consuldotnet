@@ -713,7 +713,7 @@ namespace Consul.Test
             }
 
             Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
-            Assert.Equal("test is really ok", checks.Response[check1Id].Output);
+            Assert.Equal("test is ok", checks.Response[check1Id].Output);
             Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
             Assert.Equal("All checks passing.", checks.Response[check2Id].Output);
 
