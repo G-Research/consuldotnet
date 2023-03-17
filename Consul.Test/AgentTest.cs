@@ -644,7 +644,7 @@ namespace Consul.Test
 
         private async Task CreateSessions(int n)
         {
-            for (var i=0;i<n;i++)
+            for (var i = 0; i < n; i++)
             {
                 var svcID = KVTest.GenerateTestKeyName();
                 var svcID1 = svcID + "999";
@@ -655,7 +655,13 @@ namespace Consul.Test
                     ID = svcID1,
                     Name = svcID1,
                     Port = 8000,
-                    Checks = new[] { new AgentServiceCheck { Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i), }, }
+                    Checks = new[]
+                    {
+                        new AgentServiceCheck
+                        {
+                            Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i),
+                        },
+                    }
                 };
 
                 await _client.Agent.ServiceRegister(registration1);
@@ -678,15 +684,7 @@ namespace Consul.Test
                 ID = svcID1,
                 Name = svcID1,
                 Port = 8000,
-                Checks = new[]
-                {
-                    new AgentServiceCheck
-                    {
-                        Name = check1Name,
-                        CheckID = check1Id,
-                        TTL = ttl,
-                    },
-                }
+                Checks = new[] { new AgentServiceCheck { Name = check1Name, CheckID = check1Id, TTL = ttl, }, }
             };
 
             var check2Id = svcID2 + "_checkId";
