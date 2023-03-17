@@ -642,9 +642,31 @@ namespace Consul.Test
             Assert.Equal(check.CheckID, check1Id);
         }
 
+        private async Task CreateSessions(int n)
+        {
+            for (var i=0;i<n;i++)
+            {
+                var svcID = KVTest.GenerateTestKeyName();
+                var svcID1 = svcID + "999";
+                var check1Id = svcID1 + "_checkId";
+                var check1Name = svcID1 + "_checkName";
+                var registration1 = new AgentServiceRegistration
+                {
+                    ID = svcID1,
+                    Name = svcID1,
+                    Port = 8000,
+                    Checks = new[] { new AgentServiceCheck { Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i), }, }
+                };
+
+                await _client.Agent.ServiceRegister(registration1);
+            }
+        }
+
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
+            await CreateSessions(20);
+            await Task.Delay(TimeSpan.FromSeconds(20));
             var ttl = TimeSpan.FromSeconds(20);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
