@@ -659,7 +659,7 @@ namespace Consul.Test
                     {
                         new AgentServiceCheck
                         {
-                            Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i),
+                            Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i + 5),
                         },
                     }
                 };
