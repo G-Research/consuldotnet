@@ -690,6 +690,7 @@ namespace Consul.Test
             _testOutputHelper.WriteLine($"svcID = {svcID}");
 
             await _client.Agent.ServiceRegister(registration1);
+            await Task.Delay(TimeSpan.FromSeconds(5));
             await _client.Agent.ServiceRegister(registration2);
             var checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
@@ -698,9 +699,6 @@ namespace Consul.Test
             Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
-            // Calling PassTTL only once was not enough and the test was occasionally failing for some reason
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            await _client.Agent.PassTTL(check1Id, "test is really ok");
 
             while (true)
             {
