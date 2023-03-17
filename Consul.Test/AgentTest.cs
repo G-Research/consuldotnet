@@ -697,6 +697,7 @@ namespace Consul.Test
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
             // Calling PassTTL only once was not enough and the test was occasionally failing for some reason
+            await Task.Delay(TimeSpan.FromSeconds(1));
             await _client.Agent.PassTTL(check1Id, "test is ok");
 
             while (true)
