@@ -701,7 +701,7 @@ namespace Consul.Test
 
             await _client.Agent.PassTTL(check1Id, "test is ok");
             await Task.Delay(delay);
-
+            checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
             Assert.Equal("test is ok", checks.Response[check1Id].Output);
             Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
