@@ -642,37 +642,9 @@ namespace Consul.Test
             Assert.Equal(check.CheckID, check1Id);
         }
 
-        private async Task CreateSessions(int n)
-        {
-            for (var i = 0; i < n; i++)
-            {
-                var svcID = KVTest.GenerateTestKeyName();
-                var svcID1 = svcID + "999";
-                var check1Id = svcID1 + "_checkId";
-                var check1Name = svcID1 + "_checkName";
-                var registration1 = new AgentServiceRegistration
-                {
-                    ID = svcID1,
-                    Name = svcID1,
-                    Port = 8000,
-                    Checks = new[]
-                    {
-                        new AgentServiceCheck
-                        {
-                            Name = check1Name, CheckID = check1Id, TTL = TimeSpan.FromSeconds(i + 5),
-                        },
-                    }
-                };
-
-                await _client.Agent.ServiceRegister(registration1);
-            }
-        }
-
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            await CreateSessions(20);
-            await Task.Delay(TimeSpan.FromSeconds(20));
             var ttl = TimeSpan.FromSeconds(20);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
@@ -718,7 +690,7 @@ namespace Consul.Test
             await _client.Agent.PassTTL(check1Id, "test is ok");
             // Calling PassTTL only once was not enough and the test was occasionally failing for some reason
             await Task.Delay(TimeSpan.FromSeconds(1));
-            await _client.Agent.PassTTL(check1Id, "test is ok");
+            await _client.Agent.PassTTL(check1Id, "test is really ok");
 
             while (true)
             {
@@ -733,7 +705,7 @@ namespace Consul.Test
             }
 
             Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
-            Assert.Equal("test is ok", checks.Response[check1Id].Output);
+            Assert.Equal("test is really ok", checks.Response[check1Id].Output);
             Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
             Assert.Equal("All checks passing.", checks.Response[check2Id].Output);
 
