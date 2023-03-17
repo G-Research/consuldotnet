@@ -690,7 +690,6 @@ namespace Consul.Test
 
             _testOutputHelper.WriteLine($"svcID = {svcID}");
 
-            
             await _client.Agent.ServiceRegister(registration1);
             await Task.Delay(delay);
             await _client.Agent.ServiceRegister(registration2);
