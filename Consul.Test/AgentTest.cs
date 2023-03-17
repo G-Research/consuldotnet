@@ -656,7 +656,16 @@ namespace Consul.Test
                 ID = svcID1,
                 Name = svcID1,
                 Port = 8000,
-                Checks = new[] { new AgentServiceCheck { Name = check1Name, CheckID = check1Id, TTL = ttl, }, }
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check1Name,
+                        CheckID = check1Id,
+                        TTL = ttl,
+                        Status = HealthStatus.Critical,
+                    },
+                },
             };
 
             var check2Id = svcID2 + "_checkId";
@@ -673,6 +682,7 @@ namespace Consul.Test
                         Name = check2Name,
                         CheckID = check2Id,
                         AliasService = svcID1,
+                        Status = HealthStatus.Critical,
                     },
                 },
             };
