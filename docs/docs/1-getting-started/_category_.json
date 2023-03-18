@@ -1,0 +1,8 @@
+{
+  "label": "Getting Started",
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "5 minutes to get started with Consul.NET and run the basic example."
+  }
+}
