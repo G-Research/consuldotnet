@@ -706,6 +706,7 @@ namespace Consul.Test
             checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
             Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
+
         }
     }
 }
