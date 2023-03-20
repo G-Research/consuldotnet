@@ -1,0 +1,12 @@
+# Setting up Consul Server
+
+You'll need a running Consul Server on your local machine, or a Consul
+Agent connected to a Consul Server cluster. To run a local server:
+
+1. [Download a copy](https://www.consul.io/downloads.html) of the latest Windows
+version and unzip it into the `Consul.Test` folder.
+2. Open a command prompt and `cd` to the `Consul.Test` folder.
+3. Run `.\consul.exe agent -dev -config-file test_config.json`
+
+This creates a 1-server cluster that operates in "dev" mode (does not
+write data to disk) and listens on `127.0.0.1:8500`.

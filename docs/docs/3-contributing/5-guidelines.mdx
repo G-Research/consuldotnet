@@ -1,32 +1,10 @@
-# Contributing to Consul.NET
+import {DotNetFrameworkDevVersion} from "@site/src/components/DynamicText";
 
-We'd love for you to contribute to our source code and to make Consul.NET even better than it is
-today! Here are the guidelines we'd like you to follow:
+# Guidelines
 
- - [Code of Conduct](CODE_OF_CONDUCT.md)
- - [Issues and Bugs](#issue)
- - [Feature Requests](#feature)
- - [Submission Guidelines](#submit)
- - [Coding Rules](#rules)
+Submission and coding guidelines for the Consul.NET project.
 
-## <a name="issue"></a> Found an Issue?
-
-If you find a bug in the source code or a mistake in the documentation, you can help us by
-submitting an issue to [our issue tracker](https://github.com/G-Research/consuldotnet/issues). Even better you can submit a Pull Request with a fix.
-
-**Please see the [Submission Guidelines](#submit) below.**
-
-## <a name="feature"></a> Want a Feature?
-
-You can request a new feature by submitting an issue to [our issue tracker](https://github.com/G-Research/consuldotnet/issues). If you
-would like to implement a new feature then consider what kind of change it is:
-
-* **Major Changes** that you wish to contribute to the project should be discussed first in an issue, so that we can better coordinate our efforts,
-  prevent duplication of work, and help you to craft the change so that it is successfully accepted
-  into the project.
-* **Small Changes** can be crafted and submitted to the GitHub Repository as a [Pull Request](https://github.com/G-Research/consuldotnet/pulls).
-
-## <a name="submit"></a> Submission Guidelines
+## Submission Guidelines
 
 ### Submitting an Issue
 
@@ -51,8 +29,8 @@ Before you submit your pull request consider the following guidelines:
 * Search [GitHub](https://github.com/G-Research/consuldotnet) for an open or closed Pull Request that relates to your submission. You don't want to duplicate effort.
 * Make your changes in a new git branch:
 
-    ```shell
-    git checkout -b my-fix-branch develop
+  ```shell
+  git checkout -b my-fix-branch develop
     ```
 
 * Create your patch, **including appropriate test cases**.
@@ -60,15 +38,15 @@ Before you submit your pull request consider the following guidelines:
 * Run the test suite using the development environment described below.
 * Commit your changes using a descriptive commit message.
 
-    ```shell
-    git commit -a
+  ```shell
+  git commit -a
     ```
-  Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
+Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
 * Make sure you use a distinctive commit author name.
 * Push your branch to GitHub:
 
-    ```shell
-    git push origin my-fix-branch
+  ```shell
+  git push origin my-fix-branch
     ```
 
 In GitHub, send a pull request to `consuldotnet:master`.
@@ -96,26 +74,26 @@ from the main (upstream) repository:
 
 * Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
-    ```shell
-    git push origin --delete my-fix-branch
+  ```shell
+  git push origin --delete my-fix-branch
     ```
 
 * Check out the master branch:
 
-    ```shell
-    git checkout master -f
+  ```shell
+  git checkout master -f
     ```
 
 * Delete the local branch:
 
-    ```shell
-    git branch -D my-fix-branch
+  ```shell
+  git branch -D my-fix-branch
     ```
 
 * Update your master with the latest upstream version:
 
-    ```shell
-    git pull --ff upstream master
+  ```shell
+  git pull --ff upstream master
     ```
 
 ## Coding
@@ -123,7 +101,7 @@ from the main (upstream) repository:
 ### Developer Environment
 
 - Visual Studio 2019 (with latest patches/updates), with the following workloads/components
-    - Developer packs for .NET Framework 4.6.1.
+  - Developer packs for <DotNetFrameworkDevVersion/>.
 
 Or just VS Code and latest stable .NET SDKs.
 
@@ -131,7 +109,7 @@ Alternatively, You can use GitPod and start contributing directly.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/G-Research/consuldotnet/)
 
-### <a name="rules"></a> Coding Rules
+### Coding Rules
 
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
