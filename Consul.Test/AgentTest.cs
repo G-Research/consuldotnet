@@ -637,11 +637,11 @@ namespace Consul.Test
 
         [Theory(DisplayName = "It should work")]
         [Repeat(100)]
-        public async Task Agent_Register_UseAliasCheck(int _)
+        public async Task Agent_Register_UseAliasCheck(int counter)
         {
             var ttl = TimeSpan.FromSeconds(10);
             var delay = TimeSpan.FromSeconds(ttl.TotalSeconds / 2);
-            var svcID = KVTest.GenerateTestKeyName();
+            var svcID = KVTest.GenerateTestKeyName() + $"_{counter}_";
             var svcID1 = svcID + "1";
             var svcID2 = svcID + "2";
             var check1Id = svcID1 + "_checkId";
