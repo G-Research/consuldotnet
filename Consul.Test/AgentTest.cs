@@ -635,8 +635,9 @@ namespace Consul.Test
             Assert.Equal(check.CheckID, check1Id);
         }
 
-        [Fact]
-        public async Task Agent_Register_UseAliasCheck()
+        [Theory(DisplayName = "It should work")]
+        [Repeat(100)]
+        public async Task Agent_Register_UseAliasCheck(int _)
         {
             var ttl = TimeSpan.FromSeconds(10);
             var delay = TimeSpan.FromSeconds(ttl.TotalSeconds / 2);
@@ -706,6 +707,32 @@ namespace Consul.Test
             checks = await _client.Agent.Checks();
             Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
             Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
+        }
+    }
+
+    public sealed class RepeatAttribute : Xunit.Sdk.DataAttribute
+    {
+        private readonly int _count;
+
+        public RepeatAttribute(int count)
+        {
+            if (count < 1)
+            {
+                throw new System.ArgumentOutOfRangeException(
+                    paramName: nameof(count),
+                    message: "Repeat count must be greater than 0."
+                );
+            }
+
+            _count = count;
+        }
+
+        public override IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod)
+        {
+            foreach (var iterationNumber in Enumerable.Range(start: 1, count: this._count))
+            {
+                yield return new object[] { iterationNumber };
+            }
         }
     }
 }
