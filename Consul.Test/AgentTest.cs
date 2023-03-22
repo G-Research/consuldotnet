@@ -690,7 +690,6 @@ namespace Consul.Test
             Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
             Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
 
-
             await _client.Agent.PassTTL(check1Id, "test is ok");
 
             while (true)
