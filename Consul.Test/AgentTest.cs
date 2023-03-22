@@ -23,6 +23,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -637,8 +638,8 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
-            var ttl = TimeSpan.FromSeconds(5);
-            var delay = TimeSpan.FromMilliseconds(ttl.TotalMilliseconds / 2);
+            var ttl = TimeSpan.FromSeconds(10);
+            var delay = TimeSpan.FromSeconds(ttl.TotalSeconds / 2);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
             var svcID2 = svcID + "2";
@@ -656,8 +657,9 @@ namespace Consul.Test
                         Name = check1Name,
                         CheckID = check1Id,
                         TTL = ttl,
+                        Status = HealthStatus.Critical,
                     },
-                }
+                },
             };
 
             var check2Id = svcID2 + "_checkId";
@@ -674,11 +676,13 @@ namespace Consul.Test
                         Name = check2Name,
                         CheckID = check2Id,
                         AliasService = svcID1,
+                        Status = HealthStatus.Critical,
                     },
                 },
             };
 
             await _client.Agent.ServiceRegister(registration1);
+            await Task.Delay(delay);
             await _client.Agent.ServiceRegister(registration2);
 
             var checks = await _client.Agent.Checks();
