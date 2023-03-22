@@ -203,3 +203,6 @@ project.lock.json
 
 # Rider
 *.idea/
+
+# macOS
+.DS_Store
