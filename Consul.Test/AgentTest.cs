@@ -638,6 +638,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Register_UseAliasCheck()
         {
+            // 120 is a lot, but otherwise the test is flaky
             var ttl = TimeSpan.FromSeconds(120);
             var svcID = KVTest.GenerateTestKeyName();
             var svcID1 = svcID + "1";
@@ -694,8 +695,7 @@ namespace Consul.Test
 
             while (true)
             {
-                // wait for some time to make sure the checks status propagates
-                await Task.Delay(TimeSpan.FromMilliseconds(10));
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 checks = await _client.Agent.Checks();
 
                 if (checks.Response[check1Id].Status != HealthStatus.Passing ||
