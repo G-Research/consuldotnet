@@ -81,6 +81,7 @@ namespace Consul.Test
             Assert.False(semaphore.IsHeld);
         }
 
+        
         [Fact]
         public async Task Semaphore_OneShot()
         {
