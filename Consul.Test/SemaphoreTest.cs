@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -79,11 +80,12 @@ namespace Consul.Test
 
             Assert.False(semaphore.IsHeld);
         }
-
-        [Fact]
-        public async Task Semaphore_OneShot()
+        
+        [Theory()]
+        [Repeat(10)]
+        public async Task Semaphore_OneShot(int iteration)
         {
-            const string keyName = "test/semaphore/oneshot";
+            string keyName = $"test/semaphore/oneshot_{iteration}";
             TimeSpan waitTime = TimeSpan.FromMilliseconds(3000);
 
             var semaphoreOptions = new SemaphoreOptions(keyName, 2)
@@ -455,6 +457,32 @@ namespace Consul.Test
             await distributedLock2.Destroy();
 
             masterInstanceClient.Dispose();
+        }
+    }
+
+    public sealed class RepeatAttribute : Xunit.Sdk.DataAttribute
+    {
+        private readonly int _count;
+
+        public RepeatAttribute(int count)
+        {
+            if (count < 1)
+            {
+                throw new System.ArgumentOutOfRangeException(
+                    paramName: nameof(count),
+                    message: "Repeat count must be greater than 0."
+                );
+            }
+
+            _count = count;
+        }
+
+        public override IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod)
+        {
+            foreach (var iterationNumber in Enumerable.Range(start: 1, count: this._count))
+            {
+                yield return new object[] { iterationNumber };
+            }
         }
     }
 }
