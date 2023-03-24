@@ -479,7 +479,7 @@ namespace Consul.Test
 
         public override IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod)
         {
-            foreach (var iterationNumber in Enumerable.Range(start: 1, count: this._count))
+            foreach (var iterationNumber in Enumerable.Range(start: 1, count: _count))
             {
                 yield return new object[] { iterationNumber };
             }
