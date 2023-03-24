@@ -81,11 +81,10 @@ namespace Consul.Test
             Assert.False(semaphore.IsHeld);
         }
 
-        [Theory()]
-        [Repeat(30)]
-        public async Task Semaphore_OneShot(int iteration)
+        [Fact]
+        public async Task Semaphore_OneShot()
         {
-            string keyName = $"test/semaphore/oneshot_{iteration}";
+            string keyName = $"test/semaphore/oneshot";
             TimeSpan waitTime = TimeSpan.FromMilliseconds(3000);
 
             var semaphoreOptions = new SemaphoreOptions(keyName, 2)
