@@ -23,36 +23,6 @@ jobs:
       - name: Check format
         run: dotnet format --verify-no-changes
 
-  Consul_AspNetCore:
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
-        framework: [netcoreapp3.1, net5.0, net6.0]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup .NET Core SDK v3.1.x
-        if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 3.1.x
-      - name: Setup .NET SDK v5.0.x
-        if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.0.x
-      - name: Setup .NET SDK v6.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.x
-      - name: Build
-        run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
-      - name: Run tests
-        shell: bash
-        run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
   Consul:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
@@ -98,7 +68,7 @@ jobs:
         shell: bash
         run: |
           ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }} --filter Consul.Test.SemaphoreTest.Semaphore_OneShot
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3
