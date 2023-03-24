@@ -82,7 +82,7 @@ namespace Consul.Test
         }
 
         [Theory()]
-        [Repeat(10)]
+        [Repeat(30)]
         public async Task Semaphore_OneShot(int iteration)
         {
             string keyName = $"test/semaphore/oneshot_{iteration}";
