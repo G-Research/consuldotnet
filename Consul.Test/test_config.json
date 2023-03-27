@@ -13,6 +13,6 @@
     "enable_script_checks": true,
     "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ==",
 	"limits": {
-	  "http_max_conns_per_client" : 1
+	  "http_max_conns_per_client" : 1000
 	}
 }

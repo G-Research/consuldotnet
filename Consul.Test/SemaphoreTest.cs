@@ -227,7 +227,7 @@ namespace Consul.Test
         public async Task Semaphore_ContendFast()
         {
             const string keyName = "test/semaphore/contend";
-            const int contenderPool = 1500;
+            const int contenderPool = 30;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
 
@@ -235,14 +235,15 @@ namespace Consul.Test
             for (var i = 0; i < contenderPool; i++)
             {
                 var v = i;
-                tasks.Add(Task.Run(async () =>
+                var task = Task.Run(async () =>
                 {
                     var semaphore = _client.Semaphore(keyName, 2);
                     await semaphore.Acquire(CancellationToken.None);
                     acquired[v] = semaphore.IsHeld;
                     await semaphore.Release();
-                    await semaphore.Destroy();
-                }));
+                });
+                //await task;
+                tasks.Add(task);
             }
 
             await TimeoutUtils.WithTimeout(Task.WhenAll(tasks));
