@@ -80,7 +80,7 @@ namespace Consul.Test
 
             Assert.False(semaphore.IsHeld);
         }
-        
+
         [Fact]
         public async Task Semaphore_OneShot()
         {
@@ -227,7 +227,7 @@ namespace Consul.Test
         public async Task Semaphore_ContendFast()
         {
             const string keyName = "test/semaphore/contend";
-            const int contenderPool = 15;
+            const int contenderPool = 1500;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
 
@@ -241,6 +241,7 @@ namespace Consul.Test
                     await semaphore.Acquire(CancellationToken.None);
                     acquired[v] = semaphore.IsHeld;
                     await semaphore.Release();
+                    await semaphore.Destroy();
                 }));
             }
 

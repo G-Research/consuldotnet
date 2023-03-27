@@ -1,5 +1,5 @@
 {
-    "log_level": "TRACE",
+    "log_level": "DEBUG",
     "bind_addr": "127.0.0.1",
     "server": true,
     "bootstrap": true,
@@ -11,5 +11,8 @@
         }
     },
     "enable_script_checks": true,
-    "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ=="
+    "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ==",
+	"limits": {
+	  "http_max_conns_per_client" : 1
+	}
 }
