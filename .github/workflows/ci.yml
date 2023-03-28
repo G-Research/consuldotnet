@@ -16,12 +16,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup .NET SDK v7.0.x
+      - name: Setup .NET SDK v7.0.x100
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 7.0.100
       - name: Check format
-        run: dotnet format --verify-no-changes
+        run: dotnet format -v diag --verify-no-changes
 
   Consul_AspNetCore:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
