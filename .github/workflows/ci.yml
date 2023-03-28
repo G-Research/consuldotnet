@@ -12,14 +12,14 @@ jobs:
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet-format` tool.
   check-format:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup .NET SDK v6.0.x
+      - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
       - name: Check format
         run: dotnet format --verify-no-changes
 
@@ -27,18 +27,13 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
-        framework: [netcoreapp3.1, net5.0, net6.0]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        framework: [netcoreapp3.1, net5.0, net6.0, net7.0]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup .NET Core SDK v3.1.x
-        if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
         uses: actions/setup-dotnet@v3
@@ -48,6 +43,10 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
+      - name: Setup .NET SDK v7.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
       - name: Build
         run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
       - name: Run tests
@@ -58,23 +57,13 @@ jobs:
     strategy:
       matrix:
         consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.7, 1.14.5, 1.15.1]
-        framework: [net461, netcoreapp2.1, netcoreapp3.1, net5.0, net6.0]
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        framework: [net461, net5.0, net6.0, net7.0]
+        os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup .NET Core SDK v2.1.x
-        if: matrix.framework == 'netcoreapp2.1'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 2.1.x
-      - name: Setup .NET Core SDK v3.1.x
-        if: matrix.framework == 'netcoreapp3.1'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 3.1.x
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
         uses: actions/setup-dotnet@v3
@@ -84,6 +73,10 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
+      - name: Setup .NET SDK v7.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
       - name: Download Consul
         shell: bash
         run: |
@@ -151,7 +144,7 @@ jobs:
   publish-preview:
     if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
     needs: package
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v3
@@ -167,7 +160,7 @@ jobs:
   publish-release:
     if: ${{ !github.event.repository.fork && startsWith(github.ref, 'refs/tags/v') }}
     needs: package
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@v3
