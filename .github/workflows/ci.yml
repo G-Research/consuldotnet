@@ -103,7 +103,7 @@ jobs:
           path: consul*.log
 
   package:
-    runs-on: windows-2019
+    runs-on: windows-latest
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
