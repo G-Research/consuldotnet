@@ -22,9 +22,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -35,6 +37,12 @@ namespace Consul.Test
     {
         const int DefaultSessionTTLSeconds = 10;
         const int LockWaitTimeSeconds = 15;
+
+        public SemaphoreTest(ITestOutputHelper output)
+        {
+            var converter = new Converter(output);
+            Console.SetOut(converter);
+        }
 
         [Fact]
         public async Task Semaphore_BadLimit()
@@ -484,6 +492,32 @@ namespace Consul.Test
             {
                 yield return new object[] { iterationNumber };
             }
+        }
+    }
+
+    class Converter : TextWriter
+    {
+        ITestOutputHelper _output;
+        public Converter(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+        public override Encoding Encoding
+        {
+            get { return Encoding.Default; }
+        }
+        public override void WriteLine(string message)
+        {
+            _output.WriteLine(message);
+        }
+        public override void WriteLine(string format, params object[] args)
+        {
+            _output.WriteLine(format, args);
+        }
+
+        public override void Write(char value)
+        {
+            throw new NotSupportedException("This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
         }
     }
 }
