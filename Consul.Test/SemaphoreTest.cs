@@ -506,13 +506,29 @@ namespace Consul.Test
         {
             get { return Encoding.Default; }
         }
+
         public override void WriteLine(string message)
         {
-            _output.WriteLine(message);
+            try
+            {
+                _output.WriteLine(message);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
+
         public override void WriteLine(string format, params object[] args)
         {
-            _output.WriteLine(format, args);
+            try
+            {
+                _output.WriteLine(format, args);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         public override void Write(char value)
