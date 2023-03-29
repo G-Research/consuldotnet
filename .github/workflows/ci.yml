@@ -43,6 +43,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
+        if: matrix.framework == 'net6.0'
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
@@ -73,6 +74,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Setup .NET SDK v6.0.x
+        if: matrix.framework == 'net6.0'
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
