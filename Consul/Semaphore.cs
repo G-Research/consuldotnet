@@ -334,9 +334,9 @@ namespace Consul
                     {
                         try
                         {
-                            Console.WriteLine($"{DateTime.Now} Creating LockSession");
+                            Console.WriteLine($"Creating LockSession");
                             LockSession = await CreateSession().ConfigureAwait(false);
-                            Console.WriteLine($"{DateTime.Now} Created LockSession:{LockSession}");
+                            Console.WriteLine($"Created LockSession:{LockSession}");
                             _sessionRenewTask = _client.Session.RenewPeriodic(Opts.SessionTTL, LockSession, WriteOptions.Default, _cts.Token);
                         }
                         catch (Exception ex)
@@ -358,7 +358,7 @@ namespace Consul
                         throw new KeyNotFoundException("Failed to make contender entry");
                     }
 
-                    Console.WriteLine($"{DateTime.Now} Acquired LockSession:{LockSession}");
+                    Console.WriteLine($"Acquired LockSession:{LockSession}");
                     var qOpts = new QueryOptions()
                     {
                         WaitTime = Opts.SemaphoreWaitTime
@@ -369,7 +369,7 @@ namespace Consul
 
                     while (!ct.IsCancellationRequested)
                     {
-                        Console.WriteLine($"{DateTime.Now} While Loop");
+                        Console.WriteLine($"While Loop");
                         if (attempts > 0 && Opts.SemaphoreTryOnce)
                         {
                             var elapsed = sw.Elapsed;

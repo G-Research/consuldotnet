@@ -30,9 +30,6 @@ using Xunit.Abstractions;
 
 namespace Consul.Test
 {
-    // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
-    [Trait("speed", "slow")]
-    [Collection("SemaphoreTest")]
     public class SemaphoreTest : BaseFixture
     {
         const int DefaultSessionTTLSeconds = 10;
@@ -511,7 +508,7 @@ namespace Consul.Test
         {
             try
             {
-                _output.WriteLine(message);
+                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + message);
             }
             catch (Exception)
             {
@@ -523,7 +520,7 @@ namespace Consul.Test
         {
             try
             {
-                _output.WriteLine(format, args);
+                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + format, args);
             }
             catch (Exception)
             {
