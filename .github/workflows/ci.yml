@@ -37,6 +37,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup .NET SDK v5.0.x
+        if: matrix.framework == 'net5.0'
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+      - name: Setup .NET SDK v6.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
       - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
@@ -58,6 +67,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup .NET SDK v5.0.x
+        if: matrix.framework == 'net5.0'
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+      - name: Setup .NET SDK v6.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
       - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
