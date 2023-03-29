@@ -232,7 +232,7 @@ namespace Consul.Test
         public async Task Semaphore_ContendFast()
         {
             const string keyName = "test/semaphore/contend";
-            const int contenderPool = 30;
+            const int contenderPool = 300;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
 
