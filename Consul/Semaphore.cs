@@ -369,7 +369,6 @@ namespace Consul
 
                     while (!ct.IsCancellationRequested)
                     {
-                        Console.WriteLine($"While Loop");
                         if (attempts > 0 && Opts.SemaphoreTryOnce)
                         {
                             var elapsed = sw.Elapsed;

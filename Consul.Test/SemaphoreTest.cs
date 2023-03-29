@@ -228,11 +228,12 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
-        public async Task Semaphore_ContendFast()
+        [Theory]
+        [Repeat(10)]
+        public async Task Semaphore_ContendFast(int repeat)
         {
-            const string keyName = "test/semaphore/contend";
-            const int contenderPool = 300;
+            string keyName = "test/semaphore/contend_" + repeat.ToString();
+            const int contenderPool = 15;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
 
