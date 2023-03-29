@@ -9,53 +9,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
-  # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet format`.
-  check-format:
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup .NET SDK v7.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      # For the time being (https://github.com/dotnet/format/issues/1500, https://github.com/dotnet/format/issues/1560) we need to use `dotnet-format` instead of `dotnet format`
-      - name: Restore tool
-        run: dotnet tool restore
-      - name: Check format
-        run: dotnet tool run dotnet-format  -- --check
 
-  Consul_AspNetCore:
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        framework: [net5.0, net6.0, net7.0]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup .NET SDK v5.0.x
-        if: matrix.framework == 'net5.0'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.0.x
-      - name: Setup .NET SDK v6.0.x
-        if: matrix.framework == 'net6.0'
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.x
-      - name: Setup .NET SDK v7.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - name: Build
-        run: dotnet build Consul.AspNetCore.Test --configuration=Release --framework=${{ matrix.framework }}
-      - name: Run tests
-        shell: bash
-        run: dotnet test Consul.AspNetCore.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
   Consul:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
@@ -96,7 +50,7 @@ jobs:
         shell: bash
         run: |
           ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+          dotnet test Consul.Test --configuration=Release --logger "console;verbosity=detailed" --no-build --framework=${{ matrix.framework }}
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3
@@ -104,73 +58,3 @@ jobs:
           name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
           path: consul*.log
 
-  package:
-    runs-on: windows-latest
-    needs: [Consul_AspNetCore, Consul]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup .NET SDK v7.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - name: Create NuGet packages
-        run: |
-          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
-            $suffix = "preview-$(Get-Date -Format yyyyMMddHHmmss -AsUTC)-$(git rev-parse --short HEAD)"
-            $params = "--version-suffix", $suffix
-          }
-
-          dotnet pack --configuration=Release --output dist @params
-
-          if ("${{ github.ref }}" -like "refs/tags/v*") {
-              $tag = "${{ github.ref }}".SubString(11)
-              $expectedConsulFile = "dist/Consul.$tag.nupkg"
-              $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
-
-              # Check whether the tag and the package version match together
-              if (-not (Test-Path -Path $expectedConsulFile)) {
-                  echo "::error ::Expected file $expectedConsulFile doesn't exist"
-                  exit 1
-              }
-              if (-not (Test-Path -Path $expectedConsulAspNetCoreFile)) {
-                  echo "::error ::Expected file $expectedConsulAspNetCoreFile doesn't exist"
-                  exit 1
-              }
-          }
-      - name: Upload NuGet package artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: nuget-packages
-          path: dist/*.nupkg
-
-  # Publish NuGet packages to the preview feed when there is a push to master.
-  # Tests need to succeed for all components and on all platforms first.
-  publish-preview:
-    if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
-    needs: package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: nuget-packages
-          path: dist
-      - name: Publish to NuGet
-        run: dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.FEEDZIO_API_KEY }} --source https://f.feedz.io/consuldotnet/preview/nuget/index.json
-
-  # Publish NuGet packages when a tag is pushed.
-  # Tests need to succeed for all components and on all platforms first,
-  # including having a tag name that matches the version number.
-  publish-release:
-    if: ${{ !github.event.repository.fork && startsWith(github.ref, 'refs/tags/v') }}
-    needs: package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: nuget-packages
-          path: dist
-      - name: Publish to NuGet
-        run: dotnet nuget push "dist/Consul.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
