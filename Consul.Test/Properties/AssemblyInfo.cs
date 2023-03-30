@@ -6,6 +6,4 @@ using Xunit;
 // CollectionAttribute into the assembly-level collection instead.
 // This is to limit the number of tests that are going to be run in parallel so we can reduce the number
 // of concurrent http connections that are required to complete all tests.
-[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, MaxParallelThreads = 4)]
-
-[assembly:Xunit.TestFramework("Consul.Test.CustomTestFramework", "Consul.Test")]
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]

@@ -23,20 +23,14 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
+    // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
     [Collection("LockTest")]
     public class LockTest : BaseFixture
     {
-        public LockTest(ITestOutputHelper output)
-        {
-            var converter = new TestOutputConverter(output);
-            Console.SetOut(converter);
-        }
-
         [Fact]
         public async Task Lock_AcquireRelease()
         {

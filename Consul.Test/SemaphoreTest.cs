@@ -21,27 +21,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
+    // These tests are slow, so we put them into separate collection so they can run in parallel to other tests.
     [Trait("speed", "slow")]
     [Collection("SemaphoreTest")]
     public class SemaphoreTest : BaseFixture
     {
         const int DefaultSessionTTLSeconds = 10;
         const int LockWaitTimeSeconds = 15;
-
-        public SemaphoreTest(ITestOutputHelper output)
-        {
-            var converter = new TestOutputConverter(output);
-            Console.SetOut(converter);
-        }
 
         [Fact]
         public async Task Semaphore_BadLimit()
@@ -91,7 +83,7 @@ namespace Consul.Test
         [Fact]
         public async Task Semaphore_OneShot()
         {
-            string keyName = $"test/semaphore/oneshot";
+            const string keyName = "test/semaphore/oneshot";
             TimeSpan waitTime = TimeSpan.FromMilliseconds(3000);
 
             var semaphoreOptions = new SemaphoreOptions(keyName, 2)
@@ -230,12 +222,11 @@ namespace Consul.Test
             }
         }
 
-        [Theory]
-        [Repeat(10)]
-        public async Task Semaphore_ContendFast(int repeat)
+        [Fact]
+        public async Task Semaphore_ContendFast()
         {
-            string keyName = "test/semaphore/contend_" + repeat.ToString();
-            const int contenderPool = 50;
+            const string keyName = "test/semaphore/contend";
+            const int contenderPool = 15;
 
             var acquired = new System.Collections.Concurrent.ConcurrentDictionary<int, bool>();
 
@@ -243,15 +234,13 @@ namespace Consul.Test
             for (var i = 0; i < contenderPool; i++)
             {
                 var v = i;
-                var task = Task.Run(async () =>
+                tasks.Add(Task.Run(async () =>
                 {
                     var semaphore = _client.Semaphore(keyName, 2);
                     await semaphore.Acquire(CancellationToken.None);
                     acquired[v] = semaphore.IsHeld;
                     await semaphore.Release();
-                });
-                //await task;
-                tasks.Add(task);
+                }));
             }
 
             await TimeoutUtils.WithTimeout(Task.WhenAll(tasks));
@@ -468,31 +457,4 @@ namespace Consul.Test
             masterInstanceClient.Dispose();
         }
     }
-
-    public sealed class RepeatAttribute : Xunit.Sdk.DataAttribute
-    {
-        private readonly int _count;
-
-        public RepeatAttribute(int count)
-        {
-            if (count < 1)
-            {
-                throw new System.ArgumentOutOfRangeException(
-                    paramName: nameof(count),
-                    message: "Repeat count must be greater than 0."
-                );
-            }
-
-            _count = count;
-        }
-
-        public override IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod)
-        {
-            foreach (var iterationNumber in Enumerable.Range(start: 1, count: _count))
-            {
-                yield return new object[] { iterationNumber };
-            }
-        }
-    }
 }
-

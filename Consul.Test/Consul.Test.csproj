@@ -3,17 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>net461;net5.0;net6.0;net7.0</TargetFrameworks>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'netcoreapp2.1'">true</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'netcoreapp2.1'" >true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Consul\Consul.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="3.1.0" />

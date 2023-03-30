@@ -327,16 +327,7 @@ namespace Consul
             var message = new HttpRequestMessage(HttpMethod.Put, BuildConsulUri(Endpoint, Params));
             ApplyHeaders(message, Client.Config);
             message.Content = content;
-
-            HttpResponseMessage response;
-            try
-            {
-                response = await Client.HttpClient.SendAsync(message, ct).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            var response = await Client.HttpClient.SendAsync(message, ct).ConfigureAwait(false);
 
             result.StatusCode = response.StatusCode;
 
