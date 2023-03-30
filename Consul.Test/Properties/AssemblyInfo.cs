@@ -9,3 +9,4 @@ using Xunit;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 
 [assembly:Xunit.TestFramework("Consul.Test.CustomTestFramework", "Consul.Test")]
+[assembly: CollectionBehavior(MaxParallelThreads = 4)]
