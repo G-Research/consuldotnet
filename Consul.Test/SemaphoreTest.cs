@@ -38,7 +38,7 @@ namespace Consul.Test
 
         public SemaphoreTest(ITestOutputHelper output)
         {
-            var converter = new Converter(output);
+            var converter = new TestOutputConverter(output);
             Console.SetOut(converter);
         }
 
@@ -491,48 +491,6 @@ namespace Consul.Test
             {
                 yield return new object[] { iterationNumber };
             }
-        }
-    }
-
-    class Converter : TextWriter
-    {
-        ITestOutputHelper _output;
-        public Converter(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-        public override Encoding Encoding
-        {
-            get { return Encoding.Default; }
-        }
-
-        public override void WriteLine(string message)
-        {
-            try
-            {
-                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + message);
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
-
-        public override void WriteLine(string format, params object[] args)
-        {
-            try
-            {
-                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + format, args);
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
-
-        public override void Write(char value)
-        {
-            throw new NotSupportedException("This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
         }
     }
 }

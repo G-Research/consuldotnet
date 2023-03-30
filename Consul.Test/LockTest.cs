@@ -23,12 +23,19 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     [Collection("LockTest")]
     public class LockTest : BaseFixture
     {
+        public LockTest(ITestOutputHelper output)
+        {
+            var converter = new TestOutputConverter(output);
+            Console.SetOut(converter);
+        }
+
         [Fact]
         public async Task Lock_AcquireRelease()
         {
