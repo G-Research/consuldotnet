@@ -30,6 +30,7 @@ using Xunit.Abstractions;
 
 namespace Consul.Test
 {
+    [Collection("SemaphoreTest")]
     public class SemaphoreTest : BaseFixture
     {
         const int DefaultSessionTTLSeconds = 10;

@@ -26,6 +26,7 @@ using Xunit;
 
 namespace Consul.Test
 {
+    [Collection("LockTest")]
     public class LockTest : BaseFixture
     {
         [Fact]
