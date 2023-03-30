@@ -77,7 +77,7 @@ namespace Consul.Test
             // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
             // E.g. https://github.com/microsoft/referencesource/blob/5697c29004a34d80acdaf5742d7e699022c64ecd/System.Web/HttpRuntime.cs#L1200
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
-            ThreadPool.SetMinThreads(50, 8);
+            //ThreadPool.SetMinThreads(50, 8);
         }
 
         public BaseFixture()
