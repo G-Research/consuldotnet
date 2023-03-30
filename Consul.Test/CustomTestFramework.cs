@@ -49,9 +49,12 @@ namespace Consul.Test
             protected override async void RunTestCases(IEnumerable<IXunitTestCase> testCases,
                 IMessageSink executionMessageSink, ITestFrameworkExecutionOptions executionOptions)
             {
-                using var assemblyRunner = new CustomAssemblyRunner(TestAssembly, testCases, DiagnosticMessageSink,
-                    executionMessageSink, executionOptions);
-                await assemblyRunner.RunAsync();
+                using (var assemblyRunner = new CustomAssemblyRunner(TestAssembly, testCases, DiagnosticMessageSink,
+                           executionMessageSink, executionOptions))
+                {
+                    await assemblyRunner.RunAsync();
+                }
+
             }
         }
 
