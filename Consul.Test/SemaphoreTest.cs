@@ -495,3 +495,4 @@ namespace Consul.Test
         }
     }
 }
+
