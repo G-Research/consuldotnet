@@ -536,3 +536,4 @@ namespace Consul.Test
         }
     }
 }
+
