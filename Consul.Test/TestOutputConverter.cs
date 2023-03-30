@@ -21,49 +21,51 @@ using System.IO;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace Consul.Test;
-
-public class TestOutputConverter : TextWriter
+namespace Consul.Test
 {
-    ITestOutputHelper _output;
 
-    public TestOutputConverter(ITestOutputHelper output)
+    public class TestOutputConverter : TextWriter
     {
-        _output = output;
-    }
+        ITestOutputHelper _output;
 
-    public override Encoding Encoding
-    {
-        get { return Encoding.Default; }
-    }
-
-    public override void WriteLine(string message)
-    {
-        try
+        public TestOutputConverter(ITestOutputHelper output)
         {
-            _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + message);
+            _output = output;
         }
-        catch (Exception)
-        {
-            // ignored
-        }
-    }
 
-    public override void WriteLine(string format, params object[] args)
-    {
-        try
+        public override Encoding Encoding
         {
-            _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + format, args);
+            get { return Encoding.Default; }
         }
-        catch (Exception)
-        {
-            // ignored
-        }
-    }
 
-    public override void Write(char value)
-    {
-        throw new NotSupportedException(
-            "This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
+        public override void WriteLine(string message)
+        {
+            try
+            {
+                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + message);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        public override void WriteLine(string format, params object[] args)
+        {
+            try
+            {
+                _output.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + ": " + format, args);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        public override void Write(char value)
+        {
+            throw new NotSupportedException(
+                "This text writer only supports WriteLine(string) and WriteLine(string, params object[]).");
+        }
     }
 }
