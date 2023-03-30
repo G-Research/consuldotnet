@@ -30,6 +30,7 @@ using Xunit.Abstractions;
 
 namespace Consul.Test
 {
+    [Trait("speed", "slow")]
     [Collection("SemaphoreTest")]
     public class SemaphoreTest : BaseFixture
     {

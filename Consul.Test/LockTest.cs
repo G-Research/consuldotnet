@@ -27,6 +27,7 @@ using Xunit.Abstractions;
 
 namespace Consul.Test
 {
+    [Trait("speed", "slow")]
     [Collection("LockTest")]
     public class LockTest : BaseFixture
     {
