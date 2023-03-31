@@ -81,7 +81,12 @@ namespace Consul.Test
             // As for HTTP connections, we need multiple threads to test semaphores and locks.
             // XUnit sets the initial number of worker threads to the number of CPU cores.
             // Unfortunately, when the initial limit for the ThreadPool is too low, it introduces a risk of a deadlock-like behavior and the tests are timing out.
-            ThreadPool.SetMinThreads(32, 4);
+            ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
+            if (workerThreads <= 4)
+            {
+                workerThreads = 4;
+                ThreadPool.SetMinThreads(workerThreads, completionPortThreads);
+            }
         }
 
         public BaseFixture()
