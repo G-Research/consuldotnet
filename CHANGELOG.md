@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.6.10.9
+* Adding properties: AliasService, AliasNode to AgentServiceCheck class for support: (#202)
+* Update project url (#212)
+* Update CI, drop tests for old frameworks, add net7.0 (#213)
+
 ## 1.6.10.8
 * Fix to correctly handle query TTL (#187)
 * Add `CheckId` to the `AgentServiceCheck` and mark the `ID` as obsolete (#185)
