@@ -139,6 +139,7 @@ namespace Consul
         public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
         public bool EnableTagOverride { get; set; }
         public IDictionary<string, string> Meta { get; set; }
+        public AgentServiceProxy Proxy { get; set; }
     }
 
     /// <summary>
@@ -198,6 +199,12 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceConnect Connect { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceProxy Proxy { get; set; }
     }
 
     /// <summary>
@@ -207,6 +214,48 @@ namespace Consul
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceID { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceConnect specifies the configuration for Connect
+    /// </summary>
+    public class AgentServiceConnect
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceRegistration SidecarService { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceProxy specifies the configuration for a Connect service proxy instance.This is only valid if Kind defines a proxy or gateway
+    /// </summary>
+    public class AgentServiceProxy
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationServiceID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int LocalServicePort { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LocalServiceAddress { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationServiceName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceProxyUpstream[] Upstreams { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceProxyUpstream specifies the upstream service for which the proxy should create a listener.
+    /// </summary>
+    public class AgentServiceProxyUpstream
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int LocalBindPort { get; set; }
     }
 
     /// <summary>
