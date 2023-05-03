@@ -139,6 +139,8 @@ namespace Consul
         public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
         public bool EnableTagOverride { get; set; }
         public IDictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] // If the Proxy property is serialized to have null value, a protocol error occurs when registering the service through the catalog (catalog/register) during an http request.
         public AgentServiceProxy Proxy { get; set; }
     }
 
