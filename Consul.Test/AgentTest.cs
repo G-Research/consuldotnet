@@ -775,6 +775,7 @@ namespace Consul.Test
             Assert.Equal(sourceServiceID, sourceProxyService.Proxy.DestinationServiceID);
             Assert.Equal("127.0.0.1", sourceProxyService.Proxy.LocalServiceAddress);
             Assert.Equal(sourceServiceRegistrationParameters.Port, sourceProxyService.Proxy.LocalServicePort);
+            Assert.Equal(ServiceKind.ConnectProxy, sourceProxyService.Kind);
             Assert.Single(sourceProxyService.Proxy.Upstreams);
             Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].DestinationName, sourceProxyService.Proxy.Upstreams[0].DestinationName);
             Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].LocalBindPort, sourceProxyService.Proxy.Upstreams[0].LocalBindPort);
@@ -790,6 +791,7 @@ namespace Consul.Test
             Assert.Equal("127.0.0.1", destinationProxyService.Proxy.LocalServiceAddress);
             Assert.Equal(destinationServiceRegistrationParameters.Port, destinationProxyService.Proxy.LocalServicePort);
             Assert.Null(destinationProxyService.Proxy.Upstreams);
+            Assert.Equal(ServiceKind.ConnectProxy, destinationProxyService.Kind);
         }
     }
 }
