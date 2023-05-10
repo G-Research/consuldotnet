@@ -163,18 +163,14 @@ namespace Consul
             { "ingress-gateway", new ServiceKind("ingress-gateway") },
         };
 
-
         public static ServiceKind ConnectProxy => Map["connect-proxy"];
         public static ServiceKind MeshGateway => Map["mesh-gateway"];
         public static ServiceKind TerminatingGateway => Map["terminating-gateway"];
         public static ServiceKind IngressGateway => Map["ingress-gateway"];
 
-
         string Value { get; }
 
-
         ServiceKind(string value) => Value = value;
-
 
         public override bool Equals(object obj) => obj is ServiceKind typedObject ? Equals(typedObject) : Value.Equals(obj.ToString(), StringComparison.OrdinalIgnoreCase);
 

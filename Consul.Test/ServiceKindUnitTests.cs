@@ -40,7 +40,6 @@ namespace Consul.Test
             new object[] { "Ingress-gateway", true, ServiceKind.IngressGateway },
         };
 
-
         [Fact]
         public void Test_Equals()
         {
