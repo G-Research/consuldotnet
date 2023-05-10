@@ -709,5 +709,89 @@ namespace Consul.Test
             Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
             Assert.Equal("All checks passing.", checks.Response[check2Id].Output);
         }
+
+        [Fact]
+        public async Task Agent_Service_Register_With_Connect()
+        {
+            // Arrange
+            var destinationServiceID = KVTest.GenerateTestKeyName();
+            var destinationServiceRegistrationParameters = new AgentServiceRegistration
+            {
+                ID = destinationServiceID,
+                Name = destinationServiceID,
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 8001
+                    }
+                }
+            };
+
+            var sourceServiceID = KVTest.GenerateTestKeyName();
+            var sourceServiceRegistrationParameters = new AgentServiceRegistration
+            {
+                ID = sourceServiceID,
+                Name = sourceServiceID,
+                Port = 9000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                },
+                Tags = new string[] { "tag1", "tag2" },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 9001,
+                        Proxy = new AgentServiceProxy
+                        {
+                            Upstreams = new AgentServiceProxyUpstream[] { new AgentServiceProxyUpstream { DestinationName = destinationServiceID, LocalBindPort = 9002 } }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            await _client.Agent.ServiceRegister(destinationServiceRegistrationParameters);
+            await _client.Agent.ServiceRegister(sourceServiceRegistrationParameters);
+
+            // Assert
+            var services = await _client.Agent.Services();
+
+            // Assert SourceService
+            var sourceProxyServiceID = $"{sourceServiceID}-sidecar-proxy";
+            Assert.Contains(sourceServiceID, services.Response.Keys);
+            Assert.Contains(sourceProxyServiceID, services.Response.Keys);
+            AgentService sourceProxyService = services.Response[sourceProxyServiceID];
+            Assert.Equal(sourceServiceRegistrationParameters.Tags, sourceProxyService.Tags);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Port, sourceProxyService.Port);
+            Assert.Equal(sourceServiceID, sourceProxyService.Proxy.DestinationServiceName);
+            Assert.Equal(sourceServiceID, sourceProxyService.Proxy.DestinationServiceID);
+            Assert.Equal("127.0.0.1", sourceProxyService.Proxy.LocalServiceAddress);
+            Assert.Equal(sourceServiceRegistrationParameters.Port, sourceProxyService.Proxy.LocalServicePort);
+            Assert.Equal(ServiceKind.ConnectProxy, sourceProxyService.Kind);
+            Assert.Single(sourceProxyService.Proxy.Upstreams);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].DestinationName, sourceProxyService.Proxy.Upstreams[0].DestinationName);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].LocalBindPort, sourceProxyService.Proxy.Upstreams[0].LocalBindPort);
+
+            // Assert DestinationService
+            var destinationProxyServiceID = $"{destinationServiceID}-sidecar-proxy";
+            Assert.Contains(destinationServiceID, services.Response.Keys);
+            Assert.Contains(destinationProxyServiceID, services.Response.Keys);
+            AgentService destinationProxyService = services.Response[destinationProxyServiceID];
+            Assert.Equal(destinationServiceRegistrationParameters.Connect.SidecarService.Port, destinationProxyService.Port);
+            Assert.Equal(destinationServiceID, destinationProxyService.Proxy.DestinationServiceName);
+            Assert.Equal(destinationServiceID, destinationProxyService.Proxy.DestinationServiceID);
+            Assert.Equal("127.0.0.1", destinationProxyService.Proxy.LocalServiceAddress);
+            Assert.Equal(destinationServiceRegistrationParameters.Port, destinationProxyService.Proxy.LocalServicePort);
+            Assert.Null(destinationProxyService.Proxy.Upstreams);
+            Assert.Equal(ServiceKind.ConnectProxy, destinationProxyService.Kind);
+        }
     }
 }

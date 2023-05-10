@@ -20,6 +20,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -139,6 +141,64 @@ namespace Consul
         public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
         public bool EnableTagOverride { get; set; }
         public IDictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] // If the Proxy property is serialized to have null value, a protocol error occurs when registering the service through the catalog (catalog/register) during an http request.
+        public AgentServiceProxy Proxy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceKind Kind { get; set; }
+    }
+
+    /// <summary>
+    /// ServiceKind specifies the type of service.
+    /// </summary>
+    [TypeConverter(typeof(ServiceKindTypeConverter))]
+    public class ServiceKind : IEquatable<ServiceKind>
+    {
+        static IReadOnlyDictionary<string, ServiceKind> Map { get; } = new Dictionary<string, ServiceKind>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "connect-proxy", new ServiceKind("connect-proxy") },
+            { "mesh-gateway", new ServiceKind("mesh-gateway") },
+            { "terminating-gateway", new ServiceKind("terminating-gateway") },
+            { "ingress-gateway", new ServiceKind("ingress-gateway") },
+        };
+
+        public static ServiceKind ConnectProxy => Map["connect-proxy"];
+        public static ServiceKind MeshGateway => Map["mesh-gateway"];
+        public static ServiceKind TerminatingGateway => Map["terminating-gateway"];
+        public static ServiceKind IngressGateway => Map["ingress-gateway"];
+
+        string Value { get; }
+
+        ServiceKind(string value) => Value = value;
+
+        public override bool Equals(object obj) => obj is ServiceKind typedObject ? Equals(typedObject) : Value.Equals(obj.ToString(), StringComparison.OrdinalIgnoreCase);
+
+        public bool Equals(ServiceKind other) => ReferenceEquals(this, other);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public override string ToString() => Value.ToString();
+
+        public static bool TryParse(string value, out ServiceKind result)
+        {
+            result = null;
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return true;
+            }
+
+            return Map.TryGetValue(value, out result);
+        }
+    }
+
+    class ServiceKindTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) => destinationType == typeof(string);
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) => ServiceKind.TryParse(value?.ToString(), out ServiceKind result) ? result : throw new NotSupportedException();
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) => value is null ? string.Empty : value.ToString();
     }
 
     /// <summary>
@@ -198,6 +258,12 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IDictionary<string, ServiceTaggedAddress> TaggedAddresses { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceConnect Connect { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceProxy Proxy { get; set; }
     }
 
     /// <summary>
@@ -207,6 +273,48 @@ namespace Consul
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceID { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceConnect specifies the configuration for Connect
+    /// </summary>
+    public class AgentServiceConnect
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceRegistration SidecarService { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceProxy specifies the configuration for a Connect service proxy instance. This is only valid if Kind defines a proxy or gateway.
+    /// </summary>
+    public class AgentServiceProxy
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationServiceID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int LocalServicePort { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LocalServiceAddress { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationServiceName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public AgentServiceProxyUpstream[] Upstreams { get; set; }
+    }
+
+    /// <summary>
+    /// AgentServiceProxyUpstream specifies the upstream service for which the proxy should create a listener.
+    /// </summary>
+    public class AgentServiceProxyUpstream
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int LocalBindPort { get; set; }
     }
 
     /// <summary>
