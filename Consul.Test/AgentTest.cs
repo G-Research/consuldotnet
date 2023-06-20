@@ -793,5 +793,42 @@ namespace Consul.Test
             Assert.Null(destinationProxyService.Proxy.Upstreams);
             Assert.Equal(ServiceKind.ConnectProxy, destinationProxyService.Kind);
         }
+
+        [Fact]
+        public async Task Agent_FilterChecks()
+        {
+            // Arrange
+            string svcName = KVTest.GenerateTestKeyName();
+            string svcID = $"{svcName}-1";
+            string checkName = $"Check {svcID}";
+
+            await _client.Agent.ServiceRegister(new AgentServiceRegistration
+            {
+                Name = svcName,
+                ID = svcID,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15),
+                    Name = checkName
+                }
+            });
+
+            // mass service
+            await _client.Agent.ServiceRegister(new AgentServiceRegistration
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15),
+                }
+            });
+
+            // Act
+            Dictionary<string, AgentCheck> actual = (await _client.Agent.Checks(Selectors.ServiceName == svcName)).Response;
+
+            // Assert
+            Assert.Single(actual);
+            Assert.Equal(checkName, actual.Values.First().Name);
+        }
     }
 }
