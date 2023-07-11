@@ -541,9 +541,11 @@ namespace Consul.Test
             var metaSelector = new MetaSelector();
 
             Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
-            Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID2, (await _client.Agent.Services(idSelector == svcID2)).Response.Keys.Single());
             Assert.Equal(svcID1, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar1")).Response.Keys.Single());
             Assert.Equal(svcID2, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar2")).Response.Keys.Single());
+            Assert.Equal(svcID1, (await _client.Agent.Services(Selectors.Service == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID2, (await _client.Agent.Services(Selectors.Service == svcID2)).Response.Keys.Single());
         }
 
         [Theory]
