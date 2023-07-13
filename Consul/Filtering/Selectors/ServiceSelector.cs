@@ -20,7 +20,7 @@
 #pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 namespace Consul.Filtering
 {
-    public sealed class ServiceSelector : Selector
+    public sealed class ServiceSelector : Selector, IEqualsApplicableConstraint
     {
         private static readonly string Self = "Service";
 
@@ -29,6 +29,9 @@ namespace Consul.Filtering
         public MetaSelector Meta { get; } = new MetaSelector(Self);
 
         public override string Encode() => Self;
+
+        public static Filter operator ==(ServiceSelector selector, string value) => Filters.Eq(selector, value);
+        public static Filter operator !=(ServiceSelector selector, string value) => Filters.NotEq(selector, value);
     }
 }
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()

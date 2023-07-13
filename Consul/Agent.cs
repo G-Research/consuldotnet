@@ -485,7 +485,17 @@ namespace Consul
         /// <returns>A map of the registered check names and check data</returns>
         public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct = default(CancellationToken))
         {
-            return _client.Get<Dictionary<string, AgentCheck>>("/v1/agent/checks").Execute(ct);
+            return Checks(null, ct);
+        }
+
+        /// <summary>
+        /// Checks returns the locally registered checks
+        /// </summary>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <returns>A map of the registered check names and check data</returns>
+        public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(Filter filter, CancellationToken ct = default(CancellationToken))
+        {
+            return _client.Get<Dictionary<string, AgentCheck>>("/v1/agent/checks", filter: filter).Execute(ct);
         }
 
         /// <summary>
