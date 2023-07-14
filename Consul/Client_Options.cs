@@ -83,6 +83,18 @@ namespace Consul
         };
 
         /// <summary>
+        /// Namespace overrides the `default` namespace
+        /// Note: Namespaces are available only in Consul Enterprise
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
+        /// Partition overrides the `default` partition
+        /// Note: Partitions are available only in Consul Enterprise
+        /// </summary>
+        public string Partition { get; set; }
+
+        /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config
         /// </summary>
         public string Datacenter { get; set; }
@@ -91,5 +103,11 @@ namespace Consul
         /// Token is used to provide a per-request ACL token which overrides the agent's default token.
         /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        /// RelayFactor is used in keyring operations to cause responses to be relayed back to the sender through N other random nodes.
+        /// Must be a value from 0 to 5 (inclusive)
+        /// </summary>
+        public uint RelayFactor { get; set; }
     }
 }
