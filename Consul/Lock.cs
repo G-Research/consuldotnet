@@ -161,6 +161,11 @@ namespace Consul
         public static readonly TimeSpan DefaultMonitorRetryTime = TimeSpan.FromSeconds(2);
 
         /// <summary>
+        /// DefaultLockDelay is how long a session is asked to wait before being allowed to acquire a previously-held lock.
+        /// </summary>
+        public static readonly TimeSpan DefaultLockDelay = TimeSpan.FromSeconds(15);
+
+        /// <summary>
         /// LockFlagValue is a magic flag we set to indicate a key is being used for a lock. It is used to detect a potential conflict with a semaphore.
         /// </summary>
         private const ulong LockFlagValue = 0x2ddccbc058a50c18;
@@ -233,6 +238,9 @@ namespace Consul
                         throw new LockHeldException();
                     }
 
+                    var wOpts = WriteOptions.Default;
+                    wOpts.Namespace = Opts.Namespace;
+
                     // Don't overwrite the CancellationTokenSource until AFTER we've tested for holding,
                     // since there might be tasks that are currently running for this lock.
                     DisposeCancellationTokenSource();
@@ -243,7 +251,7 @@ namespace Consul
                     {
                         LockSession = await CreateSession().ConfigureAwait(false);
                         _sessionRenewTask = _client.Session.RenewPeriodic(Opts.SessionTTL, LockSession,
-                            WriteOptions.Default, _cts.Token);
+                            wOpts, _cts.Token);
                     }
                     else
                     {
@@ -252,7 +260,8 @@ namespace Consul
 
                     var qOpts = new QueryOptions()
                     {
-                        WaitTime = Opts.LockWaitTime
+                        WaitTime = Opts.LockWaitTime,
+                        Namespace = Opts.Namespace
                     };
 
                     var attempts = 0;
@@ -479,7 +488,11 @@ namespace Consul
                 var cts = _cts;
                 try
                 {
-                    var opts = new QueryOptions() { Consistency = ConsistencyMode.Consistent };
+                    var opts = new QueryOptions()
+                    {
+                        Consistency = ConsistencyMode.Consistent,
+                        Namespace = Opts.Namespace
+                    };
                     _retries = Opts.MonitorRetries;
                     while (IsHeld && !cts.Token.IsCancellationRequested)
                     {
@@ -549,7 +562,8 @@ namespace Consul
             var se = new SessionEntry
             {
                 Name = Opts.SessionName,
-                TTL = Opts.SessionTTL
+                TTL = Opts.SessionTTL,
+                LockDelay = Opts.LockDelay,
             };
             return (await _client.Session.Create(se).ConfigureAwait(false)).Response;
         }
@@ -587,6 +601,11 @@ namespace Consul
         /// </summary>
         private static readonly TimeSpan DefaultLockSessionTTL = TimeSpan.FromSeconds(15);
 
+        /// <summary>
+        /// DefaultNamespace is the default namespace to use if none is provided
+        /// </summary>
+        private static readonly string DefaultNamespace = "default";
+
         private TimeSpan _lockRetryTime;
 
         public string Key { get; set; }
@@ -614,12 +633,26 @@ namespace Consul
         /// <summary>
         /// When set to false, <see cref="Lock.Acquire"/> will block forever until the lock is acquired. LockWaitTime is ignored in this case.
         /// <br/>
-        /// When set to true, <see cref="Lock.Acquire"/> the lock within a timestamp (It is analogous to <c>SemaphoreSlim.Wait(Timespan timeout)</c>. 
+        /// When set to true, <see cref="Lock.Acquire"/> the lock within a timestamp (It is analogous to <c>SemaphoreSlim.Wait(Timespan timeout)</c>.
         /// Under the hood, it attempts to acquire the lock multiple times if needed (due to the HTTP Long Poll returning early),
         /// and will do so as many times as it can within the bounds set by LockWaitTime.
         /// If LockWaitTime is set to 0, there will be only single attempt to acquire the lock.
         /// </summary>
         public bool LockTryOnce { get; set; }
+
+        /// <summary>
+        /// LockDelay is a time duration between 0 and 60 second.
+        /// When a session invalidation takes place, Consul prevents any of the previously held locks from being re-acquired for the `LockDelay` interval.
+        /// The purpose of this delay is to allow the potentially still live leader to detect the invalidation and stop processing requests that may lead to inconsistent state.
+        /// While not a bulletproof method, it does avoid the need to introduce sleep states into application logic and can help mitigate many issues.
+        /// While the default is to use a 15 second delay, clients are able to disable this mechanism by providing a zero delay value.
+        /// </summary>
+        public TimeSpan LockDelay { get; set; }
+
+        /// <summary>
+        /// defaults to API client config, namespace of ACL token, or "default" namespace
+        /// </summary>
+        public string Namespace { get; set; }
 
         public LockOptions(string key)
         {
@@ -629,6 +662,8 @@ namespace Consul
             MonitorRetryTime = Lock.DefaultMonitorRetryTime;
             LockWaitTime = Lock.DefaultLockWaitTime;
             LockRetryTime = Lock.DefaultLockRetryTime;
+            LockDelay = Lock.DefaultLockDelay;
+            Namespace = DefaultNamespace;
         }
     }
 
