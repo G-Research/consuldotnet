@@ -77,7 +77,7 @@ jobs:
           CONSUL_DOT_NET_VERSION: ${{ steps.version.outputs.tag }}
         run: ${{ steps.detect-package-manager.outputs.manager }} run build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./docs/build
 
