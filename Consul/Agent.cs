@@ -751,12 +751,24 @@ namespace Consul
         /// Providing a CancellationToken can be used to close the connection and stop the
         /// log stream, otherwise the log stream will time out based on the HTTP Client's timeout value.
         /// </summary>
-        public async Task<LogStream> Monitor(LogLevel level = default(LogLevel), CancellationToken ct = default(CancellationToken))
+        public async Task<LogStream> Monitor(LogLevel level = default, bool logJSON = false, CancellationToken ct = default)
         {
             var req = _client.Get<Stream>("/v1/agent/monitor");
             req.Params["loglevel"] = level.ToString().ToLowerInvariant();
+
+            if (logJSON)
+            {
+                req.Params["logjson"] = "true";
+            }
+
             var res = await req.ExecuteStreaming(ct).ConfigureAwait(false);
             return new LogStream(res.Response);
+        }
+
+        // MonitorJSON is like Monitor except it returns logs in JSON format.
+        public async Task<LogStream> MonitorJSON(LogLevel level = default, CancellationToken ct = default)
+        {
+            return await Monitor(level, true, ct).ConfigureAwait(false);
         }
 
         /// <summary>
