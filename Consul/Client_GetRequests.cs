@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace Consul
             ApplyHeaders(message, Client.Config);
             var response = await Client.HttpClient.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
 
-            ParseQueryHeaders(response, (result as QueryResult<TOut>));
+            ParseQueryHeaders(response, result as QueryResult<TOut>);
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -124,8 +125,7 @@ namespace Consul
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
-                throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
-                    response.StatusCode), response.StatusCode);
+                throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}", response.StatusCode);
             }
 
             result.RequestTime = timer.Elapsed;
@@ -170,6 +170,27 @@ namespace Consul
             if (!string.IsNullOrEmpty(Options.Near))
             {
                 Params["near"] = Options.Near;
+            }
+
+            if (Options.UseCache && Options.Consistency != ConsistencyMode.Consistent)
+            {
+                Params["cached"] = string.Empty;
+                var cacheControl = new List<string>();
+
+                if (Options.MaxAge.HasValue && Options.MaxAge > TimeSpan.Zero)
+                {
+                    cacheControl.Add($"max-age={Options.MaxAge.Value.Seconds}");
+                }
+
+                if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
+                {
+                    cacheControl.Add($"stale-if-error={Options.StaleIfError.Value.Seconds}");
+                }
+
+                if (cacheControl.Count > 0)
+                {
+                    Params["Cache-Control"] = string.Join(",", cacheControl);
+                }
             }
         }
 
@@ -246,7 +267,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? QueryOptions.Default;
         }
@@ -305,6 +326,27 @@ namespace Consul
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
+            }
+
+            if (Options.UseCache && Options.Consistency != ConsistencyMode.Consistent)
+            {
+                Params["cached"] = string.Empty;
+                var cacheControl = new List<string>();
+
+                if (Options.MaxAge.HasValue && Options.MaxAge > TimeSpan.Zero)
+                {
+                    cacheControl.Add($"max-age={Options.MaxAge.Value.Seconds}");
+                }
+
+                if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
+                {
+                    cacheControl.Add($"stale-if-error={Options.StaleIfError.Value.Seconds}");
+                }
+
+                if (cacheControl.Count > 0)
+                {
+                    Params["Cache-Control"] = string.Join(",", cacheControl);
+                }
             }
         }
 
