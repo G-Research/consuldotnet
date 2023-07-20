@@ -162,7 +162,7 @@ namespace Consul
         /// <summary>
         /// DefaultLockDelay is how long a session is asked to wait before being allowed to acquire a previously-held lock.
         /// </summary>
-        public static readonly TimeSpan DefaultLockDelay = TimeSpan.FromSeconds(15);
+        // public static readonly TimeSpan DefaultLockDelay = TimeSpan.FromSeconds(15);
 
         /// <summary>
         /// LockFlagValue is a magic flag we set to indicate a key is being used for a lock. It is used to detect a potential conflict with a semaphore.
@@ -231,9 +231,6 @@ namespace Consul
                         throw new LockHeldException();
                     }
 
-                    var wOpts = WriteOptions.Default;
-                    wOpts.Namespace = Opts.Namespace;
-
                     // Don't overwrite the CancellationTokenSource until AFTER we've tested for holding,
                     // since there might be tasks that are currently running for this lock.
                     DisposeCancellationTokenSource();
@@ -244,7 +241,7 @@ namespace Consul
                     {
                         LockSession = await CreateSession().ConfigureAwait(false);
                         _sessionRenewTask = _client.Session.RenewPeriodic(Opts.SessionTTL, LockSession,
-                            wOpts, _cts.Token);
+                            WriteOptions.Default, _cts.Token);
                     }
                     else
                     {
@@ -253,8 +250,7 @@ namespace Consul
 
                     var qOpts = new QueryOptions()
                     {
-                        WaitTime = Opts.LockWaitTime,
-                        Namespace = Opts.Namespace
+                        WaitTime = Opts.LockWaitTime
                     };
 
                     var attempts = 0;
@@ -481,11 +477,7 @@ namespace Consul
                 var cts = _cts;
                 try
                 {
-                    var opts = new QueryOptions()
-                    {
-                        Consistency = ConsistencyMode.Consistent,
-                        Namespace = Opts.Namespace
-                    };
+                    var opts = new QueryOptions() { Consistency = ConsistencyMode.Consistent };
                     _retries = Opts.MonitorRetries;
                     while (IsHeld && !cts.Token.IsCancellationRequested)
                     {
@@ -556,7 +548,7 @@ namespace Consul
             {
                 Name = Opts.SessionName,
                 TTL = Opts.SessionTTL,
-                LockDelay = Opts.LockDelay,
+                // LockDelay = Opts.LockDelay,
             };
             return (await _client.Session.Create(se).ConfigureAwait(false)).Response;
         }
@@ -597,7 +589,7 @@ namespace Consul
         /// <summary>
         /// DefaultNamespace is the default namespace to use if none is provided
         /// </summary>
-        private static readonly string DefaultNamespace = "default";
+        // private static readonly string DefaultNamespace = "default";
 
         private TimeSpan _lockRetryTime;
 
@@ -640,12 +632,12 @@ namespace Consul
         /// While not a bulletproof method, it does avoid the need to introduce sleep states into application logic and can help mitigate many issues.
         /// While the default is to use a 15 second delay, clients are able to disable this mechanism by providing a zero delay value.
         /// </summary>
-        public TimeSpan LockDelay { get; set; }
+        // public TimeSpan LockDelay { get; set; }
 
         /// <summary>
         /// defaults to API client config, namespace of ACL token, or "default" namespace
         /// </summary>
-        public string Namespace { get; set; }
+        // public string Namespace { get; set; }
 
         public LockOptions(string key)
         {
@@ -655,8 +647,8 @@ namespace Consul
             MonitorRetryTime = Lock.DefaultMonitorRetryTime;
             LockWaitTime = Lock.DefaultLockWaitTime;
             LockRetryTime = Lock.DefaultLockRetryTime;
-            LockDelay = Lock.DefaultLockDelay;
-            Namespace = DefaultNamespace;
+            // LockDelay = Lock.DefaultLockDelay;
+            // Namespace = DefaultNamespace;
         }
     }
 
