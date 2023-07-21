@@ -95,6 +95,31 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Client_UseCache()
+        {
+            var opts = new QueryOptions()
+            {
+                Datacenter = "foo",
+                Consistency = ConsistencyMode.Default,
+                WaitIndex = 1000,
+                WaitTime = new TimeSpan(0, 0, 100),
+                Token = "12345",
+                UseCache = true,
+                MaxAge = new TimeSpan(0, 0, 10),
+                StaleIfError = new TimeSpan(0, 0, 10)
+            };
+            var request = _client.Get<KVPair>("/v1/kv/foo", opts);
+
+            await Assert.ThrowsAsync<ConsulRequestException>(async () => await request.Execute(CancellationToken.None));
+
+            Assert.Equal("foo", request.Params["dc"]);
+            Assert.Equal("1000", request.Params["index"]);
+            Assert.Equal("1m40s", request.Params["wait"]);
+            Assert.Equal(string.Empty, request.Params["cached"]);
+            Assert.Equal("max-age=10,stale-if-error=10", request.Params["Cache-Control"]);
+        }
+
+        [Fact]
         public async Task Client_SetClientOptions()
         {
             using (var client = new ConsulClient(c =>
