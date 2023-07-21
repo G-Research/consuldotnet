@@ -30,32 +30,32 @@ namespace Consul
     /// </summary>
     public interface IAgentEndpoint
     {
-        Task<WriteResult> CheckDeregister(string checkID, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> CheckRegister(AgentCheckRegistration check, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(Filter filter, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> DisableNodeMaintenance(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> DisableServiceMaintenance(string serviceID, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> EnableNodeMaintenance(string reason, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> EnableServiceMaintenance(string serviceID, string reason, CancellationToken ct = default(CancellationToken));
-        Task FailTTL(string checkID, string note, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> ForceLeave(string node, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> Join(string addr, bool wan, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<AgentMember[]>> Members(bool wan, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult> CheckDeregister(string checkID, CancellationToken ct = default);
+        Task<WriteResult> CheckRegister(AgentCheckRegistration check, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(Filter filter, CancellationToken ct = default);
+        Task<WriteResult> DisableNodeMaintenance(CancellationToken ct = default);
+        Task<WriteResult> DisableServiceMaintenance(string serviceID, CancellationToken ct = default);
+        Task<WriteResult> EnableNodeMaintenance(string reason, CancellationToken ct = default);
+        Task<WriteResult> EnableServiceMaintenance(string serviceID, string reason, CancellationToken ct = default);
+        Task FailTTL(string checkID, string note, CancellationToken ct = default);
+        Task<WriteResult> ForceLeave(string node, CancellationToken ct = default);
+        Task<WriteResult> Join(string addr, bool wan, CancellationToken ct = default);
+        Task<QueryResult<AgentMember[]>> Members(bool wan, CancellationToken ct = default);
         [Obsolete("This property will be removed in a future release. Replace uses of it with a call to GetNodeName()")]
         string NodeName { get; }
-        Task<string> GetNodeName(CancellationToken ct = default(CancellationToken));
-        Task PassTTL(string checkID, string note, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, Dictionary<string, dynamic>>>> Self(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default(CancellationToken));
-        Task WarnTTL(string checkID, string note, CancellationToken ct = default(CancellationToken));
-        Task<Agent.LogStream> Monitor(LogLevel level = default(LogLevel), CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> Leave(string node, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> Reload(string node, CancellationToken ct = default(CancellationToken));
+        Task<string> GetNodeName(CancellationToken ct = default);
+        Task PassTTL(string checkID, string note, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, Dictionary<string, dynamic>>>> Self(CancellationToken ct = default);
+        Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default);
+        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default);
+        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default);
+        Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default);
+        Task WarnTTL(string checkID, string note, CancellationToken ct = default);
+        Task<Agent.LogStream> Monitor(LogLevel level = default, CancellationToken ct = default);
+        Task<WriteResult> Leave(string node, CancellationToken ct = default);
+        Task<WriteResult> Reload(string node, CancellationToken ct = default);
     }
 }
