@@ -23,19 +23,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     public class ACLTest : BaseFixture
     {
-        private readonly ITestOutputHelper _output;
-
-        public ACLTest(ITestOutputHelper output)
-        {
-            this._output = output;
-        }
-
         async Task SkipIfAclNotSupportedAsync()
         {
             var cutOffVersion = SemanticVersion.Parse("1.11.0");
