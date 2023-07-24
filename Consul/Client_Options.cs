@@ -17,7 +17,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 #if !(NETSTANDARD || NETCOREAPP)
     using System.Security.Permissions;
     using System.Runtime.Serialization;
@@ -33,38 +32,15 @@ namespace Consul
         public static readonly QueryOptions Default = new QueryOptions()
         {
             Consistency = ConsistencyMode.Default,
-            // Datacenter = string.Empty,
+            Datacenter = string.Empty,
             Token = string.Empty,
             WaitIndex = 0
         };
 
         /// <summary>
-        /// Namespace overrides the `default` namespace.
-        /// Note: Namespaces are available only in Consul Enterprise
-        /// </summary>
-        // public string Namespace { get; set; }
-
-        /// <summary>
-        /// Partition overrides the `default` partition.
-        /// Note: Partitions are available only in Consul Enterprise
-        /// </summary>
-        // public string Partition { get; set; }
-
-        /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config.
         /// </summary>
         public string Datacenter { get; set; }
-
-        /// <summary>
-        /// Providing a peer name in the query option.
-        /// </summary>
-        // public string Peer { get; set; }
-
-        /// <summary>
-        /// AllowStale allows any Consul server (non-leader) to service a read.
-        /// This allows for lower latency and higher throughput.
-        /// </summary>
-        // public bool AllowStale { get; set; }
 
         /// <summary>
         /// The consistency level required for the operation.
@@ -101,12 +77,6 @@ namespace Consul
         public ulong WaitIndex { get; set; }
 
         /// <summary>
-        /// WaitHash is used by some endpoints instead of WaitIndex to perform blocking on state based on a hash of the response rather than a monotonic index.
-        /// This is required when the state being blocked on is not stored in Raft, for example agent-local proxy configuration.
-        /// </summary>
-        // public string WaitHash { get; set; }
-
-        /// <summary>
         /// WaitTime is used to bound the duration of a wait. Defaults to that of the Config, but can be overridden.
         /// </summary>
         public TimeSpan? WaitTime { get; set; }
@@ -123,47 +93,6 @@ namespace Consul
         /// for the sort.
         /// </summary>
         public string Near { get; set; }
-
-        /// <summary>
-        /// NodeMeta is used to filter results by nodes with the given metadata key/value pairs.
-        /// Currently, only one key/value pair can be used for filtering.
-        /// </summary>
-        // public Dictionary<string, string> NodeMeta { get; set; }
-
-        /// <summary>
-        /// RelayFactor is used in keyring operations to cause responses to be relayed back to the sender through N other random nodes.
-        /// Must be a value from 0 to 5 (inclusive)
-        /// </summary>
-        // public uint RelayFactor { get; set; }
-
-        /// <summary>
-        /// LocalOnly is used in keyring list operation to force the keyring query to only hit local servers (no WAN traffic).
-        /// </summary>
-        // public bool LocalOnly { get; set; }
-
-        /// <summary>
-        /// Connect filters prepared query execution to only include Connect-capable services.
-        /// This currently affects prepared query execution.
-        /// </summary>
-        // public bool Connect { get; set; }
-
-        /// <summary>
-        /// Filter requests filtering data prior to it being returned.
-        /// The string is a C# compatible boolean expression.
-        /// </summary>
-        // public string Filter { get; set; }
-
-        /// <summary>
-        // MergeCentralConfig returns a service definition merged with the proxy-defaults/global and service-defaults/:service config entries.
-        // This can be used to ensure a full service definition is returned in the response especially when the service might not be written into the catalog that way.
-        /// </summary>
-        // public bool MergeCentralConfig { get; set; }
-
-        /// <summary>
-	    /// Global is used to request information from all datacenters.
-	    /// Currently only used for operator usage requests.
-        /// </summary>
-        // public bool Global { get; set; }
     }
 
     /// <summary>
@@ -178,18 +107,6 @@ namespace Consul
         };
 
         /// <summary>
-        /// Namespace overrides the `default` namespace
-        /// Note: Namespaces are available only in Consul Enterprise
-        /// </summary>
-        // public string Namespace { get; set; }
-
-        /// <summary>
-        /// Partition overrides the `default` partition
-        /// Note: Partitions are available only in Consul Enterprise
-        /// </summary>
-        // public string Partition { get; set; }
-
-        /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config
         /// </summary>
         public string Datacenter { get; set; }
@@ -198,12 +115,5 @@ namespace Consul
         /// Token is used to provide a per-request ACL token which overrides the agent's default token.
         /// </summary>
         public string Token { get; set; }
-
-        /// <summary>
-        /// RelayFactor is used in keyring operations to cause responses to be relayed back to the sender through N other random nodes.
-        /// Must be a value from 0 to 5 (inclusive)
-        /// </summary>
-        // public uint RelayFactor { get; set; }
-
     }
 }
