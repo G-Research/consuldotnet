@@ -18,18 +18,29 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     public class ACLTest : BaseFixture
     {
+        private readonly ITestOutputHelper _output;
+
+        public ACLTest(ITestOutputHelper output)
+        {
+            this._output = output;
+        }
+
         async Task SkipIfAclNotSupportedAsync()
         {
-            var info = await _client.Agent.Self();
-            var version = new Version(info.Response["Config"]["Version"]);
+            QueryResult<Dictionary<string, Dictionary<string, dynamic>>> info = await _client.Agent.Self();
+            var versionString = info.Response["Config"]["Version"];
+            _output.WriteLine($"Version='{versionString}'");
+            var version = new Version(versionString);
             Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
         }
 
