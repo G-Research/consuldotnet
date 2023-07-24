@@ -82,5 +82,11 @@ namespace Consul.Test
                 Assert.True(response.Keys.ContainsKey(newKey));
             }
         }
+
+        [EnterpriseOnlyFact]
+        public async Task Operator_GetLicense()
+        {
+            var license = await _client.Operator.GetConsulLicense();
+        }
     }
 }
