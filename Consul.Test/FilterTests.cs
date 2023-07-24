@@ -175,6 +175,18 @@ namespace Consul.Test
         }
 
         [Fact]
+        public void Filter_ServiceSelector_Equals()
+        {
+            CheckEncoded("Service == \"serviceName\"", S.Service == ServiceConstants.ServiceName);
+        }
+
+        [Fact]
+        public void Filter_ServiceSelector_NotEquals()
+        {
+            CheckEncoded("Service != \"serviceName\"", S.Service != ServiceConstants.ServiceName);
+        }
+
+        [Fact]
         public void Filter_ServiceMetaEntrySelector()
         {
             CheckEncoded("A.B", new ServiceMetaEntrySelector("A", "B"));

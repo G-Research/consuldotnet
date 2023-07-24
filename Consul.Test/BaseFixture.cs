@@ -77,6 +77,16 @@ namespace Consul.Test
             // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
             // E.g. https://github.com/microsoft/referencesource/blob/5697c29004a34d80acdaf5742d7e699022c64ecd/System.Web/HttpRuntime.cs#L1200
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+
+            // As for HTTP connections, we need multiple threads to test semaphores and locks.
+            // XUnit sets the initial number of worker threads to the number of CPU cores.
+            // Unfortunately, when the initial limit for the ThreadPool is too low, it introduces a risk of a deadlock-like behavior and the tests are timing out.
+            ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
+            if (workerThreads < 4)
+            {
+                workerThreads = 4;
+                ThreadPool.SetMinThreads(workerThreads, completionPortThreads);
+            }
         }
 
         public BaseFixture()

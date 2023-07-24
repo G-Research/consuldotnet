@@ -21,5 +21,6 @@ namespace Consul.Filtering
     public static class Selectors
     {
         public static ServiceSelector Service { get; } = new ServiceSelector();
+        public static StringFieldSelector ServiceName { get; } = new StringFieldSelector(nameof(ServiceName));
     }
 }

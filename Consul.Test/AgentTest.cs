@@ -23,6 +23,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -540,9 +541,11 @@ namespace Consul.Test
             var metaSelector = new MetaSelector();
 
             Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
-            Assert.Equal(svcID1, (await _client.Agent.Services(idSelector == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID2, (await _client.Agent.Services(idSelector == svcID2)).Response.Keys.Single());
             Assert.Equal(svcID1, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar1")).Response.Keys.Single());
             Assert.Equal(svcID2, (await _client.Agent.Services(metaSelector[uniqueMeta] == "bar2")).Response.Keys.Single());
+            Assert.Equal(svcID1, (await _client.Agent.Services(Selectors.Service == svcID1)).Response.Keys.Single());
+            Assert.Equal(svcID2, (await _client.Agent.Services(Selectors.Service == svcID2)).Response.Keys.Single());
         }
 
         [Theory]
@@ -632,6 +635,202 @@ namespace Consul.Test
             var check = checks.Response[check1Id];
             Assert.Equal(check.Name, check1Name);
             Assert.Equal(check.CheckID, check1Id);
+        }
+
+        [Fact]
+        public async Task Agent_Register_UseAliasCheck()
+        {
+            // 120 is a lot, but otherwise the test is flaky
+            var ttl = TimeSpan.FromSeconds(120);
+            var svcID = KVTest.GenerateTestKeyName();
+            var svcID1 = svcID + "1";
+            var svcID2 = svcID + "2";
+            var check1Id = svcID1 + "_checkId";
+            var check1Name = svcID1 + "_checkName";
+            var registration1 = new AgentServiceRegistration
+            {
+                ID = svcID1,
+                Name = svcID1,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check1Name,
+                        CheckID = check1Id,
+                        TTL = ttl,
+                        Status = HealthStatus.Critical,
+                    },
+                },
+            };
+
+            var check2Id = svcID2 + "_checkId";
+            var check2Name = svcID2 + "_checkName";
+            var registration2 = new AgentServiceRegistration
+            {
+                ID = svcID2,
+                Name = svcID2,
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        Name = check2Name,
+                        CheckID = check2Id,
+                        AliasService = svcID1,
+                        Status = HealthStatus.Critical,
+                    },
+                },
+            };
+
+            await _client.Agent.ServiceRegister(registration1);
+            await _client.Agent.ServiceRegister(registration2);
+
+            var checks = await _client.Agent.Checks();
+            Assert.Equal(HealthStatus.Critical, checks.Response[check1Id].Status);
+            Assert.NotEqual("test is ok", checks.Response[check1Id].Output);
+            Assert.Equal(HealthStatus.Critical, checks.Response[check2Id].Status);
+            Assert.NotEqual("test is ok", checks.Response[check2Id].Output);
+
+            await _client.Agent.PassTTL(check1Id, "test is ok");
+
+            while (true)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                checks = await _client.Agent.Checks();
+
+                if (checks.Response[check1Id].Status != HealthStatus.Passing ||
+                    checks.Response[check2Id].Status == HealthStatus.Passing)
+                {
+                    break;
+                }
+            }
+
+            Assert.Equal(HealthStatus.Passing, checks.Response[check1Id].Status);
+            Assert.Equal("test is ok", checks.Response[check1Id].Output);
+            Assert.Equal(HealthStatus.Passing, checks.Response[check2Id].Status);
+            Assert.Equal("All checks passing.", checks.Response[check2Id].Output);
+        }
+
+        [Fact]
+        public async Task Agent_Service_Register_With_Connect()
+        {
+            // Arrange
+            var destinationServiceID = KVTest.GenerateTestKeyName();
+            var destinationServiceRegistrationParameters = new AgentServiceRegistration
+            {
+                ID = destinationServiceID,
+                Name = destinationServiceID,
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 8001
+                    }
+                }
+            };
+
+            var sourceServiceID = KVTest.GenerateTestKeyName();
+            var sourceServiceRegistrationParameters = new AgentServiceRegistration
+            {
+                ID = sourceServiceID,
+                Name = sourceServiceID,
+                Port = 9000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                },
+                Tags = new string[] { "tag1", "tag2" },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 9001,
+                        Proxy = new AgentServiceProxy
+                        {
+                            Upstreams = new AgentServiceProxyUpstream[] { new AgentServiceProxyUpstream { DestinationName = destinationServiceID, LocalBindPort = 9002 } }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            await _client.Agent.ServiceRegister(destinationServiceRegistrationParameters);
+            await _client.Agent.ServiceRegister(sourceServiceRegistrationParameters);
+
+            // Assert
+            var services = await _client.Agent.Services();
+
+            // Assert SourceService
+            var sourceProxyServiceID = $"{sourceServiceID}-sidecar-proxy";
+            Assert.Contains(sourceServiceID, services.Response.Keys);
+            Assert.Contains(sourceProxyServiceID, services.Response.Keys);
+            AgentService sourceProxyService = services.Response[sourceProxyServiceID];
+            Assert.Equal(sourceServiceRegistrationParameters.Tags, sourceProxyService.Tags);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Port, sourceProxyService.Port);
+            Assert.Equal(sourceServiceID, sourceProxyService.Proxy.DestinationServiceName);
+            Assert.Equal(sourceServiceID, sourceProxyService.Proxy.DestinationServiceID);
+            Assert.Equal("127.0.0.1", sourceProxyService.Proxy.LocalServiceAddress);
+            Assert.Equal(sourceServiceRegistrationParameters.Port, sourceProxyService.Proxy.LocalServicePort);
+            Assert.Equal(ServiceKind.ConnectProxy, sourceProxyService.Kind);
+            Assert.Single(sourceProxyService.Proxy.Upstreams);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].DestinationName, sourceProxyService.Proxy.Upstreams[0].DestinationName);
+            Assert.Equal(sourceServiceRegistrationParameters.Connect.SidecarService.Proxy.Upstreams[0].LocalBindPort, sourceProxyService.Proxy.Upstreams[0].LocalBindPort);
+
+            // Assert DestinationService
+            var destinationProxyServiceID = $"{destinationServiceID}-sidecar-proxy";
+            Assert.Contains(destinationServiceID, services.Response.Keys);
+            Assert.Contains(destinationProxyServiceID, services.Response.Keys);
+            AgentService destinationProxyService = services.Response[destinationProxyServiceID];
+            Assert.Equal(destinationServiceRegistrationParameters.Connect.SidecarService.Port, destinationProxyService.Port);
+            Assert.Equal(destinationServiceID, destinationProxyService.Proxy.DestinationServiceName);
+            Assert.Equal(destinationServiceID, destinationProxyService.Proxy.DestinationServiceID);
+            Assert.Equal("127.0.0.1", destinationProxyService.Proxy.LocalServiceAddress);
+            Assert.Equal(destinationServiceRegistrationParameters.Port, destinationProxyService.Proxy.LocalServicePort);
+            Assert.Null(destinationProxyService.Proxy.Upstreams);
+            Assert.Equal(ServiceKind.ConnectProxy, destinationProxyService.Kind);
+        }
+
+        [Fact]
+        public async Task Agent_FilterChecks()
+        {
+            // Arrange
+            string svcName = KVTest.GenerateTestKeyName();
+            string svcID = $"{svcName}-1";
+            string checkName = $"Check {svcID}";
+
+            await _client.Agent.ServiceRegister(new AgentServiceRegistration
+            {
+                Name = svcName,
+                ID = svcID,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15),
+                    Name = checkName
+                }
+            });
+
+            // mass service
+            await _client.Agent.ServiceRegister(new AgentServiceRegistration
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15),
+                }
+            });
+
+            // Act
+            Dictionary<string, AgentCheck> actual = (await _client.Agent.Checks(Selectors.ServiceName == svcName)).Response;
+
+            // Assert
+            Assert.Single(actual);
+            Assert.Equal(checkName, actual.Values.First().Name);
         }
     }
 }
