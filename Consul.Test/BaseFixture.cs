@@ -22,7 +22,7 @@ namespace Consul.Test
                 c.Address = TestHelper.HttpUri;
             });
 
-            var timeout = TimeSpan.FromSeconds(60);
+            var timeout = TimeSpan.FromSeconds(15);
             var cancelToken = new CancellationTokenSource(timeout).Token;
             Exception exception = null;
             var firstIteration = true;
