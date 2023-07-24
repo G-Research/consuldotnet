@@ -83,7 +83,7 @@ jobs:
         with:
           dotnet-version: 7.0.x
       - name: Setup Consul Enterprise URL
-        if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
+        if: ${{ !github.event.repository.fork}}
         run: |
           echo "ENTERPRISE=1" >> $GITHUB_ENV
       - name: Download Consul
