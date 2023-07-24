@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,11 +38,9 @@ namespace Consul.Test
 
         async Task SkipIfAclNotSupportedAsync()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.11.0");
             QueryResult<Dictionary<string, Dictionary<string, dynamic>>> info = await _client.Agent.Self();
-            var versionString = info.Response["Config"]["Version"];
-            _output.WriteLine($"Version='{versionString}'");
-            var version = new Version(versionString);
-            Skip.If(version >= new Version("1.11.0"), "Legacy ACL system was removed in Consul 1.11.");
+            Skip.If(AgentVersion >= cutOffVersion, $"Current version is {AgentVersion}, but the legacy ACL system was removed in Consul {cutOffVersion}");
         }
 
         [SkippableFact]
