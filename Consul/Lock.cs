@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -160,11 +161,6 @@ namespace Consul
         public static readonly TimeSpan DefaultMonitorRetryTime = TimeSpan.FromSeconds(2);
 
         /// <summary>
-        /// DefaultLockDelay is how long a session is asked to wait before being allowed to acquire a previously-held lock.
-        /// </summary>
-        // public static readonly TimeSpan DefaultLockDelay = TimeSpan.FromSeconds(15);
-
-        /// <summary>
         /// LockFlagValue is a magic flag we set to indicate a key is being used for a lock. It is used to detect a potential conflict with a semaphore.
         /// </summary>
         private const ulong LockFlagValue = 0x2ddccbc058a50c18;
@@ -188,8 +184,14 @@ namespace Consul
         /// </summary>
         public bool IsHeld
         {
-            get => _isheld;
-            private set => _isheld = value;
+            get
+            {
+                return _isheld;
+            }
+            private set
+            {
+                _isheld = value;
+            }
         }
 
         internal Lock(ConsulClient c)
@@ -380,7 +382,7 @@ namespace Consul
         /// <summary>
         /// Unlock released the lock. It is an error to call this if the lock is not currently held.
         /// </summary>
-        public async Task Release(CancellationToken ct = default)
+        public async Task Release(CancellationToken ct = default(CancellationToken))
         {
             try
             {
@@ -418,7 +420,7 @@ namespace Consul
         /// <summary>
         /// Destroy is used to cleanup the lock entry. It is not necessary to invoke. It will fail if the lock is in use.
         /// </summary>
-        public async Task Destroy(CancellationToken ct = default)
+        public async Task Destroy(CancellationToken ct = default(CancellationToken))
         {
             using (await _mutex.LockAsync().ConfigureAwait(false))
             {
@@ -547,8 +549,7 @@ namespace Consul
             var se = new SessionEntry
             {
                 Name = Opts.SessionName,
-                TTL = Opts.SessionTTL,
-                // LockDelay = Opts.LockDelay,
+                TTL = Opts.SessionTTL
             };
             return (await _client.Session.Create(se).ConfigureAwait(false)).Response;
         }
@@ -586,11 +587,6 @@ namespace Consul
         /// </summary>
         private static readonly TimeSpan DefaultLockSessionTTL = TimeSpan.FromSeconds(15);
 
-        /// <summary>
-        /// DefaultNamespace is the default namespace to use if none is provided
-        /// </summary>
-        // private static readonly string DefaultNamespace = "default";
-
         private TimeSpan _lockRetryTime;
 
         public string Key { get; set; }
@@ -601,7 +597,7 @@ namespace Consul
         public int MonitorRetries { get; set; }
         public TimeSpan LockRetryTime
         {
-            get => _lockRetryTime;
+            get { return _lockRetryTime; }
             set
             {
                 if (value < LockRetryTimeMin)
@@ -625,20 +621,6 @@ namespace Consul
         /// </summary>
         public bool LockTryOnce { get; set; }
 
-        /// <summary>
-        /// LockDelay is a time duration between 0 and 60 second.
-        /// When a session invalidation takes place, Consul prevents any of the previously held locks from being re-acquired for the `LockDelay` interval.
-        /// The purpose of this delay is to allow the potentially still live leader to detect the invalidation and stop processing requests that may lead to inconsistent state.
-        /// While not a bulletproof method, it does avoid the need to introduce sleep states into application logic and can help mitigate many issues.
-        /// While the default is to use a 15 second delay, clients are able to disable this mechanism by providing a zero delay value.
-        /// </summary>
-        // public TimeSpan LockDelay { get; set; }
-
-        /// <summary>
-        /// defaults to API client config, namespace of ACL token, or "default" namespace
-        /// </summary>
-        // public string Namespace { get; set; }
-
         public LockOptions(string key)
         {
             Key = key;
@@ -647,8 +629,6 @@ namespace Consul
             MonitorRetryTime = Lock.DefaultMonitorRetryTime;
             LockWaitTime = Lock.DefaultLockWaitTime;
             LockRetryTime = Lock.DefaultLockRetryTime;
-            // LockDelay = Lock.DefaultLockDelay;
-            // Namespace = DefaultNamespace;
         }
     }
 
@@ -688,7 +668,7 @@ namespace Consul
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default)
+        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -703,7 +683,7 @@ namespace Consul
         /// <param name="opts"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default)
+        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default(CancellationToken))
         {
             if (opts == null)
             {
@@ -721,7 +701,7 @@ namespace Consul
         /// <param name="key"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public Task ExecuteLocked(string key, Action action, CancellationToken ct = default)
+        public Task ExecuteLocked(string key, Action action, CancellationToken ct = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -736,7 +716,7 @@ namespace Consul
         /// <param name="opts"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default)
+        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default(CancellationToken))
         {
             if (opts == null)
             {
