@@ -82,19 +82,11 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
-      - name: Condition1
-        if: ${{ !github.event.repository.fork}} && ${{ !startsWith(matrix.consul, '1.1') }}
-        run: |
-          echo "ENTERPRISE1=1"
-      - name: Condition2
-        if: ${{ !github.event.repository.fork && !startsWith(matrix.consul, '1.1') }}
-        run: |
-          echo "ENTERPRISE2=1"
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
         # This is necessary until a valid license is configured in the repository settings.
-        if: ${{ !github.event.repository.fork}} && !startsWith(matrix.consul, '1.1')
+        if: ${{ !github.event.repository.fork && !startsWith(matrix.consul, '1.1') }}
         run: |
           echo "ENTERPRISE=1" >> $GITHUB_ENV
           echo "ENTERPRISE=1"
