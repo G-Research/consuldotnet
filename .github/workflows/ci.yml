@@ -88,13 +88,13 @@ jobs:
         # This is necessary until a valid license is configured in the repository settings.
         if: ${{ !github.event.repository.fork && !startsWith(matrix.consul, '1.1') }}
         run: |
-          echo "ENTERPRISE=1" >> $GITHUB_ENV
+          echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
       - name: Download Consul
         shell: bash
         run: |
           cd Consul.Test
           SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
-          if [[ $ENTERPRISE == 1 ]]
+          if [[ $RUN_CONSUL_ENTERPRISE_TESTS == 1 ]]
           then
             curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}+ent/consul_${{ matrix.consul }}+ent_${SYSTEM}_amd64.zip -o consul.zip
           else 
