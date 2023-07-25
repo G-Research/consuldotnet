@@ -86,7 +86,8 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {
-            var license = await _client.Operator.GetConsulLicense();
+            var queryResult = await _client.Operator.GetConsulLicense();
+            Assert.NotNull(queryResult.Response);
         }
     }
 }

@@ -83,15 +83,18 @@ jobs:
         with:
           dotnet-version: 7.0.x
       - name: Setup Consul Enterprise URL
-        if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
+        # Consul enterprise until version 1.10.0 can be run even without a valid license,
+        # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
+        # This is necessary until a valid license is configured in the repository settings.
+        if: ${{ !github.event.repository.fork && !startsWith(matrix.consul, '1.1') }}
         run: |
-          echo "ENTERPRISE=1" >> $GITHUB_ENV
+          echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
       - name: Download Consul
         shell: bash
         run: |
           cd Consul.Test
           SYSTEM=$(uname | sed 's/MINGW.*/windows/' | tr A-Z a-z)
-          if [[ $ENTERPRISE == 1 ]]
+          if [[ $RUN_CONSUL_ENTERPRISE_TESTS == 1 ]]
           then
             curl -sSL https://releases.hashicorp.com/consul/${{ matrix.consul }}+ent/consul_${{ matrix.consul }}+ent_${SYSTEM}_amd64.zip -o consul.zip
           else 
@@ -106,7 +109,9 @@ jobs:
         shell: bash
         run: |
           ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
-          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }} -e RUN_CONSUL_ENTERPRISE_TESTS=1
+          dotnet test Consul.Test --configuration=Release --logger "GitHubActions;report-warnings=false" --no-build -v=Normal --framework=${{ matrix.framework }}
+        env:
+            RUN_CONSUL_ENTERPRISE_TESTS: ${{env.RUN_CONSUL_ENTERPRISE_TESTS }}
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3
