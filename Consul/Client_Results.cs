@@ -18,6 +18,7 @@
 
 using System;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace Consul
 {
@@ -44,6 +45,11 @@ namespace Consul
     /// </summary>
     public class QueryResult : ConsulResult
     {
+        /// <summary>
+        /// The headers returned by the Consul server
+        /// </summary>
+        public HttpResponseHeaders Headers { get; set; }
+
         /// <summary>
         /// The index number when the query was serviced. This can be used as a WaitIndex to perform a blocking query
         /// </summary>

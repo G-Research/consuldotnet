@@ -98,6 +98,7 @@ namespace Consul
                 result.Response = Deserialize<TOut>(ResponseStream);
             }
 
+            result.Headers = response.Headers;
             result.RequestTime = timer.Elapsed;
             return result;
         }
@@ -312,6 +313,7 @@ namespace Consul
                 }
             }
 
+            result.Headers = response.Headers;
             result.RequestTime = timer.Elapsed;
             return result;
         }
