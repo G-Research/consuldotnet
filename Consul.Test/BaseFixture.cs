@@ -4,6 +4,7 @@ using System.Net;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -11,6 +12,7 @@ namespace Consul.Test
     public class BaseFixture : IAsyncLifetime
     {
         protected ConsulClient _client;
+        protected static SemanticVersion AgentVersion;
 
         private static readonly Lazy<Task> Ready = new Lazy<Task>(async () =>
         {
@@ -58,6 +60,9 @@ namespace Consul.Test
                         continue;
 
                     await client.Session.Destroy(sessionRequest.Response);
+
+                    var info = await client.Agent.Self();
+                    AgentVersion = SemanticVersion.Parse(info.Response["Config"]["Version"]);
                     break;
                 }
                 catch (OperationCanceledException)
@@ -110,6 +115,17 @@ namespace Consul.Test
         public async Task InitializeAsync()
         {
             await Ready.Value;
+        }
+    }
+
+    public class EnterpriseOnlyFact : FactAttribute
+    {
+        public EnterpriseOnlyFact()
+        {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RUN_CONSUL_ENTERPRISE_TESTS")))
+            {
+                Skip = "Skipped; this test requires a consul enterprise server to run.";
+            }
         }
     }
 }
