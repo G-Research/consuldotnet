@@ -95,7 +95,7 @@ namespace Consul.Test
         }
 
         [Fact]
-        public async Task Client_UseCache()
+        public async Task Client_SetQueryOptionsWithCache()
         {
             var opts = new QueryOptions()
             {
@@ -163,9 +163,11 @@ namespace Consul.Test
                 hc.Timeout = TimeSpan.FromDays(10);
                 hc.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var config = new ConsulClientConfiguration();
-                config.Address = TestHelper.HttpUri;
-                config.Token = TestHelper.MasterToken;
+                var config = new ConsulClientConfiguration
+                {
+                    Address = TestHelper.HttpUri,
+                    Token = TestHelper.MasterToken
+                };
 
 #pragma warning disable CS0618 // Type or member is obsolete
                 using (var client = new ConsulClient(config, hc))
@@ -200,9 +202,11 @@ namespace Consul.Test
         [Fact]
         public async Task Client_ReuseAndUpdateConfig()
         {
-            var config = new ConsulClientConfiguration();
-            config.Address = TestHelper.HttpUri;
-            config.Token = TestHelper.MasterToken;
+            var config = new ConsulClientConfiguration
+            {
+                Address = TestHelper.HttpUri,
+                Token = TestHelper.MasterToken
+            };
 
 #pragma warning disable CS0618 // Type or member is obsolete
             using (var client = new ConsulClient(config))
@@ -244,8 +248,8 @@ namespace Consul.Test
         [Fact]
         public void Client_Constructors()
         {
-            Action<ConsulClientConfiguration> cfgAction2 = (cfg) => { cfg.Token = "yep"; };
-            Action<ConsulClientConfiguration> cfgAction = (cfg) => { cfg.Datacenter = "foo"; cfgAction2(cfg); };
+            void cfgAction2(ConsulClientConfiguration cfg) { cfg.Token = "yep"; }
+            void cfgAction(ConsulClientConfiguration cfg) { cfg.Datacenter = "foo"; cfgAction2(cfg); }
 
             using (var c = new ConsulClient())
             {
