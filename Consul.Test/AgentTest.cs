@@ -409,6 +409,27 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Agent_UseCache()
+        {
+            IEnumerable<string> cacheResult;
+            QueryResult<string[]> response;
+
+            var opts = new QueryOptions
+            {
+                UseCache = true,
+                MaxAge = TimeSpan.FromSeconds(10)
+            };
+
+            response = await _client.Catalog.Datacenters(opts);
+            Assert.True(response.Headers.TryGetValues("X-Cache", out cacheResult));
+            Assert.Equal("MISS", cacheResult.First());
+
+            response = await _client.Catalog.Datacenters(opts);
+            Assert.True(response.Headers.TryGetValues("X-Cache", out cacheResult));
+            Assert.Equal("HIT", cacheResult.First());
+        }
+
+        [Fact]
         public async Task Agent_Join()
         {
             var info = await _client.Agent.Self();
