@@ -148,6 +148,15 @@ namespace Consul
         }
 
         /// <summary>
+        /// Datacenters is used to query for all the known datacenters with custom query options
+        /// </summary>
+        /// <returns>A list of datacenter names</returns>
+        public Task<QueryResult<string[]>> Datacenters(QueryOptions q, CancellationToken ct = default(CancellationToken))
+        {
+            return _client.Get<string[]>("/v1/catalog/datacenters", q).Execute(ct);
+        }
+
+        /// <summary>
         /// Nodes is used to query all the known nodes
         /// </summary>
         /// <returns>A list of all nodes</returns>

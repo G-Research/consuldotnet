@@ -30,6 +30,7 @@ namespace Consul
     public interface ICatalogEndpoint
     {
         Task<QueryResult<string[]>> Datacenters(CancellationToken ct = default(CancellationToken));
+        Task<QueryResult<string[]>> Datacenters(QueryOptions q, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct = default(CancellationToken));
         Task<WriteResult> Deregister(CatalogDeregistration reg, WriteOptions q, CancellationToken ct = default(CancellationToken));
         Task<QueryResult<CatalogNode>> Node(string node, CancellationToken ct = default(CancellationToken));
