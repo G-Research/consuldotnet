@@ -54,7 +54,7 @@ namespace Consul
         Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default);
         Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default);
         Task WarnTTL(string checkID, string note, CancellationToken ct = default);
-        Task<Agent.LogStream> Monitor(LogLevel level = default, bool logJSON = false, CancellationToken ct = default);
+        Task<Agent.LogStream> Monitor(LogLevel level = default, CancellationToken ct = default);
         Task<Agent.LogStream> MonitorJSON(LogLevel level = default, CancellationToken ct = default);
 
         Task<WriteResult> Leave(string node, CancellationToken ct = default);
