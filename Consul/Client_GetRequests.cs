@@ -173,19 +173,19 @@ namespace Consul
                 Params["near"] = Options.Near;
             }
 
-            if (Options.UseCache && Options.Consistency != ConsistencyMode.Consistent)
+            if (Options.UseCache)
             {
                 Params["cached"] = string.Empty;
                 var cacheControl = new List<string>();
 
                 if (Options.MaxAge.HasValue && Options.MaxAge > TimeSpan.Zero)
                 {
-                    cacheControl.Add($"max-age={Options.MaxAge.Value.Seconds}");
+                    cacheControl.Add($"max-age={Convert.ToInt32(Options.MaxAge.Value.TotalSeconds)}");
                 }
 
                 if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
                 {
-                    cacheControl.Add($"stale-if-error={Options.StaleIfError.Value.Seconds}");
+                    cacheControl.Add($"stale-if-error={Convert.ToInt32(Options.StaleIfError.Value.TotalSeconds)}");
                 }
 
                 if (cacheControl.Count > 0)
