@@ -19,6 +19,7 @@
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.2" />
     <PackageReference Include="GitHubActionsTestLogger" Version="1.2.0" />
+    <PackageReference Include="NuGet.Versioning" Version="6.6.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
