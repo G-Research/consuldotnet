@@ -408,25 +408,30 @@ namespace Consul.Test
             await _client.Agent.ServiceDeregister(svcID);
         }
 
-        [Fact]
-        public async Task Agent_UseCache()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Agent_UseCache(bool useCache)
         {
-            IEnumerable<string> cacheResult;
-            QueryResult<string[]> response;
 
             var opts = new QueryOptions
             {
-                UseCache = true,
-                MaxAge = TimeSpan.FromSeconds(10)
+                UseCache = useCache,
+                MaxAge = TimeSpan.FromSeconds(10),
+                StaleIfError = TimeSpan.FromSeconds(10),
             };
 
-            response = await _client.Catalog.Datacenters(opts);
-            Assert.True(response.Headers.TryGetValues("X-Cache", out cacheResult));
-            Assert.Equal("MISS", cacheResult.First());
+            var response = await _client.Catalog.Datacenters(opts);
 
-            response = await _client.Catalog.Datacenters(opts);
-            Assert.True(response.Headers.TryGetValues("X-Cache", out cacheResult));
-            Assert.Equal("HIT", cacheResult.First());
+            if (useCache)
+            {
+                Assert.True(response.Headers.TryGetValues("X-Cache", out var cacheResult));
+                Assert.Contains(cacheResult.Single(), new[] { "MISS", "HIT" });
+            }
+            else
+            {
+                Assert.False(response.Headers.TryGetValues("X-Cache", out _));
+            }
         }
 
         [Fact]
