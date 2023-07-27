@@ -251,7 +251,7 @@ namespace Consul
                 try
                 {
 
-                    meta.XCache = headers.GetValues("X-Cache").Single() == "HIT" ? QueryResult.CacheResult.HIT : QueryResult.CacheResult.MISS;
+                    meta.XCache = headers.GetValues("X-Cache").Single() == "HIT" ? QueryResult.CacheResult.Hit : QueryResult.CacheResult.Miss;
                 }
                 catch (Exception ex)
                 {

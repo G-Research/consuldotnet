@@ -46,15 +46,14 @@ namespace Consul
     {
         public enum CacheResult
         {
-            UNDEFINED,
-            MISS,
-            HIT
+            Miss,
+            Hit
         }
 
         /// <summary>
         /// In all cases the HTTP `X-Cache` header is always set in the response to either `HIT` or `MISS` indicating whether the response was served from cache or not.
         /// </summary>
-        public CacheResult XCache { get; set; }
+        public CacheResult? XCache { get; set; }
 
         /// <summary>
         /// For cache hits, the HTTP `Age` header is always set in the response to indicate how many seconds since that response was fetched from the servers.
