@@ -98,7 +98,6 @@ namespace Consul
                 result.Response = Deserialize<TOut>(ResponseStream);
             }
 
-            result.Headers = response.Headers;
             result.RequestTime = timer.Elapsed;
             return result;
         }
@@ -246,6 +245,31 @@ namespace Consul
                     throw new ConsulRequestException("Failed to parse X-Consul-Translate-Addresses", res.StatusCode, ex);
                 }
             }
+
+            if (headers.Contains("X-Cache"))
+            {
+                try
+                {
+
+                    meta.XCache = headers.GetValues("X-Cache").Single() == "HIT" ? QueryResult.CacheResult.HIT : QueryResult.CacheResult.MISS;
+                }
+                catch (Exception ex)
+                {
+                    throw new ConsulRequestException("Failed to parse X-Cache", res.StatusCode, ex);
+                }
+            }
+
+            if (headers.Contains("Age"))
+            {
+                try
+                {
+                    meta.Age = TimeSpan.FromSeconds(double.Parse(headers.GetValues("Age").Single()));
+                }
+                catch (Exception ex)
+                {
+                    throw new ConsulRequestException("Failed to parse Age", res.StatusCode, ex);
+                }
+            }
         }
 
         protected override void ApplyHeaders(HttpRequestMessage message, ConsulClientConfiguration clientConfig)
@@ -313,7 +337,6 @@ namespace Consul
                 }
             }
 
-            result.Headers = response.Headers;
             result.RequestTime = timer.Elapsed;
             return result;
         }

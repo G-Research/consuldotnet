@@ -425,12 +425,11 @@ namespace Consul.Test
 
             if (useCache)
             {
-                Assert.True(response.Headers.TryGetValues("X-Cache", out var cacheResult));
-                Assert.Contains(cacheResult.Single(), new[] { "MISS", "HIT" });
+                Assert.NotEqual(QueryResult.CacheResult.UNDEFINED, response.XCache);
             }
             else
             {
-                Assert.False(response.Headers.TryGetValues("X-Cache", out _));
+                Assert.Equal(QueryResult.CacheResult.UNDEFINED, response.XCache);
             }
         }
 

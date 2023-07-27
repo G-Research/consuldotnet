@@ -18,7 +18,6 @@
 
 using System;
 using System.Net;
-using System.Net.Http.Headers;
 
 namespace Consul
 {
@@ -45,10 +44,23 @@ namespace Consul
     /// </summary>
     public class QueryResult : ConsulResult
     {
+        public enum CacheResult
+        {
+            UNDEFINED,
+            MISS,
+            HIT
+        }
+
         /// <summary>
-        /// The headers returned by the Consul server
+        /// In all cases the HTTP `X-Cache` header is always set in the response to either `HIT` or `MISS` indicating whether the response was served from cache or not.
         /// </summary>
-        public HttpResponseHeaders Headers { get; set; }
+        public CacheResult XCache { get; set; }
+
+        /// <summary>
+        /// For cache hits, the HTTP `Age` header is always set in the response to indicate how many seconds since that response was fetched from the servers.
+        /// As long as the local agent has an active connection to the servers, the age will always be 0 since the value is up-to-date.
+        /// </summary>
+        public TimeSpan Age { get; set; }
 
         /// <summary>
         /// The index number when the query was serviced. This can be used as a WaitIndex to perform a blocking query
