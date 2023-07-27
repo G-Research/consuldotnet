@@ -365,7 +365,7 @@ namespace Consul
 
                 if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
                 {
-                    cacheControl.Add($"stale-if-error={Options.StaleIfError.Value.Seconds}");
+                    cacheControl.Add($"stale-if-error={Convert.ToInt32(Options.StaleIfError.Value.TotalSeconds)}");
                 }
 
                 if (cacheControl.Count > 0)
