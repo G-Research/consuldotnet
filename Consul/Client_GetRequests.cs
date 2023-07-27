@@ -360,7 +360,7 @@ namespace Consul
 
                 if (Options.MaxAge.HasValue && Options.MaxAge > TimeSpan.Zero)
                 {
-                    cacheControl.Add($"max-age={Options.MaxAge.Value.Seconds}");
+                    cacheControl.Add($"max-age={Convert.ToInt32(Options.MaxAge.Value.TotalSeconds)}");
                 }
 
                 if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
