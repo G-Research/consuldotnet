@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? QueryOptions.Default;
             Filter = filter;
@@ -116,7 +117,7 @@ namespace Consul
             ApplyHeaders(message, Client.Config);
             var response = await Client.HttpClient.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
 
-            ParseQueryHeaders(response, (result as QueryResult<TOut>));
+            ParseQueryHeaders(response, result as QueryResult<TOut>);
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -124,8 +125,7 @@ namespace Consul
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
-                throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
-                    response.StatusCode), response.StatusCode);
+                throw new ConsulRequestException($"Unexpected response, status code {response.StatusCode}", response.StatusCode);
             }
 
             result.RequestTime = timer.Elapsed;
@@ -170,6 +170,27 @@ namespace Consul
             if (!string.IsNullOrEmpty(Options.Near))
             {
                 Params["near"] = Options.Near;
+            }
+
+            if (Options.UseCache)
+            {
+                Params["cached"] = string.Empty;
+                var cacheControl = new List<string>();
+
+                if (Options.MaxAge.HasValue)
+                {
+                    cacheControl.Add($"max-age={Convert.ToUInt64(Options.MaxAge.Value.TotalSeconds)}");
+                }
+
+                if (Options.StaleIfError.HasValue)
+                {
+                    cacheControl.Add($"stale-if-error={Convert.ToUInt64(Options.StaleIfError.Value.TotalSeconds)}");
+                }
+
+                if (cacheControl.Count > 0)
+                {
+                    Params["Cache-Control"] = string.Join(",", cacheControl);
+                }
             }
         }
 
@@ -224,6 +245,31 @@ namespace Consul
                     throw new ConsulRequestException("Failed to parse X-Consul-Translate-Addresses", res.StatusCode, ex);
                 }
             }
+
+            if (headers.Contains("X-Cache"))
+            {
+                try
+                {
+
+                    meta.XCache = headers.GetValues("X-Cache").Single() == "HIT" ? QueryResult.CacheResult.Hit : QueryResult.CacheResult.Miss;
+                }
+                catch (Exception ex)
+                {
+                    throw new ConsulRequestException("Failed to parse X-Cache", res.StatusCode, ex);
+                }
+            }
+
+            if (headers.Contains("Age"))
+            {
+                try
+                {
+                    meta.Age = TimeSpan.FromSeconds(double.Parse(headers.GetValues("Age").Single()));
+                }
+                catch (Exception ex)
+                {
+                    throw new ConsulRequestException("Failed to parse Age", res.StatusCode, ex);
+                }
+            }
         }
 
         protected override void ApplyHeaders(HttpRequestMessage message, ConsulClientConfiguration clientConfig)
@@ -246,7 +292,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? QueryOptions.Default;
         }
@@ -305,6 +351,27 @@ namespace Consul
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
+            }
+
+            if (Options.UseCache)
+            {
+                Params["cached"] = string.Empty;
+                var cacheControl = new List<string>();
+
+                if (Options.MaxAge.HasValue)
+                {
+                    cacheControl.Add($"max-age={Convert.ToUInt64(Options.MaxAge.Value.TotalSeconds)}");
+                }
+
+                if (Options.StaleIfError.HasValue)
+                {
+                    cacheControl.Add($"stale-if-error={Convert.ToUInt64(Options.StaleIfError.Value.TotalSeconds)}");
+                }
+
+                if (cacheControl.Count > 0)
+                {
+                    Params["Cache-Control"] = string.Join(",", cacheControl);
+                }
             }
         }
 
