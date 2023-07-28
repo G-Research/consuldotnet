@@ -413,7 +413,6 @@ namespace Consul.Test
         [InlineData(true)]
         public async Task Agent_UseCache(bool useCache)
         {
-
             var opts = new QueryOptions
             {
                 UseCache = useCache,
@@ -425,11 +424,11 @@ namespace Consul.Test
 
             if (useCache)
             {
-                Assert.NotEqual(QueryResult.CacheResult.UNDEFINED, response.XCache);
+                Assert.NotNull(response.XCache);
             }
             else
             {
-                Assert.Equal(QueryResult.CacheResult.UNDEFINED, response.XCache);
+                Assert.Null(response.XCache);
             }
         }
 
