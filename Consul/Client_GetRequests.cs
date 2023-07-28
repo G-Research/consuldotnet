@@ -54,7 +54,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? QueryOptions.Default;
             Filter = filter;
