@@ -516,6 +516,33 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Agent_MonitorJSON()
+        {
+            using (var logs = await _client.Agent.MonitorJSON(LogLevel.Trace))
+            {
+                var counter = 0;
+                var logsTask = Task.Run(async () =>
+                {
+                    foreach (var line in logs)
+                    {
+                        // Make a request each time so we get more logs
+                        await _client.Agent.Self();
+                        Assert.StartsWith("{", await line);
+                        Assert.EndsWith("}", await line);
+
+                        counter++;
+                        if (counter > 5)
+                        {
+                            break;
+                        }
+                    }
+                });
+
+                await TimeoutUtils.WithTimeout(logsTask);
+            }
+        }
+
+        [Fact]
         public async Task Agent_FilterServices()
         {
             var svcID1 = KVTest.GenerateTestKeyName();
