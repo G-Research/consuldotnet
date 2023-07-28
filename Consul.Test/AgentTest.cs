@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using Xunit;
@@ -551,8 +552,7 @@ namespace Consul.Test
                     {
                         // Make a request each time so we get more logs
                         await _client.Agent.Self();
-                        Assert.StartsWith("{", await line);
-                        Assert.EndsWith("}", await line);
+                        Assert.NotNull(JsonSerializer.Deserialize<object>(await line));
 
                         counter++;
                         if (counter > 5)
