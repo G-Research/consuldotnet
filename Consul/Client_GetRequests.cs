@@ -182,7 +182,7 @@ namespace Consul
                     cacheControl.Add($"max-age={Convert.ToUInt64(Options.MaxAge.Value.TotalSeconds)}");
                 }
 
-                if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
+                if (Options.StaleIfError.HasValue)
                 {
                     cacheControl.Add($"stale-if-error={Convert.ToUInt64(Options.StaleIfError.Value.TotalSeconds)}");
                 }
@@ -358,12 +358,12 @@ namespace Consul
                 Params["cached"] = string.Empty;
                 var cacheControl = new List<string>();
 
-                if (Options.MaxAge.HasValue && Options.MaxAge > TimeSpan.Zero)
+                if (Options.MaxAge.HasValue)
                 {
                     cacheControl.Add($"max-age={Convert.ToUInt64(Options.MaxAge.Value.TotalSeconds)}");
                 }
 
-                if (Options.StaleIfError.HasValue && Options.StaleIfError > TimeSpan.Zero)
+                if (Options.StaleIfError.HasValue)
                 {
                     cacheControl.Add($"stale-if-error={Convert.ToUInt64(Options.StaleIfError.Value.TotalSeconds)}");
                 }
