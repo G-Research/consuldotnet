@@ -353,7 +353,7 @@ namespace Consul
                 Params["dc"] = Options.Datacenter;
             }
 
-            if (Options.UseCache && Options.Consistency != ConsistencyMode.Consistent)
+            if (Options.UseCache)
             {
                 Params["cached"] = string.Empty;
                 var cacheControl = new List<string>();
