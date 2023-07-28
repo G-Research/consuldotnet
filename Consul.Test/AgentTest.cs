@@ -408,6 +408,30 @@ namespace Consul.Test
             await _client.Agent.ServiceDeregister(svcID);
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task Agent_UseCache(bool useCache)
+        {
+            var opts = new QueryOptions
+            {
+                UseCache = useCache,
+                MaxAge = TimeSpan.FromSeconds(10),
+                StaleIfError = TimeSpan.FromSeconds(10),
+            };
+
+            var response = await _client.Catalog.Datacenters(opts);
+
+            if (useCache)
+            {
+                Assert.NotNull(response.XCache);
+            }
+            else
+            {
+                Assert.Null(response.XCache);
+            }
+        }
+
         [Fact]
         public async Task Agent_Join()
         {
