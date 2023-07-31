@@ -32,23 +32,29 @@ namespace Consul
         public static readonly QueryOptions Default = new QueryOptions()
         {
             Consistency = ConsistencyMode.Default,
+            Namespace = Environment.GetEnvironmentVariable("HTTPNamespaceEnvName"),
             Datacenter = string.Empty,
             Token = string.Empty,
             WaitIndex = 0
         };
 
         /// <summary>
-        /// Providing a datacenter overwrites the DC provided by the Config
+        /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions.
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
+        /// Providing a datacenter overwrites the DC provided by the Config.
         /// </summary>
         public string Datacenter { get; set; }
 
         /// <summary>
-        /// The consistency level required for the operation
+        /// The consistency level required for the operation.
         /// </summary>
         public ConsistencyMode Consistency { get; set; }
 
         /// <summary>
-        /// WaitIndex is used to enable a blocking query. Waits until the timeout or the next index is reached
+        /// WaitIndex is used to enable a blocking query. Waits until the timeout or the next index is reached.
         /// </summary>
         public ulong WaitIndex { get; set; }
 
@@ -81,6 +87,11 @@ namespace Consul
             Datacenter = string.Empty,
             Token = string.Empty
         };
+
+        /// <summary>
+        /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions
+        /// </summary>
+        public string Namespace { get; set; }
 
         /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config

@@ -39,7 +39,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
 
             Options = options ?? WriteOptions.Default;
@@ -97,6 +97,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -119,13 +124,13 @@ namespace Consul
     public class PostRequest<TIn> : ConsulRequest
     {
         public WriteOptions Options { get; set; }
-        private TIn _body;
+        private readonly TIn _body;
 
         public PostRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Post)
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             _body = body;
             Options = options ?? WriteOptions.Default;
@@ -192,6 +197,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -215,13 +225,13 @@ namespace Consul
     public class PostRequest<TIn, TOut> : ConsulRequest
     {
         public WriteOptions Options { get; set; }
-        private TIn _body;
+        private readonly TIn _body;
 
         public PostRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Post)
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             _body = body;
             Options = options ?? WriteOptions.Default;
@@ -293,6 +303,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -314,13 +329,13 @@ namespace Consul
     public class PostRequest : ConsulRequest
     {
         public WriteOptions Options { get; set; }
-        private string _body;
+        private readonly string _body;
 
         public PostRequest(ConsulClient client, string url, string body, WriteOptions options = null) : base(client, url, HttpMethod.Post)
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             _body = body;
             Options = options ?? WriteOptions.Default;
@@ -336,10 +351,8 @@ namespace Consul
             Client.CheckDisposed();
             var timer = Stopwatch.StartNew();
             var result = new WriteResult<string>();
-
-            HttpContent content = null;
             var bodyBytes = Encoding.UTF8.GetBytes(_body);
-            content = new ByteArrayContent(bodyBytes);
+            HttpContent content = new ByteArrayContent(bodyBytes);
 
             var message = new HttpRequestMessage(HttpMethod.Post, BuildConsulUri(Endpoint, Params));
             ApplyHeaders(message, Client.Config);
@@ -381,6 +394,11 @@ namespace Consul
             if (Options == WriteOptions.Default)
             {
                 return;
+            }
+
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
             }
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
