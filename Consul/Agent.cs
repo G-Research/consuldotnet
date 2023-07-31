@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 //  <copyright file="Agent.cs" company="PlayFab Inc">
 //    Copyright 2015 PlayFab Inc.
 //    Copyright 2020 G-Research Limited
@@ -779,9 +779,14 @@ namespace Consul
 
             public void Dispose()
             {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            public virtual void Dispose(bool disposing)
+            {
                 _streamreader.Dispose();
                 _stream.Dispose();
-                GC.SuppressFinalize(this);
             }
 
             public IEnumerator<Task<string>> GetEnumerator()
