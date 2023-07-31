@@ -95,6 +95,31 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Client_SetQueryOptionsWithCache()
+        {
+            var opts = new QueryOptions()
+            {
+                Datacenter = "foo",
+                Consistency = ConsistencyMode.Default,
+                WaitIndex = 1000,
+                WaitTime = new TimeSpan(0, 0, 100),
+                Token = "12345",
+                UseCache = true,
+                MaxAge = new TimeSpan(0, 0, 10),
+                StaleIfError = new TimeSpan(0, 0, 10)
+            };
+            var request = _client.Get<KVPair>("/v1/kv/foo", opts);
+
+            await Assert.ThrowsAsync<ConsulRequestException>(async () => await request.Execute(CancellationToken.None));
+
+            Assert.Equal("foo", request.Params["dc"]);
+            Assert.Equal("1000", request.Params["index"]);
+            Assert.Equal("1m40s", request.Params["wait"]);
+            Assert.Equal(string.Empty, request.Params["cached"]);
+            Assert.Equal("max-age=10,stale-if-error=10", request.Params["Cache-Control"]);
+        }
+
+        [Fact]
         public async Task Client_SetClientOptions()
         {
             using (var client = new ConsulClient(c =>
@@ -138,9 +163,11 @@ namespace Consul.Test
                 hc.Timeout = TimeSpan.FromDays(10);
                 hc.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var config = new ConsulClientConfiguration();
-                config.Address = TestHelper.HttpUri;
-                config.Token = TestHelper.MasterToken;
+                var config = new ConsulClientConfiguration
+                {
+                    Address = TestHelper.HttpUri,
+                    Token = TestHelper.MasterToken
+                };
 
 #pragma warning disable CS0618 // Type or member is obsolete
                 using (var client = new ConsulClient(config, hc))
@@ -175,9 +202,11 @@ namespace Consul.Test
         [Fact]
         public async Task Client_ReuseAndUpdateConfig()
         {
-            var config = new ConsulClientConfiguration();
-            config.Address = TestHelper.HttpUri;
-            config.Token = TestHelper.MasterToken;
+            var config = new ConsulClientConfiguration
+            {
+                Address = TestHelper.HttpUri,
+                Token = TestHelper.MasterToken
+            };
 
 #pragma warning disable CS0618 // Type or member is obsolete
             using (var client = new ConsulClient(config))
@@ -219,8 +248,8 @@ namespace Consul.Test
         [Fact]
         public void Client_Constructors()
         {
-            Action<ConsulClientConfiguration> cfgAction2 = (cfg) => { cfg.Token = "yep"; };
-            Action<ConsulClientConfiguration> cfgAction = (cfg) => { cfg.Datacenter = "foo"; cfgAction2(cfg); };
+            void cfgAction2(ConsulClientConfiguration cfg) { cfg.Token = "yep"; }
+            void cfgAction(ConsulClientConfiguration cfg) { cfg.Datacenter = "foo"; cfgAction2(cfg); }
 
             using (var c = new ConsulClient())
             {
