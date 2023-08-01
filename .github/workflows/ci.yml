@@ -107,7 +107,7 @@ jobs:
           rm consul.zip
       - name: Build
         run: dotnet build Consul.Test --configuration=Release --framework=${{ matrix.framework }}
-      - name: Run tests ${{ env.RUN_CONSUL_ENTERPRISE_TESTS }}
+      - name: Run tests ${{env.RUN_CONSUL_ENTERPRISE_TESTS}}
         shell: bash
         run: |
           ./Consul.Test/consul agent -dev -config-file Consul.Test/test_config.json -log-file consul.log >consul-stdout.log 2>consul-stderr.log &
