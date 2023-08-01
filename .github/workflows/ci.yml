@@ -87,7 +87,7 @@ jobs:
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
         # This is still necessary although a valid license has been configured in the repository settings
         # because the license secret is unavailable when the pull request is created from a fork.
-        if: ${{ env.CONSUL_LICENSE != '' || !startsWith(matrix.consul, '1.1')) }}
+        if: ${{ env.CONSUL_LICENSE != '' || !startsWith(matrix.consul, '1.1') }}
         run: |
           echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
         env:
