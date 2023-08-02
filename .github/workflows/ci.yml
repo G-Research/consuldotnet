@@ -83,9 +83,15 @@ jobs:
         with:
           dotnet-version: 7.0.x
       - name: Setup Consul Enterprise URL
-        if: ${{ !github.event.repository.fork }}
+        # Consul enterprise until version 1.10.0 can be run even without a valid license,
+        # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
+        # This is still necessary although a valid license has been configured in the repository settings
+        # because the license secret is unavailable when the pull request is created from a fork.
+        if: ${{ env.CONSUL_LICENSE != '' || !startsWith(matrix.consul, '1.1') }}
         run: |
           echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
+        env:
+            CONSUL_LICENSE: ${{ secrets.CONSUL_LICENSE }}
       - name: Download Consul
         shell: bash
         run: |
