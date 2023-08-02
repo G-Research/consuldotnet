@@ -40,6 +40,7 @@ namespace Consul
 
         /// <summary>
         /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions.
+        /// Namespace is an Enterprise-only feature.
         /// </summary>
         public string Namespace { get; set; }
 
@@ -115,6 +116,7 @@ namespace Consul
 
         /// <summary>
         /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions
+        /// Namespace is an Enterprise-only feature.
         /// </summary>
         public string Namespace { get; set; }
 
