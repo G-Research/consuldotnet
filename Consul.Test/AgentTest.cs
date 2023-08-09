@@ -20,10 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Consul.Filtering;
+using NuGet.Versioning;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -527,6 +528,35 @@ namespace Consul.Test
                         // Make a request each time so we get more logs
                         await _client.Agent.Self();
                         Assert.False(string.IsNullOrEmpty(await line));
+                        counter++;
+                        if (counter > 5)
+                        {
+                            break;
+                        }
+                    }
+                });
+
+                await TimeoutUtils.WithTimeout(logsTask);
+            }
+        }
+
+        [SkippableFact]
+        public async Task Agent_MonitorJSON()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
+            using (var logs = await _client.Agent.MonitorJSON(LogLevel.Trace))
+            {
+                var counter = 0;
+                var logsTask = Task.Run(async () =>
+                {
+                    foreach (var line in logs)
+                    {
+                        // Make a request each time so we get more logs
+                        await _client.Agent.Self();
+                        Assert.NotNull(JsonSerializer.Deserialize<object>(await line));
+
                         counter++;
                         if (counter > 5)
                         {
