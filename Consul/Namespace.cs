@@ -1,0 +1,66 @@
+using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace Consul
+{
+    public class Namespace
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public NamespaceACLConfig ACLs { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+        public TimeSpan? DeletedAt { get; set; }
+        public string Partition { get; set; }
+        public ulong CreateIndex { get; set; }
+        public ulong ModifyIndex { get; set; }
+
+        public Namespace(string name, string description = "")
+        {
+            Name = name;
+            Description = description;
+        }
+    }
+
+    public class NamespaceACLConfig
+    {
+        public List<AuthMethodEntry> PolicyDefaults { get; set; }
+        public List<AuthMethodEntry> RoleDefaults { get; set; }
+    }
+
+    public class Namespaces : INamespacesEndpoint
+    {
+        private readonly ConsulClient _client;
+
+        internal Namespaces(ConsulClient c)
+        {
+            _client = c;
+        }
+
+        public Task<WriteResult> Create(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Put("v1/namespace", ns, q).Execute(ct);
+        }
+
+        public Task<WriteResult> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Put($"v1/namespace/{ns.Name}", ns, q).Execute(ct);
+        }
+
+        public Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<Namespace>($"v1/namespace/{name}", q).Execute(ct);
+        }
+
+        public Task<QueryResult<Namespace[]>> List(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<Namespace[]>($"v1/namespaces", q).Execute(ct);
+        }
+
+        public Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Delete($"v1/namespace/{name}", q).Execute(ct);
+        }
+    }
+}
