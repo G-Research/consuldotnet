@@ -93,7 +93,10 @@ jobs:
         run: |
           echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
         env:
-            CONSUL_LICENSE: ${{ secrets.CONSUL_LICENSE }}
+            # We've decided to pause using the CONSUL_LICENSE for tests because the license would need to be renewed periodically.
+            # Otherwise, new builds of consul are going to fail with "license expiration date is before version build date" errors.
+            # Mind that, we are still running enterprise 1.10.0.
+            # CONSUL_LICENSE: ${{ secrets.CONSUL_LICENSE }}
       - name: Download Consul
         shell: bash
         run: |
