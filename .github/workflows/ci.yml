@@ -81,7 +81,9 @@ jobs:
       - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          # TODO: Workaround for the https://github.com/microsoft/vstest/issues/4549
+          # use dotnet-version: 7.0.x when the 7.0.401+ is avaialble
+          dotnet-version: 7.0.307
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
