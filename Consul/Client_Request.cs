@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -72,6 +71,10 @@ namespace Consul
             {
                 Params["wait"] = client.Config.WaitTime.Value.ToGoDuration();
             }
+            if (!string.IsNullOrEmpty(client.Config.Namespace))
+            {
+                Params["ns"] = client.Config.Namespace;
+            }
         }
 
         protected abstract void ApplyOptions(ConsulClientConfiguration clientConfig);
@@ -79,8 +82,10 @@ namespace Consul
 
         protected Uri BuildConsulUri(string url, Dictionary<string, string> p)
         {
-            var builder = new UriBuilder(Client.Config.Address);
-            builder.Path = url;
+            var builder = new UriBuilder(Client.Config.Address)
+            {
+                Path = url
+            };
 
             ApplyOptions(Client.Config);
 
@@ -113,7 +118,7 @@ namespace Consul
             }
         }
 
-        protected byte[] Serialize(object value)
+        protected static byte[] Serialize(object value)
         {
             return System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
         }

@@ -32,7 +32,6 @@ namespace Consul
         public static readonly QueryOptions Default = new QueryOptions()
         {
             Consistency = ConsistencyMode.Default,
-            Namespace = Environment.GetEnvironmentVariable("HTTPNamespaceEnvName"),
             Datacenter = string.Empty,
             Token = string.Empty,
             WaitIndex = 0
