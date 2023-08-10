@@ -152,7 +152,7 @@ namespace Consul
             ConfigureFromEnvironment(consulAddress);
             Address = consulAddress.Uri;
 
-            string ns = Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN");
+            string ns = Environment.GetEnvironmentVariable("CONSUL_NAMESPACE");
             if (!string.IsNullOrEmpty(ns))
             {
                 Namespace = ns;
