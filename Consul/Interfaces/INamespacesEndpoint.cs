@@ -24,12 +24,17 @@ namespace Consul
     /// <summary>
     /// The interface for the Namespaces API Endpoints
     /// </summary>
-    interface INamespacesEndpoint
+    public interface INamespacesEndpoint
     {
         Task<WriteResult> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> Create(Namespace ns, CancellationToken ct = default);
         Task<WriteResult> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> Update(Namespace ns, CancellationToken ct = default);
         Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<Namespace>> Read(string name, CancellationToken ct = default);
         Task<QueryResult<Namespace[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<Namespace[]>> List(CancellationToken ct = default);
         Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> Delete(string name, CancellationToken ct = default);
     }
 }
