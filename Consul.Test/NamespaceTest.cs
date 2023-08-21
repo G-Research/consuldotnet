@@ -1,0 +1,93 @@
+// -----------------------------------------------------------------------
+//  <copyright file="NamespaceTest.cs" company="G-Research Limited">
+//    Copyright 2020 G-Research Limited
+//
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using Xunit;
+
+namespace Consul.Test
+{
+    public class NamespaceTest : BaseFixture
+    {
+        [Fact]
+        public async Task Namespaces_CreateNamespace()
+        {
+            var name = "test";
+            var ns = new Namespace(name);
+            var request = await _client.Namespaces.Create(ns);
+
+            Assert.Equal(request.Response.Name, name);
+        }
+
+        [Fact]
+        public async Task Namespaces_UpdateNamespace()
+        {
+            var name = "test";
+            var ns = new Namespace(name);
+            await _client.Namespaces.Create(ns);
+
+            var newName = "new-test";
+            var newNamespace = new Namespace(newName);
+            var updateRequest = await _client.Namespaces.Update(newNamespace);
+
+            Assert.Equal(updateRequest.Response.Name, newName);
+        }
+
+        [Fact]
+        public async Task Namespaces_ReadNamespace()
+        {
+            var name = "test";
+            var ns = new Namespace(name);
+            await _client.Namespaces.Create(ns);
+            var request = await _client.Namespaces.Read(name);
+
+            Assert.Equal(request.Response.Name, name);
+        }
+
+        [Fact]
+        public async Task Namespaces_ListNamespaces()
+        {
+            var suffix = new[] { "test-a", "test-b", "test-c" };
+
+            foreach (var name in suffix)
+            {
+                var ns = new Namespace(name);
+                await _client.Namespaces.Create(ns);
+            }
+
+            var request = await _client.Namespaces.List();
+
+            request.Response.Select(x => x.Name)
+                            .ToList()
+                            .ForEach(x => Assert.Contains(x, suffix));
+        }
+
+        [Fact]
+        public async Task Namespaces_DeleteNamespace()
+        {
+            var name = "test";
+            var ns = new Namespace(name);
+            await _client.Namespaces.Create(ns);
+            await _client.Namespaces.Delete(name);
+            var request = await _client.Namespaces.List();
+
+            Assert.Empty(request.Response);
+        }
+    }
+}

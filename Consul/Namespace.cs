@@ -38,24 +38,28 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult> Create(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<Namespace>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default)
         {
-            return _client.Put("v1/namespace", ns, q).Execute(ct);
+            var res = await _client.Put("v1/namespace", ns, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<Namespace>(res);
         }
 
-        public Task<WriteResult> Create(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<Namespace>> Create(Namespace ns, CancellationToken ct = default)
         {
-            return _client.Put("v1/namespace", ns, WriteOptions.Default).Execute(ct);
+            var res = await _client.Put("v1/namespace", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<Namespace>(res);
         }
 
-        public Task<WriteResult> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<Namespace>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
         {
-            return _client.Put($"v1/namespace/{ns.Name}", ns, q).Execute(ct);
+            var res = await _client.Put($"v1/namespace/{ns.Name}", ns, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<Namespace>(res);
         }
 
-        public Task<WriteResult> Update(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<Namespace>> Update(Namespace ns, CancellationToken ct = default)
         {
-            return _client.Put($"v1/namespace/{ns.Name}", ns, WriteOptions.Default).Execute(ct);
+            var res = await _client.Put($"v1/namespace/{ns.Name}", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<Namespace>(res);
         }
 
         public Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default)

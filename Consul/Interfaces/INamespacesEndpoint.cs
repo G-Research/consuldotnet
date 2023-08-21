@@ -26,10 +26,10 @@ namespace Consul
     /// </summary>
     public interface INamespacesEndpoint
     {
-        Task<WriteResult> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> Create(Namespace ns, CancellationToken ct = default);
-        Task<WriteResult> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> Update(Namespace ns, CancellationToken ct = default);
+        Task<WriteResult<Namespace>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<Namespace>> Create(Namespace ns, CancellationToken ct = default);
+        Task<WriteResult<Namespace>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<Namespace>> Update(Namespace ns, CancellationToken ct = default);
         Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<Namespace>> Read(string name, CancellationToken ct = default);
         Task<QueryResult<Namespace[]>> List(QueryOptions q, CancellationToken ct = default);
