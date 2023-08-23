@@ -12,7 +12,6 @@ namespace Consul
         public NamespaceACLConfig ACLs { get; set; }
         public Dictionary<string, string> Meta { get; set; }
         public TimeSpan? DeletedAt { get; set; }
-        public string Partition { get; set; }
         public ulong CreateIndex { get; set; }
         public ulong ModifyIndex { get; set; }
 
