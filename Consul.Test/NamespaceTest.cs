@@ -16,10 +16,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Threading.Tasks;
 using System.Linq;
-using Xunit;
+using System.Threading.Tasks;
 using NuGet.Versioning;
+using Xunit;
 
 namespace Consul.Test
 {
