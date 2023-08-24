@@ -115,7 +115,7 @@ jobs:
 
       # TODO: Workaround for the https://github.com/microsoft/vstest/issues/4549
       # use dotnet-version: 7.0.x when the 7.0.401+ is avaialble
-      - name: Workaround for the issue with 7.0.400
+      - name: Workaround for the https://github.com/microsoft/vstest/issues/4549 (net461&7.0.400)
         if: matrix.framework == 'net461'
         shell: bash
         run: |
