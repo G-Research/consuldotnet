@@ -112,6 +112,15 @@ jobs:
 
           unzip consul.zip
           rm consul.zip
+
+      # TODO: Workaround for the https://github.com/microsoft/vstest/issues/4549
+      # use dotnet-version: 7.0.x when the 7.0.401+ is avaialble
+      - name: Workaround for the https://github.com/microsoft/vstest/issues/4549 (net461&7.0.400)
+        if: matrix.framework == 'net461'
+        shell: bash
+        run: |
+          dotnet new globaljson --sdk-version 7.0.300 --roll-forward=latestPatch --force
+
       - name: Build
         run: dotnet build Consul.Test --configuration=Release --framework=${{ matrix.framework }}
       - name: Run tests
