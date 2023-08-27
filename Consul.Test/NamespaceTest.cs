@@ -16,6 +16,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
@@ -48,11 +49,11 @@ namespace Consul.Test
             var ns = new Namespace(name);
             await _client.Namespaces.Create(ns);
 
-            var newName = "new-test";
-            var newNamespace = new Namespace(newName);
+            var description = "updated namespace";
+            var newNamespace = new Namespace(name, description);
             var updateRequest = await _client.Namespaces.Update(newNamespace);
 
-            Assert.Equal(updateRequest.Response.Name, newName);
+            Assert.Equal(updateRequest.Response.Description, description);
         }
 
         [SkippableFact]
@@ -75,19 +76,16 @@ namespace Consul.Test
             var cutOffVersion = SemanticVersion.Parse("1.7.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
 
-            var suffix = new[] { "test-a", "test-b", "test-c" };
+            var testNames = new HashSet<string> { "test-a", "test-b", "test-c" };
 
-            foreach (var name in suffix)
+            foreach (var name in testNames)
             {
                 var ns = new Namespace(name);
                 await _client.Namespaces.Create(ns);
             }
 
             var request = await _client.Namespaces.List();
-
-            request.Response.Select(x => x.Name)
-                            .ToList()
-                            .ForEach(x => Assert.Contains(x, suffix));
+            Assert.True(request.Response.Select(x => x.Name).ToHashSet().SetEquals(testNames));
         }
 
         [SkippableFact]
@@ -100,9 +98,9 @@ namespace Consul.Test
             var ns = new Namespace(name);
             await _client.Namespaces.Create(ns);
             await _client.Namespaces.Delete(name);
-            var request = await _client.Namespaces.List();
+            var request = await _client.Namespaces.Read(name);
 
-            Assert.Empty(request.Response);
+            Assert.NotNull(request.Response.DeletedAt);
         }
     }
 }

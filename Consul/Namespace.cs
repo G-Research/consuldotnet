@@ -2,15 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Consul
 {
     public class Namespace
     {
         public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public NamespaceACLConfig ACLs { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Meta { get; set; }
+
         public DateTime? DeletedAt { get; set; }
         public ulong CreateIndex { get; set; }
         public ulong ModifyIndex { get; set; }
