@@ -16,6 +16,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,7 +86,8 @@ namespace Consul.Test
             }
 
             var request = await _client.Namespaces.List();
-            Assert.True(request.Response.Select(x => x.Name).ToHashSet().SetEquals(testNames));
+            Console.WriteLine(new HashSet<string>(request.Response.Select(x => x.Name)));
+            Assert.True(new HashSet<string>(request.Response.Select(x => x.Name)).SetEquals(testNames));
         }
 
         [SkippableFact]
