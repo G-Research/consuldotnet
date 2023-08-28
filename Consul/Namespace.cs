@@ -17,6 +17,8 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Meta { get; set; }
+
+        public DateTime? DeletedAt { get; set; }
     }
 
     public class NamespaceACLConfig
@@ -33,7 +35,6 @@ namespace Consul
         {
             public ulong CreateIndex { get; set; }
             public ulong ModifyIndex { get; set; }
-            public DateTime? DeletedAt { get; set; }
         }
 
         internal Namespaces(ConsulClient c)

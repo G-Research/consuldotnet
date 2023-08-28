@@ -115,24 +115,24 @@ namespace Consul.Test
             Assert.True(new HashSet<string>(request.Response.Select(x => x.Name)).SetEquals(testNames));
         }
 
-        // [SkippableFact]
-        // public async Task Namespaces_DeleteNamespace()
-        // {
-        //     var cutOffVersion = SemanticVersion.Parse("1.7.0");
-        //     Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+        [SkippableFact]
+        public async Task Namespaces_DeleteNamespace()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
 
-        //     var name = "test";
+            var name = "test";
 
-        //     var ns = new Namespace
-        //     {
-        //         Name = name
-        //     };
+            var ns = new Namespace
+            {
+                Name = name
+            };
 
-        //     await _client.Namespaces.Create(ns);
-        //     await _client.Namespaces.Delete(name);
-        //     var request = await _client.Namespaces.Read(name);
+            await _client.Namespaces.Create(ns);
+            await _client.Namespaces.Delete(name);
+            var request = await _client.Namespaces.Read(name);
 
-        //     Assert.NotNull(request.Response.DeletedAt);
-        // }
+            Assert.NotNull(request.Response.DeletedAt);
+        }
     }
 }
