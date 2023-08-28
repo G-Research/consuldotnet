@@ -26,14 +26,14 @@ namespace Consul
     /// </summary>
     public interface INamespacesEndpoint
     {
-        Task<WriteResult<Namespace>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<Namespace>> Create(Namespace ns, CancellationToken ct = default);
-        Task<WriteResult<Namespace>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<Namespace>> Update(Namespace ns, CancellationToken ct = default);
-        Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Namespace>> Read(string name, CancellationToken ct = default);
-        Task<QueryResult<Namespace[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Namespace[]>> List(CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default);
         Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult> Delete(string name, CancellationToken ct = default);
     }

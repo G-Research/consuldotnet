@@ -17,7 +17,12 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Meta { get; set; }
+    }
 
+    public class NamespaceResponse : Namespace
+    {
+        public ulong CreateIndex { get; set; }
+        public ulong ModifyIndex { get; set; }
         public DateTime? DeletedAt { get; set; }
     }
 
@@ -31,59 +36,53 @@ namespace Consul
     {
         private readonly ConsulClient _client;
 
-        private class NamespaceActionResult : Namespace
-        {
-            public ulong CreateIndex { get; set; }
-            public ulong ModifyIndex { get; set; }
-        }
-
         internal Namespaces(ConsulClient c)
         {
             _client = c;
         }
 
-        public async Task<WriteResult<Namespace>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default)
         {
-            var res = await _client.Put<Namespace, NamespaceActionResult>("v1/namespace", ns, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<Namespace>(res, res.Response);
+            var res = await _client.Put<Namespace, NamespaceResponse>("v1/namespace", ns, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public async Task<WriteResult<Namespace>> Create(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct = default)
         {
-            var res = await _client.Put<Namespace, NamespaceActionResult>("v1/namespace", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<Namespace>(res, res.Response);
+            var res = await _client.Put<Namespace, NamespaceResponse>("v1/namespace", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public async Task<WriteResult<Namespace>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
         {
-            var res = await _client.Put<Namespace, NamespaceActionResult>($"v1/namespace/{ns.Name}", ns, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<Namespace>(res, res.Response);
+            var res = await _client.Put<Namespace, NamespaceResponse>($"v1/namespace/{ns.Name}", ns, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public async Task<WriteResult<Namespace>> Update(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default)
         {
-            var res = await _client.Put<Namespace, NamespaceActionResult>($"v1/namespace/{ns.Name}", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<Namespace>(res, res.Response);
+            var res = await _client.Put<Namespace, NamespaceResponse>($"v1/namespace/{ns.Name}", ns, WriteOptions.Default).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public Task<QueryResult<Namespace>> Read(string name, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<Namespace>($"v1/namespace/{name}", q).Execute(ct);
+            return _client.Get<NamespaceResponse>($"v1/namespace/{name}", q).Execute(ct);
         }
 
-        public Task<QueryResult<Namespace>> Read(string name, CancellationToken ct = default)
+        public Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default)
         {
-            return _client.Get<Namespace>($"v1/namespace/{name}", QueryOptions.Default).Execute(ct);
+            return _client.Get<NamespaceResponse>($"v1/namespace/{name}", QueryOptions.Default).Execute(ct);
         }
 
-        public Task<QueryResult<Namespace[]>> List(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<Namespace[]>($"v1/namespaces", q).Execute(ct);
+            return _client.Get<NamespaceResponse[]>($"v1/namespaces", q).Execute(ct);
         }
 
-        public Task<QueryResult<Namespace[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default)
         {
-            return _client.Get<Namespace[]>($"v1/namespaces", QueryOptions.Default).Execute(ct);
+            return _client.Get<NamespaceResponse[]>($"v1/namespaces", QueryOptions.Default).Execute(ct);
         }
 
         public Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default)
