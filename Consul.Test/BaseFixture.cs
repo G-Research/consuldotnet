@@ -118,7 +118,7 @@ namespace Consul.Test
         }
     }
 
-    public class EnterpriseOnlyFact : FactAttribute
+    public class EnterpriseOnlyFact : SkippableFactAttribute
     {
         public EnterpriseOnlyFact()
         {
