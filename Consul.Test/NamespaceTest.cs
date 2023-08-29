@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -28,6 +29,9 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Namespaces_CreateNamespace()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var name = "test";
 
             var ns = new Namespace
@@ -43,6 +47,9 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Namespaces_UpdateNamespace()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var name = "test";
 
             var ns = new Namespace
@@ -68,6 +75,9 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Namespaces_ReadNamespace()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var name = "test";
 
             var ns = new Namespace
@@ -85,6 +95,9 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Namespaces_ListNamespaces()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var testNames = new HashSet<string> { "test-a", "test-b", "test-c" };
 
             foreach (var name in testNames)
@@ -105,6 +118,9 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Namespaces_DeleteNamespace()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var name = "test";
 
             var ns = new Namespace
