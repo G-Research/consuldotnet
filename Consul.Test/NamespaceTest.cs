@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -138,11 +139,33 @@ namespace Consul.Test
             Assert.NotNull(readRequest.Response.DeletedAt);
         }
 
-        // [EnterpriseOnlyFact]
-        // public async Task Namespaces_KVIsolation()
-        // {
-        //     var cutOffVersion = SemanticVersion.Parse("1.7.0");
-        //     Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
-        // }
+        [EnterpriseOnlyFact]
+        public async Task Namespaces_KVIsolation()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
+
+            var name = "test";
+
+            await _client.Namespaces.Create(new Namespace
+            {
+                Name = name
+            });
+
+            var key = "key";
+
+            var requestPair = new KVPair
+            {
+                Key = key,
+                Value = Encoding.UTF8.GetBytes("value")
+            };
+
+            await _client.KV.Put(requestPair, new WriteOptions { Namespace = name });
+            var namespaceResponsePair = await _client.KV.Get(key, new QueryOptions { Namespace = name });
+            Assert.Equal(requestPair.Value, namespaceResponsePair.Response.Value);
+
+            var defaultNamespaceResponsePair = await _client.KV.Get(key);
+            Assert.Null(defaultNamespaceResponsePair.Response?.Value);
+        }
     }
 }
