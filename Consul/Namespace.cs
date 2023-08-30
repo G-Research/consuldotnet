@@ -10,7 +10,7 @@ namespace Consul
     {
         public string Name { get; set; }
 
-        public string Description { get; set; } = "";
+        public string Description { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public NamespaceACLConfig ACLs { get; set; }

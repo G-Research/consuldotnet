@@ -128,11 +128,21 @@ namespace Consul.Test
                 Name = name
             };
 
-            await _client.Namespaces.Create(ns);
-            await _client.Namespaces.Delete(name);
-            var request = await _client.Namespaces.Read(name);
+            var createRequest = await _client.Namespaces.Create(ns);
+            Assert.Equal(name, createRequest.Response.Name);
+            Assert.Null(createRequest.Response.DeletedAt);
 
-            Assert.NotNull(request.Response.DeletedAt);
+            await _client.Namespaces.Delete(name);
+
+            var readRequest = await _client.Namespaces.Read(name);
+            Assert.NotNull(readRequest.Response.DeletedAt);
         }
+
+        // [EnterpriseOnlyFact]
+        // public async Task Namespaces_KVIsolation()
+        // {
+        //     var cutOffVersion = SemanticVersion.Parse("1.7.0");
+        //     Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
+        // }
     }
 }
