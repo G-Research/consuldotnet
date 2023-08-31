@@ -70,7 +70,7 @@ namespace Consul
 
         /// <summary>
         /// Namespace is the name of the namespace to send along for the request
-	/// when no other Namespace is present in the QueryOptions
+        /// when no other Namespace is present in the QueryOptions
         /// </summary>
         public string Namespace { get; set; }
 
