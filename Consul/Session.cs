@@ -24,6 +24,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+#if !(NETSTANDARD || NETCOREAPP)
+    using System.Runtime.Serialization;
+#endif
+
 namespace Consul
 {
     public class SessionBehavior : IEquatable<SessionBehavior>
