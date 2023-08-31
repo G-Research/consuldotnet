@@ -55,7 +55,7 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default)
         {
             return Fire(ue, WriteOptions.Default, ct);
         }
@@ -66,7 +66,7 @@ namespace Consul
         /// <param name="ue">A User Event definition</param>
         /// <param name="q">Customized write options</param>
         /// <returns></returns>
-        public async Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default)
         {
             var req = _client.Put<byte[], EventCreationResult>(string.Format("/v1/event/fire/{0}", ue.Name), ue.Payload, q);
             if (!string.IsNullOrEmpty(ue.NodeFilter))
@@ -89,7 +89,7 @@ namespace Consul
         /// List is used to get the most recent events an agent has received. This list can be optionally filtered by the name. This endpoint supports quasi-blocking queries. The index is not monotonic, nor does it provide provide LastContact or KnownLeader.
         /// </summary>
         /// <returns>An array of events</returns>
-        public Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default)
         {
             return List(string.Empty, QueryOptions.Default, ct);
         }
@@ -99,7 +99,7 @@ namespace Consul
         /// </summary>
         /// <param name="name">The name of the event to filter for</param>
         /// <returns>An array of events</returns>
-        public Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default)
         {
             return List(name, QueryOptions.Default, ct);
         }

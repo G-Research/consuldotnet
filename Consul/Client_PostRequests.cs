@@ -252,7 +252,7 @@ namespace Consul
 
             if (typeof(TIn) == typeof(byte[]))
             {
-                var bodyBytes = (_body as byte[]);
+                var bodyBytes = _body as byte[];
                 if (bodyBytes != null)
                 {
                     content = new ByteArrayContent(bodyBytes);

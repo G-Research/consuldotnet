@@ -382,7 +382,7 @@ namespace Consul
         /// <summary>
         /// Unlock released the lock. It is an error to call this if the lock is not currently held.
         /// </summary>
-        public async Task Release(CancellationToken ct = default(CancellationToken))
+        public async Task Release(CancellationToken ct = default)
         {
             try
             {
@@ -420,7 +420,7 @@ namespace Consul
         /// <summary>
         /// Destroy is used to cleanup the lock entry. It is not necessary to invoke. It will fail if the lock is in use.
         /// </summary>
-        public async Task Destroy(CancellationToken ct = default(CancellationToken))
+        public async Task Destroy(CancellationToken ct = default)
         {
             using (await _mutex.LockAsync().ConfigureAwait(false))
             {
@@ -668,7 +668,7 @@ namespace Consul
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default(CancellationToken))
+        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -683,7 +683,7 @@ namespace Consul
         /// <param name="opts"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default(CancellationToken))
+        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default)
         {
             if (opts == null)
             {
@@ -701,7 +701,7 @@ namespace Consul
         /// <param name="key"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public Task ExecuteLocked(string key, Action action, CancellationToken ct = default(CancellationToken))
+        public Task ExecuteLocked(string key, Action action, CancellationToken ct = default)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -716,7 +716,7 @@ namespace Consul
         /// <param name="opts"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default(CancellationToken))
+        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default)
         {
             if (opts == null)
             {

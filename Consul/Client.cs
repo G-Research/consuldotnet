@@ -23,7 +23,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using Consul.Filtering;
-using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -39,9 +38,9 @@ namespace Consul
 
         internal event EventHandler _updated;
 
-        internal static Lazy<bool> ClientCertSupport = new Lazy<bool>(() => { return Type.GetType("Mono.Runtime") == null; });
+        internal static Lazy<bool> ClientCertSupport = new Lazy<bool>(() => Type.GetType("Mono.Runtime") == null);
 
-        internal bool ClientCertificateSupported => ClientCertSupport.Value;
+        internal static bool ClientCertificateSupported => ClientCertSupport.Value;
 
 #if NETSTANDARD || NETCOREAPP
         [Obsolete("Use of DisableServerCertificateValidation should be converted to setting the HttpHandler's ServerCertificateCustomValidationCallback in the ConsulClient constructor" +
@@ -116,10 +115,7 @@ namespace Consul
 #endif
         public X509Certificate2 ClientCertificate
         {
-            internal get
-            {
-                return _clientCertificate;
-            }
+            internal get => _clientCertificate;
             set
             {
                 if (!ClientCertificateSupported)
@@ -312,8 +308,11 @@ namespace Consul
 #else
                 _httpHandler = new WebRequestHandler();
 #endif
-                _httpClient = new HttpClient(_httpHandler);
-                _httpClient.Timeout = TimeSpan.FromMinutes(15);
+                _httpClient = new HttpClient(_httpHandler)
+                {
+                    Timeout = TimeSpan.FromMinutes(15)
+                };
+
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _httpClient.DefaultRequestHeaders.Add("Keep-Alive", "true");
             }
@@ -328,14 +327,12 @@ namespace Consul
                 {
                     if (disposing)
                     {
-                        if (_httpClient != null && !_skipClientDispose)
+                        if (!_skipClientDispose)
                         {
-                            _httpClient.Dispose();
+                            _httpClient?.Dispose();
                         }
-                        if (_httpHandler != null)
-                        {
-                            _httpHandler.Dispose();
-                        }
+
+                        _httpHandler?.Dispose();
                     }
 
                     _disposedValue = true;
@@ -547,7 +544,7 @@ namespace Consul
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 #if !__MonoCS__
-            if (config.ClientCertificateSupported)
+            if (ConsulClientConfiguration.ClientCertificateSupported)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 if (config.ClientCertificate != null)

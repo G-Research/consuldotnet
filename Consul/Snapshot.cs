@@ -17,9 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,22 +37,22 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult> Restore(Stream s, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Restore(Stream s, CancellationToken ct = default)
         {
             return Restore(s, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult> Restore(Stream s, WriteOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Restore(Stream s, WriteOptions q, CancellationToken ct = default)
         {
             return _client.Put("/v1/snapshot", s, q).Execute(ct);
         }
 
-        public Task<QueryResult<Stream>> Save(CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<Stream>> Save(CancellationToken ct = default)
         {
             return Save(QueryOptions.Default, ct);
         }
 
-        public Task<QueryResult<Stream>> Save(QueryOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<Stream>> Save(QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<Stream>("/v1/snapshot", q).ExecuteStreaming(ct);
         }
@@ -67,9 +65,6 @@ namespace Consul
         /// <summary>
         /// Catalog returns a handle to the snapshot endpoints
         /// </summary>
-        public ISnapshotEndpoint Snapshot
-        {
-            get { return _snapshot.Value; }
-        }
+        public ISnapshotEndpoint Snapshot => _snapshot.Value;
     }
 }

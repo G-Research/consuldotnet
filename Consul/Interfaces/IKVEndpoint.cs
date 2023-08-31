@@ -28,28 +28,28 @@ namespace Consul
     /// </summary>
     public interface IKVEndpoint
     {
-        Task<WriteResult<bool>> Acquire(KVPair p, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Acquire(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> CAS(KVPair p, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> CAS(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string key, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string key, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> DeleteCAS(KVPair p, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> DeleteCAS(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> DeleteTree(string prefix, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> DeleteTree(string prefix, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<KVPair>> Get(string key, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<KVPair>> Get(string key, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<string[]>> Keys(string prefix, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<string[]>> Keys(string prefix, string separator, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<string[]>> Keys(string prefix, string separator, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<KVPair[]>> List(string prefix, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<KVPair[]>> List(string prefix, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Put(KVPair p, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Put(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Release(KVPair p, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<KVTxnResponse>> Txn(List<KVTxnOp> txn, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<KVTxnResponse>> Txn(List<KVTxnOp> txn, WriteOptions q, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult<bool>> Acquire(KVPair p, CancellationToken ct = default);
+        Task<WriteResult<bool>> Acquire(KVPair p, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> CAS(KVPair p, CancellationToken ct = default);
+        Task<WriteResult<bool>> CAS(KVPair p, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string key, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string key, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> DeleteCAS(KVPair p, CancellationToken ct = default);
+        Task<WriteResult<bool>> DeleteCAS(KVPair p, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> DeleteTree(string prefix, CancellationToken ct = default);
+        Task<WriteResult<bool>> DeleteTree(string prefix, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<KVPair>> Get(string key, CancellationToken ct = default);
+        Task<QueryResult<KVPair>> Get(string key, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<string[]>> Keys(string prefix, CancellationToken ct = default);
+        Task<QueryResult<string[]>> Keys(string prefix, string separator, CancellationToken ct = default);
+        Task<QueryResult<string[]>> Keys(string prefix, string separator, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<KVPair[]>> List(string prefix, CancellationToken ct = default);
+        Task<QueryResult<KVPair[]>> List(string prefix, QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Put(KVPair p, CancellationToken ct = default);
+        Task<WriteResult<bool>> Put(KVPair p, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Release(KVPair p, CancellationToken ct = default);
+        Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<KVTxnResponse>> Txn(List<KVTxnOp> txn, CancellationToken ct = default);
+        Task<WriteResult<KVTxnResponse>> Txn(List<KVTxnOp> txn, WriteOptions q, CancellationToken ct = default);
     }
 }

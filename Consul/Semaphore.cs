@@ -462,7 +462,7 @@ namespace Consul
         /// <summary>
         /// Release is used to voluntarily give up our semaphore slot. It is an error to call this if the semaphore has not been acquired.
         /// </summary>
-        public async Task Release(CancellationToken ct = default(CancellationToken))
+        public async Task Release(CancellationToken ct = default)
         {
             try
             {
@@ -531,7 +531,7 @@ namespace Consul
         /// <summary>
         /// Destroy is used to cleanup the semaphore entry. It is not necessary to invoke. It will fail if the semaphore is in use.
         /// </summary>
-        public async Task Destroy(CancellationToken ct = default(CancellationToken))
+        public async Task Destroy(CancellationToken ct = default)
         {
             using (await _mutex.LockAsync().ConfigureAwait(false))
             {
@@ -793,7 +793,7 @@ namespace Consul
 
         public string Prefix
         {
-            get { return _prefix; }
+            get => _prefix;
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -811,7 +811,7 @@ namespace Consul
 
         public int Limit
         {
-            get { return _limit; }
+            get => _limit;
             set
             {
                 if (value > 0)
@@ -878,7 +878,7 @@ namespace Consul
             }
             return new Semaphore(this) { Opts = opts };
         }
-        public Task<IDistributedSemaphore> AcquireSemaphore(string prefix, int limit, CancellationToken ct = default(CancellationToken))
+        public Task<IDistributedSemaphore> AcquireSemaphore(string prefix, int limit, CancellationToken ct = default)
         {
             if (string.IsNullOrEmpty(prefix))
             {
@@ -890,7 +890,7 @@ namespace Consul
             }
             return AcquireSemaphore(new SemaphoreOptions(prefix, limit), ct);
         }
-        public async Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default(CancellationToken))
+        public async Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default)
         {
             if (opts == null)
             {
@@ -902,7 +902,7 @@ namespace Consul
             return semaphore;
         }
 
-        public Task ExecuteInSemaphore(string prefix, int limit, Action a, CancellationToken ct = default(CancellationToken))
+        public Task ExecuteInSemaphore(string prefix, int limit, Action a, CancellationToken ct = default)
         {
             if (string.IsNullOrEmpty(prefix))
             {
@@ -915,7 +915,7 @@ namespace Consul
             return ExecuteInSemaphore(new SemaphoreOptions(prefix, limit), a, ct);
         }
 
-        public async Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct = default(CancellationToken))
+        public async Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct = default)
         {
             if (opts == null)
             {

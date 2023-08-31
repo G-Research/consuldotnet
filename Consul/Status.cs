@@ -34,7 +34,7 @@ namespace Consul
         /// Leader is used to query for a known leader
         /// </summary>
         /// <returns>A write result containing the leader node name</returns>
-        public async Task<string> Leader(CancellationToken ct = default(CancellationToken))
+        public async Task<string> Leader(CancellationToken ct = default)
         {
             var res = await _client.Get<string>("/v1/status/leader").Execute(ct).ConfigureAwait(false);
             return res.Response;
@@ -44,7 +44,7 @@ namespace Consul
         /// Peers is used to query for a known raft peers
         /// </summary>
         /// <returns>A write result containing the list of Raft peers</returns>
-        public async Task<string[]> Peers(CancellationToken ct = default(CancellationToken))
+        public async Task<string[]> Peers(CancellationToken ct = default)
         {
             var res = await _client.Get<string[]>("/v1/status/peers").Execute(ct).ConfigureAwait(false);
             return res.Response;
@@ -58,9 +58,6 @@ namespace Consul
         /// <summary>
         /// Status returns a handle to the status endpoint
         /// </summary>
-        public IStatusEndpoint Status
-        {
-            get { return _status.Value; }
-        }
+        public IStatusEndpoint Status => _status.Value;
     }
 }

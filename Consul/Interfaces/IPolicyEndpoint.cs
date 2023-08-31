@@ -27,15 +27,15 @@ namespace Consul
     /// </summary>
     public interface IPolicyEndpoint
     {
-        Task<WriteResult<PolicyEntry>> Create(PolicyEntry policy, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<PolicyEntry>> Create(PolicyEntry policy, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<PolicyEntry[]>> List(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<PolicyEntry[]>> List(QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<PolicyEntry>> Read(string id, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<PolicyEntry>> Read(string id, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, WriteOptions q, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult<PolicyEntry>> Create(PolicyEntry policy, CancellationToken ct = default);
+        Task<WriteResult<PolicyEntry>> Create(PolicyEntry policy, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<PolicyEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<PolicyEntry[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<PolicyEntry>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<PolicyEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, CancellationToken ct = default);
+        Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, WriteOptions q, CancellationToken ct = default);
     }
 }

@@ -26,19 +26,19 @@ namespace Consul
     /// </summary>
     public interface IAuthMethodEndpoint
     {
-        Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<AuthMethodEntry>> Read(string id, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<AuthMethodEntry>> Read(string id, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<AuthMethodEntry[]>> List(QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Login(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Login(WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> Logout(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult> Logout(WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, WriteOptions q, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct = default);
+        Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<AuthMethodEntry>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<AuthMethodEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<AuthMethodEntry[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Login(CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Login(WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> Logout(CancellationToken ct = default);
+        Task<WriteResult> Logout(WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct = default);
+        Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, WriteOptions q, CancellationToken ct = default);
     }
 }

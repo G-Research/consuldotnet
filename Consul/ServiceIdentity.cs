@@ -15,6 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
+using System;
 
 namespace Consul
 {
@@ -24,7 +25,7 @@ namespace Consul
     public class ServiceIdentity
     {
         public ServiceIdentity()
-            : this(string.Empty, new string[] { })
+            : this(string.Empty, Array.Empty<string>())
         {
         }
 

@@ -34,21 +34,21 @@ namespace Consul
         IPolicyEndpoint Policy { get; }
         IRoleEndpoint Role { get; }
         ITokenEndpoint Token { get; }
-        Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default(CancellationToken));
-        Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default(CancellationToken));
-        Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default(CancellationToken));
-        Task<IDistributedSemaphore> AcquireSemaphore(string prefix, int limit, CancellationToken ct = default(CancellationToken));
+        Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default);
+        Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default);
+        Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default);
+        Task<IDistributedSemaphore> AcquireSemaphore(string prefix, int limit, CancellationToken ct = default);
         IAgentEndpoint Agent { get; }
         ICatalogEndpoint Catalog { get; }
         IDistributedLock CreateLock(LockOptions opts);
         IDistributedLock CreateLock(string key);
         IEventEndpoint Event { get; }
-        Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct = default(CancellationToken));
-        Task ExecuteInSemaphore(string prefix, int limit, Action a, CancellationToken ct = default(CancellationToken));
-        Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default(CancellationToken));
+        Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct = default);
+        Task ExecuteInSemaphore(string prefix, int limit, Action a, CancellationToken ct = default);
+        Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default);
         [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(LockOptions, Action, CancellationToken)")]
         Task ExecuteLocked(LockOptions opts, CancellationToken ct, Action action);
-        Task ExecuteLocked(string key, Action action, CancellationToken ct = default(CancellationToken));
+        Task ExecuteLocked(string key, Action action, CancellationToken ct = default);
         [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(string, Action, CancellationToken)")]
         Task ExecuteLocked(string key, CancellationToken ct, Action action);
         IHealthEndpoint Health { get; }

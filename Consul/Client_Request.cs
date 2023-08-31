@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace Consul
@@ -118,9 +119,6 @@ namespace Consul
             }
         }
 
-        protected static byte[] Serialize(object value)
-        {
-            return System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
-        }
+        protected static byte[] Serialize(object value) => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
     }
 }

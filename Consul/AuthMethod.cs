@@ -91,7 +91,7 @@ namespace Consul
         /// <param name="authMethod">The new ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct = default)
         {
             return Create(authMethod, WriteOptions.Default, ct);
         }
@@ -103,7 +103,7 @@ namespace Consul
         /// <param name="writeOptions">Customized write options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public async Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, WriteOptions writeOptions, CancellationToken ct = default)
         {
             var res = await _client.Put<AuthMethodEntry, AuthMethodActionResult>("/v1/acl/auth-method", authMethod, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<AuthMethodEntry>(res, res.Response);
@@ -115,7 +115,7 @@ namespace Consul
         /// <param name="authMethod">The modified ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the updated ACL AuthMethod</returns>
-        public Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct = default)
         {
             return Update(authMethod, WriteOptions.Default, ct);
         }
@@ -127,7 +127,7 @@ namespace Consul
         /// <param name="writeOptions">Customized write options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the updated ACL AuthMethod</returns>
-        public async Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, WriteOptions writeOptions, CancellationToken ct = default)
         {
             var res = await _client.Put<AuthMethodEntry, AuthMethodActionResult>($"/v1/acl/auth-method/{authMethod.Name}", authMethod, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<AuthMethodEntry>(res, res.Response);
@@ -139,7 +139,7 @@ namespace Consul
         /// <param name="name">The name of the ACL AuthMethod to delete</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>Success (true) or failure (false)</returns>
-        public Task<WriteResult<bool>> Delete(string name, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<bool>> Delete(string name, CancellationToken ct = default)
         {
             return Delete(name, WriteOptions.Default, ct);
         }
@@ -151,7 +151,7 @@ namespace Consul
         /// <param name="writeOptions">Customized write options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>Success (true) or failure (false)</returns>
-        public Task<WriteResult<bool>> Delete(string name, WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<bool>> Delete(string name, WriteOptions writeOptions, CancellationToken ct = default)
         {
             return _client.DeleteReturning<bool>($"/v1/acl/auth-method/{name}", writeOptions).Execute(ct);
         }
@@ -162,7 +162,7 @@ namespace Consul
         /// <param name="name">The Name of the ACL AuthMethod to get</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL AuthMethod</returns>
-        public Task<QueryResult<AuthMethodEntry>> Read(string name, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<AuthMethodEntry>> Read(string name, CancellationToken ct = default)
         {
             return Read(name, QueryOptions.Default, ct);
         }
@@ -174,7 +174,7 @@ namespace Consul
         /// <param name="queryOptions">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL AuthMethod</returns>
-        public async Task<QueryResult<AuthMethodEntry>> Read(string name, QueryOptions queryOptions, CancellationToken ct = default(CancellationToken))
+        public async Task<QueryResult<AuthMethodEntry>> Read(string name, QueryOptions queryOptions, CancellationToken ct = default)
         {
             var res = await _client.Get<AuthMethodActionResult>($"/v1/acl/auth-method/{name}", queryOptions).Execute(ct).ConfigureAwait(false);
             return new QueryResult<AuthMethodEntry>(res, res.Response);
@@ -185,7 +185,7 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL AuthMethods</returns>
-        public Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct = default)
         {
             return List(QueryOptions.Default, ct);
         }
@@ -196,7 +196,7 @@ namespace Consul
         /// <param name="queryOptions">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL AuthMethods</returns>
-        public Task<QueryResult<AuthMethodEntry[]>> List(QueryOptions queryOptions, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<AuthMethodEntry[]>> List(QueryOptions queryOptions, CancellationToken ct = default)
         {
             return _client.Get<AuthMethodEntry[]>("/v1/acl/auth-methods", queryOptions).Execute(ct);
         }
@@ -206,7 +206,7 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing an ACL Token for the login</returns>
-        public Task<WriteResult<TokenEntry>> Login(CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<TokenEntry>> Login(CancellationToken ct = default)
         {
             return Login(WriteOptions.Default, ct);
         }
@@ -217,7 +217,7 @@ namespace Consul
         /// <param name="writeOptions"></param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>>A write result containing an ACL Token for the login</returns>
-        public async Task<WriteResult<TokenEntry>> Login(WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult<TokenEntry>> Login(WriteOptions writeOptions, CancellationToken ct = default)
         {
             var res = await _client.PutReturning<TokenEntry>("/v1/acl/login", writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<TokenEntry>(res, res.Response);
@@ -228,7 +228,7 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result</returns>
-        public Task<WriteResult> Logout(CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Logout(CancellationToken ct = default)
         {
             return Logout(WriteOptions.Default, ct);
         }
@@ -239,7 +239,7 @@ namespace Consul
         /// <param name="writeOptions"></param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result</returns>
-        public async Task<WriteResult> Logout(WriteOptions writeOptions, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult> Logout(WriteOptions writeOptions, CancellationToken ct = default)
         {
             return await _client.Post($"/v1/acl/logout", null, writeOptions).Execute(ct).ConfigureAwait(false);
         }

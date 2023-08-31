@@ -27,7 +27,7 @@ namespace Consul
     /// </summary>
     public interface IStatusEndpoint
     {
-        Task<string> Leader(CancellationToken ct = default(CancellationToken));
-        Task<string[]> Peers(CancellationToken ct = default(CancellationToken));
+        Task<string> Leader(CancellationToken ct = default);
+        Task<string[]> Peers(CancellationToken ct = default);
     }
 }
