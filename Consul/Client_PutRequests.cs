@@ -38,7 +38,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? WriteOptions.Default;
         }
@@ -92,6 +92,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -118,7 +123,7 @@ namespace Consul
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             Options = options ?? WriteOptions.Default;
         }
@@ -167,6 +172,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -189,13 +199,13 @@ namespace Consul
     public class PutRequest<TIn> : ConsulRequest
     {
         public WriteOptions Options { get; set; }
-        private TIn _body;
+        private readonly TIn _body;
 
         public PutRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             _body = body;
             Options = options ?? WriteOptions.Default;
@@ -216,7 +226,7 @@ namespace Consul
 
             if (typeof(TIn) == typeof(byte[]))
             {
-                content = new ByteArrayContent((_body as byte[]) ?? new byte[0]);
+                content = new ByteArrayContent((_body as byte[]) ?? Array.Empty<byte>());
             }
             else if (typeof(TIn) == typeof(Stream))
             {
@@ -262,6 +272,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -285,13 +300,13 @@ namespace Consul
     public class PutRequest<TIn, TOut> : ConsulRequest
     {
         public WriteOptions Options { get; set; }
-        private TIn _body;
+        private readonly TIn _body;
 
         public PutRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
             {
-                throw new ArgumentException(nameof(url));
+                throw new ArgumentException(null, nameof(url));
             }
             _body = body;
             Options = options ?? WriteOptions.Default;
@@ -312,7 +327,7 @@ namespace Consul
 
             if (typeof(TIn) == typeof(byte[]))
             {
-                var bodyBytes = (_body as byte[]);
+                var bodyBytes = _body as byte[];
                 if (bodyBytes != null)
                 {
                     content = new ByteArrayContent(bodyBytes);
@@ -365,6 +380,11 @@ namespace Consul
             if (Options == WriteOptions.Default)
             {
                 return;
+            }
+
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
             }
 
             if (!string.IsNullOrEmpty(Options.Datacenter))

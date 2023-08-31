@@ -38,6 +38,12 @@ namespace Consul
         };
 
         /// <summary>
+        /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions.
+        /// Namespace is an Enterprise-only feature.
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config.
         /// </summary>
         public string Datacenter { get; set; }
@@ -48,6 +54,7 @@ namespace Consul
         public ConsistencyMode Consistency { get; set; }
 
         /// <summary>
+        /// WaitIndex is used to enable a blocking query. Waits until the timeout or the next index is reached.
         /// UseCache requests that the agent cache results locally.
         /// See https://www.consul.io/api/features/caching.html for more details on the semantics.
         /// </summary>
@@ -105,6 +112,12 @@ namespace Consul
             Datacenter = string.Empty,
             Token = string.Empty
         };
+
+        /// <summary>
+        /// Namespace is the name of the namespace to send along for the request when no other Namespace is present in the QueryOptions
+        /// Namespace is an Enterprise-only feature.
+        /// </summary>
+        public string Namespace { get; set; }
 
         /// <summary>
         /// Providing a datacenter overwrites the DC provided by the Config

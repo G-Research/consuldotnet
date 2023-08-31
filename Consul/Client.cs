@@ -69,6 +69,12 @@ namespace Consul
         public Uri Address { get; set; }
 
         /// <summary>
+        /// Namespace is the name of the namespace to send along for the request
+        /// when no other Namespace is present in the QueryOptions
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
         /// Datacenter to provide with each request. If not provided, the default agent datacenter is used.
         /// </summary>
         public string Datacenter { get; set; }
@@ -86,10 +92,7 @@ namespace Consul
 #endif
         public NetworkCredential HttpAuth
         {
-            internal get
-            {
-                return _httpauth;
-            }
+            internal get => _httpauth;
             set
             {
                 _httpauth = value;
@@ -148,6 +151,12 @@ namespace Consul
             UriBuilder consulAddress = new UriBuilder("http://127.0.0.1:8500");
             ConfigureFromEnvironment(consulAddress);
             Address = consulAddress.Uri;
+
+            string ns = Environment.GetEnvironmentVariable("CONSUL_NAMESPACE");
+            if (!string.IsNullOrEmpty(ns))
+            {
+                Namespace = ns;
+            }
         }
 
         /// <summary>
@@ -234,9 +243,10 @@ namespace Consul
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN")))
+            string token = Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN");
+            if (!string.IsNullOrEmpty(token))
             {
-                Token = Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN");
+                Token = token;
             }
         }
 
@@ -471,6 +481,7 @@ namespace Consul
             _token = new Lazy<Token>(() => new Token(this));
             _aclReplication = new Lazy<ACLReplication>(() => new ACLReplication(this));
             _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
+            _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
         }
 
         #region IDisposable Support

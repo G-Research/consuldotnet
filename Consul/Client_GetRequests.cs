@@ -144,6 +144,11 @@ namespace Consul
                 return;
             }
 
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
+            }
+
             if (!string.IsNullOrEmpty(Options.Datacenter))
             {
                 Params["dc"] = Options.Datacenter;
@@ -346,6 +351,11 @@ namespace Consul
             if (Options == QueryOptions.Default)
             {
                 return;
+            }
+
+            if (!string.IsNullOrEmpty(Options.Namespace))
+            {
+                Params["ns"] = Options.Namespace;
             }
 
             if (!string.IsNullOrEmpty(Options.Datacenter))
