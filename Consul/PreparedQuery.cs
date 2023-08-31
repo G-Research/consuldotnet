@@ -18,8 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -227,64 +225,64 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult<string>> Create(PreparedQueryDefinition query, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult<string>> Create(PreparedQueryDefinition query, CancellationToken ct = default)
         {
             return Create(query, WriteOptions.Default, ct);
         }
 
-        public async Task<WriteResult<string>> Create(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult<string>> Create(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default)
         {
             var res = await _client.Post<PreparedQueryDefinition, PreparedQueryCreationResult>("/v1/query", query, q).Execute(ct).ConfigureAwait(false);
             return new WriteResult<string>(res, res.Response.ID);
         }
 
-        public Task<WriteResult> Delete(string queryID, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Delete(string queryID, CancellationToken ct = default)
         {
             return Delete(queryID, WriteOptions.Default, ct);
         }
 
-        public async Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default(CancellationToken))
+        public async Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default)
         {
             var res = await _client.DeleteReturning<string>(string.Format("/v1/query/{0}", queryID), q).Execute(ct).ConfigureAwait(false);
             return new WriteResult(res);
         }
 
-        public Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, CancellationToken ct = default)
         {
             return Execute(queryIDOrName, QueryOptions.Default, ct);
         }
 
-        public Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, QueryOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<PreparedQueryExecuteResponse>(string.Format("/v1/query/{0}/execute", queryIDOrName), q).Execute(ct);
         }
 
-        public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, CancellationToken ct = default)
         {
             return Get(queryID, QueryOptions.Default, ct);
         }
 
-        public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, QueryOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<PreparedQueryDefinition[]>(string.Format("/v1/query/{0}", queryID), q).Execute(ct);
         }
 
-        public Task<QueryResult<PreparedQueryDefinition[]>> List(CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryDefinition[]>> List(CancellationToken ct = default)
         {
             return List(QueryOptions.Default, ct);
         }
 
-        public Task<QueryResult<PreparedQueryDefinition[]>> List(QueryOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<QueryResult<PreparedQueryDefinition[]>> List(QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<PreparedQueryDefinition[]>("/v1/query", q).Execute(ct);
         }
 
-        public Task<WriteResult> Update(PreparedQueryDefinition query, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Update(PreparedQueryDefinition query, CancellationToken ct = default)
         {
             return Update(query, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult> Update(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default(CancellationToken))
+        public Task<WriteResult> Update(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default)
         {
             return _client.Put(string.Format("/v1/query/{0}", query.ID), query, q).Execute(ct);
         }
@@ -297,9 +295,6 @@ namespace Consul
         /// <summary>
         /// Catalog returns a handle to the catalog endpoints
         /// </summary>
-        public IPreparedQueryEndpoint PreparedQuery
-        {
-            get { return _preparedquery.Value; }
-        }
+        public IPreparedQueryEndpoint PreparedQuery => _preparedquery.Value;
     }
 }

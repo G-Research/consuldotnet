@@ -26,7 +26,7 @@ namespace Consul
     /// </summary>
     public interface IACLReplicationEndpoint
     {
-        Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<ACLReplicationEntry>> Status(QueryOptions q, CancellationToken ct = default(CancellationToken));
+        Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct = default);
+        Task<QueryResult<ACLReplicationEntry>> Status(QueryOptions q, CancellationToken ct = default);
     }
 }

@@ -28,22 +28,22 @@ namespace Consul
     /// </summary>
     public interface ISessionEndpoint
     {
-        Task<WriteResult<string>> Create(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<string>> Create(SessionEntry se, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<string>> CreateNoChecks(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry>> Info(string id, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry[]>> List(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry[]>> List(QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<SessionEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult<string>> Create(CancellationToken ct = default);
+        Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct = default);
+        Task<WriteResult<string>> Create(SessionEntry se, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<string>> CreateNoChecks(CancellationToken ct = default);
+        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct = default);
+        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry>> Info(string id, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct = default);
+        Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default);
         Task RenewPeriodic(TimeSpan initialTTL, string id, CancellationToken ct);
         Task RenewPeriodic(TimeSpan initialTTL, string id, WriteOptions q, CancellationToken ct);
     }

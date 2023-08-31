@@ -27,19 +27,19 @@ namespace Consul
     /// </summary>
     public interface ITokenEndpoint
     {
-        Task<WriteResult<TokenEntry>> Bootstrap(CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Bootstrap(WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Clone(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Clone(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Create(TokenEntry token, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Create(TokenEntry token, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct = default(CancellationToken));
-        Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct = default(CancellationToken));
-        Task<WriteResult<TokenEntry>> Update(TokenEntry token, WriteOptions q, CancellationToken ct = default(CancellationToken));
+        Task<WriteResult<TokenEntry>> Bootstrap(CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Bootstrap(WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Clone(string id, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Clone(string id, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Create(TokenEntry token, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Create(TokenEntry token, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Update(TokenEntry token, WriteOptions q, CancellationToken ct = default);
     }
 }
