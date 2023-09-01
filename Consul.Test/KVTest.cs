@@ -348,7 +348,7 @@ namespace Consul.Test
             Assert.Equal(pairs.Response.Length, putTasks.Length);
             Assert.False(pairs.LastIndex == 0);
 
-            var deleteTree = await _client.KV.DeleteTree(prefix);
+            await _client.KV.DeleteTree(prefix);
 
             pairs = await _client.KV.Keys(prefix, "");
             Assert.Null(pairs.Response);
@@ -385,7 +385,7 @@ namespace Consul.Test
             Assert.True(acquireRequest.Response);
 
             getRequest = await _client.KV.Get(key);
-
+            Assert.NotEqual("bnVsbA==", Convert.ToBase64String(getRequest.Response.Value));
             Assert.NotNull(getRequest.Response);
             Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
