@@ -4,7 +4,12 @@ on:
   pull_request:
     paths: ['**.cs']
   push:
-    paths: ['**.cs']
+    branches-ignore: [master]
+    paths:
+      - '**.editorconfig'
+      - '**.globalconfig'
+      - '**.cs'
+      - .github/workflows/formatter.yml
 
 permissions:
   contents: write
@@ -16,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -23,7 +30,9 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Format scripts
-        run: dotnet tool run dotnet-format --fix-whitespace
+        run: |
+          dotnet tool restore
+          dotnet tool run dotnet-format --fix-whitespace --no-restore
 
       - name: Set Git config
         run: |
@@ -33,5 +42,5 @@ jobs:
       - name: Commit changes
         run: |
           git add .
-          git commit -m "style: fix whitespaces" | true
+          git commit -m "style: fix whitespaces" || true
           git push
