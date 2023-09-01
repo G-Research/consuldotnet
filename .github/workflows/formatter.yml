@@ -24,6 +24,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: Cache .NET tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: dotnet-tools-${{ runner.os }}-${{ hashFiles('.config/dotnet-tools.json') }}
+          restore-keys: dotnet-tools-${{ runner.os }}-
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
