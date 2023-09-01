@@ -37,8 +37,8 @@ jobs:
 
       - name: Set Git config
         run: |
-          git config user.name 'octocat'
-          git config user.email 'octocat@users.noreply.github.com'
+          git config user.name octocat
+          git config user.email octocat@users.noreply.github.com
 
       - name: Commit changes
         run: |
