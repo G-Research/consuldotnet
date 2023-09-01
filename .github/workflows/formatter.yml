@@ -29,10 +29,11 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
+      - name: Restore tools
+        run: dotnet tool restore
+
       - name: Format scripts
-        run: |
-          dotnet tool restore
-          dotnet tool run dotnet-format --fix-whitespace --no-restore
+        run: dotnet tool run dotnet-format --fix-whitespace --no-restore
 
       - name: Set Git config
         run: |
