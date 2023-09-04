@@ -58,39 +58,39 @@ namespace Consul
             return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default)
         {
-            return Update(ns, WriteOptions.Default, ct);
+            return await Update(ns, WriteOptions.Default, ct).ConfigureAwait(false);
         }
 
-        public Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<NamespaceResponse>($"v1/namespace/{name}", q).Execute(ct);
+            return await _client.Get<NamespaceResponse>($"v1/namespace/{name}", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default)
         {
-            return Read(name, QueryOptions.Default, ct);
+            return await Read(name, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
-        public Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<NamespaceResponse[]>($"v1/namespaces", q).Execute(ct);
+            return await _client.Get<NamespaceResponse[]>($"v1/namespaces", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default)
         {
-            return List(QueryOptions.Default, ct);
+            return await List(QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
-        public Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default)
         {
-            return _client.Delete($"v1/namespace/{name}", q).Execute(ct);
+            return await _client.Delete($"v1/namespace/{name}", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public Task<WriteResult> Delete(string name, CancellationToken ct = default)
+        public async Task<WriteResult> Delete(string name, CancellationToken ct = default)
         {
-            return Delete(name, WriteOptions.Default, ct);
+            return await Delete(name, WriteOptions.Default, ct).ConfigureAwait(false);
         }
     }
 
