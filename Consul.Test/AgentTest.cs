@@ -570,6 +570,28 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Agent_GetLocalServiceHealth()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15),
+                    Status = HealthStatus.Passing
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetLocalServiceHealth(svcID);
+            Assert.Equal("passing", status.Response[0].AggregatedStatus);
+        }
+
+        [Fact]
         public async Task Agent_FilterServices()
         {
             var svcID1 = KVTest.GenerateTestKeyName();
