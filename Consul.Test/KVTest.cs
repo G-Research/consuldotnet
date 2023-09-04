@@ -385,8 +385,8 @@ namespace Consul.Test
             Assert.True(acquireRequest.Response);
 
             getRequest = await _client.KV.Get(key);
-            Assert.NotEqual("bnVsbA==", Convert.ToBase64String(getRequest.Response.Value));
             Assert.NotNull(getRequest.Response);
+            Assert.Equal("test2", Encoding.UTF8.GetString(getRequest.Response.Value));
             Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
