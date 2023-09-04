@@ -354,8 +354,10 @@ namespace Consul.Test
             Assert.Null(pairs.Response);
         }
 
-        [Fact]
-        public async Task KV_AcquireRelease()
+        [Theory]
+        [InlineData("test")]
+        [InlineData("test2")]
+        public async Task KV_AcquireRelease(string stringValue)
         {
             var sessionRequest = await _client.Session.CreateNoChecks(new SessionEntry());
             var id = sessionRequest.Response;
@@ -363,7 +365,7 @@ namespace Consul.Test
             Assert.False(string.IsNullOrEmpty(sessionRequest.Response));
 
             var key = GenerateTestKeyName();
-            var value = Encoding.UTF8.GetBytes("test");
+            var value = Encoding.UTF8.GetBytes(stringValue);
 
             var pair = new KVPair(key)
             {
@@ -386,7 +388,8 @@ namespace Consul.Test
 
             getRequest = await _client.KV.Get(key);
             Assert.NotNull(getRequest.Response);
-            Assert.Equal("test2", Encoding.UTF8.GetString(getRequest.Response.Value));
+            Assert.Equal(stringValue, Encoding.UTF8.GetString(getRequest.Response.Value));
+
             Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
