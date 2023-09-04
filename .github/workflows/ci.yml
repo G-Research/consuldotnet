@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
@@ -36,7 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
         uses: actions/setup-dotnet@v3
@@ -67,7 +67,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET SDK v5.0.x
         if: matrix.framework == 'net5.0'
         uses: actions/setup-dotnet@v3
@@ -143,7 +143,7 @@ jobs:
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET SDK v7.0.x
         uses: actions/setup-dotnet@v3
         with:
