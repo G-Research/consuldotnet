@@ -508,7 +508,7 @@ namespace Consul
         public Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
             p.Validate();
-            var req = _client.Put<object, bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), p.Value, q);
+            var req = _client.Put<byte[], bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), p.Value, q);
             if (p.Flags > 0)
             {
                 req.Params["flags"] = p.Flags.ToString();
