@@ -2,9 +2,7 @@ name: Format
 
 on:
   pull_request:
-    paths: ['**.cs']
-  push:
-    branches-ignore: [master]
+   
     paths:
       - '**.editorconfig'
       - '**.globalconfig'
