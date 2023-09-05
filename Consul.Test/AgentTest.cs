@@ -569,11 +569,11 @@ namespace Consul.Test
             }
         }
 
+
         [Theory]
         [InlineData("passing")]
         [InlineData("warning")]
         [InlineData("critical")]
-
         public async Task Agent_GetLocalServiceHealth(string statusString)
         {
             var healthStatus = HealthStatus.Parse(statusString);
@@ -603,6 +603,7 @@ namespace Consul.Test
             var status = await _client.Agent.GetLocalServiceHealth(svcID);
             Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
         }
+
         [Fact]
         public async Task Agent_FilterServices()
         {

@@ -45,6 +45,21 @@ namespace Consul
 
         public static HealthStatus Any { get; } = new HealthStatus() { Status = "any" };
 
+        public static HealthStatus Parse(string status)
+        {
+            switch (status)
+            {
+                case "passing":
+                    return Passing;
+                case "warning":
+                    return Warning;
+                case "critical":
+                    return Critical;
+                default:
+                    throw new ArgumentException("Invalid Check status value during deserialization");
+            }
+        }
+
         public bool Equals(HealthStatus other)
         {
             return other != null && ReferenceEquals(this, other);
