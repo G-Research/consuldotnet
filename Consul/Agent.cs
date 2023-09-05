@@ -410,7 +410,7 @@ namespace Consul
     /// </summary>
     public class LocalServiceHealth
     {
-        public string AggregatedStatus { get; set; }
+        public HealthStatus AggregatedStatus { get; set; }
 
         public AgentService Service { get; set; }
 
