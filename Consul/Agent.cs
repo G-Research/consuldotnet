@@ -796,28 +796,28 @@ namespace Consul
             return await GetLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
-        // /// <summary>
-        // /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
-        // /// </summary>
-        // /// <param name="serviceName">Name of service</param>
-        // /// <returns>passing, warning, or critical</returns>
-        // public async Task<QueryResult<AggregatedStatus>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
-        // {
-        //     var req = _client.Get<AggregatedStatus>($"v1/agent/health/service/name/{serviceName}", q);
-        //     req.Params["format"] = "text";
+        /// <summary>
+        /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<HealthStatus>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<HealthStatus>($"v1/agent/health/service/name/{serviceName}", q);
+            req.Params["format"] = "text";
 
-        //     return await req.Execute(ct).ConfigureAwait(false);
-        // }
+            return await req.Execute(ct).ConfigureAwait(false);
+        }
 
-        // /// <summary>
-        // /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
-        // /// </summary>
-        // /// <param name="serviceName">Name of service</param>
-        // /// <returns>passing, warning, or critical</returns>
-        // public async Task<QueryResult<AggregatedStatus>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default)
-        // {
-        //     return await GetWorstLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
-        // }
+        /// <summary>
+        /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<HealthStatus>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default)
+        {
+            return await GetWorstLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// GetLocalServiceHealthByID returns the health info of a service registered on the local agent by ID
@@ -839,28 +839,28 @@ namespace Consul
             return await GetLocalServiceHealth(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
-        // /// <summary>
-        // /// GetWorstLocalServiceHealthByID returns the worst aggregated status of a service registered on the local agent by ID
-        // /// </summary>
-        // /// <param name="serviceID">ID of the service</param>
-        // /// <returns>passing, warning, or critical</returns>
-        // public async Task<QueryResult<AggregatedStatus>> GetWorstLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default)
-        // {
-        //     var req = _client.Get<AggregatedStatus>($"v1/agent/health/service/id/{serviceID}", q);
-        //     req.Params["format"] = "text";
+        /// <summary>
+        /// GetWorstLocalServiceHealthByID returns the worst aggregated status of a service registered on the local agent by ID
+        /// </summary>
+        /// <param name="serviceID">ID of the service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<HealthStatus>> GetWorstLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<HealthStatus>($"v1/agent/health/service/id/{serviceID}", q);
+            req.Params["format"] = "text";
 
-        //     return await req.Execute(ct).ConfigureAwait(false);
-        // }
+            return await req.Execute(ct).ConfigureAwait(false);
+        }
 
-        // /// <summary>
-        // /// GetWorstLocalServiceHealthByID returns the worst aggregated status of a service registered on the local agent by ID
-        // /// </summary>
-        // /// <param name="serviceID">ID of the service</param>
-        // /// <returns>passing, warning, or critical</returns>
-        // public async Task<QueryResult<AggregatedStatus>> GetWorstLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
-        // {
-        //     return await GetWorstLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
-        // }
+        /// <summary>
+        /// GetWorstLocalServiceHealthByID returns the worst aggregated status of a service registered on the local agent by ID
+        /// </summary>
+        /// <param name="serviceID">ID of the service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<HealthStatus>> GetWorstLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
+        {
+            return await GetWorstLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Log streamer
