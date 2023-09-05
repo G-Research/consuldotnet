@@ -569,28 +569,40 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
-        public async Task Agent_GetLocalServiceHealth()
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+
+        public async Task Agent_GetLocalServiceHealth(string statusString)
         {
+            var healthStatus = HealthStatus.Parse(statusString);
             var svcID = KVTest.GenerateTestKeyName();
             var registration = new AgentServiceRegistration
             {
                 Name = svcID,
                 Tags = new[] { "bar", "baz" },
                 Port = 8000,
-                Check = new AgentServiceCheck
+                Checks = new[]
                 {
-                    TTL = TimeSpan.FromSeconds(15),
-                    Status = HealthStatus.Passing
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
                 }
             };
 
             await _client.Agent.ServiceRegister(registration);
 
             var status = await _client.Agent.GetLocalServiceHealth(svcID);
-            Assert.Equal("passing", status.Response[0].AggregatedStatus);
+            Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
         }
-
         [Fact]
         public async Task Agent_FilterServices()
         {
