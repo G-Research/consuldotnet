@@ -404,15 +404,6 @@ namespace Consul
         public TimeSpan? DeregisterCriticalServiceAfter { get; set; }
     }
 
-    // /// <summary>
-    // /// Aggregated status of a service
-    // /// </summary>
-    // public enum AggregatedStatus
-    // {
-    //     Passing,
-    //     Warning,
-    //     Critical
-    // }
 
     /// <summary>
     /// LocalServiceHealth represents the health of a service and its associated checks as returned by the Agent API
