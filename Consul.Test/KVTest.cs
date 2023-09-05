@@ -368,7 +368,7 @@ namespace Consul.Test
             var pair = new KVPair(key)
             {
                 Value = Encoding.UTF8.GetBytes(value),
-                Session = id
+                Session = id,
             };
 
             var acquireRequest = await _client.KV.Acquire(pair);
@@ -381,26 +381,14 @@ namespace Consul.Test
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
 
-            acquireRequest = await _client.KV.Release(pair);
-            Assert.True(acquireRequest.Response);
+            var newValue = "test2";
+            pair.Value = Encoding.UTF8.GetBytes(newValue);
+            var releaseRequest = await _client.KV.Release(pair);
+            Assert.True(releaseRequest.Response);
 
             getRequest = await _client.KV.Get(key);
             Assert.NotNull(getRequest.Response);
-            Assert.Equal(value, Encoding.UTF8.GetString(getRequest.Response.Value));
-
-            var newValue = "test2";
-            var newPair = new KVPair(key)
-            {
-                Value = Encoding.UTF8.GetBytes(newValue),
-                Session = id
-            };
-
-            await _client.KV.Acquire(newPair);
-            await _client.KV.Release(newPair);
-            var newGetRequest = await _client.KV.Get(key);
-            Assert.NotNull(newGetRequest.Response);
-            Assert.Equal(newValue, Encoding.UTF8.GetString(newGetRequest.Response.Value));
-
+            Assert.Equal(newValue, Encoding.UTF8.GetString(getRequest.Response.Value));
             Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
