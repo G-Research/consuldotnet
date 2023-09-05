@@ -398,6 +398,7 @@ namespace Consul.Test
             await _client.KV.Acquire(newPair);
             await _client.KV.Release(newPair);
             var newGetRequest = await _client.KV.Get(key);
+            Assert.NotNull(newGetRequest.Response);
             Assert.Equal(newValue, Encoding.UTF8.GetString(newGetRequest.Response.Value));
 
             Assert.Null(getRequest.Response.Session);
