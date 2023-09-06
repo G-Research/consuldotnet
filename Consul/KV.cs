@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -509,7 +508,7 @@ namespace Consul
         public Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
             p.Validate();
-            var req = _client.Put<object, bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), null, q);
+            var req = _client.Put<byte[], bool>(string.Format("/v1/kv/{0}", p.Key.TrimStart('/')), p.Value, q);
             if (p.Flags > 0)
             {
                 req.Params["flags"] = p.Flags.ToString();
@@ -620,9 +619,6 @@ namespace Consul
         /// <summary>
         /// KV returns a handle to the KV endpoint
         /// </summary>
-        public IKVEndpoint KV
-        {
-            get { return _kv.Value; }
-        }
+        public IKVEndpoint KV => _kv.Value;
     }
 }

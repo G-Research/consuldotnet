@@ -348,7 +348,7 @@ namespace Consul.Test
             Assert.Equal(pairs.Response.Length, putTasks.Length);
             Assert.False(pairs.LastIndex == 0);
 
-            var deleteTree = await _client.KV.DeleteTree(prefix);
+            await _client.KV.DeleteTree(prefix);
 
             pairs = await _client.KV.Keys(prefix, "");
             Assert.Null(pairs.Response);
@@ -363,12 +363,12 @@ namespace Consul.Test
             Assert.False(string.IsNullOrEmpty(sessionRequest.Response));
 
             var key = GenerateTestKeyName();
-            var value = Encoding.UTF8.GetBytes("test");
+            var value = "test";
 
             var pair = new KVPair(key)
             {
-                Value = value,
-                Session = id
+                Value = Encoding.UTF8.GetBytes(value),
+                Session = id,
             };
 
             var acquireRequest = await _client.KV.Acquire(pair);
@@ -381,12 +381,14 @@ namespace Consul.Test
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
 
-            acquireRequest = await _client.KV.Release(pair);
-            Assert.True(acquireRequest.Response);
+            var newValue = "test2";
+            pair.Value = Encoding.UTF8.GetBytes(newValue);
+            var releaseRequest = await _client.KV.Release(pair);
+            Assert.True(releaseRequest.Response);
 
             getRequest = await _client.KV.Get(key);
-
             Assert.NotNull(getRequest.Response);
+            Assert.Equal(newValue, Encoding.UTF8.GetString(getRequest.Response.Value));
             Assert.Null(getRequest.Response.Session);
             Assert.Equal(getRequest.Response.LockIndex, (ulong)1);
             Assert.True(getRequest.LastIndex > 0);
