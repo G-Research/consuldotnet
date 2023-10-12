@@ -56,6 +56,7 @@ namespace Consul.Test
                 var checks = await _client.Health.Checks(svcID);
                 Assert.NotEqual((ulong)0, checks.LastIndex);
                 Assert.NotEmpty(checks.Response);
+                Assert.Equal(checks.Response[0].ServiceTags, registration.Tags);
             }
             finally
             {
