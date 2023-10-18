@@ -79,10 +79,13 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            if (!response.IsSuccessStatusCode && (
+            var isSpecialStatusCode = response.StatusCode == HttpStatusCode.ServiceUnavailable || (int)response.StatusCode == 429;
+
+            if (!response.IsSuccessStatusCode && !isSpecialStatusCode && (
                 (response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(TxnResponse)) ||
                 (response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse))))
             {
+
                 if (ResponseStream == null)
                 {
                     throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
@@ -95,7 +98,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode)
             {
                 result.Response = Deserialize<TOut>(ResponseStream);
             }

@@ -601,6 +601,7 @@ namespace Consul.Test
             await _client.Agent.ServiceRegister(registration);
 
             var status = await _client.Agent.GetLocalServiceHealth(svcID);
+
             Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
         }
 

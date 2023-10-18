@@ -410,6 +410,7 @@ namespace Consul
     /// </summary>
     public class LocalServiceHealth
     {
+        [JsonConverter(typeof(HealthStatusConverter))]
         public HealthStatus AggregatedStatus { get; set; }
 
         public AgentService Service { get; set; }
