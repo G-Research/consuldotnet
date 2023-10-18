@@ -569,7 +569,6 @@ namespace Consul.Test
             }
         }
 
-
         [Theory]
         [InlineData("passing")]
         [InlineData("warning")]
@@ -603,6 +602,115 @@ namespace Consul.Test
             var status = await _client.Agent.GetLocalServiceHealth(svcID);
 
             Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
+        }
+
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetLocalServiceHealthByID(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                ID = svcID,
+                Name = svcID,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetLocalServiceHealthByID(svcID);
+
+            Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
+        }
+
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetWorstLocalServiceHealth(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcID = KVTest.GenerateTestKeyName();
+
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetWorstLocalServiceHealth(svcID);
+
+            Assert.Equal(healthStatus.Status, status.Response);
+        }
+
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetWorstLocalServiceHealthByID(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcID = KVTest.GenerateTestKeyName();
+
+            var registration = new AgentServiceRegistration
+            {
+                ID = svcID,
+                Name = svcID,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetWorstLocalServiceHealthByID(svcID);
+
+            Assert.Equal(healthStatus.Status, status.Response);
         }
 
         [Fact]

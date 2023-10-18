@@ -325,7 +325,9 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
+            var isSpecialStatusCode = response.StatusCode == HttpStatusCode.ServiceUnavailable || (int)response.StatusCode == 429;
+
+            if (!isSpecialStatusCode && response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
                 if (ResponseStream == null)
                 {
@@ -339,7 +341,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode)
             {
                 using (var reader = new StreamReader(ResponseStream))
                 {
