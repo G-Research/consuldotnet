@@ -579,7 +579,7 @@ namespace Consul.Test
             var svcID = KVTest.GenerateTestKeyName();
             var registration = new AgentServiceRegistration
             {
-                Name = svcID,
+                Name = svcName,
                 Tags = new[] { "bar", "baz" },
                 Port = 8000,
                 Checks = new[]
