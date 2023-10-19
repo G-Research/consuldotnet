@@ -243,7 +243,7 @@ namespace Consul
         /// </summary>
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
-        /// <returns></returns>
+        /// <returns>A list of service instances</returns>
         public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default)
         {
             return NodesForMeshCapableService(service, QueryOptions.Default, null, ct);
