@@ -201,7 +201,7 @@ namespace Consul.Test
 
             var services = await _client.Catalog.NodesForMeshCapableService("redis");
 
-            Assert.True(services.Response.Length==0);
+            Assert.True(services.Response.Length == 0);
 
         }
 

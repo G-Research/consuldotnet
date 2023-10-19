@@ -246,7 +246,7 @@ namespace Consul
         /// <returns></returns>
         public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default)
         {
-            return NodesForMeshCapableService(service,QueryOptions.Default, null, ct);
+            return NodesForMeshCapableService(service, QueryOptions.Default, null, ct);
         }
 
         /// <summary>
