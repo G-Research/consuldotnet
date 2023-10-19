@@ -268,7 +268,7 @@ namespace Consul
         /// <param name="q">Customized Query options</param>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
-        /// <returns></returns>
+        /// <returns>A list of service instances</returns>
         public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, Filter filter, CancellationToken ct = default)
         {
             var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/connect/{0}", service), q, filter);
