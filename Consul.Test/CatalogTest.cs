@@ -175,6 +175,37 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Catalog_GetNodesForMeshCapableService()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new CatalogRegistration
+            {
+                Datacenter = "dc1",
+                Node = "foobar",
+                Address = "192.168.10.10",
+                Service = new AgentService
+                {
+                    ID = svcID,
+                    Service = "redis",
+                    Tags = new[] { "master", "v1" },
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
+                }
+            };
+
+            await _client.Catalog.Register(registration);
+
+            var services = await _client.Catalog.NodesForMeshCapableService("redis");
+
+            Assert.True(services.Response.Length==0);
+
+        }
+
+        [Fact]
         public async Task Catalog_EnableTagOverride()
         {
             var svcID = KVTest.GenerateTestKeyName();

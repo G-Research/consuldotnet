@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Filtering;
 
 namespace Consul
 {
@@ -44,5 +45,8 @@ namespace Consul
         Task<QueryResult<CatalogService[]>> Service(string service, string tag, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, Filter filter, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default);
     }
 }
