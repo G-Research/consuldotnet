@@ -60,10 +60,8 @@ namespace Consul
         Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct = default);
         Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default);
-        Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
-        Task<QueryResult<string>> GetWorstLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<string>> GetWorstLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
+        Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
 
         Task<WriteResult> Leave(string node, CancellationToken ct = default);
         Task<WriteResult> Reload(string node, CancellationToken ct = default);
