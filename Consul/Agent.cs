@@ -836,7 +836,7 @@ namespace Consul
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
         public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
         {
-            return await GetLocalServiceHealth(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+            return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
         /// <summary>
