@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.7.14.0
+## 1.7.14.1
 * Add ServiceTags to the health check endpoint (#244)
 * Write correct value for KV.Release (#237)
 * Introduce Namespace (#229)
