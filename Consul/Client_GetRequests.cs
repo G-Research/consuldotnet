@@ -79,11 +79,16 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var isSpecialStatusCode = response.StatusCode == HttpStatusCode.ServiceUnavailable || (int)response.StatusCode == 429;
+            var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+            var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
 
-            if (!response.IsSuccessStatusCode && !isSpecialStatusCode && (
-                (response.StatusCode != HttpStatusCode.NotFound && typeof(TOut) != typeof(TxnResponse)) ||
-                (response.StatusCode != HttpStatusCode.Conflict && typeof(TOut) == typeof(TxnResponse))))
+            var isSpecialStatusCode =
+                ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                ((int)response.StatusCode == 429 && isAgentServiceId);
+
+            if (!isSpecialStatusCode && response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
 
                 if (ResponseStream == null)
@@ -325,7 +330,14 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var isSpecialStatusCode = response.StatusCode == HttpStatusCode.ServiceUnavailable || (int)response.StatusCode == 429;
+            var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+            var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
+
+            var isSpecialStatusCode =
+                ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                ((int)response.StatusCode == 429 && isAgentServiceId);
 
             if (!isSpecialStatusCode && response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
