@@ -79,18 +79,20 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
-            var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
 
-            var isSpecialStatusCode =
-                ((int)response.StatusCode == 503 && isAgentServiceName) ||
-                ((int)response.StatusCode == 429 && isAgentServiceName) ||
-                ((int)response.StatusCode == 503 && isAgentServiceId) ||
-                ((int)response.StatusCode == 429 && isAgentServiceId);
-
-            if (!isSpecialStatusCode && response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
+            Func<bool> isSpecialStatusCode = () =>
             {
+                var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+                var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
 
+                return ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceId);
+            };
+
+            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode && !isSpecialStatusCode())
+            {
                 if (ResponseStream == null)
                 {
                     throw new ConsulRequestException(string.Format("Unexpected response, status code {0}",
@@ -103,7 +105,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode || isSpecialStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode())
             {
                 result.Response = Deserialize<TOut>(ResponseStream);
             }
@@ -330,16 +332,18 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
-            var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
+            Func<bool> isSpecialStatusCode = () =>
+            {
+                var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+                var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
 
-            var isSpecialStatusCode =
-                ((int)response.StatusCode == 503 && isAgentServiceName) ||
-                ((int)response.StatusCode == 429 && isAgentServiceName) ||
-                ((int)response.StatusCode == 503 && isAgentServiceId) ||
-                ((int)response.StatusCode == 429 && isAgentServiceId);
+                return ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceId);
+            };
 
-            if (!isSpecialStatusCode && response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
+            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode && !isSpecialStatusCode())
             {
                 if (ResponseStream == null)
                 {
@@ -353,7 +357,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode || isSpecialStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode())
             {
                 using (var reader = new StreamReader(ResponseStream))
                 {
