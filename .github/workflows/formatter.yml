@@ -1,0 +1,53 @@
+name: Format
+
+on:
+  pull_request_target:
+    paths:
+      - '**.editorconfig'
+      - '**.globalconfig'
+      - '**.cs'
+      - .github/workflows/formatter.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+
+      - name: Cache .NET tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: dotnet-tools-${{ runner.os }}-${{ hashFiles('.config/dotnet-tools.json') }}
+          restore-keys: dotnet-tools-${{ runner.os }}-
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Format scripts
+        run: dotnet tool run dotnet-format --fix-whitespace --no-restore
+
+      - name: Set Git config
+        run: |
+          git config user.name octocat
+          git config user.email octocat@users.noreply.github.com
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "style: fix whitespaces" || true
+          git push || true
