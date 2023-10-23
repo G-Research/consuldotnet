@@ -86,21 +86,10 @@ namespace Consul
             serializer.Serialize(writer, ((HealthStatus)value).Status);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var status = (string)serializer.Deserialize(reader, typeof(string));
-            switch (status)
-            {
-                case "passing":
-                    return HealthStatus.Passing;
-                case "warning":
-                    return HealthStatus.Warning;
-                case "critical":
-                    return HealthStatus.Critical;
-                default:
-                    throw new ArgumentException("Invalid Check status value during deserialization");
-            }
+            return HealthStatus.Parse(status);
         }
 
         public override bool CanConvert(Type objectType)
