@@ -647,11 +647,11 @@ namespace Consul.Test
         public async Task Agent_GetWorstLocalServiceHealth(string statusString)
         {
             var healthStatus = HealthStatus.Parse(statusString);
-            var svcID = KVTest.GenerateTestKeyName();
+            var svcName = KVTest.GenerateTestKeyName();
 
             var registration = new AgentServiceRegistration
             {
-                Name = svcID,
+                Name = svcName,
                 Tags = new[] { "bar", "baz" },
                 Port = 8000,
                 Checks = new[]
