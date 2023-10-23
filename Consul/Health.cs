@@ -94,11 +94,7 @@ namespace Consul
 
         public override bool CanConvert(Type objectType)
         {
-            if (objectType == typeof(HealthStatus))
-            {
-                return true;
-            }
-            return false;
+            return objectType == typeof(HealthStatus);
         }
     }
 
