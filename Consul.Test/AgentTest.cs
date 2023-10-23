@@ -671,7 +671,7 @@ namespace Consul.Test
 
             await _client.Agent.ServiceRegister(registration);
 
-            var status = await _client.Agent.GetWorstLocalServiceHealth(svcID);
+            var status = await _client.Agent.GetWorstLocalServiceHealth(svcName);
 
             Assert.Equal(healthStatus.Status, status.Response);
         }
