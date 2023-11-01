@@ -431,6 +431,115 @@ namespace Consul
     }
 
     /// <summary>
+    /// Gets or sets memory information.
+    /// </summary>
+    public class MemoryInfo
+    {
+        public long Total { get; set; }
+        public long Available { get; set; }
+        public long Used { get; set; }
+        public double UsedPercent { get; set; }
+        public long Free { get; set; }
+        public long Active { get; set; }
+        public long Inactive { get; set; }
+        public long Wired { get; set; }
+        public long Laundry { get; set; }
+        public long Buffers { get; set; }
+        public long Cached { get; set; }
+        public long WriteBack { get; set; }
+        public long Dirty { get; set; }
+        public long WriteBackTmp { get; set; }
+        public long Shared { get; set; }
+        public long Slab { get; set; }
+        public long Sreclaimable { get; set; }
+        public long Sunreclaim { get; set; }
+        public long PageTables { get; set; }
+        public long SwapCached { get; set; }
+        public long CommitLimit { get; set; }
+        public long CommittedAS { get; set; }
+        public long HighTotal { get; set; }
+        public long HighFree { get; set; }
+        public long LowTotal { get; set; }
+        public long LowFree { get; set; }
+        public long SwapTotal { get; set; }
+        public long SwapFree { get; set; }
+        public long Mapped { get; set; }
+        public long VmallocTotal { get; set; }
+        public long VmallocUsed { get; set; }
+        public long VmallocChunk { get; set; }
+        public long HugePagesTotal { get; set; }
+        public long HugePagesFree { get; set; }
+        public long HugePageSize { get; set; }
+    }
+
+    /// <summary>
+    /// Gets or sets CPU information.
+    /// </summary>
+    public class CPUInfo
+    {
+        public int Cpu { get; set; }
+        public string VendorId { get; set; }
+        public string Family { get; set; }
+        public string Model { get; set; }
+        public int Stepping { get; set; }
+        public string PhysicalId { get; set; }
+        public string CoreId { get; set; }
+        public int Cores { get; set; }
+        public string ModelName { get; set; }
+        public int Mhz { get; set; }
+        public int CacheSize { get; set; }
+        public List<string> Flags { get; set; }
+        public string Microcode { get; set; }
+    }
+
+    /// <summary>
+    /// Gets or sets host information.
+    /// </summary>
+    public class HostInfo
+    {
+        public string Hostname { get; set; }
+        public long Uptime { get; set; }
+        public long BootTime { get; set; }
+        public int Procs { get; set; }
+        public string Os { get; set; }
+        public string Platform { get; set; }
+        public string PlatformFamily { get; set; }
+        public string PlatformVersion { get; set; }
+        public string KernelVersion { get; set; }
+        public string KernelArch { get; set; }
+        public string VirtualizationSystem { get; set; }
+        public string VirtualizationRole { get; set; }
+        public string HostId { get; set; }
+    }
+
+    /// <summary>
+    /// Gets or sets disk information.
+    /// </summary>
+    public class DiskInfo
+    {
+        public string Path { get; set; }
+        public string Fstype { get; set; }
+        public long Total { get; set; }
+        public long Free { get; set; }
+        public long Used { get; set; }
+        public double UsedPercent { get; set; }
+        public long InodesTotal { get; set; }
+        public long InodesUsed { get; set; }
+        public long InodesFree { get; set; }
+        public double InodesUsedPercent { get; set; }
+    }
+
+    public class AgentHostInfo
+    {
+        public MemoryInfo Memory { get; set; }
+        public List<CPUInfo> CPU { get; set; }
+        public HostInfo Host { get; set; }
+        public DiskInfo Disk { get; set; }
+        public long CollectionTime { get; set; }
+        public object Errors { get; set; }
+    }
+
+    /// <summary>
     /// Agent can be used to query the Agent endpoints
     /// </summary>
     public class Agent : IAgentEndpoint
@@ -839,6 +948,10 @@ namespace Consul
             return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
+        public async Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default)
+        {
+            return await _client.Get<AgentHostInfo>($"v1/agent/host").Execute(ct).ConfigureAwait(false);
+        }
         /// <summary>
         /// Log streamer
         /// </summary>
