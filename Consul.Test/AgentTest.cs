@@ -1000,7 +1000,10 @@ namespace Consul.Test
         {
             var agentVersion = await _client.Agent.GetAgentHostInfo();
             Debug.WriteLine(agentVersion.Response.Host.Os);
-            Assert.True(agentVersion.Response.Host.Os.Contains("windows") || agentVersion.Response.Host.Os.Contains("linux") || agentVersion.Response.Host.Os.Contains("mac"));
+            Assert.True(agentVersion.Response.Host.Os.Contains("windows")
+                || agentVersion.Response.Host.Os.Contains("linux")
+                || agentVersion.Response.Host.Os.Contains("mac")
+                || agentVersion.Response.Host.Os.Contains("darwin"));
         }
     }
 }
