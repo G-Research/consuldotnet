@@ -431,7 +431,7 @@ namespace Consul
     }
 
     /// <summary>
-    /// Gets or sets memory information.
+    /// MemoryInfo represents the memory statistics for the agent
     /// </summary>
     public class MemoryInfo
     {
@@ -473,7 +473,7 @@ namespace Consul
     }
 
     /// <summary>
-    /// Gets or sets CPU information.
+    /// CPUInfo represents the CPU statistics for the agent
     /// </summary>
     public class CPUInfo
     {
@@ -493,7 +493,7 @@ namespace Consul
     }
 
     /// <summary>
-    /// Gets or sets host information.
+    /// HostInfo represents the host information for the agent
     /// </summary>
     public class HostInfo
     {
@@ -513,7 +513,7 @@ namespace Consul
     }
 
     /// <summary>
-    /// Gets or sets disk information.
+    /// DiskInfo represents the disk statistics for the agent
     /// </summary>
     public class DiskInfo
     {
@@ -529,6 +529,9 @@ namespace Consul
         public double InodesUsedPercent { get; set; }
     }
 
+    /// <summary>
+    /// AgentHostInfo represents the host information for the agent
+    /// </summary>
     public class AgentHostInfo
     {
         public MemoryInfo Memory { get; set; }
@@ -948,6 +951,11 @@ namespace Consul
             return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// GetAgentHostInfo returns the host info of the agent
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns>Agent Host Information</returns>
         public async Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default)
         {
             return await _client.Get<AgentHostInfo>($"v1/agent/host").Execute(ct).ConfigureAwait(false);
