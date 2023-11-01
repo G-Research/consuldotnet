@@ -993,5 +993,13 @@ namespace Consul.Test
             Assert.Single(actual);
             Assert.Equal(checkName, actual.Values.First().Name);
         }
+
+        [Fact]
+        public async Task Agent_Version()
+        {
+            var agentVersion = await _client.Agent.GetAgentVersion();
+            Assert.NotNull(agentVersion.Response.HumanVersion);
+            Assert.NotNull(agentVersion.Response.SHA);
+        }
     }
 }
