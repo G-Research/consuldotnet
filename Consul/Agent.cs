@@ -857,7 +857,7 @@ namespace Consul
         public async Task<QueryResult<AgentVersion>> GetAgentVersion(CancellationToken ct = default)
         {
             return await _client.Get<AgentVersion>("/v1/agent/version").Execute(ct).ConfigureAwait(false);
-        }   
+        }
         /// <summary>
         /// Log streamer
         /// </summary>
