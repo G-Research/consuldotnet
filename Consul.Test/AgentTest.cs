@@ -997,8 +997,8 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_HostInfo()
         {
-            var agent = await _client.Agent.GetAgentHostInfo();
-            Assert.True(agent.Response.Host.Os.Contains("windows") || agent.Response.Host.Os.Contains("linux") || agent.Response.Host.Os.Contains("mac"));
+            var agentVersion = await _client.Agent.GetAgentHostInfo();
+            Assert.True(agentVersion.Response.Host.Os.Contains("windows") || agentVersion.Response.Host.Os.Contains("linux") || agentVersion.Response.Host.Os.Contains("mac"));
         }
     }
 }

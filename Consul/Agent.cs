@@ -486,7 +486,7 @@ namespace Consul
         public string CoreId { get; set; }
         public int Cores { get; set; }
         public string ModelName { get; set; }
-        public int Mhz { get; set; }
+        public long Mhz { get; set; }
         public int CacheSize { get; set; }
         public List<string> Flags { get; set; }
         public string Microcode { get; set; }
