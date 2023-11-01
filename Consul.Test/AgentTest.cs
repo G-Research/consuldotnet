@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -998,6 +999,7 @@ namespace Consul.Test
         public async Task Agent_HostInfo()
         {
             var agentVersion = await _client.Agent.GetAgentHostInfo();
+            Debug.WriteLine(agentVersion.Response.Host.Os);
             Assert.True(agentVersion.Response.Host.Os.Contains("windows") || agentVersion.Response.Host.Os.Contains("linux") || agentVersion.Response.Host.Os.Contains("mac"));
         }
     }
