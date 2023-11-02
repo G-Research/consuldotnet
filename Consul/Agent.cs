@@ -441,6 +441,68 @@ namespace Consul
     }
 
     /// <summary>
+    /// Metrics represents the metrics returned by the Agent API
+    /// </summary>
+    public class Metrics
+    {
+        public string Timestamp { get; set; }
+        public List<Gauge> Gauges { get; set; }
+        public List<Point> Points { get; set; }
+        public List<Counter> Counters { get; set; }
+        public List<Sample> Samples { get; set; }
+    }
+
+    /// <summary>
+    /// Guage represents a Guage metric
+    /// </summary>
+    public class Gauge
+    {
+        public string Name { get; set; }
+        public double Value { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Point represents a Point metric
+    /// </summary>
+    public class Point
+    {
+        public string Name { get; set; }
+        public double Value { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Counter represents a Counter metric
+    /// </summary>
+    public class Counter
+    {
+        public string Name { get; set; }
+        public long Count { get; set; }
+        public double Sum { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Mean { get; set; }
+        public double Stddev { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Sample represents a Sample metric
+    /// </summary>
+    public class Sample
+    {
+        public string Name { get; set; }
+        public long Count { get; set; }
+        public double Sum { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Mean { get; set; }
+        public double Stddev { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
     /// Agent can be used to query the Agent endpoints
     /// </summary>
     public class Agent : IAgentEndpoint
@@ -897,6 +959,16 @@ namespace Consul
             {
                 return GetEnumerator();
             }
+        }
+
+        /// <summary>
+        /// GetAgentMetrics returns the metrics of the local agent
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns>Metrics of the local agent</returns>
+        public async Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default)
+        {
+            return await _client.Get<Metrics>("/v1/agent/metrics").Execute(ct).ConfigureAwait(false);
         }
     }
 
