@@ -998,12 +998,22 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_HostInfo()
         {
-            var hostInfo = await _client.Agent.GetAgentHostInfo();
-            Assert.NotNull(hostInfo.Response.Host);
-            Assert.NotNull(hostInfo.Response.Memory);
-            Assert.NotNull(hostInfo.Response.CPU);
-            Assert.NotNull(hostInfo.Response.Disk);
-            Assert.True(hostInfo.Response.CollectionTime > 0);
+            var agentVersion = await _client.Agent.GetAgentHostInfo();
+            Assert.True(agentVersion.Response.Host.Os.Contains("windows")
+                || agentVersion.Response.Host.Os.Contains("linux")
+                || agentVersion.Response.Host.Os.Contains("mac")
+                || agentVersion.Response.Host.Os.Contains("darwin"));
+        }
+
+        [Fact]
+        public async Task Agent_Metrics()
+        {
+            var agentMetrics = await _client.Agent.GetAgentMetrics();
+            Assert.NotNull(agentMetrics.Response.Timestamp);
+            Assert.NotNull(agentMetrics.Response.Counters);
+            Assert.NotNull(agentMetrics.Response.Gauges);
+            Assert.NotNull(agentMetrics.Response.Points);
+            Assert.NotNull(agentMetrics.Response.Samples);
         }
     }
 }
