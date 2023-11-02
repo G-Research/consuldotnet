@@ -65,6 +65,5 @@ namespace Consul
         Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default);
         Task<WriteResult> Reload(CancellationToken ct = default);
         Task<WriteResult> Leave(string node, CancellationToken ct = default);
-        Task<WriteResult> Reload(string node, CancellationToken ct = default);
     }
 }
