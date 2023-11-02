@@ -998,7 +998,12 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_HostInfo()
         {
-            var agentVersion = await _client.Agent.GetAgentHostInfo();
+            var hostInfo = await _client.Agent.GetAgentHostInfo();
+            Assert.NotNull(hostInfo.Response.Host);
+            Assert.NotNull(hostInfo.Response.Memory);
+            Assert.NotNull(hostInfo.Response.CPU);
+            Assert.NotNull(hostInfo.Response.Disk);
+            Assert.True(hostInfo.Response.CollectionTime > 0);
             Assert.True(agentVersion.Response.Host.Os.Contains("windows")
                 || agentVersion.Response.Host.Os.Contains("linux")
                 || agentVersion.Response.Host.Os.Contains("mac")
