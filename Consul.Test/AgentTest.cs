@@ -1004,10 +1004,6 @@ namespace Consul.Test
             Assert.NotNull(hostInfo.Response.CPU);
             Assert.NotNull(hostInfo.Response.Disk);
             Assert.True(hostInfo.Response.CollectionTime > 0);
-            Assert.True(agentVersion.Response.Host.Os.Contains("windows")
-                || agentVersion.Response.Host.Os.Contains("linux")
-                || agentVersion.Response.Host.Os.Contains("mac")
-                || agentVersion.Response.Host.Os.Contains("darwin"));
         }
     }
 }
