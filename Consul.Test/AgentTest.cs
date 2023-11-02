@@ -19,12 +19,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using NuGet.Versioning;
 using Xunit;
+using static System.Net.WebRequestMethods;
 
 namespace Consul.Test
 {
@@ -1003,6 +1007,75 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Gauges);
             Assert.NotNull(agentMetrics.Response.Points);
             Assert.NotNull(agentMetrics.Response.Samples);
+        }
+
+        [Fact]
+        public async Task Agent_Reload()
+        {
+            string config1 = @"
+            {
+              ""ports"": {
+                ""http"": 8499,
+                 ""dns"": -1,
+                 ""grpc"": -1,
+                 ""grpc_tls"": -1,
+                 ""serf_lan"": 8100,
+                 ""serf_wan"": -1,
+                 ""server"": 8200,
+                 ""sidecar_min_port"": 0,
+                 ""sidecar_max_port"": 0,
+                 ""expose_min_port"": 0,
+                 ""expose_max_port"": 0
+              }
+            }";
+            string config2 = @"
+            {
+              ""ports"": {
+                ""http"": 8499,
+                 ""dns"": -1,
+                 ""grpc"": -1,
+                 ""grpc_tls"": -1,
+                 ""serf_lan"": 8100,
+                 ""serf_wan"": -1,
+                 ""server"": 8200,
+                 ""sidecar_min_port"": 0,
+                 ""sidecar_max_port"": 0,
+                 ""expose_min_port"": 0,
+                 ""expose_max_port"": 0
+              },
+              ""service"": {
+                ""name"": ""redis"",
+                ""port"": 1234,
+                ""Meta"": { ""some"": ""meta"" }
+              }
+            }";
+            // Generate a random file name
+            string fileName = Path.Combine(Path.GetTempPath(), "random_config_" + Guid.NewGuid().ToString() + ".json");
+
+            // Write the JSON data to the file
+            System.IO.File.WriteAllText(fileName, config1);
+
+            string consulPath = Path.Combine(Directory.GetCurrentDirectory(),"consul.exe");
+
+            // Specify the command and arguments
+            string command = $"agent -dev -config-file \"{fileName}\"";
+            ProcessStartInfo startInfo = new ProcessStartInfo(consulPath)
+            {
+                Arguments = command
+
+            };
+            Process.Start(startInfo);
+            var client = new ConsulClient(c =>
+                {
+                    c.Token = Guid.NewGuid().ToString();
+                    c.Address = new Uri(" http://127.0.0.1:8499");
+                });
+            var services = await _client.Agent.Services();
+            Assert.Empty(services.Response);
+            System.IO.File.WriteAllText(fileName, config2);
+            await client.Agent.Reload();
+            services = await client.Agent.Services();
+            Assert.True(services.Response.ContainsKey("redis"));
         }
     }
 }
