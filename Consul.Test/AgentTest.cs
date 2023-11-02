@@ -1055,7 +1055,7 @@ namespace Consul.Test
             // Write the JSON data to the file
             System.IO.File.WriteAllText(fileName, config1);
 
-            string consulPath = Path.Combine(Directory.GetCurrentDirectory(),"consul.exe");
+            string consulPath = Path.Combine(Directory.GetCurrentDirectory(), "consul.exe");
 
             // Specify the command and arguments
             string command = $"agent -dev -config-file \"{fileName}\"";
