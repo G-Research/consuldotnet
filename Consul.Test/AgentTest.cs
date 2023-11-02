@@ -999,6 +999,10 @@ namespace Consul.Test
         {
             var agentMetrics = await _client.Agent.GetAgentMetrics();
             Assert.NotNull(agentMetrics.Response.Timestamp);
+            Assert.NotNull(agentMetrics.Response.Counters);
+            Assert.NotNull(agentMetrics.Response.Gauges);
+            Assert.NotNull(agentMetrics.Response.Points);
+            Assert.NotNull(agentMetrics.Response.Samples);
         }
     }
 }
