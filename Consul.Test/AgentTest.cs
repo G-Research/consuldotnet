@@ -1,13 +1,12 @@
 // -----------------------------------------------------------------------
-//  <copyright file="AgentTest.cs" company="PlayFab Inc">
-//    Copyright 2015 PlayFab Inc.
+//  <copyright file="AgentTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
-//    Licensed under the Apache License, Version 2.0 (the "License");
+//    Licensed under the Apache License, Version 2.0 (the "License"),
 //    you may not use this file except in compliance with the License.
 //    You may obtain a copy of the License at
 //
-//        http://www.apache.org/licenses/LICENSE-2.0
+//       http://www.apache.org/licenses/LICENSE-2.0
 //
 //    Unless required by applicable law or agreed to in writing, software
 //    distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,16 +18,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using NuGet.Versioning;
 using Xunit;
-using static System.Net.WebRequestMethods;
 
 namespace Consul.Test
 {
@@ -1009,83 +1004,23 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Samples);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Agent_Reload()
         {
-            string config1 = @"
-            {
-              ""ports"": {
-                ""http"": 8499,
-                 ""dns"": -1,
-                 ""grpc"": -1,
-                 ""grpc_tls"": -1,
-                 ""serf_lan"": 8100,
-                 ""serf_wan"": -1,
-                 ""server"": 8200,
-                 ""sidecar_min_port"": 0,
-                 ""sidecar_max_port"": 0,
-                 ""expose_min_port"": 0,
-                 ""expose_max_port"": 0
-              }
-            }";
-            string config2 = @"
-            {
-              ""ports"": {
-                ""http"": 8499,
-                 ""dns"": -1,
-                 ""grpc"": -1,
-                 ""grpc_tls"": -1,
-                 ""serf_lan"": 8100,
-                 ""serf_wan"": -1,
-                 ""server"": 8200,
-                 ""sidecar_min_port"": 0,
-                 ""sidecar_max_port"": 0,
-                 ""expose_min_port"": 0,
-                 ""expose_max_port"": 0
-              },
-              ""service"": {
-                ""name"": ""redis"",
-                ""port"": 1234,
-                ""Meta"": { ""some"": ""meta"" }
-              }
-            }";
-            // Generate a random file name
-            string fileName = Path.Combine(Path.GetTempPath(), "random_config_" + Guid.NewGuid().ToString() + ".json");
-
-            // Write the JSON data to the file
-            System.IO.File.WriteAllText(fileName, config1);
-
-            string consulPath = Path.Combine(Directory.GetCurrentDirectory(), "consul.exe");
-
-            // Specify the command and arguments
-            string command = $"agent -dev -config-file \"{fileName}\"";
-
-            ProcessStartInfo startInfo = new ProcessStartInfo(consulPath)
-            {
-                Arguments = command,
-                UseShellExecute = false
-            };
-            using (Process process = new Process
-            {
-                StartInfo = startInfo
-            })
-            {
-                process.Start();
-                var client = new ConsulClient(c =>
-                {
-                    c.Token = Guid.NewGuid().ToString();
-                    c.Address = new Uri(" http://127.0.0.1:8499");
-                });
-                var services = await client.Agent.Services();
-                Assert.Empty(services.Response);
-                System.IO.File.WriteAllText(fileName, config2);
-                await client.Agent.Reload();
-                services = await client.Agent.Services();
-                Assert.True(services.Response.ContainsKey("redis"));
-                process.Kill();
-            }
-
-
+            string configFile = Environment.GetEnvironmentVariable("AgentConfig");
+            Skip.If(string.IsNullOrEmpty(configFile));
+            var intialConfig = System.IO.File.ReadAllText(configFile);
+            var udpatedConfig = intialConfig.Replace("TRACE", "DEBUG");
+            var agentDetails = await _client.Agent.Self();
+            var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+            Assert.Equal("TRACE", agentLogLevel.Value);
+            System.IO.File.WriteAllText(configFile, udpatedConfig);
+            await _client.Agent.Reload();
+            agentDetails = await _client.Agent.Self();
+            agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+            Assert.Equal("DEBUG", agentLogLevel.Value);
+            System.IO.File.WriteAllText(configFile, intialConfig);
+            await _client.Agent.Reload();
         }
     }
 }
