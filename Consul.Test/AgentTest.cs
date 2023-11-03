@@ -1061,7 +1061,8 @@ namespace Consul.Test
             string command = $"agent -dev -config-file \"{fileName}\"";
             ProcessStartInfo startInfo = new ProcessStartInfo(consulPath)
             {
-                Arguments = command
+                Arguments = command,
+                CreateNoWindow = true
 
             };
             Process.Start(startInfo);
