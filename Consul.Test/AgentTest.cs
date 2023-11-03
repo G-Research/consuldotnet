@@ -1059,24 +1059,33 @@ namespace Consul.Test
 
             // Specify the command and arguments
             string command = $"agent -dev -config-file \"{fileName}\"";
+            
             ProcessStartInfo startInfo = new ProcessStartInfo(consulPath)
             {
                 Arguments = command,
-                CreateNoWindow = true
-
+                UseShellExecute = false
             };
-            Process.Start(startInfo);
-            var client = new ConsulClient(c =>
+            using (Process process = new Process
+            {
+                StartInfo = startInfo
+            })
+            {
+                process.Start();
+                var client = new ConsulClient(c =>
                 {
                     c.Token = Guid.NewGuid().ToString();
                     c.Address = new Uri(" http://127.0.0.1:8499");
                 });
-            var services = await _client.Agent.Services();
-            Assert.Empty(services.Response);
-            System.IO.File.WriteAllText(fileName, config2);
-            await client.Agent.Reload();
-            services = await client.Agent.Services();
-            Assert.True(services.Response.ContainsKey("redis"));
+                var services = await client.Agent.Services();
+                Assert.Empty(services.Response);
+                System.IO.File.WriteAllText(fileName, config2);
+                await client.Agent.Reload();
+                services = await client.Agent.Services();
+                Assert.True(services.Response.ContainsKey("redis"));
+                process.Kill();
+            }
+               
+               
         }
     }
 }
