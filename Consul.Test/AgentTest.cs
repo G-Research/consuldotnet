@@ -1007,7 +1007,7 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Agent_Reload()
         {
-            string configFile = Environment.GetEnvironmentVariable("AgentConfig");
+            string configFile = Environment.GetEnvironmentVariable("CONSUL_AGENT_CONFIG_PATH");
             Skip.If(string.IsNullOrEmpty(configFile));
             var initialConfig= System.IO.File.ReadAllText(configFile);
             var udpatedConfig = intialConfig.Replace("TRACE", "DEBUG");
