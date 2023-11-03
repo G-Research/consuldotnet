@@ -1009,7 +1009,7 @@ namespace Consul.Test
         {
             string configFile = Environment.GetEnvironmentVariable("AgentConfig");
             Skip.If(string.IsNullOrEmpty(configFile));
-            var intialConfig = System.IO.File.ReadAllText(configFile);
+            var initialConfig= System.IO.File.ReadAllText(configFile);
             var udpatedConfig = intialConfig.Replace("TRACE", "DEBUG");
             var agentDetails = await _client.Agent.Self();
             var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
