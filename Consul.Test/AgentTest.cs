@@ -1008,19 +1008,26 @@ namespace Consul.Test
         public async Task Agent_Reload()
         {
             string configFile = Environment.GetEnvironmentVariable("CONSUL_AGENT_CONFIG_PATH");
-            Skip.If(string.IsNullOrEmpty(configFile));
+            Skip.If(string.IsNullOrEmpty(configFile), "The CONSUL_AGENT_CONFIG_PATH environment variable was not set");
             var initialConfig = System.IO.File.ReadAllText(configFile);
-            var udpatedConfig = intialConfig.Replace("TRACE", "DEBUG");
-            var agentDetails = await _client.Agent.Self();
-            var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
-            Assert.Equal("TRACE", agentLogLevel.Value);
-            System.IO.File.WriteAllText(configFile, udpatedConfig);
-            await _client.Agent.Reload();
-            agentDetails = await _client.Agent.Self();
-            agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
-            Assert.Equal("DEBUG", agentLogLevel.Value);
-            System.IO.File.WriteAllText(configFile, intialConfig);
-            await _client.Agent.Reload();
+            var udpatedConfig = initialConfig.Replace("TRACE", "DEBUG");
+            try
+            {
+                var agentDetails = await _client.Agent.Self();
+                var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+                Assert.Equal("TRACE", agentLogLevel.Value);
+                System.IO.File.WriteAllText(configFile, udpatedConfig);
+                await _client.Agent.Reload();
+                agentDetails = await _client.Agent.Self();
+                agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+                Assert.Equal("DEBUG", agentLogLevel.Value);
+                System.IO.File.WriteAllText(configFile, initialConfig);
+                await _client.Agent.Reload();
+            }
+            finally
+            {
+                System.IO.File.WriteAllText(configFile, initialConfig);
+            }
         }
     }
 }
