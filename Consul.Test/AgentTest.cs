@@ -1059,7 +1059,7 @@ namespace Consul.Test
 
             // Specify the command and arguments
             string command = $"agent -dev -config-file \"{fileName}\"";
-            
+
             ProcessStartInfo startInfo = new ProcessStartInfo(consulPath)
             {
                 Arguments = command,
@@ -1084,8 +1084,8 @@ namespace Consul.Test
                 Assert.True(services.Response.ContainsKey("redis"));
                 process.Kill();
             }
-               
-               
+
+
         }
     }
 }
