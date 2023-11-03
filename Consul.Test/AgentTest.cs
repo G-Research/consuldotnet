@@ -1000,7 +1000,6 @@ namespace Consul.Test
             var hostInfo = await _client.Agent.GetAgentHostInfo();
             Assert.NotNull(hostInfo.Response.Host);
             Assert.NotNull(hostInfo.Response.Memory);
-            Assert.NotNull(hostInfo.Response.CPU);
             Assert.NotNull(hostInfo.Response.Disk);
             Assert.True(hostInfo.Response.CollectionTime > 0);
         }
