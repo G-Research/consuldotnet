@@ -1,0 +1,28 @@
+---
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "nuget"
+    directory: "/Consul/"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "nuget"
+    directory: "/Consul.AspNetCore/"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "bundler"
+    directory: "/Consul.AspNetCore.Test/"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "bundler"
+    directory: "/Consul.Test/"
+    schedule:
+      interval: "daily"
