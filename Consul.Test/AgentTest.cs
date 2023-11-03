@@ -995,6 +995,16 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Agent_HostInfo()
+        {
+            var hostInfo = await _client.Agent.GetAgentHostInfo();
+            Assert.NotNull(hostInfo.Response.Host);
+            Assert.NotNull(hostInfo.Response.Memory);
+            Assert.NotNull(hostInfo.Response.Disk);
+            Assert.True(hostInfo.Response.CollectionTime > 0);
+        }
+
+        [Fact]
         public async Task Agent_Metrics()
         {
             var agentMetrics = await _client.Agent.GetAgentMetrics();
