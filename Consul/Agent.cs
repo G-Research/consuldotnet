@@ -539,7 +539,6 @@ namespace Consul
         public HostInfo Host { get; set; }
         public DiskInfo Disk { get; set; }
         public long CollectionTime { get; set; }
-        public object Errors { get; set; }
     }
 
     /// <summary>
