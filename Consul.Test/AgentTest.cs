@@ -1014,13 +1014,11 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Samples);
         }
 
-        //[SkippableFact]
-        [Fact]
+        [SkippableFact]
         public async Task Agent_Reload()
         {
             string configFile = Environment.GetEnvironmentVariable("CONSUL_AGENT_CONFIG_PATH");
-
-            //Skip.If(string.IsNullOrEmpty(configFile), "The CONSUL_AGENT_CONFIG_PATH environment variable was not set");
+            Skip.If(string.IsNullOrEmpty(configFile), "The CONSUL_AGENT_CONFIG_PATH environment variable was not set");
             var initialConfig = System.IO.File.ReadAllText(configFile);
             var udpatedConfig = initialConfig.Replace("TRACE", "DEBUG");
             try
