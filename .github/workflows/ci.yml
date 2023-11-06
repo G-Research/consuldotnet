@@ -7,7 +7,6 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  CONSUL_AGENT_CONFIG_PATH: $GITHUB_WORKSPACE/Consul.Test/test_config.json
 
 jobs:
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet format`.
@@ -132,6 +131,7 @@ jobs:
         env:
             RUN_CONSUL_ENTERPRISE_TESTS: ${{env.RUN_CONSUL_ENTERPRISE_TESTS }}
             CONSUL_LICENSE: ${{ secrets.CONSUL_LICENSE }}
+            CONSUL_AGENT_CONFIG_PATH: $GITHUB_WORKSPACE/Consul.Test/test_config.json
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3
