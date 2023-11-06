@@ -131,7 +131,7 @@ jobs:
         env:
             RUN_CONSUL_ENTERPRISE_TESTS: ${{env.RUN_CONSUL_ENTERPRISE_TESTS }}
             CONSUL_LICENSE: ${{ secrets.CONSUL_LICENSE }}
-            CONSUL_AGENT_CONFIG_PATH: ${{GITHUB_WORKSPACE}}/Consul.Test/test_config.json
+            CONSUL_AGENT_CONFIG_PATH: ${{vars.GITHUB_WORKSPACE}}/Consul.Test/test_config.json
       - name: Upload Consul logs
         if: failure()
         uses: actions/upload-artifact@v3
