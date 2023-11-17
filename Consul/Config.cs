@@ -33,7 +33,7 @@ namespace Consul
 
     public interface IConfig
     {
-       
+
     }
 
     public class Config : IConfig
