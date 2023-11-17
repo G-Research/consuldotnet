@@ -25,7 +25,7 @@ using Consul.Interfaces;
 
 namespace Consul
 {
-    public class ConfigPayload
+    public class ConfigurationPayload
     {
         public string Kind { get; set; }
         public string Name { get; set; }
@@ -33,35 +33,50 @@ namespace Consul
     }
 
 
-    public class Config : IConfigEndpoint
+    public class Configuration : IConfigurationEndpoint
     {
+        private readonly ConsulClient _client;
 
-    }
-
-    public class Config : IConfig
-    {
-        public Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default)
+        internal Configuration(ConsulClient c)
+        {
+            _client = c;
+        }
+        public Task<WriteResult> ApplyConfig(ConfigurationPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
         }
-        public Task<WriteResult> ApplyConfig(string dc, ConfigPayload cp, CancellationToken ct = default)
+        public Task<WriteResult> ApplyConfig(string dc, ConfigurationPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(dc, 0, cp, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult> ApplyConfig(int cas, ConfigPayload cp, CancellationToken ct = default)
+        public Task<WriteResult> ApplyConfig(int cas, ConfigurationPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(string.Empty, cas, cp, WriteOptions.Default, ct);
         }
-        public Task<WriteResult> ApplyConfig(string dc = "", int cas = 0, ConfigPayload cp, WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult> ApplyConfig(string dc, int cas, ConfigurationPayload cp, WriteOptions q, CancellationToken ct = default)
         {
-            var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/service/{0}", service), q);
-            return _client.Put("/v1/catalog/deregister", reg, q).Execute(ct);
-            if (string.IsNullOrEmpty(dc))
+            var req = _client.Put("/v1/config", cp, q);
+            if (!string.IsNullOrEmpty(dc))
             {
-
+                req.Params["dc"] = dc;
             }
+            if (cas > 0)
+            {
+                req.Params["cas"] = cas.ToString();
+            }
+            return req.Execute(ct);
         }
-    }
 
+
+    }
+    public partial class ConsulClient : IConsulClient
+    {
+        private Lazy<Configuration> _configuration;
+
+        /// <summary>
+        /// ConsulClient returns a handle to the catalog endpoints
+        /// </summary>
+        public IConfigurationEndpoint Configuration => _configuration.Value;
+    }
 }

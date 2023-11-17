@@ -24,11 +24,11 @@ using System.Threading.Tasks;
 
 namespace Consul.Interfaces
 {
-    public interface IConfigEndpoint
+    public interface IConfigurationEndpoint
     {
-        Task<WriteResult> ApplyConfig(string dc = "", int cas = 0, ConfigPayload cp = null, WriteOptions q = null, CancellationToken ct = default);
-        Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default);
-        Task<WriteResult> ApplyConfig(int cas, ConfigPayload cp, CancellationToken ct = default);
-        Task<WriteResult> ApplyConfig(string dc, ConfigPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(ConfigurationPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(int cas, ConfigurationPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(string dc, ConfigurationPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(string dc, int cas, ConfigurationPayload cp, WriteOptions q, CancellationToken ct = default);
     }
 }
