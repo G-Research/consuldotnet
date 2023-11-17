@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Interfaces;
 
 namespace Consul
 {
@@ -31,13 +32,15 @@ namespace Consul
         public string Protocol { get; set; }
     }
 
-    public interface IConfig
-    {
-       
-    }
 
-    public class Config : IConfig
+    public class Config : IConfigEndpoint
     {
+        private readonly ConsulClient _client;
+
+        internal Config(ConsulClient c)
+        {
+            _client = c;
+        }
         public Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
