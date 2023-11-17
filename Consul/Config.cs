@@ -35,12 +35,11 @@ namespace Consul
 
     public class Config : IConfigEndpoint
     {
-        private readonly ConsulClient _client;
 
-        internal Config(ConsulClient c)
-        {
-            _client = c;
-        }
+    }
+
+    public class Config : IConfig
+    {
         public Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
