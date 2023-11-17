@@ -1,0 +1,34 @@
+// -----------------------------------------------------------------------
+//  <copyright file="IConfigEndpoint.cs" company="G-Research Limited">
+//    Copyright 2020 G-Research Limited
+//
+//    Licensed under the Apache License, Version 2.0 (the "License"),
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace Consul.Interfaces
+{
+    public interface IConfigEndpoint
+    {
+        Task<WriteResult> ApplyConfig(string dc = "", int cas = 0, ConfigPayload cp = null, WriteOptions q = null, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(int cas, ConfigPayload cp, CancellationToken ct = default);
+        Task<WriteResult> ApplyConfig(string dc, ConfigPayload cp, CancellationToken ct = default);
+    }
+}

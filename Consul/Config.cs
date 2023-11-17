@@ -30,9 +30,15 @@ namespace Consul
         public string Name { get; set; }
         public string Protocol { get; set; }
     }
-    public class Config
+
+    public interface IConfig
     {
-        public Task<WriteResult> ApplyConfig( ConfigPayload cp, CancellationToken ct = default)
+       
+    }
+
+    public class Config : IConfig
+    {
+        public Task<WriteResult> ApplyConfig(ConfigPayload cp, CancellationToken ct = default)
         {
             return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
         }
@@ -41,9 +47,9 @@ namespace Consul
             return ApplyConfig(dc, 0, cp, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult> ApplyConfig( int cas, ConfigPayload cp,  CancellationToken ct = default)
+        public Task<WriteResult> ApplyConfig(int cas, ConfigPayload cp, CancellationToken ct = default)
         {
-            return ApplyConfig(string.Empty, cas, cp,  WriteOptions.Default, ct);
+            return ApplyConfig(string.Empty, cas, cp, WriteOptions.Default, ct);
         }
         public Task<WriteResult> ApplyConfig(string dc = "", int cas = 0, ConfigPayload cp, WriteOptions q, CancellationToken ct = default)
         {
@@ -55,5 +61,5 @@ namespace Consul
             }
         }
     }
-   
+
 }
