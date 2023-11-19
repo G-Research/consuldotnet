@@ -26,7 +26,698 @@ using Newtonsoft.Json;
 
 namespace Consul
 {
-    public class ControlPlaneRequestLimit
+    /// <summary>
+    /// The JWTProviderEntry configures Consul to use a JSON Web Token (JWT) and JSON Web Key Set (JWKS) in order to add JWT validation to proxies in the service mesh.
+    /// </summary>
+    public class JWTProviderEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "jwt-provider";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Issuer { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<JSONWebKeySetConfig> JSONWebKeySet { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Audiences { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ProviderLocation> Locations { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ForwardingConfig Forwarding { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ClockSkewSeconds { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CacheConfig CacheConfig { get; set; }
+    }
+
+    public class JSONWebKeySetConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public LocalJSONWebKeySet Local { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public RemoteJSONWebKeySet Remote { get; set; }
+    }
+
+    public class LocalJSONWebKeySet
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string JWKS { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Filename { get; set; }
+    }
+
+    public class RemoteJSONWebKeySet
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string URI { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RequestTimeoutMs { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CacheDuration { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool FetchAsynchronously { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public RetryPolicyConfig RetryPolicy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public JWKSClusterConfig JWKSCluster { get; set; }
+    }
+
+    public class RetryPolicyConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string NumRetries { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public RetryPolicyBackOffConfig RetryPolicyBackOff { get; set; }
+    }
+
+    public class RetryPolicyBackOffConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string BaseInterval { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string MaxInterval { get; set; }
+    }
+
+    public class JWKSClusterConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DiscoveryType { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ConnectTimeout { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TLSCertificatesConfig TLSCertificates { get; set; }
+    }
+
+    public class TLSCertificatesConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TrustedCAConfig TrustedCA { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CaCertificateProviderInstanceConfig CaCertificateProviderInstance { get; set; }
+    }
+
+    public class TrustedCAConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Filename { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string EnvironmentVariable { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string InlineString { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string InlineBytes { get; set; }
+    }
+
+    public class CaCertificateProviderInstanceConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string InstanceName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CertificateName { get; set; }
+    }
+
+    public class ProviderLocation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public HeaderLocation Header { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public QueryParamLocation QueryParam { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CookieLocation Cookie { get; set; }
+    }
+
+    public class HeaderLocation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ValuePrefix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Forward { get; set; }
+    }
+
+    public class QueryParamLocation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+    }
+
+    public class CookieLocation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+    }
+
+    public class ForwardingConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string HeaderName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool PadForwardPayloadHeader { get; set; }
+    }
+
+    public class CacheConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Size { get; set; }
+    }
+
+    /// <summary>
+    /// IngressGatewayEntry provides configuration for the Ingress Gateway Proxy
+    /// </summary>
+    public class IngressGatewayEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "ingress-gateway";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TLSConfig TLS { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public GatewayDefaults Defaults { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<GatewayListener> Listeners { get; set; }
+    }
+
+    public class TLSConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Enabled { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TLSMinVersion { get; set; } = "TLSv1_2";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TLSMaxVersion { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> CipherSuites { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public SDSConfig SDS { get; set; }
+    }
+
+    public class SDSConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ClusterName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CertResource { get; set; }
+    }
+
+    public class GatewayDefaults
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int MaxConnections { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int MaxPendingRequests { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int MaxConcurrentRequests { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public PassiveHealthCheckConfig PassiveHealthCheck { get; set; }
+    }
+
+    public class PassiveHealthCheckConfig
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Interval { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int MaxFailures { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int EnforcingConsecutive5xx { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int MaxEjectionPercent { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string BaseEjectionTime { get; set; }
+    }
+
+    public class GatewayListener
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Port { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Protocol { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ExternalService> Services { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TLSConfig TLS { get; set; }
+    }
+
+    public class ExternalService
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Hosts { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public HeaderModification RequestHeaders { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public HeaderModification ResponseHeaders { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TLSConfig TLS { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public GatewayDefaults Defaults { get; set; }
+    }
+
+    public class HeaderModification
+    {
+        [JsonProperty("Add", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Add { get; set; }
+
+        [JsonProperty("Set", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Set { get; set; }
+
+        [JsonProperty("Remove", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Remove { get; set; }
+    }
+
+    /// <summary>
+    /// The InlineCertificateEntry configures the gateway inline certificate configuration entry
+    /// </summary>
+    public class InlineCertificateEntry : IConfigurationEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "inline-certificate";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Certificate { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PrivateKey { get; set; }
+    }
+    /// <summary>
+    /// The TcpRouteEntry configures TCP route resources.
+    /// </summary>
+    public class TcpRouteEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "tcp-route";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<TcpRouteService> Services { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ApiGatewayReference> Parents { get; set; }
+    }
+
+    public class TcpRouteService
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+    }
+
+
+
+    /// <summary>
+    /// The HttpRouteEntry configures HTTP route resources.
+    /// </summary>
+    public class HttpRouteEntry : IConfigurationEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "http-route";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Hostnames { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ApiGatewayReference> Parents { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteRule> Rules { get; set; }
+    }
+
+    public class ApiGatewayReference
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SectionName { get; set; }
+    }
+
+    public class HttpRouteRule
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteFilter> Filters { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteMatch> Matches { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteService> Services { get; set; }
+    }
+
+    public class HttpRouteFilter
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpHeaderOperation> Headers { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpURLRewriteOperation> URLRewrite { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public JWTSettings JWT { get; set; }
+    }
+
+    public class HttpRouteMatch
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpHeaderMatch> Headers { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Method { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpPathMatch> Path { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpQueryMatch> Query { get; set; }
+    }
+
+    public class JWTSettings
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<JWTProvider> Providers { get; set; }
+    }
+
+    public class JWTProvider
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public VerifyClaims VerifyClaims { get; set; }
+    }
+
+    public class VerifyClaims
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Path { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    public class HttpRouteService
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Weight { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteFilter> Filters { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HttpRouteFilter> ResponseFilters { get; set; }
+    }
+
+    public class HttpHeaderOperation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HeaderKeyValuePair> Add { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Remove { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<HeaderKeyValuePair> Set { get; set; }
+    }
+
+    public class HttpURLRewriteOperation
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Path { get; set; }
+    }
+
+    public class HeaderKeyValuePair
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Key { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    public class HttpHeaderMatch
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Match { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    public class HttpPathMatch
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Match { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    public class HttpQueryMatch
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Match { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    /// <summary>
+    ///  Configures the API gateway configuration entry that you can deploy to networks in virtual machine (VM) environments.
+    /// </summary>
+    public class ApiGatewayEntry : IConfigurationEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "api-gateway";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ApiGatewayListener> Listeners { get; set; }
+    }
+
+    public class ApiGatewayListener
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Port { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Protocol { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ApiGatewayTLS TLS { get; set; }
+
+        [JsonProperty("default", NullValueHandling = NullValueHandling.Ignore)]
+        public ApiGatewayOverrideSettings Default { get; set; }
+
+        [JsonProperty("override", NullValueHandling = NullValueHandling.Ignore)]
+        public ApiGatewayOverrideSettings Override { get; set; }
+    }
+
+    public class ApiGatewayTLS
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string MaxVersion { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string MinVersion { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> CipherSuites { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ApiGatewayCertificate> Certificates { get; set; }
+    }
+
+    public class ApiGatewayCertificate
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "inline-certificate";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+    }
+
+    public class ApiGatewayOverrideSettings
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ApiGatewayJWTSettings JWT { get; set; }
+    }
+
+    public class ApiGatewayJWTSettings
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<ApiGatewayJWTProvider> Providers { get; set; }
+    }
+
+    public class ApiGatewayJWTProvider
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ApiGatewayVerifyClaims VerifyClaims { get; set; }
+    }
+
+    public class ApiGatewayVerifyClaims
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Path { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; set; }
+    }
+
+    /// <summary>
+    /// Configuration options for the control-plane-request-limit configuration entry
+    /// </summary>
+    public class ControlPlaneRequestLimitEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "control-plane-request-limit";
@@ -79,7 +770,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int WriteRate { get; set; }
     }
-    public class TerminalGatewayEntry
+
+    /// <summary>
+    /// Configures terminating gateways to proxy traffic from services in the Consul service mesh to services registered with Consul that do not have a service mesh sidecar proxy
+    /// </summary>
+    public class TerminalGatewayEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "terminating-gateway";
@@ -120,7 +815,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
     }
-    public class ServiceSplitterEntry
+
+    /// <summary>
+    /// Configures and apply service splitters to redirect a percentage of incoming traffic requests for a service to one or more specific service instances.
+    /// </summary>
+    public class ServiceSplitterEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-splitter";
@@ -164,8 +863,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, Dictionary<string, string>> ResponseHeaders { get; set; }
     }
-    
-    public class ServiceRouterEntry
+
+    /// <summary>
+    /// Service routers use L7 network information to redirect a traffic request for a service to one or more specific service instances.
+    /// </summary>
+    public class ServiceRouterEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-router";
@@ -287,7 +989,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Regex { get; set; }
     }
-    public class ServiceResolverEntry
+
+    /// <summary>
+    /// Configures and apply service resolvers to create named subsets of service instances and define their behavior when satisfying upstream requests.
+    /// </summary>
+    public class ServiceResolverEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-resolver";
@@ -379,7 +1085,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool Terminal { get; set; }
     }
-    public class ServiceIntentionsEntry
+
+    /// <summary>
+    /// Configures control access between services in the service mesh.
+    /// </summary>
+    public class ServiceIntentionsEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-intentions";
@@ -489,7 +1199,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LegacyUpdateTime { get; set; }
     }
-    public class SamenessGroupEntry
+
+    /// <summary>
+    /// Sameness groups associate identical admin partitions to facilitate traffic between identical services.
+    /// </summary>
+    public class SamenessGroupEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "sameness-group";
@@ -518,7 +1232,11 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Peer { get; set; }
     }
-    public class ProxyDefaultEntry
+
+    /// <summary>
+    /// Proxy defaults configuration entries set global passthrough Envoy settings for proxies in the service mesh, including sidecars and gateways.
+    /// </summary>
+    public class ProxyDefaultEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "proxy-defaults";
@@ -635,7 +1353,10 @@ namespace Consul
         public string TextFormat { get; set; }
     }
 
-    public class ExportedServiceEntry
+    /// <summary>
+    /// The Exported Service configuration entry enables Consul to export service instances to other clusters from a single file and connect services across clusters.
+    /// </summary>
+    public class ExportedServiceEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "exported-services";
@@ -677,7 +1398,10 @@ namespace Consul
         public string SamenessGroup { get; set; }
     }
 
-    public class MeshEntry
+    /// <summary>
+    /// The mesh configuration entry allows you to define a global default configuration that applies to all service mesh proxies.
+    /// </summary>
+    public class MeshEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "mesh";
@@ -719,18 +1443,6 @@ namespace Consul
         public PeeringMeshConfig Peering { get; set; }
     }
 
-    public class TLSConfig
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TLSMinVersion { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TLSMaxVersion { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> CipherSuites { get; set; }
-    }
-
     public class TLSDirectionConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -750,7 +1462,10 @@ namespace Consul
         public bool PeerThroughMeshGateways { get; set; }
     }
 
-    public class ServiceDefaultsEntry : IConfigurationPayload
+    /// <summary>
+    /// The service defaults configuration entry contains common configuration settings for service mesh services, such as upstreams and gateways.
+    /// </summary>
+    public class ServiceDefaultsEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-defaults";
@@ -915,24 +1630,6 @@ namespace Consul
         public int MaxConcurrentRequests { get; set; }
     }
 
-    public class PassiveHealthCheckConfig
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Interval { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxFailures { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int EnforcingConsecutive5xx { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxEjectionPercent { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string BaseEjectionTime { get; set; }
-    }
-
     public class EnvoyExtensionConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -960,9 +1657,8 @@ namespace Consul
         public int Port { get; set; }
     }
 
-    public interface IConfigurationPayload
+    public interface IConfigurationEntry
     {
-        string Name { get; set; }
         string Kind { get; set; }
     }
 
@@ -974,22 +1670,58 @@ namespace Consul
         {
             _client = c;
         }
-        public Task<WriteResult> ApplyConfig<TConfig>(TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload
+
+        /// <summary>
+        /// This creates or updates the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="configurationEntry">Configuration Entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
-        }
-        public Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload
-        {
-            return ApplyConfig(dc, 0, cp, WriteOptions.Default, ct);
+            return ApplyConfig(string.Empty, 0, configurationEntry, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult> ApplyConfig<TConfig>(int cas, TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload
+        /// <summary>
+        ///  This creates or updates the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="dc">Data Center to Query</param>
+        /// <param name="configurationEntry">Configuration Entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return ApplyConfig(string.Empty, cas, cp, WriteOptions.Default, ct);
+            return ApplyConfig(dc, 0, configurationEntry, WriteOptions.Default, ct);
         }
-        public Task<WriteResult> ApplyConfig<TConfig>(string dc, int cas, TConfig cp, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationPayload
+
+        /// <summary>
+        ///  This creates or updates the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="cas">Sets Check and Set Operation</param>
+        /// <param name="configurationEntry">Configuration Entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(int cas, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Put("/v1/config", cp, q);
+            return ApplyConfig(string.Empty, cas, configurationEntry, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        ///  This creates or updates the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="dc">Data Center to Query</param>
+        /// <param name="cas">Sets Check and Set Operation</param>
+        /// <param name="configurationEntry">Configuration Entry</param>
+        /// <param name="q">Write Option</param>
+        /// <param name="ct">An empty write result</param>
+        /// <returns></returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(string dc, int cas, TConfig configurationEntry, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+            var req = _client.Put("/v1/config", configurationEntry, q);
             if (!string.IsNullOrEmpty(dc))
             {
                 req.Params["dc"] = dc;
@@ -1000,8 +1732,6 @@ namespace Consul
             }
             return req.Execute(ct);
         }
-
-
     }
     public partial class ConsulClient : IConsulClient
     {
