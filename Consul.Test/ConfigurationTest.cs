@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IConfigEndpoint.cs" company="G-Research Limited">
+//  <copyright file="ConfigurationTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License"),
@@ -18,17 +18,27 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
-namespace Consul.Interfaces
+namespace Consul.Test
 {
-    public interface IConfigurationEndpoint
+    public class ConfigurationTest : BaseFixture
     {
-        Task<WriteResult> ApplyConfig<TConfig>(int cas, TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload;
-        Task<WriteResult> ApplyConfig<TConfig>(string dc, int cas, TConfig cp, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationPayload;
-        Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload;
-        Task<WriteResult> ApplyConfig<TConfig>(TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload;
+        [Fact]
+        public async Task Configuration_ApplyConfig()
+        {
+            var payload = new ServiceDefaultsEntry
+            {
+                Kind = "service-defaults",
+                Name = "web",
+                Protocol = "http"
+            };
+            var writeResult = await _client.Configuration.ApplyConfig(payload);
+             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+        }
     }
 }
