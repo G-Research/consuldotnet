@@ -38,7 +38,7 @@ namespace Consul.Test
                 Protocol = "http"
             };
             var writeResult = await _client.Configuration.ApplyConfig(payload);
-             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
         }
     }
 }
