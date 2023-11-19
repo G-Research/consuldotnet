@@ -164,7 +164,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, Dictionary<string, string>> ResponseHeaders { get; set; }
     }
-    
+
     public class ServiceRouterEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
