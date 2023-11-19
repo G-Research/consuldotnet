@@ -252,7 +252,7 @@ namespace Consul
         public int Port { get; set; }
     }
 
- 
+
 
     public class ExposeConfig
     {
@@ -279,8 +279,8 @@ namespace Consul
     }
     public interface IConfigurationPayload
     {
-         string Name { get; set; }
-         string Kind { get; set; }
+        string Name { get; set; }
+        string Kind { get; set; }
     }
 
     public class Configuration : IConfigurationEndpoint
@@ -291,7 +291,7 @@ namespace Consul
         {
             _client = c;
         }
-        public Task<WriteResult> ApplyConfig<TConfig>(TConfig cp, CancellationToken ct = default) where TConfig: IConfigurationPayload
+        public Task<WriteResult> ApplyConfig<TConfig>(TConfig cp, CancellationToken ct = default) where TConfig : IConfigurationPayload
         {
             return ApplyConfig(string.Empty, 0, cp, WriteOptions.Default, ct);
         }
