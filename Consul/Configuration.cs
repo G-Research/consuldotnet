@@ -864,10 +864,7 @@ namespace Consul
         public Dictionary<string, Dictionary<string, string>> ResponseHeaders { get; set; }
     }
 
-    /// <summary>
-    /// Service routers use L7 network information to redirect a traffic request for a service to one or more specific service instances.
-    /// </summary>
-    public class ServiceRouterEntry : IConfigurationEntry
+    public class ServiceRouterEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "service-router";
