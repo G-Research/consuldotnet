@@ -45,6 +45,11 @@ namespace Consul.Test
             };
             var writeResult = await _client.Configuration.ApplyConfig(payload);
             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+            var queryResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
+            Assert.Equal(HttpStatusCode.OK, queryResult.StatusCode);
+            Assert.Equal(payload.Name, queryResult.Response.Name);
+            Assert.Equal(payload.Name, queryResult.Response.Name);
+            Assert.Equal(payload.Protocol, queryResult.Response.Protocol);
         }
     }
 

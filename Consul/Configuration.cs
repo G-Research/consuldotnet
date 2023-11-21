@@ -272,13 +272,13 @@ namespace Consul
     public class GatewayDefaults
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxConnections { get; set; }
+        public int? MaxConnections { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxPendingRequests { get; set; }
+        public int? MaxPendingRequests { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxConcurrentRequests { get; set; }
+        public int? MaxConcurrentRequests { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public PassiveHealthCheckConfig PassiveHealthCheck { get; set; }
@@ -290,13 +290,13 @@ namespace Consul
         public string Interval { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxFailures { get; set; }
+        public int? MaxFailures { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int EnforcingConsecutive5xx { get; set; }
+        public int? EnforcingConsecutive5xx { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxEjectionPercent { get; set; }
+        public int? MaxEjectionPercent { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string BaseEjectionTime { get; set; }
@@ -305,7 +305,7 @@ namespace Consul
     public class GatewayListener
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Port { get; set; }
+        public int? Port { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Protocol { get; set; }
@@ -540,7 +540,7 @@ namespace Consul
         public string Partition { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Weight { get; set; }
+        public int? Weight { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<HttpRouteFilter> Filters { get; set; }
@@ -639,7 +639,7 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Port { get; set; }
+        public int? Port { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Protocol { get; set; }
@@ -729,10 +729,10 @@ namespace Consul
         public string Mode { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ReadRate { get; set; }
+        public int? ReadRate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int WriteRate { get; set; }
+        public int? WriteRate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public KVRateLimit KV { get; set; }
@@ -747,28 +747,28 @@ namespace Consul
     public class KVRateLimit
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ReadRate { get; set; }
+        public int? ReadRate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int WriteRate { get; set; }
+        public int? WriteRate { get; set; }
     }
 
     public class ACLRateLimit
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ReadRate { get; set; }
+        public int? ReadRate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int WriteRate { get; set; }
+        public int? WriteRate { get; set; }
     }
 
     public class CatalogRateLimit
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ReadRate { get; set; }
+        public int? ReadRate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int WriteRate { get; set; }
+        public int? WriteRate { get; set; }
     }
 
     /// <summary>
@@ -843,7 +843,7 @@ namespace Consul
     public class SplitConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Weight { get; set; }
+        public int? Weight { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Service { get; set; }
@@ -928,13 +928,13 @@ namespace Consul
         public string PrefixRewrite { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int RequestTimeout { get; set; }
+        public int? RequestTimeout { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int IdleTimeout { get; set; }
+        public int? IdleTimeout { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int NumRetries { get; set; } = 1;
+        public int? NumRetries { get; set; } = 1;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool RetryOnConnectFailure { get; set; }
@@ -943,7 +943,7 @@ namespace Consul
         public List<string> RetryOn { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<int> RetryOnStatusCodes { get; set; }
+        public List<int?> RetryOnStatusCodes { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> RequestHeaders { get; set; }
@@ -1057,16 +1057,16 @@ namespace Consul
     public class LeastRequestConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ChoiceCount { get; set; } = 2;
+        public int? ChoiceCount { get; set; } = 2;
     }
 
     public class RingHashConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MinimumRingSize { get; set; }
+        public int? MinimumRingSize { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaximumRingSize { get; set; }
+        public int? MaximumRingSize { get; set; }
     }
 
     public class CookieConfig
@@ -1180,7 +1180,7 @@ namespace Consul
         public bool Invert { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Precedence { get; set; }
+        public int? Precedence { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
@@ -1297,7 +1297,7 @@ namespace Consul
     public class TransparentProxyConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int OutboundListenerPort { get; set; }
+        public int? OutboundListenerPort { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool DialedDirectly { get; set; }
@@ -1324,10 +1324,10 @@ namespace Consul
         public string Path { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int LocalPathPort { get; set; }
+        public int? LocalPathPort { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ListenerPort { get; set; }
+        public int? ListenerPort { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Protocol { get; set; }
@@ -1535,10 +1535,10 @@ namespace Consul
     public class InstanceLevelConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int RequestsPerSecond { get; set; }
+        public int? RequestsPerSecond { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int RequestsMaxBurst { get; set; }
+        public int? RequestsMaxBurst { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<RouteConfig> Routes { get; set; }
@@ -1556,10 +1556,10 @@ namespace Consul
         public string PathRegex { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int RequestsPerSecond { get; set; }
+        public int? RequestsPerSecond { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int RequestMaxBurst { get; set; }
+        public int? RequestMaxBurst { get; set; }
     }
 
     public class UpstreamConfig
@@ -1574,7 +1574,7 @@ namespace Consul
         public string Protocol { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ConnectTimeoutMs { get; set; }
+        public int? ConnectTimeoutMs { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public MeshGatewayConfig MeshGateway { get; set; }
@@ -1604,7 +1604,7 @@ namespace Consul
         public string Protocol { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ConnectTimeoutMs { get; set; }
+        public int? ConnectTimeoutMs { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public MeshGatewayConfig MeshGateway { get; set; }
@@ -1622,13 +1622,13 @@ namespace Consul
     public class LimitsConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxConnections { get; set; }
+        public int? MaxConnections { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxPendingRequests { get; set; }
+        public int? MaxPendingRequests { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxConcurrentRequests { get; set; }
+        public int? MaxConcurrentRequests { get; set; }
     }
 
     public class EnvoyExtensionConfig
@@ -1655,7 +1655,7 @@ namespace Consul
         public List<string> Addresses { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Port { get; set; }
+        public int? Port { get; set; }
     }
 
     public interface IConfigurationEntry
@@ -1681,7 +1681,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return ApplyConfig(string.Empty, 0, configurationEntry, WriteOptions.Default, ct);
+            return ApplyConfig(string.Empty, 0, null, configurationEntry, WriteOptions.Default, ct);
         }
 
         /// <summary>
@@ -1694,7 +1694,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return ApplyConfig(dc, 0, configurationEntry, WriteOptions.Default, ct);
+            return ApplyConfig(dc, 0, null, configurationEntry, WriteOptions.Default, ct);
         }
 
         /// <summary>
@@ -1705,9 +1705,9 @@ namespace Consul
         /// <param name="configurationEntry">Configuration Entry</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(int cas, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<WriteResult> ApplyConfig<TConfig>(int? cas, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return ApplyConfig(string.Empty, cas, configurationEntry, WriteOptions.Default, ct);
+            return ApplyConfig(string.Empty, cas, null, configurationEntry, WriteOptions.Default, ct);
         }
 
         /// <summary>
@@ -1718,20 +1718,63 @@ namespace Consul
         /// <param name="cas">Sets Check and Set Operation</param>
         /// <param name="configurationEntry">Configuration Entry</param>
         /// <param name="q">Write Option</param>
-        /// <param name="ct">An empty write result</param>
-        /// <returns></returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(string dc, int cas, TConfig configurationEntry, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        /// <param name="ns">Namespace</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(string dc, int? cas, string ns, TConfig configurationEntry, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
             var req = _client.Put("/v1/config", configurationEntry, q);
             if (!string.IsNullOrEmpty(dc))
             {
                 req.Params["dc"] = dc;
             }
-            if (cas > 0)
+            if (cas != null && cas > 0)
             {
                 req.Params["cas"] = cas.ToString();
             }
+            if (!string.IsNullOrEmpty(ns))
+            {
+                req.Params["ns"] = ns;
+            }
             return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// This Retrieves the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry </param>
+        /// <param name="name">The name of config entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A config entry</returns>
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+           return GetConfig<TConfig>(kind, name, string.Empty, string.Empty, ct);
+        }
+
+        /// <summary>
+        /// This Retrieves the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="name">The name of config entry</param>
+        /// <param name="dc">Datacenter</param>
+        /// <param name="ns">Namespace</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A config entry</returns>
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, string dc, string ns, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}");
+            if (!string.IsNullOrEmpty(dc))
+            {
+                req.Params["dc"] = dc;
+            }
+            if (!string.IsNullOrEmpty(ns))
+            {
+                req.Params["ns"] = ns;
+            }
+            return req.Execute(ct);
+
         }
     }
     public partial class ConsulClient : IConsulClient
