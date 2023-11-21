@@ -1514,7 +1514,7 @@ namespace Consul
         public DestinationConfig Destination { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxInboundConnections { get; set; }
+        public int? MaxInboundConnections { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public MeshGatewayConfig MeshGateway { get; set; }
