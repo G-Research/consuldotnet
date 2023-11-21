@@ -29,14 +29,16 @@ namespace Consul.Test
     [Collection(nameof(ExclusiveCollection))]
     public class ConfigurationTest : BaseFixture
     {
-        [Fact]
-        public async Task Configuration_ApplyConfig()
+        [Theory]
+        [InlineData("http")]
+        [InlineData("https")]
+        public async Task Configuration_ApplyConfig(string protocol)
         {
             var payload = new ServiceDefaultsEntry
             {
                 Kind = "service-defaults",
                 Name = "web",
-                Protocol = "http"
+                Protocol = protocol
             };
             var writeResult = await _client.Configuration.ApplyConfig(payload);
             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
