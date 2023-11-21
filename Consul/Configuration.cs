@@ -1673,83 +1673,26 @@ namespace Consul
         }
 
         /// <summary>
-        /// This creates or updates the given config entry.
-        /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="configurationEntry">Configuration Entry</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
-        {
-            return ApplyConfig(string.Empty, 0, null, configurationEntry, WriteOptions.Default, ct);
-        }
-
-        /// <summary>
         ///  This creates or updates the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="dc">Data Center to Query</param>
-        /// <param name="configurationEntry">Configuration Entry</param>
-        /// <param name="ct">Cancellation Token</param>
+        /// <param name="q">Write Options</param>
+        /// <param name="configurationEntry">The configuration entry</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
-        {
-            return ApplyConfig(dc, 0, null, configurationEntry, WriteOptions.Default, ct);
-        }
-
-        /// <summary>
-        ///  This creates or updates the given config entry.
-        /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="cas">Sets Check and Set Operation</param>
-        /// <param name="configurationEntry">Configuration Entry</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(int? cas, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
-        {
-            return ApplyConfig(string.Empty, cas, null, configurationEntry, WriteOptions.Default, ct);
-        }
-
-        /// <summary>
-        ///  This creates or updates the given config entry.
-        /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="dc">Data Center to Query</param>
-        /// <param name="cas">Sets Check and Set Operation</param>
-        /// <param name="configurationEntry">Configuration Entry</param>
-        /// <param name="q">Write Option</param>
-        /// <param name="ns">Namespace</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(string dc, int? cas, string ns, TConfig configurationEntry, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<WriteResult> ApplyConfig<TConfig>(WriteOptions q, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
             var req = _client.Put("/v1/config", configurationEntry, q);
-            if (!string.IsNullOrEmpty(dc))
-            {
-                req.Params["dc"] = dc;
-            }
-            if (cas != null && cas > 0)
-            {
-                req.Params["cas"] = cas.ToString();
-            }
-            if (!string.IsNullOrEmpty(ns))
-            {
-                req.Params["ns"] = ns;
-            }
             return req.Execute(ct);
         }
 
         /// <summary>
-        /// This Retrieves the given config entry.
+        ///  This creates or updates the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="kind">The kind of config entry </param>
-        /// <param name="name">The name of config entry</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>A config entry</returns>
-        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        /// <param name="configurationEntry">The configuration entry</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return GetConfig<TConfig>(kind, name, string.Empty, string.Empty, ct);
+            var req = _client.Put("/v1/config", configurationEntry,WriteOptions.Default);
+            return req.Execute(ct);
         }
 
         /// <summary>
@@ -1758,23 +1701,27 @@ namespace Consul
         /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="name">The name of config entry</param>
-        /// <param name="dc">Datacenter</param>
-        /// <param name="ns">Namespace</param>
+        /// <param name="q">Query Options</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A config entry</returns>
-        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, string dc, string ns, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}");
-            if (!string.IsNullOrEmpty(dc))
-            {
-                req.Params["dc"] = dc;
-            }
-            if (!string.IsNullOrEmpty(ns))
-            {
-                req.Params["ns"] = ns;
-            }
+            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}",q);
             return req.Execute(ct);
+        }
 
+        /// <summary>
+        /// This Retrieves the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="name">The name of config entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A config entry</returns>
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}", QueryOptions.Default);
+            return req.Execute(ct);
         }
     }
     public partial class ConsulClient : IConsulClient

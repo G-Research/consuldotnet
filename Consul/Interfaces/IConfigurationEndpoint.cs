@@ -26,11 +26,9 @@ namespace Consul.Interfaces
 {
     public interface IConfigurationEndpoint
     {
-        Task<WriteResult> ApplyConfig<TConfig>(int? cas, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<WriteResult> ApplyConfig<TConfig>(string dc, int? cas, string ns, TConfig configurationEntry, WriteOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<WriteResult> ApplyConfig<TConfig>(string dc, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<WriteResult> ApplyConfig<TConfig>(WriteOptions q, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
         Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
         Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, string dc, string ns, CancellationToken ct = default) where TConfig : IConfigurationEntry;
     }
 }

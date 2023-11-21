@@ -26,12 +26,7 @@ using Xunit;
 
 namespace Consul.Test
 {
-    [CollectionDefinition("NonParallelCollection")]
-    public class NonParallelCollection : ICollectionFixture<ConfigurationTest>
-    {
-    }
-
-    [Collection("NonParallelCollection")]
+    [Collection(nameof(ExclusiveCollection))]
     public class ConfigurationTest : BaseFixture
     {
         [Fact]
@@ -48,7 +43,7 @@ namespace Consul.Test
             var queryResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
             Assert.Equal(HttpStatusCode.OK, queryResult.StatusCode);
             Assert.Equal(payload.Name, queryResult.Response.Name);
-            Assert.Equal(payload.Name, queryResult.Response.Name);
+            Assert.Equal(payload.Kind, queryResult.Response.Kind);
             Assert.Equal(payload.Protocol, queryResult.Response.Protocol);
         }
     }
