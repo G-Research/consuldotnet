@@ -26,6 +26,12 @@ using Xunit;
 
 namespace Consul.Test
 {
+    [CollectionDefinition("NonParallelCollection")]
+    public class NonParallelCollection : ICollectionFixture<ConfigurationTest>
+    {
+    }
+
+    [Collection("NonParallelCollection")]
     public class ConfigurationTest : BaseFixture
     {
         [Fact]
@@ -41,4 +47,5 @@ namespace Consul.Test
             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
         }
     }
+
 }
