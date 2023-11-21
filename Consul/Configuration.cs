@@ -1749,7 +1749,7 @@ namespace Consul
         /// <returns>A config entry</returns>
         public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-           return GetConfig<TConfig>(kind, name, string.Empty, string.Empty, ct);
+            return GetConfig<TConfig>(kind, name, string.Empty, string.Empty, ct);
         }
 
         /// <summary>
