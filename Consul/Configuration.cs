@@ -1691,7 +1691,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Put("/v1/config", configurationEntry,WriteOptions.Default);
+            var req = _client.Put("/v1/config", configurationEntry, WriteOptions.Default);
             return req.Execute(ct);
         }
 
@@ -1706,7 +1706,7 @@ namespace Consul
         /// <returns>A config entry</returns>
         public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}",q);
+            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}", q);
             return req.Execute(ct);
         }
 
