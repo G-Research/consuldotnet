@@ -52,5 +52,4 @@ namespace Consul.Test
             Assert.Equal(payload.Protocol, queryResult.Response.Protocol);
         }
     }
-
 }
