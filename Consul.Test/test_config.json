@@ -1,15 +1,16 @@
 {
-    "log_level": "TRACE",
-    "bind_addr": "127.0.0.1",
-    "server": true,
-    "bootstrap": true,
-    "acl": {
-        "enabled": true,
-        "default_policy": "allow",
-        "tokens": {
-            "master": "c6402d2b-f081-45ef-a0f2-73a4a812e9b1"
-        }
-    },
-    "enable_script_checks": true,
-    "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ=="
+  "log_level": "TRACE",
+  "bind_addr": "127.0.0.1",
+  "server": true,
+  "bootstrap": true,
+  "acl": {
+    "enabled": true,
+    "default_policy": "allow",
+    "tokens": {
+      "master": "c6402d2b-f081-45ef-a0f2-73a4a812e9b1"
+    }
+  },
+  "enable_script_checks": true,
+  "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ==",
+  "enable_central_service_config":  true
 }

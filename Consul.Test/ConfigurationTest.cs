@@ -1,0 +1,53 @@
+// -----------------------------------------------------------------------
+//  <copyright file="ConfigurationTest.cs" company="G-Research Limited">
+//    Copyright 2020 G-Research Limited
+//
+//    Licensed under the Apache License, Version 2.0 (the "License"),
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Consul.Test
+{
+    [Collection(nameof(ExclusiveCollection))]
+    public class ConfigurationTest : BaseFixture
+    {
+        [Theory]
+        [InlineData("http")]
+        [InlineData("https")]
+        public async Task Configuration_ApplyConfig(string protocol)
+        {
+            var payload = new ServiceDefaultsEntry
+            {
+                Kind = "service-defaults",
+                Name = "web",
+                Protocol = protocol
+            };
+
+            var writeResult = await _client.Configuration.ApplyConfig(payload);
+            Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+            var queryResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
+            Assert.Equal(HttpStatusCode.OK, queryResult.StatusCode);
+            Assert.Equal(payload.Name, queryResult.Response.Name);
+            Assert.Equal(payload.Kind, queryResult.Response.Kind);
+            Assert.Equal(payload.Protocol, queryResult.Response.Protocol);
+        }
+    }
+}
