@@ -30,5 +30,9 @@ namespace Consul.Interfaces
         Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
         Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
         Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<WriteResult> DeleteConfig(string kind, string name, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct = default);
     }
 }
