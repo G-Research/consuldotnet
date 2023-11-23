@@ -1741,7 +1741,7 @@ namespace Consul
         /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="ct">Cancellation Token</param>
-        /// <returns>A List of config entries</returns>
+        /// <returns>A list of config entries</returns>
         public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
             return ListConfig<TConfig>(kind, QueryOptions.Default, ct);
