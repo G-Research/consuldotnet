@@ -1691,8 +1691,7 @@ namespace Consul
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Put("/v1/config", configurationEntry, WriteOptions.Default);
-            return req.Execute(ct);
+            return ApplyConfig<TConfig>(WriteOptions.Default, configurationEntry, ct);
         }
 
         /// <summary>
@@ -1720,8 +1719,7 @@ namespace Consul
         /// <returns>A config entry</returns>
         public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            var req = _client.Get<TConfig>($"/v1/config/{kind}/{name}", QueryOptions.Default);
-            return req.Execute(ct);
+            return GetConfig<TConfig>(kind, name, QueryOptions.Default,ct);
         }
     }
     public partial class ConsulClient : IConsulClient
