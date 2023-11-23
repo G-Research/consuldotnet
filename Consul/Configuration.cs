@@ -1719,7 +1719,7 @@ namespace Consul
         /// <returns>A config entry</returns>
         public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
-            return GetConfig<TConfig>(kind, name, QueryOptions.Default,ct);
+            return GetConfig<TConfig>(kind, name, QueryOptions.Default, ct);
         }
     }
     public partial class ConsulClient : IConsulClient
