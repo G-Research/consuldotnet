@@ -40,6 +40,7 @@ namespace Consul.Test
                 Name = "web",
                 Protocol = protocol
             };
+
             var writeResult = await _client.Configuration.ApplyConfig(payload);
             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
             var queryResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
