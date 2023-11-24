@@ -74,6 +74,8 @@ namespace Consul.Test
             var configurations = queryResult.Response;
             var webConfig = configurations.SingleOrDefault(c => c.Name == firstPayload.Name);
             var dbConfig = configurations.SingleOrDefault(c => c.Name == secondPayload.Name);
+            Assert.NotNull(dbConfig);
+            Assert.NotNull(webConfig);
 
             Assert.Equal(firstPayload.Name, webConfig.Name);
             Assert.Equal(firstPayload.Kind, webConfig.Kind);
