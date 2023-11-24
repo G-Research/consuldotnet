@@ -1721,6 +1721,59 @@ namespace Consul
         {
             return GetConfig<TConfig>(kind, name, QueryOptions.Default, ct);
         }
+
+        /// <summary>
+        /// This Retrieves the list of config for an entry kind.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A config entry</returns>
+        public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+            var req = _client.Get<List<TConfig>>($"/v1/config/{kind}", q);
+            return req.Execute(ct);
+        }
+        /// <summary>
+        /// This Retrieves the list of config for an entry kind.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A list of config entries</returns>
+        public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        {
+            return ListConfig<TConfig>(kind, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// This Deletes the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="name">The name of config entry</param>
+        /// <param name="q">Write Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A Write Result</returns>
+        public Task<WriteResult> DeleteConfig(string kind, string name, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Delete($"/v1/config/{kind}/{name}", q);
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// This Deletes the given config entry.
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="kind">The kind of config entry</param>
+        /// <param name="name">The name of config entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A config entry</returns>
+        public Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct = default)
+        {
+            return DeleteConfig(kind, name, WriteOptions.Default, ct);
+        }
     }
     public partial class ConsulClient : IConsulClient
     {

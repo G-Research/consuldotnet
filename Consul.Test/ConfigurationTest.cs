@@ -49,5 +49,68 @@ namespace Consul.Test
             Assert.Equal(payload.Kind, queryResult.Response.Kind);
             Assert.Equal(payload.Protocol, queryResult.Response.Protocol);
         }
+
+        [Fact]
+        public async Task Configuration_ListConfig()
+        {
+            var firstPayload = new ServiceDefaultsEntry
+            {
+                Kind = "service-defaults",
+                Name = "web",
+                Protocol = "https"
+            };
+
+            var secondPayload = new ServiceDefaultsEntry
+            {
+                Kind = "service-defaults",
+                Name = "db",
+                Protocol = "https"
+            };
+            var writeResult = await _client.Configuration.ApplyConfig(firstPayload);
+            Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+            writeResult = await _client.Configuration.ApplyConfig(secondPayload);
+            Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+            var queryResult = await _client.Configuration.ListConfig<ServiceDefaultsEntry>(firstPayload.Kind);
+            var configurations = queryResult.Response;
+            var webConfig = configurations.SingleOrDefault(c => c.Name == firstPayload.Name);
+            var dbConfig = configurations.SingleOrDefault(c => c.Name == secondPayload.Name);
+            Assert.NotNull(dbConfig);
+            Assert.NotNull(webConfig);
+
+            Assert.Equal(firstPayload.Name, webConfig.Name);
+            Assert.Equal(firstPayload.Kind, webConfig.Kind);
+            Assert.Equal(firstPayload.Protocol, webConfig.Protocol);
+
+            Assert.Equal(secondPayload.Name, dbConfig.Name);
+            Assert.Equal(secondPayload.Kind, dbConfig.Kind);
+            Assert.Equal(secondPayload.Protocol, dbConfig.Protocol);
+        }
+
+        [Fact]
+        public async Task Configuration_DeleteConfig()
+        {
+            var payload = new ServiceDefaultsEntry
+            {
+                Kind = "service-defaults",
+                Name = "test-service",
+                Protocol = "http"
+            };
+
+            var writeResult = await _client.Configuration.ApplyConfig(payload);
+            Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
+
+            var getConfigResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
+            Assert.Equal(HttpStatusCode.OK, getConfigResult.StatusCode);
+            Assert.Equal(payload.Name, getConfigResult.Response.Name);
+            Assert.Equal(payload.Kind, getConfigResult.Response.Kind);
+            Assert.Equal(payload.Protocol, getConfigResult.Response.Protocol);
+
+            var deleteResult = await _client.Configuration.DeleteConfig(payload.Kind, payload.Name);
+            Assert.Equal(HttpStatusCode.OK, deleteResult.StatusCode);
+
+            var getDeletedConfigResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
+            Assert.Equal(HttpStatusCode.NotFound, getDeletedConfigResult.StatusCode);
+            Assert.Null(getDeletedConfigResult.Response);
+        }
     }
 }
