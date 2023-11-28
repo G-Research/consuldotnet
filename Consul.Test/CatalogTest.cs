@@ -309,7 +309,7 @@ namespace Consul.Test
 
             await _client.Catalog.Register(registration1);
             await _client.Catalog.Register(registration2);
-            var services = await _client.Catalog.ServicesForNodes(registration1.Node, new QueryOptions { Datacenter = registration1.Datacenter });
+            var services = await _client.Catalog.ServicesForNode(registration1.Node, new QueryOptions { Datacenter = registration1.Datacenter });
             Assert.Contains(services.Response.Services, n => n.ID == svcID);
             Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }

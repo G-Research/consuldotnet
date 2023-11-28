@@ -339,9 +339,9 @@ namespace Consul
         /// <param name="node">Node Name</param>
         /// <param name="ct">CancellationToken</param>
         /// <returns>Node Services</returns>
-        public Task<QueryResult<NodeService>> ServicesForNodes(string node, CancellationToken ct = default)
+        public Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct = default)
         {
-            return ServicesForNodes(node, QueryOptions.Default, ct);
+            return ServicesForNode(node, QueryOptions.Default, ct);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Consul
         /// <param name="q">Query Parameters</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Node Services</returns>
-        public Task<QueryResult<NodeService>> ServicesForNodes(string node, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<NodeService>> ServicesForNode(string node, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<NodeService>(string.Format("/v1/catalog/node-services/{0}", node), q).Execute(ct);
         }
