@@ -85,6 +85,40 @@ namespace Consul
         public string CheckID { get; set; }
     }
 
+    public class NodeService
+    {
+        public NodeInfo Node { get; set; }
+        public List<ServiceInfo> Services { get; set; }
+    }
+
+    public class NodeInfo
+    {
+        public string ID { get; set; }
+        public string Node { get; set; }
+        public string Address { get; set; }
+        public string Datacenter { get; set; }
+        public Dictionary<string, string> TaggedAddresses { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+    }
+
+    public class ServiceInfo
+    {
+        public string ID { get; set; }
+        public string Service { get; set; }
+        public string[] Tags { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+        public int Port { get; set; }
+        public string Namespace { get; set; }
+        public Dictionary<string, ServiceAddress> TaggedAddresses { get; set; }
+    }
+
+    public class ServiceAddress
+    {
+        public string Address { get; set; }
+        public int Port { get; set; }
+    }
+
+
     /// <summary>
     /// Catalog can be used to query the Catalog endpoints
     /// </summary>
@@ -297,6 +331,29 @@ namespace Consul
         public Task<QueryResult<CatalogNode>> Node(string node, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<CatalogNode>(string.Format("/v1/catalog/node/{0}", node), q).Execute(ct);
+        }
+
+        /// <summary>
+        /// ServicesForNode is used to query for the services provided by a node
+        /// </summary>
+        /// <param name="node">Node Name</param>
+        /// <param name="ct">CancellationToken</param>
+        /// <returns>Node Services</returns>
+        public Task<QueryResult<NodeService>> ServicesForNodes(string node, CancellationToken ct = default)
+        {
+            return ServicesForNodes(node, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// ServicesForNode is used to query for the services provided by a node
+        /// </summary>
+        /// <param name="node">Node Name</param>
+        /// <param name="q">Query Parameters</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Node Services</returns>
+        public Task<QueryResult<NodeService>> ServicesForNodes(string node, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<NodeService>(string.Format("/v1/catalog/node-services/{0}", node), q).Execute(ct);
         }
     }
 

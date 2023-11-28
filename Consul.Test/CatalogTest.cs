@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -262,6 +263,55 @@ namespace Consul.Test
 
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
             }
+        }
+
+        [Fact]
+        public async Task Catalog_ServicesForNodes()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var svcID2 = KVTest.GenerateTestKeyName();
+            var registration1 = new CatalogRegistration
+            {
+                Datacenter = "dc1",
+                Node = "foobar",
+                Address = "192.168.10.10",
+                Service = new AgentService
+                {
+                    ID = svcID,
+                    Service = "redis",
+                    Tags = new[] { "master", "v1" },
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
+                }
+            };
+            var registration2 = new CatalogRegistration
+            {
+                Datacenter = "dc1",
+                Node = "foobar2",
+                Address = "192.168.10.11",
+                Service = new AgentService
+                {
+                    ID = svcID2,
+                    Service = "redis",
+                    Tags = new[] { "master", "v2" },
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        { "lan", new ServiceTaggedAddress { Address = "127.0.0.1", Port = 81 } },
+                        { "wan", new ServiceTaggedAddress { Address = "192.168.10.10", Port = 8001 } }
+                    }
+                }
+            };
+
+            await _client.Catalog.Register(registration1);
+            await _client.Catalog.Register(registration2);
+            var services = await _client.Catalog.ServicesForNodes(registration1.Node, new QueryOptions { Datacenter = registration1.Datacenter });
+            Assert.Contains(services.Response.Services, n => n.ID == svcID);
+            Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }
     }
 }
