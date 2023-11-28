@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 1.7.14.1
+* Add ServiceTags to the health check endpoint (#244)
+* Write correct value for KV.Release (#237)
+* Introduce Namespace (#229)
+* Add support for logjson (#224)
+* Add support for agent cache (#225)
+* CI: Use enterprise build (#183)
+* Adding more filtering features (#219)
+* Basic Connect support for service registration on the agent (#216)
+
 ## 1.6.10.9
 * Adding properties: AliasService, AliasNode to AgentServiceCheck class for support: (#202)
 * Update project url (#212)

@@ -79,7 +79,19 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
+
+            Func<bool> isSpecialStatusCode = () =>
+            {
+                var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+                var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
+
+                return ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceId);
+            };
+
+            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode && !isSpecialStatusCode())
             {
                 if (ResponseStream == null)
                 {
@@ -93,7 +105,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode())
             {
                 result.Response = Deserialize<TOut>(ResponseStream);
             }
@@ -320,7 +332,18 @@ namespace Consul
             result.StatusCode = response.StatusCode;
             ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
+            Func<bool> isSpecialStatusCode = () =>
+            {
+                var isAgentServiceName = Endpoint.StartsWith("v1/agent/health/service/name/", StringComparison.OrdinalIgnoreCase);
+                var isAgentServiceId = Endpoint.StartsWith("v1/agent/health/service/id/", StringComparison.OrdinalIgnoreCase);
+
+                return ((int)response.StatusCode == 503 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceName) ||
+                       ((int)response.StatusCode == 503 && isAgentServiceId) ||
+                       ((int)response.StatusCode == 429 && isAgentServiceId);
+            };
+
+            if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode && !isSpecialStatusCode())
             {
                 if (ResponseStream == null)
                 {
@@ -334,7 +357,7 @@ namespace Consul
                 }
             }
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode || isSpecialStatusCode())
             {
                 using (var reader = new StreamReader(ResponseStream))
                 {

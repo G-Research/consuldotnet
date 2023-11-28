@@ -45,6 +45,21 @@ namespace Consul
 
         public static HealthStatus Any { get; } = new HealthStatus() { Status = "any" };
 
+        public static HealthStatus Parse(string status)
+        {
+            switch (status)
+            {
+                case "passing":
+                    return Passing;
+                case "warning":
+                    return Warning;
+                case "critical":
+                    return Critical;
+                default:
+                    throw new ArgumentException("Invalid Check status value during deserialization");
+            }
+        }
+
         public bool Equals(HealthStatus other)
         {
             return other != null && ReferenceEquals(this, other);
@@ -71,30 +86,15 @@ namespace Consul
             serializer.Serialize(writer, ((HealthStatus)value).Status);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var status = (string)serializer.Deserialize(reader, typeof(string));
-            switch (status)
-            {
-                case "passing":
-                    return HealthStatus.Passing;
-                case "warning":
-                    return HealthStatus.Warning;
-                case "critical":
-                    return HealthStatus.Critical;
-                default:
-                    throw new ArgumentException("Invalid Check status value during deserialization");
-            }
+            return HealthStatus.Parse(status);
         }
 
         public override bool CanConvert(Type objectType)
         {
-            if (objectType == typeof(HealthStatus))
-            {
-                return true;
-            }
-            return false;
+            return objectType == typeof(HealthStatus);
         }
     }
 

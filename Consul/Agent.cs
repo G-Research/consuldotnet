@@ -404,6 +404,20 @@ namespace Consul
         public TimeSpan? DeregisterCriticalServiceAfter { get; set; }
     }
 
+
+    /// <summary>
+    /// LocalServiceHealth represents the health of a service and its associated checks as returned by the Agent API
+    /// </summary>
+    public class LocalServiceHealth
+    {
+        [JsonConverter(typeof(HealthStatusConverter))]
+        public HealthStatus AggregatedStatus { get; set; }
+
+        public AgentService Service { get; set; }
+
+        public AgentCheck[] Checks { get; set; }
+    }
+
     /// <summary>
     /// Log Level Enum
     /// </summary>
@@ -414,6 +428,179 @@ namespace Consul
         Debug,
         Warn,
         Err
+    }
+
+    /// <summary>
+    /// MemoryInfo represents the memory statistics for the agent
+    /// </summary>
+    public class MemoryInfo
+    {
+        public long Total { get; set; }
+        public long Available { get; set; }
+        public long Used { get; set; }
+        public double UsedPercent { get; set; }
+        public long Free { get; set; }
+        public long Active { get; set; }
+        public long Inactive { get; set; }
+        public long Wired { get; set; }
+        public long Laundry { get; set; }
+        public long Buffers { get; set; }
+        public long Cached { get; set; }
+        public long WriteBack { get; set; }
+        public long Dirty { get; set; }
+        public long WriteBackTmp { get; set; }
+        public long Shared { get; set; }
+        public long Slab { get; set; }
+        public long Sreclaimable { get; set; }
+        public long Sunreclaim { get; set; }
+        public long PageTables { get; set; }
+        public long SwapCached { get; set; }
+        public long CommitLimit { get; set; }
+        public long CommittedAS { get; set; }
+        public long HighTotal { get; set; }
+        public long HighFree { get; set; }
+        public long LowTotal { get; set; }
+        public long LowFree { get; set; }
+        public long SwapTotal { get; set; }
+        public long SwapFree { get; set; }
+        public long Mapped { get; set; }
+        public long VmallocTotal { get; set; }
+        public long VmallocUsed { get; set; }
+        public long VmallocChunk { get; set; }
+        public long HugePagesTotal { get; set; }
+        public long HugePagesFree { get; set; }
+        public long HugePageSize { get; set; }
+    }
+
+    /// <summary>
+    /// CPUInfo represents the CPU statistics for the agent
+    /// </summary>
+    public class CPUInfo
+    {
+        public int Cpu { get; set; }
+        public string VendorId { get; set; }
+        public string Family { get; set; }
+        public string Model { get; set; }
+        public int Stepping { get; set; }
+        public string PhysicalId { get; set; }
+        public string CoreId { get; set; }
+        public int Cores { get; set; }
+        public string ModelName { get; set; }
+        public long Mhz { get; set; }
+        public int CacheSize { get; set; }
+        public List<string> Flags { get; set; }
+        public string Microcode { get; set; }
+    }
+
+    /// <summary>
+    /// HostInfo represents the host information for the agent
+    /// </summary>
+    public class HostInfo
+    {
+        public string Hostname { get; set; }
+        public long Uptime { get; set; }
+        public long BootTime { get; set; }
+        public int Procs { get; set; }
+        public string Os { get; set; }
+        public string Platform { get; set; }
+        public string PlatformFamily { get; set; }
+        public string PlatformVersion { get; set; }
+        public string KernelVersion { get; set; }
+        public string KernelArch { get; set; }
+        public string VirtualizationSystem { get; set; }
+        public string VirtualizationRole { get; set; }
+        public string HostId { get; set; }
+    }
+
+    /// <summary>
+    /// DiskInfo represents the disk statistics for the agent
+    /// </summary>
+    public class DiskInfo
+    {
+        public string Path { get; set; }
+        public string Fstype { get; set; }
+        public long Total { get; set; }
+        public long Free { get; set; }
+        public long Used { get; set; }
+        public double UsedPercent { get; set; }
+        public long InodesTotal { get; set; }
+        public long InodesUsed { get; set; }
+        public long InodesFree { get; set; }
+        public double InodesUsedPercent { get; set; }
+    }
+
+    /// <summary>
+    /// AgentHostInfo represents the host information for the agent
+    /// </summary>
+    public class AgentHostInfo
+    {
+        public MemoryInfo Memory { get; set; }
+        public List<CPUInfo> CPU { get; set; }
+        public HostInfo Host { get; set; }
+        public DiskInfo Disk { get; set; }
+        public long CollectionTime { get; set; }
+    }
+
+    /// <summary>
+    /// Metrics represents the metrics returned by the Agent API
+    /// </summary>
+    public class Metrics
+    {
+        public string Timestamp { get; set; }
+        public List<Gauge> Gauges { get; set; }
+        public List<Point> Points { get; set; }
+        public List<Counter> Counters { get; set; }
+        public List<Sample> Samples { get; set; }
+    }
+
+    /// <summary>
+    /// Guage represents a Guage metric
+    /// </summary>
+    public class Gauge
+    {
+        public string Name { get; set; }
+        public double Value { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Point represents a Point metric
+    /// </summary>
+    public class Point
+    {
+        public string Name { get; set; }
+        public double Value { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Counter represents a Counter metric
+    /// </summary>
+    public class Counter
+    {
+        public string Name { get; set; }
+        public long Count { get; set; }
+        public double Sum { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Mean { get; set; }
+        public double Stddev { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
+    }
+
+    /// <summary>
+    /// Sample represents a Sample metric
+    /// </summary>
+    public class Sample
+    {
+        public string Name { get; set; }
+        public long Count { get; set; }
+        public double Sum { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Mean { get; set; }
+        public double Stddev { get; set; }
+        public Dictionary<string, string> Labels { get; set; }
     }
 
     /// <summary>
@@ -668,7 +855,6 @@ namespace Consul
             return _client.PutNothing(string.Format("/v1/agent/force-leave/{0}", node)).Execute(ct);
         }
 
-
         /// <summary>
         /// Leave is used to have the agent gracefully leave the cluster and shutdown
         /// </summary>
@@ -765,6 +951,77 @@ namespace Consul
         }
 
         /// <summary>
+        /// GetLocalServiceHealth returns the health info of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>An array containing the details of each passing, warning, or critical service</returns>
+        public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<LocalServiceHealth[]>($"v1/agent/health/service/name/{serviceName}", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetLocalServiceHealth returns the health info of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>An array containing the details of each passing, warning, or critical service</returns>
+        public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct = default)
+        {
+            return await GetLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get($"v1/agent/health/service/name/{serviceName}", q);
+            req.Params["format"] = "text";
+            return await req.Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceName">Name of service</param>
+        /// <returns>passing, warning, or critical</returns>
+        public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default)
+        {
+            return await GetWorstLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetLocalServiceHealthByID returns the health info of a service registered on the local agent by ID
+        /// </summary>
+        /// <param name="serviceID">ID of the service</param>
+        /// <returns>An array containing the details of each passing, warning, or critical service</returns>
+        public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<LocalServiceHealth>($"v1/agent/health/service/id/{serviceID}", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetLocalServiceHealthByID returns the health info of a service registered on the local agent by ID
+        /// </summary>
+        /// <param name="serviceID">ID of the service</param>
+        /// <returns>An array containing the details of each passing, warning, or critical service</returns>
+        public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
+        {
+            return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetAgentHostInfo returns the host info of the agent
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns>Agent Host Information</returns>
+        public async Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default)
+        {
+            return await _client.Get<AgentHostInfo>($"v1/agent/host").Execute(ct).ConfigureAwait(false);
+        }
+        /// <summary>
         /// Log streamer
         /// </summary>
         public class LogStream : IEnumerable<Task<string>>, IDisposable
@@ -803,6 +1060,16 @@ namespace Consul
             {
                 return GetEnumerator();
             }
+        }
+
+        /// <summary>
+        /// GetAgentMetrics returns the metrics of the local agent
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns>Metrics of the local agent</returns>
+        public async Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default)
+        {
+            return await _client.Get<Metrics>("/v1/agent/metrics").Execute(ct).ConfigureAwait(false);
         }
     }
 

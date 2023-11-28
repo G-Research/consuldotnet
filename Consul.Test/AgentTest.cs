@@ -569,6 +569,113 @@ namespace Consul.Test
             }
         }
 
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetLocalServiceHealth(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcName = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcName,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetLocalServiceHealth(svcName);
+
+            Assert.Equal(healthStatus, status.Response[0].AggregatedStatus);
+        }
+
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetLocalServiceHealthByID(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                ID = svcID,
+                Name = KVTest.GenerateTestKeyName(),
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetLocalServiceHealthByID(svcID);
+
+            Assert.Equal(healthStatus, status.Response.AggregatedStatus);
+        }
+
+        [Theory]
+        [InlineData("passing")]
+        [InlineData("warning")]
+        [InlineData("critical")]
+        public async Task Agent_GetWorstLocalServiceHealth(string statusString)
+        {
+            var healthStatus = HealthStatus.Parse(statusString);
+            var svcName = KVTest.GenerateTestKeyName();
+
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcName,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Checks = new[]
+                {
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = HealthStatus.Passing,
+                    },
+                    new AgentServiceCheck
+                    {
+                        TTL = TimeSpan.FromSeconds(15),
+                        Status = healthStatus,
+                    }
+                }
+            };
+
+            await _client.Agent.ServiceRegister(registration);
+
+            var status = await _client.Agent.GetWorstLocalServiceHealth(svcName);
+
+            Assert.Equal(healthStatus.Status, status.Response);
+        }
+
         [Fact]
         public async Task Agent_FilterServices()
         {
@@ -885,6 +992,27 @@ namespace Consul.Test
             // Assert
             Assert.Single(actual);
             Assert.Equal(checkName, actual.Values.First().Name);
+        }
+
+        [Fact]
+        public async Task Agent_HostInfo()
+        {
+            var hostInfo = await _client.Agent.GetAgentHostInfo();
+            Assert.NotNull(hostInfo.Response.Host);
+            Assert.NotNull(hostInfo.Response.Memory);
+            Assert.NotNull(hostInfo.Response.Disk);
+            Assert.True(hostInfo.Response.CollectionTime > 0);
+        }
+
+        [Fact]
+        public async Task Agent_Metrics()
+        {
+            var agentMetrics = await _client.Agent.GetAgentMetrics();
+            Assert.NotNull(agentMetrics.Response.Timestamp);
+            Assert.NotNull(agentMetrics.Response.Counters);
+            Assert.NotNull(agentMetrics.Response.Gauges);
+            Assert.NotNull(agentMetrics.Response.Points);
+            Assert.NotNull(agentMetrics.Response.Samples);
         }
     }
 }
