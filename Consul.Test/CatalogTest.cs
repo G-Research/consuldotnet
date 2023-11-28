@@ -178,31 +178,25 @@ namespace Consul.Test
         public async Task Catalog_GetNodesForMeshCapableService()
         {
             var svcID = KVTest.GenerateTestKeyName();
-            var registration = new CatalogRegistration
+            var registration = new AgentServiceRegistration
             {
-                Datacenter = "dc1",
-                Node = "foobar",
-                Address = "192.168.10.10",
-                Service = new AgentService
+                Name = svcID,
+                Port = 8000,
+                Connect = new AgentServiceConnect
                 {
-                    ID = svcID,
-                    Service = "redis",
-                    Tags = new[] { "master", "v1" },
-                    Port = 8000,
-                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+
+                    SidecarService = new AgentServiceRegistration
                     {
-                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                    }
-                }
+                        Name = "sidecar",
+                        Port = 9000,
+                    },
+                },
             };
+            await _client.Agent.ServiceRegister(registration);
 
-            await _client.Catalog.Register(registration);
-
-            var services = await _client.Catalog.NodesForMeshCapableService("redis");
-
-            Assert.True(services.Response.Length == 0);
-
+            var services = await _client.Catalog.NodesForMeshCapableService(registration.Name);
+            Assert.NotEmpty(services.Response);
+            Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
         }
 
         [Fact]

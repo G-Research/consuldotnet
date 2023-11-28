@@ -11,6 +11,9 @@
     }
   },
   "enable_script_checks": true,
+  "connect": {
+    "enabled": true
+  },
   "encrypt": "d8wu8CSUrqgtjVsvcBPmhQ==",
-  "enable_central_service_config":  true
+  "enable_central_service_config": true
 }
