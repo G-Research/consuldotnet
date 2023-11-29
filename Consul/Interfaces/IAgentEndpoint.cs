@@ -64,7 +64,10 @@ namespace Consul
         Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
         Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default);
         Task<QueryResult<AgentVersion>> GetAgentVersion(CancellationToken ct = default);
-        Task<WriteResult> Leave(string node, CancellationToken ct = default);
+        Task<WriteResult> Reload(CancellationToken ct = default);
+        [Obsolete]
         Task<WriteResult> Reload(string node, CancellationToken ct = default);
+        Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default);
+        Task<WriteResult> Leave(string node, CancellationToken ct = default);
     }
 }
