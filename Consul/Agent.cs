@@ -868,6 +868,17 @@ namespace Consul
         /// Reload triggers a configuration reload for the agent we are connected to.
         /// </summary>
         /// <returns>An empty write result</returns>
+        public Task<WriteResult> Reload(CancellationToken ct = default)
+        {
+            return _client.PutNothing("/v1/agent/reload").Execute(ct);
+        }
+
+        /// <summary>
+        /// Reload triggers a configuration reload for the agent we are connected to.
+        /// </summary>
+        /// <param name="node">The node name to reload</param>
+        /// <returns>An empty write result</returns>
+        [Obsolete]
         public Task<WriteResult> Reload(string node, CancellationToken ct = default)
         {
             return _client.PutNothing("/v1/agent/reload").Execute(ct);
