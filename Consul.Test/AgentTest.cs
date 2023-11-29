@@ -1003,9 +1003,11 @@ namespace Consul.Test
             Assert.True(hostInfo.Response.CollectionTime > 0);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Agent_Version()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.16.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_Version` is only supported from Consul {cutOffVersion}");
             var agentVersion = await _client.Agent.GetAgentVersion();
             Assert.NotNull(agentVersion.Response.HumanVersion);
             Assert.NotNull(agentVersion.Response.SHA);
