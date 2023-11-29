@@ -271,6 +271,7 @@ namespace Consul.Test
         {
             var cutOffVersion = SemanticVersion.Parse("1.7.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var svcID = KVTest.GenerateTestKeyName();
             var svcID2 = KVTest.GenerateTestKeyName();
             var registration1 = new CatalogRegistration
