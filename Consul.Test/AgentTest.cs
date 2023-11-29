@@ -1029,10 +1029,12 @@ namespace Consul.Test
                 var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
                 Assert.Equal("TRACE", agentLogLevel.Value);
                 System.IO.File.WriteAllText(configFile, udpatedConfig);
+
                 await _client.Agent.Reload();
                 agentDetails = await _client.Agent.Self();
                 agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
                 Assert.Equal("DEBUG", agentLogLevel.Value);
+
                 System.IO.File.WriteAllText(configFile, initialConfig);
                 await _client.Agent.Reload();
             }
