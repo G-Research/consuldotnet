@@ -1017,6 +1017,8 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Agent_Reload()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_Reload` is only supported from Consul {cutOffVersion}");
             string configFile = Environment.GetEnvironmentVariable("CONSUL_AGENT_CONFIG_PATH");
             Skip.If(string.IsNullOrEmpty(configFile), "The CONSUL_AGENT_CONFIG_PATH environment variable was not set");
             var initialConfig = System.IO.File.ReadAllText(configFile);
