@@ -270,7 +270,7 @@ namespace Consul.Test
         public async Task Catalog_ServicesForNodes()
         {
             var cutOffVersion = SemanticVersion.Parse("1.7.0");
-            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `ServicesForNodes` is only supported from Consul {cutOffVersion}");
 
             var svcID = KVTest.GenerateTestKeyName();
             var svcID2 = KVTest.GenerateTestKeyName();
