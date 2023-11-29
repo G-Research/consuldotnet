@@ -118,7 +118,6 @@ namespace Consul
         public int Port { get; set; }
     }
 
-
     /// <summary>
     /// Catalog can be used to query the Catalog endpoints
     /// </summary>
@@ -305,9 +304,7 @@ namespace Consul
         /// <returns>A list of service instances</returns>
         public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, Filter filter, CancellationToken ct = default)
         {
-            var req = _client.Get<CatalogService[]>(string.Format("/v1/catalog/connect/{0}", service), q, filter);
-
-            return req.Execute(ct);
+            return _client.Get<CatalogService[]>(string.Format("/v1/catalog/connect/{0}", service), q, filter).Execute(ct);
         }
 
         /// <summary>

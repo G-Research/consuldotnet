@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -265,9 +266,11 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Catalog_ServicesForNodes()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
             var svcID = KVTest.GenerateTestKeyName();
             var svcID2 = KVTest.GenerateTestKeyName();
             var registration1 = new CatalogRegistration
