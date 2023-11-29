@@ -419,6 +419,16 @@ namespace Consul
     }
 
     /// <summary>
+    /// AgentVersion represents the version information for the Consul agent
+    /// </summary>
+    public class AgentVersion
+    {
+        public string SHA { get; set; }
+        public DateTime BuildDate { get; set; }
+        public string HumanVersion { get; set; }
+        public string FIPS { get; set; }
+    }
+    /// <summary>
     /// Log Level Enum
     /// </summary>
     public enum LogLevel
@@ -1031,6 +1041,15 @@ namespace Consul
         public async Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default)
         {
             return await _client.Get<AgentHostInfo>($"v1/agent/host").Execute(ct).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// GetAgentVersion returns the version of the agent
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns>Version of the agent</returns>
+        public async Task<QueryResult<AgentVersion>> GetAgentVersion(CancellationToken ct = default)
+        {
+            return await _client.Get<AgentVersion>("/v1/agent/version").Execute(ct).ConfigureAwait(false);
         }
         /// <summary>
         /// Log streamer
