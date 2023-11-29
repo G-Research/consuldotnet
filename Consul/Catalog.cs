@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Filtering;
 using Newtonsoft.Json;
 
 namespace Consul
@@ -82,6 +83,39 @@ namespace Consul
         public string Datacenter { get; set; }
         public string ServiceID { get; set; }
         public string CheckID { get; set; }
+    }
+
+    public class NodeService
+    {
+        public NodeInfo Node { get; set; }
+        public List<ServiceInfo> Services { get; set; }
+    }
+
+    public class NodeInfo
+    {
+        public string ID { get; set; }
+        public string Node { get; set; }
+        public string Address { get; set; }
+        public string Datacenter { get; set; }
+        public Dictionary<string, string> TaggedAddresses { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+    }
+
+    public class ServiceInfo
+    {
+        public string ID { get; set; }
+        public string Service { get; set; }
+        public string[] Tags { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+        public int Port { get; set; }
+        public string Namespace { get; set; }
+        public Dictionary<string, ServiceAddress> TaggedAddresses { get; set; }
+    }
+
+    public class ServiceAddress
+    {
+        public string Address { get; set; }
+        public int Port { get; set; }
     }
 
     /// <summary>
@@ -238,6 +272,42 @@ namespace Consul
         }
 
         /// <summary>
+        /// Returns the nodes providing a mesh-capable service in a given datacenter. 
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default)
+        {
+            return NodesForMeshCapableService(service, QueryOptions.Default, null, ct);
+        }
+
+        /// <summary>
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct = default)
+        {
+            return NodesForMeshCapableService(service, QueryOptions.Default, filter, ct);
+        }
+
+        /// <summary>
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// <param name="q">Customized Query options</param>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, Filter filter, CancellationToken ct = default)
+        {
+            return _client.Get<CatalogService[]>(string.Format("/v1/catalog/connect/{0}", service), q, filter).Execute(ct);
+        }
+
+        /// <summary>
         /// Node is used to query for service information about a single node
         /// </summary>
         /// <param name="node">The node name</param>
@@ -258,6 +328,29 @@ namespace Consul
         public Task<QueryResult<CatalogNode>> Node(string node, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<CatalogNode>(string.Format("/v1/catalog/node/{0}", node), q).Execute(ct);
+        }
+
+        /// <summary>
+        /// ServicesForNode is used to query for the services provided by a node
+        /// </summary>
+        /// <param name="node">Node Name</param>
+        /// <param name="ct">CancellationToken</param>
+        /// <returns>Node Services</returns>
+        public Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct = default)
+        {
+            return ServicesForNode(node, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// ServicesForNode is used to query for the services provided by a node
+        /// </summary>
+        /// <param name="node">Node Name</param>
+        /// <param name="q">Query Parameters</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Node Services</returns>
+        public Task<QueryResult<NodeService>> ServicesForNode(string node, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<NodeService>(string.Format("/v1/catalog/node-services/{0}", node), q).Execute(ct);
         }
     }
 
