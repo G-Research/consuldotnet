@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.7.14.2
+* Added support for agent version (#261)
+* Support for Listing Services for Node and Retrieving Nodes that support Mesh Capable Service (#273)
+* Support Listing and Deleting Configuration Entries (#271)
+* Support Applying Configuration and Get Configuration (#269)
+* Added support for agent host info (#259)
+* Added support for Agent Metrics (#263)
+* Implement local service health check (#240)
+
 ## 1.7.14.1
 * Add ServiceTags to the health check endpoint (#244)
 * Write correct value for KV.Release (#237)
