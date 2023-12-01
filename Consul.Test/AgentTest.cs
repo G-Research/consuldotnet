@@ -1054,5 +1054,36 @@ namespace Consul.Test
                 System.IO.File.WriteAllText(configFile, initialConfig);
             }
         }
+
+        [SkippableFact]
+        public async Task Agent_GetServiceConfiguration()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.3.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_GetServiceConfiguration` is only supported from Consul {cutOffVersion}");
+            var service = new AgentServiceRegistration
+            {
+                Name = "test",
+                Port = 8000,
+                Kind = ServiceKind.ConnectProxy,
+                Proxy = new AgentServiceProxy
+                {
+                    DestinationServiceName = "test",
+                    DestinationServiceID = "test",
+                    LocalServiceAddress = "127.0.0.1",
+                    LocalServicePort = 8000,
+                    Upstreams = new AgentServiceProxyUpstream[] {
+                        new AgentServiceProxyUpstream {
+                            DestinationName = "db",
+                            LocalBindPort = 8001
+                        }
+                    }
+                }
+            };
+            await _client.Agent.ServiceRegister(service);
+            var serviceConfiguration2 = await _client.Agent.GetServiceConfiguration("test");
+            Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceName, service.Proxy.DestinationServiceName);
+            Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceID, service.Proxy.DestinationServiceID);
+            Assert.Equal(serviceConfiguration2.Response.Proxy.LocalServiceAddress, service.Proxy.LocalServiceAddress);
+        }
     }
 }
