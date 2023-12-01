@@ -69,5 +69,7 @@ namespace Consul
         Task<WriteResult> Reload(string node, CancellationToken ct = default);
         Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default);
         Task<WriteResult> Leave(string node, CancellationToken ct = default);
+        Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, CancellationToken ct = default);
     }
 }

@@ -124,6 +124,66 @@ namespace Consul
         public string Type { get; set; }
     }
 
+    public class TaggedAddresses
+    {
+        public AddressDetails Lan { get; set; }
+        public AddressDetails Wan { get; set; }
+    }
+
+    public class AddressDetails
+    {
+        public string Address { get; set; }
+        public int Port { get; set; }
+    }
+
+    public class Weights
+    {
+        public int Passing { get; set; }
+        public int Warning { get; set; }
+    }
+
+    public class TransparentProxy
+    {
+        public int OutboundListenerPort { get; set; }
+    }
+
+    public class Upstream
+    {
+        public string DestinationType { get; set; }
+        public string DestinationName { get; set; }
+        public int LocalBindPort { get; set; }
+    }
+
+    public class Proxy
+    {
+        public string DestinationServiceName { get; set; }
+        public string DestinationServiceID { get; set; }
+        public string LocalServiceAddress { get; set; }
+        public int LocalServicePort { get; set; }
+        public string Mode { get; set; }
+        public TransparentProxy TransparentProxy { get; set; }
+        public Dictionary<string, string> Config { get; set; }
+        public List<Upstream> Upstreams { get; set; }
+    }
+
+    public class ServiceConfiguration
+    {
+        public string Kind { get; set; }
+        public string ID { get; set; }
+        public string Service { get; set; }
+        public object Tags { get; set; }
+        public object Meta { get; set; }
+        public string Namespace { get; set; }
+        public int Port { get; set; }
+        public string Address { get; set; }
+        public TaggedAddresses TaggedAddresses { get; set; }
+        public Weights Weights { get; set; }
+        public bool EnableTagOverride { get; set; }
+        public string Datacenter { get; set; }
+        public string ContentHash { get; set; }
+        public Proxy Proxy { get; set; }
+    }
+
     /// <summary>
     /// AgentService represents a service known to the agent
     /// </summary>
@@ -261,6 +321,9 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public AgentServiceProxy Proxy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceKind Kind { get; set; }
     }
 
     /// <summary>
@@ -1042,6 +1105,7 @@ namespace Consul
         {
             return await _client.Get<AgentHostInfo>($"v1/agent/host").Execute(ct).ConfigureAwait(false);
         }
+
         /// <summary>
         /// GetAgentVersion returns the version of the agent
         /// </summary>
@@ -1051,6 +1115,30 @@ namespace Consul
         {
             return await _client.Get<AgentVersion>("/v1/agent/version").Execute(ct).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// GetServiceConfiguration returns the service definition of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceID">Id of service to fetch</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Service Configuration</returns>
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, CancellationToken ct = default)
+        {
+            return await GetServiceConfiguration(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetServiceConfiguration returns the service definition of a service registered on the local agent
+        /// </summary>
+        /// <param name="serviceID">Id of service to fetch</param>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Service Configuration</returns>
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceID}", q).Execute(ct).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Log streamer
         /// </summary>
