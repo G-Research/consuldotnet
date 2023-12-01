@@ -1119,24 +1119,24 @@ namespace Consul
         /// <summary>
         /// GetServiceConfiguration returns the service definition of a service registered on the local agent
         /// </summary>
-        /// <param name="serviceID">Id of service to fetch</param>
+        /// <param name="serviceId">Id of service to fetch</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Service Configuration</returns>
-        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, CancellationToken ct = default)
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, CancellationToken ct = default)
         {
-            return await GetServiceConfiguration(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+            return await GetServiceConfiguration(serviceId, QueryOptions.Default, ct).ConfigureAwait(false);
         }
 
         /// <summary>
         /// GetServiceConfiguration returns the service definition of a service registered on the local agent
         /// </summary>
-        /// <param name="serviceID">Id of service to fetch</param>
+        /// <param name="serviceId">Id of service to fetch</param>
         /// <param name="q">Query Options</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Service Configuration</returns>
-        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, QueryOptions q, CancellationToken ct = default)
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, QueryOptions q, CancellationToken ct = default)
         {
-            return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceID}", q).Execute(ct).ConfigureAwait(false);
+            return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceId}", q).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
