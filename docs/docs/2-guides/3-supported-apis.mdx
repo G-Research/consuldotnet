@@ -9,46 +9,71 @@ import {ConsulAPIBadge} from "@site/src/components/CustomBadge";
 
 ✅ supported · 🚧 in progress · ❌ not supported
 
-| Group            | Endpoint                    | Route                                 | Status |
-|:-----------------|:----------------------------|:--------------------------------------|:------:|
-| Agent - Base     | List Members                | GET /v1/agent/members                 |   ✅    |
-|                  | Read Configuration          | GET /v1/agent/self                    |   ✅    |
-|                  | Reload Agent                | PUT /v1/agent/reload                  |   ✅    |
-|                  | Enable Maintenance Mode     | PUT /v1/agent/maintenance             |   ✅    |
-|                  | Join Agent                  | GET /v1/agent/join/:id                |   ✅    |
-|                  | Graceful Leave + Shutdown   | PUT /v1/agent/leave                   |   ✅    |
-|                  | Force Leave + Shutdown      | PUT /v1/agent/force-leave             |   ✅    |
-| Agent - Checks   | List Checks                 | GET /v1/agent/checks                  |   ✅    |
-|                  | Register Check              | PUT /v1/agent/check/register          |   ✅    |
-|                  | Deregister Check            | PUT /v1/agent/check/deregister/:id    |   ✅    |
-|                  | TLL Check Pass              | GET /v1/agent/check/pass/:id          |   ✅    |
-|                  | TLL Check Warn              | GET /v1/agent/check/warn/:id          |   ✅    |
-|                  | TLL Check Fail              | GET /v1/agent/check/fail/:id          |   ✅    |
-|                  | TLL Check Update            | GET /v1/agent/check/update/:id        |   ✅    |
-| Agent - Services | List Services               | GET /v1/agent/services                |   ✅    |
-|                  | Register Service            | PUT /v1/agent/service/register        |   ✅    |
-|                  | Deregister Service          | PUT /v1/agent/service/deregister/:id  |   ✅    |
-|                  | Enable Maintenance Mode     | PUT /v1/agent/service/maintenance/:id |   ✅    |
-| Catalog          | List Datacenters            | GET /v1/catalog/datacenters           |   ✅    |
-|                  | List Nodes in a given DC    | GET /v1/catalog/nodes                 |   ✅    |
-|                  | List Services in a given DC | GET /v1/catalog/services              |   ✅    |
-|                  | List Nodes for Service      | GET /v1/catalog/service/:id           |   ✅    |
-|                  | List Services for Node      | GET /v1/catalog/node/:id              |   ✅    |
-| Coordinates      | Read WAN Coordinates        | GET /v1/coordinates/datacenters       |   ✅    |
-|                  | Read LAN Coordinates        | GET /v1/coordinates/nodes             |   ✅    |
-| Events           | Fire Event                  | PUT /v1/event/fire/:name              |   ✅    |
-|                  | List Events                 | GET /v1/event/list                    |   ✅    |
-| Health           | List Checks for Node        | GET /v1/health/node/:id               |   ✅    |
-|                  | List Checks for Service     | GET /v1/health/checks/:id             |   ✅    |
-|                  | List Nodes for Service      | GET /v1/health/service/:id            |   ✅    |
-|                  | List Checks in State        | GET /v1/health/state/:state           |   ✅    |
-| KV Store         | Read Key                    | GET /v1/kv/:key                       |   ✅    |
-|                  | Create/Update Key           | PUT /v1/kv/:key                       |   ✅    |
-|                  | Delete Key                  | DELETE /v2/kv/:key                    |   ✅    |
-| Namespace        | List Namespaces             | GET /v1/namespaces                    |   ✅    |
-|                  | Read Namespace              | GET /v1/namespace/:name               |   ✅    |
-|                  | Create Namespace            | PUT /v1/namespace                     |   ✅    |
-|                  | Update Namespace            | PUT /v1/namespace/:name               |   ✅    |
-|                  | Delete Namespace            | DELETE /v1/namespace/:name            |   ✅    |
-
-
+| Group            | Endpoint                          | Route                                          | Status  |
+|:-----------------|:----------------------------------|:-----------------------------------------------|:-------:|
+| Agent - Base     | List Members                      | GET /v1/agent/members                          |   ✅    |
+|                  | Read Configuration                | GET /v1/agent/self                             |   ✅    |
+|                  | Reload Agent                      | PUT /v1/agent/reload                           |   ✅    |
+|                  | Enable Maintenance Mode           | PUT /v1/agent/maintenance                      |   ✅    |
+|                  | Join Agent                        | GET /v1/agent/join/:id                         |   ✅    |
+|                  | Graceful Leave + Shutdown         | PUT /v1/agent/leave                            |   ✅    |
+|                  | Force Leave + Shutdown            | PUT /v1/agent/force-leave                      |   ✅    |
+|                  | Read Agent Host                   | GET /v1/agent/host                             |   ✅    | 
+|                  | Read Agent Host                   | GET /v1/agent/version                          |   ✅    | 
+|                  | Agent Health by Service Id        | GET /v1//agent/health/service/id/:service_id   |   ✅    | 
+|                  | Agent Health by Service Name      | GET /v1/agent/health/service/name/:name        |   ✅    | 
+|                  | Force Leave                       | PUT /v1/agent/foce-leave/:node                 |   ✅    |
+|                  | Enable/Disable Service Maintenance| PUT /v1/agent/service/maintenance/:serviceId   |   ✅    | 
+|                  | Enable/Disable Node Maintenance   | PUT /v1/agent/maintenance                      |   ✅    | 
+|                  | Read Agent Logs                   | GET /v1/agent/monitor                          |   ✅    | 
+|                  | UpdateTokenOnce                   | PUT /v1/agent/token/:target                    |   ✅    | 
+| Agent - Checks   | List Checks                       | GET /v1/agent/checks                           |   ✅    |
+|                  | Register Check                    | PUT /v1/agent/check/register                   |   ✅    |
+|                  | Deregister Check                  | PUT /v1/agent/check/deregister/:id             |   ✅    |
+|                  | TLL Check Pass                    | GET /v1/agent/check/pass/:id                   |   ✅    |
+|                  | TLL Check Warn                    | GET /v1/agent/check/warn/:id                   |   ✅    |
+|                  | TLL Check Fail                    | GET /v1/agent/check/fail/:id                   |   ✅    |
+|                  | TLL Check Update                  | GET /v1/agent/check/update/:id                 |   ✅    |
+| Agent - Services | List Services                     | GET /v1/agent/services                         |   ✅    |
+|                  | Register Service                  | PUT /v1/agent/service/register                 |   ✅    |
+|                  | Deregister Service                | PUT /v1/agent/service/deregister/:id           |   ✅    |
+|                  | Enable Maintenance Mode           | PUT /v1/agent/service/maintenance/:id          |   ✅    |
+|                  | Get a locally registered service  | GET, /v1/agent/service/:serviceId              |   ✅    |
+| Catalog          | List Datacenters                  | GET /v1/catalog/datacenters                    |   ✅    |
+|                  | List Nodes in a given DC          | GET /v1/catalog/nodes                          |   ✅    |
+|                  | List Services in a given DC       | GET /v1/catalog/services                       |   ✅    |
+|                  | List Nodes for Service            | GET /v1/catalog/service/:id                    |   ✅    |
+|                  | List Services for Node            | GET /v1/catalog/node/:id                       |   ✅    |
+|                  | Register Catalog Item             | PUT /v1/catalog/register                       |   ✅    |
+|                  | Deregister Catalog Item           | PUT /v1/catalog/deregister                     |   ✅    |
+|                  | Node Service List                 | GET, /v1/catalog/node-services/:node           |   ✅    |
+| Coordinates      | Read WAN Coordinates              | GET /v1/coordinates/datacenters                |   ✅    |
+|                  | Read LAN Coordinates              | GET /v1/coordinates/nodes                      |   ✅    |
+| Events           | Fire Event                        | PUT /v1/event/fire/:name                       |   ✅    |
+|                  | List Events                       | GET /v1/event/list                             |   ✅    |
+| Health           | List Checks for Node              | GET /v1/health/node/:id                        |   ✅    |
+|                  | List Checks for Service           | GET /v1/health/checks/:id                      |   ✅    |
+|                  | List Nodes for Service            | GET /v1/health/service/:id                     |   ✅    |
+|                  | List Checks in State              | GET /v1/health/state/:state                    |   ✅    |
+| KV Store         | Read Key                          | GET /v1/kv/:key                                |   ✅    |
+|                  | Create/Update Key                 | PUT /v1/kv/:key                                |   ✅    |
+|                  | Delete Key                        | DELETE /v2/kv/:key                             |   ✅    |
+| Namespace        | List Namespaces                   | GET /v1/namespaces                             |   ✅    |
+|                  | Read Namespace                    | GET /v1/namespace/:name                        |   ✅    |
+|                  | Create Namespace                  | PUT /v1/namespace                              |   ✅    |
+|                  | Update Namespace                  | PUT /v1/namespace/:name                        |   ✅    |
+|                  | Delete Namespace                  | DELETE /v1/namespace/:name                     |   ✅    |
+| Session          | List Session                      | GET /v1/session/list                           |   ✅    |
+|                  | Create Session                    | POST /v1/session/create                        |   ✅    |
+|                  | Destroy Session                   | PUT /v1/session/destroy/:id                    |   ✅    |
+|                  | Renew Session                     | PUT /v1/session/renew/:id                      |   ✅    |
+|                  | Info Session                      | GET /v1/session/node/:node                     |   ✅    |
+|                  | Destroy Session                   | PUT /v1/session/destroy/:id                    |   ✅    |
+|                  | List Sessions for Node            | GET /v1/session/node/:node                     |   ✅    |
+| Status           | Status of Leader                  | GET /v1/status/leader                          |   ✅    |
+|                  | Status of Peers                   | GET /v1/status/peers                           |   ✅    |
+| Transaction      | Transaction                       | PUT /v1/txn                                    |   ✅    | 
+| Config           | Retrieve a specific configuration by kind and name | GET /v1/config/{kind}/{name}  |   ✅    |
+|                   | List all configuration entries of a specific kind | GET /v1/config/{kind}         |   ✅    |
+|                   | Set a new configuration entry                    | PUT  /v1/config                |   ✅    |
+|                   | Delete a specific configuration entry by kind and name | DELETE /v1/config/{kind}/{name}   |  ✅     |
