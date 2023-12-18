@@ -6,7 +6,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
 import styles from './Index.module.css';
-import ConsulDotNetLogoSvg from '@site/static/project/logo/svg/Consul.NET_SignatureLogo_RGB-Color.svg';
+import LogoSvg from '@site/static/project/logo/svg/Consul.NET_SignatureLogo_RGB-Color.svg';
 import badgeList from "@site/src/data/badges";
 import FeatureList from "@site/src/data/features";
 import MDXContent from '@theme/MDXContent';
@@ -27,17 +27,15 @@ function HomepageBadges() {
 function HomepageBanner() {
     const {siteConfig} = useDocusaurusContext();
     return (
-        <header className={clsx('hero hero--primary', styles.heroBanner)}>
-            <div className="container">
-                <div className={clsx(styles.logoContainer)}>
-                    <ConsulDotNetLogoSvg fill='transparent' transform="scale(1.8 1.8)"/>
+        <header className={clsx('hero hero--primary text--center padding-vert--lg', styles.heroBackground)}>
+            <div className={clsx('container', styles.heroWrapper)}>
+                <div className={clsx(styles.logoSvgBox)}>
+                    <LogoSvg fill='transparent' transform="scale(1.3 1.3)" preserveAspectRatio="xMinYMin meet"/>
                 </div>
                 <h1 className="hero__title" style={{display: 'none'}}>{siteConfig.title}</h1>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
                 <HomepageBadges/>
-                <CodeBlock language="bash">
-                    {`dotnet add package Consul`}
-                </CodeBlock>
+                <CodeBlock language="bash" className="col">dotnet add package Consul</CodeBlock>
                 <p>{`Curious about what's next? try the `}
                     <Link className={styles.previewLink} to='/docs/next/'>
                         ⚡ preview version
@@ -55,14 +53,13 @@ function HomepageBanner() {
                         🚀 Get Started
                     </Link>
                 </div>
-                <div className={clsx('margin-top--md')}>
-                    <iframe
-                        src="https://ghbtns.com/github-btn.html?user=G-Research&repo=consuldotnet&type=star&count=true&size=large"
-                        width={170}
-                        height={30}
-                        title="GitHub Stars"
-                    />
-                </div>
+                <iframe
+                    src="https://ghbtns.com/github-btn.html?user=G-Research&repo=consuldotnet&type=star&count=true&size=large"
+                    className="margin-top--md padding-left--md"
+                    width={170}
+                    height={30}
+                    title="GitHub Stars"
+                />
             </div>
         </header>
     );
