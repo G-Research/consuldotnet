@@ -85,16 +85,16 @@
 
 
 /*compatibilities*/
-.compatibilities {
-    padding: 2rem 0;
-    text-align: center;
+.markdownWrapper table {
+    border-collapse: separate;
 }
 
-.compatibilities table {
-    display: inline;
-    margin-left: auto;
-    margin-right: auto;
-    border-collapse: separate;
+.markdownWrapper table th:nth-child(1), .markdownWrapper table th:nth-child(4) {
+    width: 10%;
+}
+
+.markdownWrapper table th:nth-child(2), .markdownWrapper table th:nth-child(3) {
+    width: 30%;
 }
 
 td:first-child:not(:empty) {

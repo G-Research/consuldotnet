@@ -99,16 +99,18 @@ function HomepageFeatures(): JSX.Element {
 
 function HomepageCompatibilities(): JSX.Element {
     return (
-        <section className={styles.compatibilities}>
+        <section className="padding-top--md padding-bottom--xl text--center">
             <div className="container">
-                <div className="text--center">
-                    <h1>Supported APIs</h1>
-                </div>
                 <div className="row">
                     <div className="col">
-                        <MDXContent>
-                            <SupportedAPIs/>
-                        </MDXContent>
+                        <header>
+                            <h1>Supported APIs</h1>
+                        </header>
+                        <span className={styles.markdownWrapper}>
+                            <MDXContent>
+                                <SupportedAPIs/>
+                            </MDXContent>
+                        </span>
                     </div>
                 </div>
             </div>
