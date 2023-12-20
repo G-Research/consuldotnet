@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
 [![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
 
-[![Consul API: 1.6.10](https://img.shields.io/badge/Consul%20API%20version-1.6.10-red)](https://github.com/hashicorp/consul/tree/v1.6.10/api)
+[![Consul API: 1.7.14](https://img.shields.io/badge/Consul%20API%20version-1.7.14-red)](https://github.com/hashicorp/consul/tree/v1.7.14/api)
 ![.NET: >= 4.6.1](https://img.shields.io/badge/.NET%20version-%3E=4.6.1-blue)
 ![.NET Core: >= 2.0.0](https://img.shields.io/badge/.NET%20Core%20version-%3E=2.0.0-blueviolet)
 
