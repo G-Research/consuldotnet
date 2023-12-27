@@ -1,13 +1,12 @@
 // -----------------------------------------------------------------------
-//  <copyright file="AgentTest.cs" company="PlayFab Inc">
-//    Copyright 2015 PlayFab Inc.
+//  <copyright file="AgentTest.cs" company="G-Research Limited">
 //    Copyright 2020 G-Research Limited
 //
-//    Licensed under the Apache License, Version 2.0 (the "License");
+//    Licensed under the Apache License, Version 2.0 (the "License"),
 //    you may not use this file except in compliance with the License.
 //    You may obtain a copy of the License at
 //
-//        http://www.apache.org/licenses/LICENSE-2.0
+//       http://www.apache.org/licenses/LICENSE-2.0
 //
 //    Unless required by applicable law or agreed to in writing, software
 //    distributed under the License is distributed on an "AS IS" BASIS,
@@ -1004,6 +1003,17 @@ namespace Consul.Test
             Assert.True(hostInfo.Response.CollectionTime > 0);
         }
 
+        [SkippableFact]
+        public async Task Agent_Version()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.16.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_Version` is only supported from Consul {cutOffVersion}");
+
+            var agentVersion = await _client.Agent.GetAgentVersion();
+            Assert.NotNull(agentVersion.Response.HumanVersion);
+            Assert.NotNull(agentVersion.Response.SHA);
+        }
+
         [Fact]
         public async Task Agent_Metrics()
         {
@@ -1013,6 +1023,67 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Gauges);
             Assert.NotNull(agentMetrics.Response.Points);
             Assert.NotNull(agentMetrics.Response.Samples);
+        }
+
+        [SkippableFact]
+        public async Task Agent_Reload()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_Reload` is only supported from Consul {cutOffVersion}");
+            string configFile = Environment.GetEnvironmentVariable("CONSUL_AGENT_CONFIG_PATH");
+            Skip.If(string.IsNullOrEmpty(configFile), "The CONSUL_AGENT_CONFIG_PATH environment variable was not set");
+            var initialConfig = System.IO.File.ReadAllText(configFile);
+            var udpatedConfig = initialConfig.Replace("TRACE", "DEBUG");
+            try
+            {
+                var agentDetails = await _client.Agent.Self();
+                var agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+                Assert.Equal("TRACE", agentLogLevel.Value);
+                System.IO.File.WriteAllText(configFile, udpatedConfig);
+
+                await _client.Agent.Reload();
+                agentDetails = await _client.Agent.Self();
+                agentLogLevel = agentDetails.Response["DebugConfig"]["Logging"]["LogLevel"];
+                Assert.Equal("DEBUG", agentLogLevel.Value);
+
+                System.IO.File.WriteAllText(configFile, initialConfig);
+                await _client.Agent.Reload();
+            }
+            finally
+            {
+                System.IO.File.WriteAllText(configFile, initialConfig);
+            }
+        }
+
+        [SkippableFact]
+        public async Task Agent_GetServiceConfiguration()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.3.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Agent_GetServiceConfiguration` is only supported from Consul {cutOffVersion}");
+            var service = new AgentServiceRegistration
+            {
+                Name = "test",
+                Port = 8000,
+                Kind = ServiceKind.ConnectProxy,
+                Proxy = new AgentServiceProxy
+                {
+                    DestinationServiceName = "test",
+                    DestinationServiceID = "test",
+                    LocalServiceAddress = "127.0.0.1",
+                    LocalServicePort = 8000,
+                    Upstreams = new AgentServiceProxyUpstream[] {
+                        new AgentServiceProxyUpstream {
+                            DestinationName = "db",
+                            LocalBindPort = 8001
+                        }
+                    }
+                }
+            };
+            await _client.Agent.ServiceRegister(service);
+            var serviceConfiguration2 = await _client.Agent.GetServiceConfiguration("test");
+            Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceName, service.Proxy.DestinationServiceName);
+            Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceID, service.Proxy.DestinationServiceID);
+            Assert.Equal(serviceConfiguration2.Response.Proxy.LocalServiceAddress, service.Proxy.LocalServiceAddress);
         }
     }
 }

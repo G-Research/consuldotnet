@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -175,6 +177,31 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Catalog_GetNodesForMeshCapableService()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Port = 8000,
+                Connect = new AgentServiceConnect
+                {
+
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Name = "sidecar",
+                        Port = 9000,
+                    },
+                },
+            };
+            await _client.Agent.ServiceRegister(registration);
+
+            var services = await _client.Catalog.NodesForMeshCapableService(registration.Name);
+            Assert.NotEmpty(services.Response);
+            Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
+        }
+
+        [Fact]
         public async Task Catalog_EnableTagOverride()
         {
             var svcID = KVTest.GenerateTestKeyName();
@@ -237,6 +264,58 @@ namespace Consul.Test
 
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
             }
+        }
+
+        [SkippableFact]
+        public async Task Catalog_ServicesForNodes()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `ServicesForNodes` is only supported from Consul {cutOffVersion}");
+
+            var svcID = KVTest.GenerateTestKeyName();
+            var svcID2 = KVTest.GenerateTestKeyName();
+            var registration1 = new CatalogRegistration
+            {
+                Datacenter = "dc1",
+                Node = "foobar",
+                Address = "192.168.10.10",
+                Service = new AgentService
+                {
+                    ID = svcID,
+                    Service = "redis",
+                    Tags = new[] { "master", "v1" },
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
+                }
+            };
+            var registration2 = new CatalogRegistration
+            {
+                Datacenter = "dc1",
+                Node = "foobar2",
+                Address = "192.168.10.11",
+                Service = new AgentService
+                {
+                    ID = svcID2,
+                    Service = "redis",
+                    Tags = new[] { "master", "v2" },
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        { "lan", new ServiceTaggedAddress { Address = "127.0.0.1", Port = 81 } },
+                        { "wan", new ServiceTaggedAddress { Address = "192.168.10.10", Port = 8001 } }
+                    }
+                }
+            };
+
+            await _client.Catalog.Register(registration1);
+            await _client.Catalog.Register(registration2);
+            var services = await _client.Catalog.ServicesForNode(registration1.Node, new QueryOptions { Datacenter = registration1.Datacenter });
+            Assert.Contains(services.Response.Services, n => n.ID == svcID);
+            Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }
     }
 }
