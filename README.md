@@ -1,5 +1,6 @@
 [![Consul.NET](https://user-images.githubusercontent.com/18899702/219622225-1fda8125-ed7e-4e07-8281-64d3cd5368b8.png)](https://consuldot.net/)
 
+[![G-Research](https://github.com/G-Research/brand/raw/main/badge/badge.svg)](https://github.com/G-Research)
 [![CI](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/G-Research/consuldotnet/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 [![NuGet](https://img.shields.io/nuget/vpre/consul)](https://www.nuget.org/packages/Consul/absoluteLatest)
 [![Downloads](https://img.shields.io/nuget/dt/consul?label=Downloads)](https://www.nuget.org/packages/Consul/absoluteLatest)
@@ -9,7 +10,7 @@
 [![License](https://img.shields.io/github/license/G-Research/consuldotnet.svg?label=License)](https://github.com/G-Research/consuldotnet/blob/master/LICENSE)
 [![Twitter Follow](https://img.shields.io/twitter/follow/oss_gr.svg?label=Twitter)](https://twitter.com/oss_gr)
 
-[![Consul API: 1.6.10](https://img.shields.io/badge/Consul%20API%20version-1.6.10-red)](https://github.com/hashicorp/consul/tree/v1.6.10/api)
+[![Consul API: 1.7.14](https://img.shields.io/badge/Consul%20API%20version-1.7.14-red)](https://github.com/hashicorp/consul/tree/v1.7.14/api)
 ![.NET: >= 4.6.1](https://img.shields.io/badge/.NET%20version-%3E=4.6.1-blue)
 ![.NET Core: >= 2.0.0](https://img.shields.io/badge/.NET%20Core%20version-%3E=2.0.0-blueviolet)
 
