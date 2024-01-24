@@ -24,7 +24,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Cache .NET tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: dotnet-tools-${{ runner.os }}-${{ hashFiles('.config/dotnet-tools.json') }}
