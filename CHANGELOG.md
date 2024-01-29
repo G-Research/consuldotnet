@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.7.14.3
+* Added the Configuration property to the IConsulClient interface (#298)
+* Added Support for Getting Service Configuration (#278)
+
 ## 1.7.14.2
 * Added support for agent version (#261)
 * Support for Listing Services for Node and Retrieving Nodes that support Mesh Capable Service (#273)
