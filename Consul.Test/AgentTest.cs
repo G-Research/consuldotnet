@@ -1017,6 +1017,8 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_Metrics()
         {
+            // Workaround for https://github.com/hashicorp/consul/issues/15061
+            await Task.Delay(TimeSpan.FromSeconds(60));
             var agentMetrics = await _client.Agent.GetAgentMetrics();
             Assert.NotNull(agentMetrics.Response.Timestamp);
             Assert.NotNull(agentMetrics.Response.Counters);
