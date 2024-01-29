@@ -323,3 +323,4 @@ changes made in Consul 1.4.0 and 1.5.0
   parameters from various internal calls
 * Added interfaces to all the endpoint classes so that test mocking is
   possible.
+
