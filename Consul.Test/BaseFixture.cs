@@ -63,6 +63,9 @@ namespace Consul.Test
 
                     var info = await client.Agent.Self();
                     AgentVersion = SemanticVersion.Parse(info.Response["Config"]["Version"]);
+
+                    // Workaround for https://github.com/hashicorp/consul/issues/15061
+                    await client.Agent.GetAgentMetrics();
                     break;
                 }
                 catch (OperationCanceledException)
