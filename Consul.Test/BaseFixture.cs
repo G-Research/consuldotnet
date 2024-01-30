@@ -66,6 +66,7 @@ namespace Consul.Test
 
                     // Workaround for https://github.com/hashicorp/consul/issues/15061
                     await client.Agent.GetAgentMetrics();
+
                     break;
                 }
                 catch (OperationCanceledException)
