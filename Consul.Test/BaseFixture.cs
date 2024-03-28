@@ -63,6 +63,10 @@ namespace Consul.Test
 
                     var info = await client.Agent.Self();
                     AgentVersion = SemanticVersion.Parse(info.Response["Config"]["Version"]);
+
+                    // Workaround for https://github.com/hashicorp/consul/issues/15061
+                    await client.Agent.GetAgentMetrics();
+
                     break;
                 }
                 catch (OperationCanceledException)
@@ -87,9 +91,9 @@ namespace Consul.Test
             // XUnit sets the initial number of worker threads to the number of CPU cores.
             // Unfortunately, when the initial limit for the ThreadPool is too low, it introduces a risk of a deadlock-like behavior and the tests are timing out.
             ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
-            if (workerThreads < 4)
+            if (workerThreads < 6)
             {
-                workerThreads = 4;
+                workerThreads = 6;
                 ThreadPool.SetMinThreads(workerThreads, completionPortThreads);
             }
         }

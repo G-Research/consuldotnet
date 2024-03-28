@@ -20,6 +20,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Consul.Interfaces;
 
 namespace Consul
 {
@@ -40,6 +41,7 @@ namespace Consul
         Task<IDistributedSemaphore> AcquireSemaphore(string prefix, int limit, CancellationToken ct = default);
         IAgentEndpoint Agent { get; }
         ICatalogEndpoint Catalog { get; }
+        IConfigurationEndpoint Configuration { get; }
         IDistributedLock CreateLock(LockOptions opts);
         IDistributedLock CreateLock(string key);
         IEventEndpoint Event { get; }
