@@ -6,7 +6,6 @@ on:
     types: [completed]
     branches: [master]
 
-
 jobs:
   nudge:
     runs-on: ubuntu-latest

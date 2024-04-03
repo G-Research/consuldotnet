@@ -1,14 +1,15 @@
 name: "Update Consul versions"
 
 on:
-  schedule:
-    - cron: '22 2 * * *' # Run once per day, at a randomly chosen time.
+  pull_request:
+  # schedule:
+  #   - cron: '22 2 * * *' # Run once per day, at a randomly chosen time.
 
 jobs:
   update-consul-versions:
     # Only run on main repository
     # Scheduled workflows do not have information about fork status, hence the hardcoded check
-    if: github.repository == 'G-Research/consuldotnet'
+    # if: github.repository == 'G-Research/consuldotnet'
     environment: update-consul-versions
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +31,7 @@ jobs:
           installation_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: Bearer $jwt" https://api.github.com/app/installations | jq '.[] | select(.account.login == "${{ github.repository_owner }}") | .id')
           token=$(curl -s -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: Bearer $jwt" https://api.github.com/app/installations/$installation_id/access_tokens | jq -r '.token')
           echo "::add-mask::$token"
-          echo "::set-output name=token::$token"
+          echo "token=$token" >> $GITHUB_OUTPUT
 
       - name: Install PowerShellForGitHub
         shell: pwsh
