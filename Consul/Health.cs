@@ -273,7 +273,21 @@ namespace Consul
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
         public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
         {
-            return Service(service, tag, passingOnly, q, null, ct);
+            return Service(service, tag, passingOnly, q, null, "serviceHealth", ct);
+        }
+
+        /// <summary>
+        /// Connect is equivalent to Service except that it will only return services which are Connect-enabled and will return the connection address for Connect clients to use which may be a proxy in front of the named service. If passingOnly is true only instances where both the service and any proxy are healthy will be returned.
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// <param name="tag">The service member tag</param>
+        /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
+        public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
+        {
+            return Service(service, tag, passingOnly, q, null, "connectHealth", ct);
         }
 
         /// <summary>
@@ -284,11 +298,22 @@ namespace Consul
         /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
         /// <param name="q">Customized query options</param>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="healthType">Specifies the type of health check to query for</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
-        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, string healthType, CancellationToken ct = default)
         {
-            var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/service/{0}", service), q, filter);
+            string path;
+            switch (healthType)
+            {
+                case "connectHealth":
+                    path = "/v1/health/connect/{0}";
+                    break;
+                default:
+                    path = "/v1/health/service/{0}";
+                    break;
+            }
+            var req = _client.Get<ServiceEntry[]>(string.Format(path, service), q, filter);
             if (!string.IsNullOrEmpty(tag))
             {
                 req.Params["tag"] = tag;
