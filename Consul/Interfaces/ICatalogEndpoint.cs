@@ -50,5 +50,6 @@ namespace Consul
         Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default);
         Task<QueryResult<NodeService>> ServicesForNode(string node, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct = default);
+        Task<QueryResult<GatewayService>> GatewayServices(string gateway, QueryOptions q, CancellationToken ct = default);
     }
 }
