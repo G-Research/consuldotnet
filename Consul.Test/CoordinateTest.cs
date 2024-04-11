@@ -60,7 +60,7 @@ namespace Consul.Test
 
             var firstNode = nodes[0];
 
-            var nodeDetails = await _client.Coordinate.Node(firstNode.Node, new QueryOptions());
+            var nodeDetails = await _client.Coordinate.Node(firstNode.Node, q);
 
             Assert.NotNull(nodeDetails);
             Assert.IsType<Node[]>(nodeDetails);
