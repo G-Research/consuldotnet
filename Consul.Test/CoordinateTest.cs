@@ -61,7 +61,7 @@ namespace Consul.Test
 
             var nodes = nodesResult.Response;
 
-            var firstNode = nodes[0]; 
+            var firstNode = nodes[0];
 
             var nodeDetailsResult = await _client.Coordinate.Node(firstNode.Node);
 
