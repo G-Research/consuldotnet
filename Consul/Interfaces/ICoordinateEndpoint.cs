@@ -29,8 +29,8 @@ namespace Consul
     {
         Task<QueryResult<CoordinateDatacenterMap[]>> Datacenters(CancellationToken ct = default);
         Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct = default);
-        Task<QueryResult<CoordinateEntry>> Node(string node, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CoordinateEntry>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<CoordinateEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default);
         Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q, CancellationToken ct = default);
     }
 }

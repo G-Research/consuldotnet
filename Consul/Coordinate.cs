@@ -96,9 +96,14 @@ namespace Consul
         /// <param name="ct">The cancellation token</param>"
         /// <param name="q">Customized query options</param>"
         /// <remarks>Node is used to return the coordinates of a given node in the LAN pool.</returns>
-        public Task<QueryResult<CoordinateEntry>> Node(string node, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<CoordinateEntry>(string.Format("/v1/coordinate/node/{0}", node), q).Execute(ct);
+            return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/node/{0}", node), q).Execute(ct);
+        }
+
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
+        {
+            return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/node/{0}", node)).Execute(ct);
         }
     }
 
