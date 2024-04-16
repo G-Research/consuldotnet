@@ -76,62 +76,62 @@ namespace Consul.Test
                     // ignore
                 }
                 catch (Exception ex)
-                {
-                    exception = ex;
-                }
+{
+    exception = ex;
+}
             }
         });
 
-        static BaseFixture()
-        {
-            // Some Consul object (e.g. semaphores) use multiple http connections,
-            // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
-            // E.g. https://github.com/microsoft/referencesource/blob/5697c29004a34d80acdaf5742d7e699022c64ecd/System.Web/HttpRuntime.cs#L1200
-            ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+static BaseFixture()
+{
+    // Some Consul object (e.g. semaphores) use multiple http connections,
+    // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
+    // E.g. https://github.com/microsoft/referencesource/blob/5697c29004a34d80acdaf5742d7e699022c64ecd/System.Web/HttpRuntime.cs#L1200
+    ServicePointManager.DefaultConnectionLimit = int.MaxValue;
 
-            // As for HTTP connections, we need multiple threads to test semaphores and locks.
-            // XUnit sets the initial number of worker threads to the number of CPU cores.
-            // Unfortunately, when the initial limit for the ThreadPool is too low, it introduces a risk of a deadlock-like behavior and the tests are timing out.
-            ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
-            if (workerThreads < 6)
-            {
-                workerThreads = 6;
-                ThreadPool.SetMinThreads(workerThreads, completionPortThreads);
-            }
-        }
+    // As for HTTP connections, we need multiple threads to test semaphores and locks.
+    // XUnit sets the initial number of worker threads to the number of CPU cores.
+    // Unfortunately, when the initial limit for the ThreadPool is too low, it introduces a risk of a deadlock-like behavior and the tests are timing out.
+    ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
+    if (workerThreads < 6)
+    {
+        workerThreads = 6;
+        ThreadPool.SetMinThreads(workerThreads, completionPortThreads);
+    }
+}
 
-        public BaseFixture()
-        {
-            _client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-        }
+public BaseFixture()
+{
+    _client = new ConsulClient(c =>
+    {
+        c.Token = TestHelper.MasterToken;
+        c.Address = TestHelper.HttpUri;
+    });
+}
 
-        public Task DisposeAsync()
-        {
-            _client.Dispose();
-            return Task.CompletedTask;
-        }
+public Task DisposeAsync()
+{
+    _client.Dispose();
+    return Task.CompletedTask;
+}
 
-        /// https://github.com/hashicorp/consul/issues/819
-        /// With parallel testing on the CI, sometimes the tests start before the consul server finished properly initializing.
-        /// So before we let any test run, we try some basic functionality (like session creation) to assure that the test server is ready.
-        public async Task InitializeAsync()
-        {
-            await Ready.Value;
-        }
+/// https://github.com/hashicorp/consul/issues/819
+/// With parallel testing on the CI, sometimes the tests start before the consul server finished properly initializing.
+/// So before we let any test run, we try some basic functionality (like session creation) to assure that the test server is ready.
+public async Task InitializeAsync()
+{
+    await Ready.Value;
+}
     }
 
     public class EnterpriseOnlyFact : SkippableFactAttribute
+{
+    public EnterpriseOnlyFact()
     {
-        public EnterpriseOnlyFact()
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RUN_CONSUL_ENTERPRISE_TESTS")))
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RUN_CONSUL_ENTERPRISE_TESTS")))
-            {
-                Skip = "Skipped; this test requires a consul enterprise server to run.";
-            }
+            Skip = "Skipped; this test requires a consul enterprise server to run.";
         }
     }
+}
 }
