@@ -16,60 +16,59 @@ namespace Consul.Test
 
         private static readonly Lazy<Task> Ready = new Lazy<Task>(async () =>
         {
-            var client = new ConsulClient(c =>
+        var client = new ConsulClient(c =>
+        {
+            c.Token = TestHelper.MasterToken;
+            c.Address = TestHelper.HttpUri;
+        });
+
+        var timeout = TimeSpan.FromSeconds(60);
+        var cancelToken = new CancellationTokenSource(timeout).Token;
+        Exception exception = null;
+        var firstIteration = true;
+        while (true)
+        {
+            if (!firstIteration)
+                await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
+
+            firstIteration = false;
+
+            if (cancelToken.IsCancellationRequested)
             {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            });
-
-            var timeout = TimeSpan.FromSeconds(60);
-            var cancelToken = new CancellationTokenSource(timeout).Token;
-            Exception exception = null;
-            var firstIteration = true;
-            while (true)
-            {
-                if (!firstIteration)
-                    await Task.Delay(TimeSpan.FromSeconds(1), cancelToken);
-
-                firstIteration = false;
-
-                if (cancelToken.IsCancellationRequested)
+                if (exception != null)
                 {
-                    if (exception != null)
-                    {
-                        // rethrow exception preserving its stack trace
-                        ExceptionDispatchInfo.Capture(exception).Throw();
-                    }
-                    else
-                    {
-                        throw new OperationCanceledException($"Consul server is still not responding after {timeout}");
-                    }
+                    // rethrow exception preserving its stack trace
+                    ExceptionDispatchInfo.Capture(exception).Throw();
                 }
-
-                try
+                else
                 {
-                    // single instance of test server is expected
-                    var peers = await client.Status.Peers();
-                    var leader = await client.Status.Leader();
-                    if (peers.Length != 1 || peers.Single() != leader)
+                    throw new OperationCanceledException($"Consul server is still not responding after {timeout}");
+                }
+            }
+
+            try
+            {
+                // single instance of test server is expected
+                var peers = await client.Status.Peers();
+                var leader = await client.Status.Leader();
+                if (peers.Length != 1 || peers.Single() != leader)
+                    continue;
+
+                // test basic functionality
+                var sessionRequest = await client.Session.Create(new SessionEntry());
+                if (string.IsNullOrWhiteSpace(sessionRequest.Response))
+                    continue;
+
+                await client.Session.Destroy(sessionRequest.Response);
+
+                var info = await client.Agent.Self();
+                AgentVersion = SemanticVersion.Parse(info.Response["Config"]["Version"]);
+
+                // Workaround for https://github.com/hashicorp/consul/issues/15061
+                await client.Agent.GetAgentMetrics();
+
+                    if ((await client.Coordinate.Nodes()).Response.Length == 0)
                         continue;
-
-                    // test basic functionality
-                    var sessionRequest = await client.Session.Create(new SessionEntry());
-                    if (string.IsNullOrWhiteSpace(sessionRequest.Response))
-                        continue;
-
-                    await client.Session.Destroy(sessionRequest.Response);
-
-                    var info = await client.Agent.Self();
-                    AgentVersion = SemanticVersion.Parse(info.Response["Config"]["Version"]);
-
-                    // Workaround for https://github.com/hashicorp/consul/issues/15061
-                    await client.Agent.GetAgentMetrics();
-
-                    if(await client.Coordinate.Nodes()).Response.Length == 0)
-                        continue;
-
                     break;
                 }
                 catch (OperationCanceledException)
