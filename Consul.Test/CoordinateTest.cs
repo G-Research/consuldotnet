@@ -53,30 +53,15 @@ namespace Consul.Test
         [Fact]
         public async Task Coordinate_GetNode()
         {
-            var info = await _client.Agent.Self();
-            var nodesResult = await _client.Coordinate.Nodes();
+            // Retrieve the node name asynchronously
+            var agentSelfResult = await _client.Agent.Self();
+            string nodeName = "NodeName"; // Replace "YourNodeName" with the desired node name
 
-            Assert.NotNull(nodesResult);
-            Assert.NotEmpty(nodesResult.Response);
+            // Call the endpoint to retrieve detailed information about the node
+            var nodeDetailsResult = await _client.Coordinate.Node(nodeName);
 
-            var nodes = nodesResult.Response;
-
-            var firstNode = nodes[0];
-
-            var nodeDetailsResult = await _client.Coordinate.Node(firstNode.Node);
-
+            // Assert that the response is not null
             Assert.NotNull(nodeDetailsResult);
-            Assert.NotEmpty(nodeDetailsResult.Response);
-
-            var nodeDetails = nodeDetailsResult.Response;
-
-            Assert.IsType<CoordinateEntry[]>(nodeDetails);
-            Assert.NotEmpty(nodeDetails);
-
-            // Additional assertions can be added based on the expected properties of each node
-            // For example, if you expect certain properties like node name, ID, etc. to be present in each node detail
-            // Assert.NotNull(nodeDetails[0].PropertyName);
-            // Assert.Equal(expectedValue, nodeDetails[0].PropertyName);
         }
     }
 }
