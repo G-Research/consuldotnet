@@ -103,7 +103,7 @@ namespace Consul
 
         public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
         {
-            return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/node/{0}", node)).Execute(ct);
+            return Node(node, QueryOptions.Default, ct);
         }
     }
 
