@@ -53,7 +53,6 @@ namespace Consul.Test
         [Fact]
         public async Task Coordinate_GetNode()
         {
-
             var info = await _client.Agent.Self();
             var nodesResult = await _client.Coordinate.Nodes();
 
@@ -73,11 +72,6 @@ namespace Consul.Test
 
             Assert.IsType<CoordinateEntry[]>(nodeDetails);
             Assert.NotEmpty(nodeDetails);
-
-            // Additional assertions can be added based on the expected properties of each node
-            // For example, if you expect certain properties like node name, ID, etc. to be present in each node detail
-            // Assert.NotNull(nodeDetails[0].PropertyName);
-            // Assert.Equal(expectedValue, nodeDetails[0].PropertyName);
         }
     }
 }
