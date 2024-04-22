@@ -67,8 +67,8 @@ namespace Consul.Test
                     // Workaround for https://github.com/hashicorp/consul/issues/15061
                     await client.Agent.GetAgentMetrics();
 
-                    if((await client.Coordinate.Nodes()).Response.Length == 0)
-            continue;
+                    if ((await client.Coordinate.Nodes()).Response.Length == 0)
+                        continue;
 
                     break;
                 }
