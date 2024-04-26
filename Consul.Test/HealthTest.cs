@@ -117,6 +117,33 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Health_Connect()
+        {
+            var svcID = KVTest.GenerateTestKeyName();
+            var registration = new AgentServiceRegistration
+            {
+                Name = svcID,
+                Tags = new[] { "bar", "baz" },
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                }
+            };
+            try
+            {
+                await _client.Agent.ServiceRegister(registration);
+                var checks = await _client.Health.Connect(svcID, "", false, QueryOptions.Default);
+                Assert.NotEqual((ulong)0, checks.LastIndex);
+                Assert.NotEmpty(checks.Response);
+            }
+            finally
+            {
+                await _client.Agent.ServiceDeregister(svcID);
+            }
+        }
+
+        [Fact]
         public void Health_GetAggregatedStatus()
         {
             var cases = new List<AggregatedStatusResult>()
