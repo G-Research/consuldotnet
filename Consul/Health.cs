@@ -311,7 +311,7 @@ namespace Consul
         /// <returns>This endpoint returns the nodes providing a Connect-capable service in a given datacenter, or a query result with a null response</returns>
         public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default)
         {
-            var req = _client.Get <ServiceEntry[]>(string.Format("/v1/health/connect/{0}", service), q, filter);
+            var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/connect/{0}", service), q, filter);
             if (!string.IsNullOrEmpty(tag))
             {
                 req.Params["tag"] = tag;
