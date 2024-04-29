@@ -49,5 +49,29 @@ namespace Consul.Test
             // get an error. - from offical API.
             Assert.NotNull(nodes);
         }
+
+        [Fact]
+        public async Task Coordinate_GetNode()
+        {
+            var info = await _client.Agent.Self();
+            var nodesResult = await _client.Coordinate.Nodes();
+
+            Assert.NotNull(nodesResult);
+            Assert.NotEmpty(nodesResult.Response);
+
+            var nodes = nodesResult.Response;
+
+            var firstNode = nodes[0];
+
+            var nodeDetailsResult = await _client.Coordinate.Node(firstNode.Node);
+
+            Assert.NotNull(nodeDetailsResult);
+            Assert.NotEmpty(nodeDetailsResult.Response);
+
+            var nodeDetails = nodeDetailsResult.Response;
+
+            Assert.IsType<CoordinateEntry[]>(nodeDetails);
+            Assert.NotEmpty(nodeDetails);
+        }
     }
 }
