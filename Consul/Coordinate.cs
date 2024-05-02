@@ -88,6 +88,23 @@ namespace Consul
         {
             return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/nodes"), q).Execute(ct);
         }
+
+        /// <summary>
+        /// Node returns the coordinates of a given node in the LAN pool.
+        /// </summary>
+        /// <param name="node">The node to query</param>"
+        /// <param name="ct">The cancellation token</param>"
+        /// <param name="q">Customized query options</param>"
+        /// <remarks>Node is used to return the coordinates of a given node in the LAN pool.</returns>
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/node/{0}", node), q).Execute(ct);
+        }
+
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
+        {
+            return Node(node, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
