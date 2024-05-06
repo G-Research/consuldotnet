@@ -301,14 +301,14 @@ namespace Consul
         }
 
         /// <summary>
-        /// Service is used to query health information along with service info for a given service. It can optionally do server-side filtering on a tag or nodes with passing health checks only.
+        /// Connect is equivalent to Service, except that it will only return services which are Connect-enabled
         /// <param name="service">The service ID</param>
         /// <param name="tag">The service member tag</param>
         /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
         /// <param name="q">Customized query options</param>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
-        /// <returns>This endpoint returns the nodes providing a Connect-capable service in a given datacenter, or a query result with a null response</returns>
+        /// <returns>This endpoint returns the connection address for Connect client's to use which may be a proxy in front of the named service</returns>
         public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default)
         {
             var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/connect/{0}", service), q, filter);

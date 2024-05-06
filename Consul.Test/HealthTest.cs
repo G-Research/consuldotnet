@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using Consul.Filtering; 
 
 namespace Consul.Test
 {
@@ -64,41 +65,41 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
-        public async Task Health_GetConsulService()
-        {
-            var checks = await _client.Health.Service("consul", "", false);
-            Assert.NotEqual((ulong)0, checks.LastIndex);
-            Assert.NotEmpty(checks.Response);
-        }
-
-        [Fact]
-        public async Task Health_GetServiceWithTaggedAddresses()
-        {
-            var svcID = KVTest.GenerateTestKeyName();
-            var registration = new AgentServiceRegistration
+            [Fact]
+            public async Task Health_GetConsulService()
             {
-                Name = svcID,
-                Port = 8000,
-                TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                var checks = await _client.Health.Service("consul", "", false);
+                Assert.NotEqual((ulong)0, checks.LastIndex);
+                Assert.NotEmpty(checks.Response);
+            }
+
+            [Fact]
+            public async Task Health_GetServiceWithTaggedAddresses()
+            {
+                var svcID = KVTest.GenerateTestKeyName();
+                var registration = new AgentServiceRegistration
                 {
-                    {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                    {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                }
-            };
+                    Name = svcID,
+                    Port = 8000,
+                    TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
+                };
 
-            await _client.Agent.ServiceRegister(registration);
+                await _client.Agent.ServiceRegister(registration);
 
-            var checks = await _client.Health.Service(svcID, "", false);
-            Assert.NotEqual((ulong)0, checks.LastIndex);
-            Assert.NotEmpty(checks.Response);
+                var checks = await _client.Health.Service(svcID, "", false);
+                Assert.NotEqual((ulong)0, checks.LastIndex);
+                Assert.NotEmpty(checks.Response);
 
-            Assert.True(checks.Response[0].Service.TaggedAddresses.Count > 0);
-            Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("wan"));
-            Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("lan"));
+                Assert.True(checks.Response[0].Service.TaggedAddresses.Count > 0);
+                Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("wan"));
+                Assert.True(checks.Response[0].Service.TaggedAddresses.ContainsKey("lan"));
 
-            await _client.Agent.ServiceDeregister(svcID);
-        }
+                await _client.Agent.ServiceDeregister(svcID);
+            }
 
         [Fact]
         public async Task Health_GetState()
@@ -119,29 +120,46 @@ namespace Consul.Test
         [Fact]
         public async Task Health_Connect()
         {
-            var svcID = KVTest.GenerateTestKeyName();
+            var destinationServiceID = KVTest.GenerateTestKeyName();
+
             var registration = new AgentServiceRegistration
             {
-                Name = svcID,
-                Tags = new[] { "bar", "baz" },
+                ID = destinationServiceID,
+                Name = destinationServiceID,
                 Port = 8000,
                 Check = new AgentServiceCheck
                 {
                     TTL = TimeSpan.FromSeconds(15)
+                },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 8001
+                    }
                 }
             };
+
             try
             {
                 await _client.Agent.ServiceRegister(registration);
-                var checks = await _client.Health.Connect(svcID, "", false, QueryOptions.Default);
+
+                // Use the Health.Connect method to query health information for Connect-enabled services
+                var checks = await _client.Health.Connect(destinationServiceID, "", false, QueryOptions.Default, null); // Passing null for the filter parameter
+
+                Assert.NotNull(checks);
                 Assert.NotEqual((ulong)0, checks.LastIndex);
                 Assert.NotEmpty(checks.Response);
             }
             finally
             {
-                await _client.Agent.ServiceDeregister(svcID);
+                await _client.Agent.ServiceDeregister(destinationServiceID);
             }
         }
+
+
+
+
 
         [Fact]
         public void Health_GetAggregatedStatus()
