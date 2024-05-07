@@ -157,10 +157,6 @@ namespace Consul.Test
             }
         }
 
-
-
-
-
         [Fact]
         public void Health_GetAggregatedStatus()
         {
