@@ -91,6 +91,13 @@ namespace Consul
         public List<ServiceInfo> Services { get; set; }
     }
 
+    public class CompoundServiceName
+    {
+        public string Namespace { get; set; }
+        public string Partition { get; set; }
+        public string Name { get; set; }
+    }
+
     public class GatewayService
     {
         public CompoundServiceName Gateway { get; set; }
@@ -375,9 +382,9 @@ namespace Consul
         /// <param name="q">Query Parameters</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Gateway services</returns>
-        public Task<QueryResult<GatewayService[]>> GateawayService(string gateway, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get <GatewayService[]>(string.Format("/v1/catalog/gateway-services/{0}", gateway), q).Execute(ct);
+            return _client.Get<GatewayService[]>(string.Format("/v1/catalog/gateway-services/{0}", gateway), q).Execute(ct);
         }
     }
 
