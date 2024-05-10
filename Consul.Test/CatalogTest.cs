@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -266,92 +267,41 @@ namespace Consul.Test
             }
         }
 
-        /*[Fact]
-        public async Task Catalog_GatewayServices_Terminating()
+        [Fact]
+        public async Task Catalog_GatewayServices()
         {
+            var consulClient = new ConsulClient();
+            var catalog = new Catalog(consulClient);
             var svcID = KVTest.GenerateTestKeyName();
-            var svc = new AgentService
+            var service = new AgentService
             {
                 ID = svcID,
-                Service = svcID,
-                Port = 6379
+                Service = "redis",
+                Tags = new[] { "master", "v1" },
+                Port = 8000
             };
-
+            var check = new AgentCheck
+            {
+                Node = "foobar",
+                CheckID = "service:" + svcID,
+                Name = "Redis health check",
+                Notes = "Script based health check",
+                Status = HealthStatus.Passing,
+                ServiceID = svcID
+            };
             var registration = new CatalogRegistration
             {
                 Datacenter = "dc1",
-                Node = "bar",
-                Address = "192.168.10.11",
-                Service = svc
+                Node = "foobar",
+                Address = "192.168.10.10",
+                Service = service,
+                Check = check
             };
+            await _client.Catalog.Register(registration);
+            var gatewayServices = await catalog.GatewayService("redis", new QueryOptions { Datacenter = "dc1" });
+            Assert.NotEmpty(gatewayServices.Response);
 
-            using (IConsulClient client = new ConsulClient(c =>
-            {
-                c.Token = TestHelper.MasterToken;
-                c.Address = TestHelper.HttpUri;
-            }))
-            {
-                await client.Catalog.Register(registration);
-
-                var entries = client.ConfigEntries();
-
-                var gwEntry = new TerminatingGatewayConfigEntry
-                {
-                    Kind = TerminatingGateway,
-                    Name = "terminating",
-                    Services = new List<LinkedService>
-            {
-                new LinkedService
-                {
-                    Name = "api",
-                    CAFile = "api/ca.crt",
-                    CertFile = "api/client.crt",
-                    KeyFile = "api/client.key",
-                    SNI = "my-domain"
-                },
-                new LinkedService
-                {
-                    Name = "*",
-                    CAFile = "ca.crt",
-                    CertFile = "client.crt",
-                    KeyFile = "client.key",
-                    SNI = "my-alt-domain"
-                }
-            }
-                };
-
-                await entries.Set(gwEntry, null);
-
-                var expect = new List<GatewayService>
-        {
-            new GatewayService
-            {
-                Service = new CompoundServiceName { Service = "api", Namespace = defaultNamespace },
-                Gateway = new CompoundServiceName { Service = "terminating", Namespace = defaultNamespace },
-                GatewayKind = ServiceKindTerminatingGateway,
-                CAFile = "api/ca.crt",
-                CertFile = "api/client.crt",
-                KeyFile = "api/client.key",
-                SNI = "my-domain"
-            },
-            new GatewayService
-            {
-                Service = new CompoundServiceName { Service = "redis", Namespace = defaultNamespace },
-                Gateway = new CompoundServiceName { Service = "terminating", Namespace = defaultNamespace },
-                GatewayKind = ServiceKindTerminatingGateway,
-                CAFile = "ca.crt",
-                CertFile = "client.crt",
-                KeyFile = "client.key",
-                SNI = "my-alt-domain",
-                FromWildcard = true
-            }
-        };
-
-                var resp = await client.Catalog.GatewayServices("terminating", null);
-
-                Assert.Equal(expect, resp);
-            }
-        }*/
+        }
 
         [SkippableFact]
         public async Task Catalog_ServicesForNodes()
