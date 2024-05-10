@@ -1,15 +1,14 @@
 name: "Update Consul versions"
 
 on:
-  pull_request:
-  # schedule:
-  #   - cron: '22 2 * * *' # Run once per day, at a randomly chosen time.
+  schedule:
+    - cron: '22 2 * * *' # Run once per day, at a randomly chosen time.
 
 jobs:
   update-consul-versions:
     # Only run on main repository
     # Scheduled workflows do not have information about fork status, hence the hardcoded check
-    # if: github.repository == 'G-Research/consuldotnet'
+    if: github.repository == 'G-Research/consuldotnet'
     environment: update-consul-versions
     runs-on: ubuntu-latest
     steps:
