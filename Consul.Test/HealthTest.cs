@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Consul.Filtering;
 using Xunit;
 
 namespace Consul.Test
@@ -81,10 +82,10 @@ namespace Consul.Test
                 Name = svcID,
                 Port = 8000,
                 TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
-                {
-                    {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                    {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                }
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
             };
 
             await _client.Agent.ServiceRegister(registration);
@@ -114,6 +115,46 @@ namespace Consul.Test
             public List<HealthCheck> Checks;
             public HealthStatus Expected;
 
+        }
+
+        [Fact]
+        public async Task Health_Connect()
+        {
+            var destinationServiceID = KVTest.GenerateTestKeyName();
+
+            var registration = new AgentServiceRegistration
+            {
+                ID = destinationServiceID,
+                Name = destinationServiceID,
+                Port = 8000,
+                Check = new AgentServiceCheck
+                {
+                    TTL = TimeSpan.FromSeconds(15)
+                },
+                Connect = new AgentServiceConnect
+                {
+                    SidecarService = new AgentServiceRegistration
+                    {
+                        Port = 8001
+                    }
+                }
+            };
+
+            try
+            {
+                await _client.Agent.ServiceRegister(registration);
+
+                // Use the Health.Connect method to query health information for Connect-enabled services
+                var checks = await _client.Health.Connect(destinationServiceID, "", false, QueryOptions.Default, null); // Passing null for the filter parameter
+
+                Assert.NotNull(checks);
+                Assert.NotEqual((ulong)0, checks.LastIndex);
+                Assert.NotEmpty(checks.Response);
+            }
+            finally
+            {
+                await _client.Agent.ServiceDeregister(destinationServiceID);
+            }
         }
 
         [Fact]
