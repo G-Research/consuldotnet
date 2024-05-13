@@ -266,7 +266,6 @@ namespace Consul.Test
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
             }
         }
-
         [Fact]
         public async Task Catalog_GatewayServices()
         {
@@ -275,22 +274,19 @@ namespace Consul.Test
                 c.Token = TestHelper.MasterToken;
                 c.Address = TestHelper.HttpUri;
             }))
+
             {
                 var terminatingGatewayName = "terminating-gateway";
                 var terminatingGatewayEntry = new CatalogRegistration
                 {
-                    Node = "gateway-node",
+                    Node = "gateway-service",
                     Address = "192.168.1.100",
                     Service = new AgentService
                     {
                         ID = "terminating-gateway",
                         Service = terminatingGatewayName,
                         Port = 8080,
-                        Tags = new[] { "terminating" },
-                        Meta = new Dictionary<string, string>
-                        {
-                            { "gateway_type", "terminating" }
-                        }
+                        Kind = ServiceKind.TerminatingGateway,
                     }
                 };
                 await client.Catalog.Register(terminatingGatewayEntry);
@@ -298,32 +294,27 @@ namespace Consul.Test
                 var ingressGatewayName = "ingress-gateway";
                 var ingressGatewayEntry = new CatalogRegistration
                 {
-                    Node = "gateway-node",
+                    Node = "gateway-service",
                     Address = "192.168.1.100",
                     Service = new AgentService
                     {
                         ID = "ingress-gateway",
                         Service = ingressGatewayName,
                         Port = 8081,
-                        Tags = new[] { "ingress" },
-                        Meta = new Dictionary<string, string>
-                        {
-                            { "gateway_type", "ingress" }
-                        }
+                        Kind = ServiceKind.IngressGateway,
                     }
-                };
+            };
                 await client.Catalog.Register(ingressGatewayEntry);
 
-                var terminatingGatewayServices = await client.Catalog.GatewayService("terminating", QueryOptions.Default, CancellationToken.None);
+                var terminatingGatewayServices = await client.Catalog.GatewayService("terminating-gateway", QueryOptions.Default, CancellationToken.None);
                 Assert.NotEmpty(terminatingGatewayServices.Response);
 
-                var ingressGatewayServices = await client.Catalog.GatewayService("ingress", QueryOptions.Default, CancellationToken.None);
+                var ingressGatewayServices = await client.Catalog.GatewayService("ingress-gateway", QueryOptions.Default, CancellationToken.None);
                 Assert.NotEmpty(ingressGatewayServices.Response);
-
-
             }
 
         }
+
 
         [SkippableFact]
         public async Task Catalog_ServicesForNodes()
