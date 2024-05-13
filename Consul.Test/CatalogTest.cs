@@ -303,7 +303,7 @@ namespace Consul.Test
                         Port = 8081,
                         Kind = ServiceKind.IngressGateway,
                     }
-            };
+                };
                 await client.Catalog.Register(ingressGatewayEntry);
 
                 var terminatingGatewayServices = await client.Catalog.GatewayService("terminating-gateway", QueryOptions.Default, CancellationToken.None);
