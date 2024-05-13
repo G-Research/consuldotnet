@@ -270,36 +270,58 @@ namespace Consul.Test
         [Fact]
         public async Task Catalog_GatewayServices()
         {
-            var consulClient = new ConsulClient();
-            var catalog = new Catalog(consulClient);
-            var svcID = KVTest.GenerateTestKeyName();
-            var service = new AgentService
+            using (IConsulClient client = new ConsulClient(c =>
             {
-                ID = svcID,
-                Service = "redis",
-                Tags = new[] { "master", "v1" },
-                Port = 8000
-            };
-            var check = new AgentCheck
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
             {
-                Node = "foobar",
-                CheckID = "service:" + svcID,
-                Name = "Redis health check",
-                Notes = "Script based health check",
-                Status = HealthStatus.Passing,
-                ServiceID = svcID
-            };
-            var registration = new CatalogRegistration
-            {
-                Datacenter = "dc1",
-                Node = "foobar",
-                Address = "192.168.10.10",
-                Service = service,
-                Check = check
-            };
-            await _client.Catalog.Register(registration);
-            var gatewayServices = await catalog.GatewayService("redis", new QueryOptions { Datacenter = "dc1" });
-            Assert.NotEmpty(gatewayServices.Response);
+                var terminatingGatewayName = "terminating-gateway";
+                var terminatingGatewayEntry = new CatalogRegistration
+                {
+                    Node = "gateway-node",
+                    Address = "192.168.1.100",
+                    Service = new AgentService
+                    {
+                        ID = "terminating-gateway",
+                        Service = terminatingGatewayName,
+                        Port = 8080,
+                        Tags = new[] { "terminating" },
+                        Meta = new Dictionary<string, string>
+                        {
+                            { "gateway_type", "terminating" }
+                        }
+                    }
+                };
+                await client.Catalog.Register(terminatingGatewayEntry);
+
+                var ingressGatewayName = "ingress-gateway";
+                var ingressGatewayEntry = new CatalogRegistration
+                {
+                    Node = "gateway-node",
+                    Address = "192.168.1.100",
+                    Service = new AgentService
+                    {
+                        ID = "ingress-gateway",
+                        Service = ingressGatewayName,
+                        Port = 8081,
+                        Tags = new[] { "ingress" },
+                        Meta = new Dictionary<string, string>
+                        {
+                            { "gateway_type", "ingress" }
+                        }
+                    }
+                };
+                await client.Catalog.Register(ingressGatewayEntry);
+
+                var terminatingGatewayServices = await client.Catalog.GatewayService("terminating", QueryOptions.Default, CancellationToken.None);
+                Assert.NotEmpty(terminatingGatewayServices.Response);
+
+                var ingressGatewayServices = await client.Catalog.GatewayService("ingress", QueryOptions.Default, CancellationToken.None);
+                Assert.NotEmpty(ingressGatewayServices.Response);
+
+
+            }
 
         }
 
