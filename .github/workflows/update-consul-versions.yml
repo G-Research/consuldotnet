@@ -30,7 +30,7 @@ jobs:
           installation_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: Bearer $jwt" https://api.github.com/app/installations | jq '.[] | select(.account.login == "${{ github.repository_owner }}") | .id')
           token=$(curl -s -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: Bearer $jwt" https://api.github.com/app/installations/$installation_id/access_tokens | jq -r '.token')
           echo "::add-mask::$token"
-          echo "::set-output name=token::$token"
+          echo "token=$token" >> $GITHUB_OUTPUT
 
       - name: Install PowerShellForGitHub
         shell: pwsh
