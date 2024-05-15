@@ -77,7 +77,13 @@ namespace Consul
 
             ParseQueryHeaders(response, result);
             result.StatusCode = response.StatusCode;
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                    .ReadAsStreamAsync()
+#else
+                                    .ReadAsStreamAsync(ct)
+#endif
+                                    .ConfigureAwait(false);
 
 
             Func<bool> isSpecialStatusCode = () =>
@@ -131,7 +137,13 @@ namespace Consul
 
             ParseQueryHeaders(response, result as QueryResult<TOut>);
             result.StatusCode = response.StatusCode;
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                    .ReadAsStreamAsync()
+#else
+                                    .ReadAsStreamAsync(ct)
+#endif
+                                    .ConfigureAwait(false);
 
             result.Response = ResponseStream;
 
@@ -330,7 +342,13 @@ namespace Consul
             var response = await Client.HttpClient.SendAsync(message, ct).ConfigureAwait(false);
 
             result.StatusCode = response.StatusCode;
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                    .ReadAsStreamAsync()
+#else
+                                    .ReadAsStreamAsync(ct)
+#endif
+                                    .ConfigureAwait(false);
 
             Func<bool> isSpecialStatusCode = () =>
             {
