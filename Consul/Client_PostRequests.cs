@@ -67,7 +67,13 @@ namespace Consul
 
             result.StatusCode = response.StatusCode;
 
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                        .ReadAsStreamAsync()
+#else
+                                        .ReadAsStreamAsync(ct)
+#endif
+                                        .ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
@@ -174,7 +180,13 @@ namespace Consul
 
             result.StatusCode = response.StatusCode;
 
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                            .ReadAsStreamAsync()
+#else
+                            .ReadAsStreamAsync(ct)
+#endif
+                            .ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
@@ -277,7 +289,13 @@ namespace Consul
 
             result.StatusCode = response.StatusCode;
 
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                        .ReadAsStreamAsync()
+#else
+                                        .ReadAsStreamAsync(ct)
+#endif
+                                        .ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
@@ -369,7 +387,13 @@ namespace Consul
 
             result.StatusCode = response.StatusCode;
 
-            ResponseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            ResponseStream = await response.Content
+#if !NET6_0_OR_GREATER
+                                        .ReadAsStreamAsync()
+#else
+                                        .ReadAsStreamAsync(ct)
+#endif
+                                        .ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NotFound && !response.IsSuccessStatusCode)
             {
