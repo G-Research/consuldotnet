@@ -29,3 +29,11 @@ Example: #123
 Add any additional context or information about this pull request
 -->
 
+## Checklist
+
+<!-- (required) -->
+Please make sure to check the following before submitting your pull request:
+
+- [ ] Did you read the [contributing guidelines](https://consuldot.net/docs/contributing/guidelines)?
+- [ ] Did you update the docs?
+- [ ] Did you write any tests to validate this change?
