@@ -266,7 +266,7 @@ namespace Consul.Test
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
             }
         }
-   
+
         [Fact]
         public async Task Catalog_GatewayServices()
         {
