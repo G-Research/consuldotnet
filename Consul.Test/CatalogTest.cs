@@ -396,7 +396,7 @@ namespace Consul.Test
                 // Assert that the response is not null
                 Assert.NotNull(gatewayServices);
 
-                
+
             }
         }
 
