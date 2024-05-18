@@ -266,88 +266,7 @@ namespace Consul.Test
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
             }
         }
-        /*[Fact]
-        public async Task Catalog_GatewayServices()
-        {
-            var terminatingGatewayName = "terminating-gateway";
-            var terminatingGatewayCheck = new AgentServiceCheck
-            {
-                TTL = TimeSpan.FromSeconds(15)
-            };
-            var terminatingGatewayEntry = new CatalogRegistration
-            {
-                Node = "gateway-service",
-                Address = "192.168.1.100",
-                Check = terminatingGatewayCheck,
-                new AgentCheck
-                {
-                    Node = "gateway-service", 
-                    Name = "Gateway Health Check", 
-                    Status = HealthStatus.Passing, 
-                    Notes = "Health check for gateway service"
-                },
-                Service = new AgentService
-
-                {
-                    ID = "terminating-gateway",
-                    Service = terminatingGatewayName,
-                    Port = 8080,
-                    Kind = ServiceKind.TerminatingGateway,
-                   
-
-                }
-            };
-
-            // Register Terminating Gateway
-            await _client.Catalog.Register(terminatingGatewayEntry);
-
-            var ingressGatewayName = "ingress-gateway";
-            var ingressGatewayEntry = new CatalogRegistration
-            {
-                Node = "gateway-service",
-                Address = "192.168.1.100",
-                Service = new AgentService
-                {
-                    ID = "ingress-gateway",
-                    Service = ingressGatewayName,
-                    Port = 8081,
-                    Kind = ServiceKind.IngressGateway,
-                    
-                }
-            };
-
-            // Register Ingress Gateway
-            await _client.Catalog.Register(ingressGatewayEntry);
-
-            // Query Terminating Gateway
-            var terminatingGatewayServices = await _client.Catalog.GatewayService("terminating-gateway", QueryOptions.Default, CancellationToken.None);
-            Assert.NotEmpty(terminatingGatewayServices.Response);
-
-            // Query Ingress Gateway
-            var ingressGatewayServices = await _client.Catalog.GatewayService("ingress-gateway", QueryOptions.Default, CancellationToken.None);
-            Assert.NotEmpty(ingressGatewayServices.Response);
-
-            // Deregister Terminating Gateway
-            var deregisterTerminatingGateway = new CatalogDeregistration
-            {
-                Node = terminatingGatewayEntry.Node,
-                Address = terminatingGatewayEntry.Address,
-                ServiceID = terminatingGatewayEntry.Service.ID,
-                Datacenter = "dc1" 
-            };
-            await _client.Catalog.Deregister(deregisterTerminatingGateway);
-
-            // Deregister Ingress Gateway
-            var deregisterIngressGateway = new CatalogDeregistration
-            {
-                Node = ingressGatewayEntry.Node,
-                Address = ingressGatewayEntry.Address,
-                ServiceID = ingressGatewayEntry.Service.ID,
-                Datacenter = "dc1"
-            };
-            await _client.Catalog.Deregister(deregisterIngressGateway);
-        }*/
-
+   
         [Fact]
         public async Task Catalog_GatewayServices()
         {
@@ -360,7 +279,6 @@ namespace Consul.Test
                 var terminatingGatewayName = "terminating-gateway";
                 var ingressGatewayName = "ingress-gateway";
 
-                // Register terminating gateway service
                 var terminatingGatewayEntry = new CatalogRegistration
                 {
                     Node = "gateway-service",
@@ -375,7 +293,6 @@ namespace Consul.Test
                 };
                 await client.Catalog.Register(terminatingGatewayEntry);
 
-                // Register ingress gateway service
                 var ingressGatewayEntry = new CatalogRegistration
                 {
                     Node = "gateway-service",
@@ -390,74 +307,12 @@ namespace Consul.Test
                 };
                 await client.Catalog.Register(ingressGatewayEntry);
 
-                // Retrieve gateway services associated with the "gateway-service" node
                 var gatewayServices = await client.Catalog.GatewayService("gateway-service", QueryOptions.Default, CancellationToken.None);
 
-                // Assert that the response is not null
                 Assert.NotNull(gatewayServices);
-
 
             }
         }
-
-        /*[Fact]
-        public async Task Catalog_Register_And_Query_TerminatingGatewayServices()
-        {
-            var svc = new AgentService
-            {
-                ID = "redis",
-                Service = "redis",
-                Port = 6379,
-                TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
-                    {
-                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                    }
-            };
-            var reg = new CatalogRegistration
-            {
-                Datacenter = "dc1",
-                Node = "gateway-service",
-                Address = "192.168.1.100",
-                Service = svc
-            };
-            await _client.Catalog.Register(reg);
-
-            // Query Terminating Gateway Services
-            var terminatingGatewayServices = await _client.Catalog.GatewayService("gateway-service", QueryOptions.Default, CancellationToken.None);
-            var expectedTerminatingGatewayServices = new List<GatewayService>
-    {
-        new GatewayService
-        {
-            Service = new CompoundServiceName
-            {
-                Namespace = default,
-                Name = "redis"
-            },
-            Gateway = new CompoundServiceName
-            {
-                Namespace = "your-actual-namespace",
-                Name = "terminating-gateway"
-            },
-            GatewayKind = ServiceKind.TerminatingGateway,
-            CAFile = "ca.crt",
-            CertFile = "client.crt",
-            KeyFile = "client.key",
-            SNI = "my-domain"
-        }
-    };
-            Assert.Equal(expectedTerminatingGatewayServices, terminatingGatewayServices.Response.ToList());
-
-            // Deregister Terminating Gateway
-            var deregisterTerminatingGateway = new CatalogDeregistration
-            {
-                Node = reg.Node,
-                Address = reg.Address,
-                ServiceID = reg.Service.ID,
-                Datacenter = "dc1"
-            };
-            await _client.Catalog.Deregister(deregisterTerminatingGateway);
-        }*/
 
         [SkippableFact]
         public async Task Catalog_ServicesForNodes()
