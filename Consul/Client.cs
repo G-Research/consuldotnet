@@ -166,6 +166,11 @@ namespace Consul
             var envAddr = (Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR") ?? string.Empty).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(envAddr))
             {
+                if (!envAddr.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+                {
+                    envAddr = "http://" + envAddr;
+                }
+
                 var uri = new Uri(envAddr);
                 if (!string.IsNullOrEmpty(uri.Host))
                 {
