@@ -1025,6 +1025,15 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Samples);
         }
 
+        [Fact]
+        public async Task Agent_CARoots()
+        {
+            var caRoots = await _client.Agent.GetCARoots();
+            Assert.NotEqual((ulong)0, caRoots.LastIndex);
+            Assert.Single(caRoots.Response.Roots);
+            Assert.Equal("11111111-2222-3333-4444-555555555555.consul", caRoots.Response.TrustDomain);
+        }
+
         [SkippableFact]
         public async Task Agent_Reload()
         {

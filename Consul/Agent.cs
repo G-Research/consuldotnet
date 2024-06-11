@@ -676,6 +676,31 @@ namespace Consul
         public Dictionary<string, string> Labels { get; set; }
     }
 
+    public class CARoots
+    {
+        public string ActiveRootID { get; set; }
+        public string TrustDomain { get; set; }
+        public List<Root> Roots { get; set; }
+    }
+
+    public class Root
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public long SerialNumber { get; set; }
+        public string SigningKeyID { get; set; }
+        public string ExternalTrustDomain { get; set; }
+        public string NotBefore { get; set; }
+        public string NotAfter { get; set; }
+        public string RootCert { get; set; }
+        public List<string> IntermediateCerts { get; set; }
+        public bool Active { get; set; }
+        public string PrivateKeyType { get; set; }
+        public long PrivateKeyBits { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+    }
+
     /// <summary>
     /// Agent can be used to query the Agent endpoints
     /// </summary>
@@ -1137,6 +1162,11 @@ namespace Consul
         public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, QueryOptions q, CancellationToken ct = default)
         {
             return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceId}", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default)
+        {
+            return await _client.Get<CARoots>("v1/agent/connect/ca/roots", QueryOptions.Default).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
