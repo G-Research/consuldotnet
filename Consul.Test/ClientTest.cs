@@ -162,7 +162,7 @@ namespace Consul.Test
                    }))
             {
                 var request = client.Get<KVPair>("/v1/kv/foo");
-                var uri = request.BuildConsulUri("/v1/kv/foo", new Dictionary<string,string>());
+                var uri = request.BuildConsulUri("/v1/kv/foo", new Dictionary<string, string>());
                 Assert.Equal("http://127.0.0.1:1234/my-subpath/v1/kv/foo", uri.AbsoluteUri);
             }
         }
