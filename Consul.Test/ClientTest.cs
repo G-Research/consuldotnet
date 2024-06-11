@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -32,10 +31,12 @@ namespace Consul.Test
     [Collection(nameof(ExclusiveCollection))]
     public class ClientTest : BaseFixture
     {
-        [Fact]
-        public void Client_DefaultConfig_env()
+        [Theory]
+        [InlineData("1.2.3.4:5678", "https://1.2.3.4:5678/")]
+        [InlineData("1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("http://1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
+        public void Client_DefaultConfig_env(string addr, string expected)
         {
-            const string addr = "1.2.3.4:5678";
             const string token = "abcd1234";
             const string auth = "username:password";
 
@@ -56,7 +57,7 @@ namespace Consul.Test
                 var client = new ConsulClient();
                 var config = client.Config;
 
-                Assert.Equal(addr, string.Format("{0}:{1}", config.Address.Host, config.Address.Port));
+                Assert.Equal(expected, config.Address.ToString());
                 Assert.Equal(token, config.Token);
 #pragma warning disable CS0618 // Type or member is obsolete
                 Assert.NotNull(config.HttpAuth);
