@@ -83,16 +83,8 @@ namespace Consul
 
         protected Uri BuildConsulUri(string url, Dictionary<string, string> p)
         {
-            string path = url;
-            if (!string.IsNullOrEmpty(Client.Config.Address.AbsolutePath))
-            {
-                path = Client.Config.Address.AbsolutePath + url;
-            }
-
-            var builder = new UriBuilder(Client.Config.Address)
-            {
-                Path = path,
-            };
+            var builder = new UriBuilder(Client.Config.Address);
+            builder.Path += url;
 
             ApplyOptions(Client.Config);
 
