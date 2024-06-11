@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -151,6 +152,21 @@ namespace Consul.Test
                 Assert.Equal("1m40s", request.Params["wait"]);
             }
         }
+
+        [Fact]
+        public void Client_NonRootUri()
+        {
+            using (var client = new ConsulClient(c =>
+                   {
+                       c.Address = new Uri("http://127.0.0.1:1234/my-subpath");
+                   }))
+            {
+                var request = client.Get<KVPair>("/v1/kv/foo");
+                var uri = request.BuildConsulUri("/v1/kv/foo", new Dictionary<string,string>());
+                Assert.Equal("http://127.0.0.1:1234/my-subpath/v1/kv/foo", uri.AbsoluteUri);
+            }
+        }
+
         [Fact]
         public async Task Client_SetWriteOptions()
         {
