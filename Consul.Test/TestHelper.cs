@@ -45,7 +45,7 @@ namespace Consul.Test
             HttpPort = config["http_port"];
             MasterToken = config["master_token"];
 
-            HttpAddr = $"http://{BindingAddress}:{HttpPort}/consul/";
+            HttpAddr = $"http://{BindingAddress}:{HttpPort}";
             HttpUri = new Uri(HttpAddr);
         }
     }
