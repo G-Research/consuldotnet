@@ -85,6 +85,7 @@ namespace Consul
         {
             var builder = new UriBuilder(Client.Config.Address);
             builder.Path += url;
+            builder.Path = builder.Path.Replace("//", "/");
 
             ApplyOptions(Client.Config);
 
