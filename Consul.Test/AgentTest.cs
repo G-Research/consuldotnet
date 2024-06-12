@@ -1045,7 +1045,8 @@ namespace Consul.Test
             Assert.True(root.Active);
             Assert.NotNull(root.PrivateKeyType);
             Assert.NotEqual(0, root.PrivateKeyBits);
-            if (AgentVersion >= SemanticVersion.Parse("1.7.0")) {
+            if (AgentVersion >= SemanticVersion.Parse("1.7.0"))
+            {
                 Assert.NotEqual(0, root.CreateIndex);
                 Assert.NotEqual(0, root.ModifyIndex);
                 Assert.NotEqual(0, root.SerialNumber);
