@@ -1030,8 +1030,24 @@ namespace Consul.Test
         {
             var caRoots = await _client.Agent.GetCARoots();
             Assert.NotEqual((ulong)0, caRoots.LastIndex);
-            Assert.Single(caRoots.Response.Roots);
+            Assert.NotNull(caRoots.Response.ActiveRootID);
             Assert.Equal("11111111-2222-3333-4444-555555555555.consul", caRoots.Response.TrustDomain);
+            Assert.Single(caRoots.Response.Roots);
+            var root = caRoots.Response.Roots.First();
+            Assert.NotNull(root.ID);
+            Assert.NotNull(root.Name);
+            Assert.NotEqual(0, root.SerialNumber);
+            Assert.NotNull(root.SigningKeyID);
+            Assert.NotNull(root.ExternalTrustDomain);
+            Assert.NotNull(root.NotBefore);
+            Assert.NotNull(root.NotAfter);
+            Assert.NotNull(root.RootCert);
+            Assert.Null(root.IntermediateCerts);
+            Assert.True(root.Active);
+            Assert.NotNull(root.PrivateKeyType);
+            Assert.NotEqual(0, root.PrivateKeyBits);
+            Assert.NotEqual(0, root.CreateIndex);
+            Assert.NotEqual(0, root.ModifyIndex);
         }
 
         [SkippableFact]
