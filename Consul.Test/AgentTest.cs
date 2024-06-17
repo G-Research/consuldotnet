@@ -1025,6 +1025,34 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Samples);
         }
 
+        [Fact]
+        public async Task Agent_CARoots()
+        {
+            var caRoots = await _client.Agent.GetCARoots();
+            Assert.NotEqual((ulong)0, caRoots.LastIndex);
+            Assert.NotNull(caRoots.Response.ActiveRootID);
+            Assert.Equal("11111111-2222-3333-4444-555555555555.consul", caRoots.Response.TrustDomain);
+            Assert.Single(caRoots.Response.Roots);
+            var root = caRoots.Response.Roots.First();
+            Assert.NotNull(root.ID);
+            Assert.NotNull(root.Name);
+            Assert.NotNull(root.SigningKeyID);
+            Assert.NotNull(root.ExternalTrustDomain);
+            Assert.NotNull(root.NotBefore);
+            Assert.NotNull(root.NotAfter);
+            Assert.NotNull(root.RootCert);
+            Assert.Null(root.IntermediateCerts);
+            Assert.True(root.Active);
+            Assert.NotNull(root.PrivateKeyType);
+            if (AgentVersion >= SemanticVersion.Parse("1.7.0"))
+            {
+                Assert.NotEqual(0, root.PrivateKeyBits);
+                Assert.NotEqual(0, root.CreateIndex);
+                Assert.NotEqual(0, root.ModifyIndex);
+                Assert.NotEqual(0, root.SerialNumber);
+            }
+        }
+
         [SkippableFact]
         public async Task Agent_Reload()
         {

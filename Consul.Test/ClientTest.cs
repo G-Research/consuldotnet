@@ -28,6 +28,7 @@ using Xunit;
 
 namespace Consul.Test
 {
+    [Collection(nameof(ExclusiveCollection))]
     public class ClientTest : BaseFixture
     {
         [Fact]
@@ -36,41 +37,52 @@ namespace Consul.Test
             const string addr = "1.2.3.4:5678";
             const string token = "abcd1234";
             const string auth = "username:password";
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", "1");
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
 
-            var client = new ConsulClient();
-            var config = client.Config;
+            var consulHttpAddr = Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR");
+            var consulHttpToken = Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN");
+            var consulHttpAuth = Environment.GetEnvironmentVariable("CONSUL_HTTP_AUTH");
+            var consulHttpSsl = Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL");
+            var consulHttpSslVerify = Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY");
 
-            Assert.Equal(addr, string.Format("{0}:{1}", config.Address.Host, config.Address.Port));
-            Assert.Equal(token, config.Token);
+            try
+            {
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", "1");
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
+
+                var client = new ConsulClient();
+                var config = client.Config;
+
+                Assert.Equal(addr, string.Format("{0}:{1}", config.Address.Host, config.Address.Port));
+                Assert.Equal(token, config.Token);
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.NotNull(config.HttpAuth);
-            Assert.Equal("username", config.HttpAuth.UserName);
-            Assert.Equal("password", config.HttpAuth.Password);
+                Assert.NotNull(config.HttpAuth);
+                Assert.Equal("username", config.HttpAuth.UserName);
+                Assert.Equal("password", config.HttpAuth.Password);
 #pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Equal("https", config.Address.Scheme);
-
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", string.Empty);
-
+                Assert.Equal("https", config.Address.Scheme);
 
 #if !(NETSTANDARD || NETCOREAPP)
-            Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
-                SslPolicyErrors.RemoteCertificateChainErrors));
-            ServicePointManager.ServerCertificateValidationCallback = null;
+                Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
+                    SslPolicyErrors.RemoteCertificateChainErrors));
+                ServicePointManager.ServerCertificateValidationCallback = null;
 #else
-            Assert.True((client.HttpHandler as HttpClientHandler).ServerCertificateCustomValidationCallback(null, null, null,
-                SslPolicyErrors.RemoteCertificateChainErrors));
+                Assert.True((client.HttpHandler as HttpClientHandler).ServerCertificateCustomValidationCallback(null, null, null,
+                    SslPolicyErrors.RemoteCertificateChainErrors));
 #endif
 
-            Assert.NotNull(client);
+                Assert.NotNull(client);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", consulHttpAddr);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", consulHttpToken);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", consulHttpAuth);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", consulHttpSsl);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", consulHttpSslVerify);
+            }
         }
 
         [Fact]
