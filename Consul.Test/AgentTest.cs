@@ -1053,6 +1053,33 @@ namespace Consul.Test
             }
         }
 
+        [Fact]
+        public async Task Agent_CALeaf()
+        {
+            var service = new AgentServiceRegistration
+            {
+                Name = "test_leaf",
+                Tags = new[]
+                {
+                    "bar",
+                    "baz"
+                },
+                Port = 8000,
+            };
+            await _client.Agent.ServiceRegister(service);
+            var leaf = await _client.Agent.GetCALeaf("test_leaf");
+            Assert.True(leaf.LastIndex > 0);
+            Assert.NotNull(leaf.Response.SerialNumber);
+            Assert.NotNull(leaf.Response.CertPEM);
+            Assert.NotNull(leaf.Response.PrivateKeyPEM);
+            Assert.Equal("test_leaf", leaf.Response.Service);
+            Assert.Contains("/svc/test_leaf", leaf.Response.ServiceURI);
+            Assert.True(leaf.Response.ModifyIndex > 0);
+            Assert.NotEqual(0, leaf.Response.CreateIndex);
+            Assert.True(leaf.Response.ValidBefore > DateTime.Now);
+            Assert.True(leaf.Response.ValidAfter < DateTime.Now);
+        }
+
         [SkippableFact]
         public async Task Agent_Reload()
         {
