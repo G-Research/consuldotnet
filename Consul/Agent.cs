@@ -1170,6 +1170,27 @@ namespace Consul
         }
 
         /// <summary>
+        /// GetCARoots returns root certificates in the cluster
+        /// </summary>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Root certificates</returns>
+        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default)
+        {
+            return await GetCARoots(QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCARoots returns root certificates in the cluster
+        /// </summary>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Root certificates</returns>
+        public async Task<QueryResult<CARoots>> GetCARoots(QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<CARoots>("v1/agent/connect/ca/roots", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Log streamer
         /// </summary>
         public class LogStream : IEnumerable<Task<string>>, IDisposable
