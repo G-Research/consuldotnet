@@ -707,7 +707,7 @@ namespace Consul
         public string CertPEM { get; set; }
         public string PrivateKeyPEM { get; set; }
         public string Service { get; set; }
-        public string ServiceURI {  get; set; }
+        public string ServiceURI { get; set; }
         public DateTime ValidAfter { get; set; }
         public DateTime ValidBefore { get; set; }
         public long CreateIndex { get; set; }
