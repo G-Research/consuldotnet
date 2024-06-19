@@ -1164,6 +1164,11 @@ namespace Consul
             return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceId}", q).Execute(ct).ConfigureAwait(false);
         }
 
+        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default)
+        {
+            return await _client.Get<CARoots>("v1/agent/connect/ca/roots", QueryOptions.Default).Execute(ct).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// GetCARoots returns root certificates in the cluster
         /// </summary>
