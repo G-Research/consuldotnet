@@ -3,6 +3,8 @@ name: CI
 on:
   push:
   pull_request:
+  # Allow manual runs. It is necessary to run the workflow manually, when the "formatter" workflow applies any changes.
+  workflow_dispatch:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
