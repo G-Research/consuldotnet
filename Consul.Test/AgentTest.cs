@@ -1025,6 +1025,61 @@ namespace Consul.Test
             Assert.NotNull(agentMetrics.Response.Samples);
         }
 
+        [Fact]
+        public async Task Agent_CARoots()
+        {
+            var caRoots = await _client.Agent.GetCARoots();
+            Assert.NotEqual((ulong)0, caRoots.LastIndex);
+            Assert.NotNull(caRoots.Response.ActiveRootID);
+            Assert.Equal("11111111-2222-3333-4444-555555555555.consul", caRoots.Response.TrustDomain);
+            Assert.Single(caRoots.Response.Roots);
+            var root = caRoots.Response.Roots.First();
+            Assert.NotNull(root.ID);
+            Assert.NotNull(root.Name);
+            Assert.NotNull(root.SigningKeyID);
+            Assert.NotNull(root.ExternalTrustDomain);
+            Assert.NotNull(root.NotBefore);
+            Assert.NotNull(root.NotAfter);
+            Assert.NotNull(root.RootCert);
+            Assert.Null(root.IntermediateCerts);
+            Assert.True(root.Active);
+            Assert.NotNull(root.PrivateKeyType);
+            if (AgentVersion >= SemanticVersion.Parse("1.7.0"))
+            {
+                Assert.NotEqual(0, root.PrivateKeyBits);
+                Assert.NotEqual(0, root.CreateIndex);
+                Assert.NotEqual(0, root.ModifyIndex);
+                Assert.NotEqual(0, root.SerialNumber);
+            }
+        }
+
+        [Fact]
+        public async Task Agent_CALeaf()
+        {
+            var service = new AgentServiceRegistration
+            {
+                Name = "test_leaf",
+                Tags = new[]
+                {
+                    "bar",
+                    "baz"
+                },
+                Port = 8000,
+            };
+            await _client.Agent.ServiceRegister(service);
+            var leaf = await _client.Agent.GetCALeaf("test_leaf");
+            Assert.True(leaf.LastIndex > 0);
+            Assert.NotNull(leaf.Response.SerialNumber);
+            Assert.NotNull(leaf.Response.CertPEM);
+            Assert.NotNull(leaf.Response.PrivateKeyPEM);
+            Assert.Equal("test_leaf", leaf.Response.Service);
+            Assert.Contains("/svc/test_leaf", leaf.Response.ServiceURI);
+            Assert.True(leaf.Response.ModifyIndex > 0);
+            Assert.NotEqual(0, leaf.Response.CreateIndex);
+            Assert.True(leaf.Response.ValidBefore > DateTime.Now);
+            Assert.True(leaf.Response.ValidAfter < DateTime.Now);
+        }
+
         [SkippableFact]
         public async Task Agent_Reload()
         {
