@@ -701,6 +701,19 @@ namespace Consul
         public long ModifyIndex { get; set; }
     }
 
+    public class CALeaf
+    {
+        public string SerialNumber { get; set; }
+        public string CertPEM { get; set; }
+        public string PrivateKeyPEM { get; set; }
+        public string Service { get; set; }
+        public string ServiceURI { get; set; }
+        public DateTime ValidAfter { get; set; }
+        public DateTime ValidBefore { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+    }
+
     /// <summary>
     /// Agent can be used to query the Agent endpoints
     /// </summary>
@@ -1183,6 +1196,29 @@ namespace Consul
         public async Task<QueryResult<CARoots>> GetCARoots(QueryOptions q, CancellationToken ct = default)
         {
             return await _client.Get<CARoots>("v1/agent/connect/ca/roots", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCALeaf, returns the leaf certificate representing a single service
+        /// </summary>
+        /// <param name="serviceId">Id of service to fetch</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Leaf certificate</returns>
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct = default)
+        {
+            return await GetCALeaf(serviceId, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCALeaf, returns the leaf certificate representing a single service
+        /// </summary>
+        /// <param name="serviceId">Id of service to fetch</param>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Leaf certificate</returns>
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<CALeaf>($"v1/agent/connect/ca/leaf/{serviceId}", q).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
