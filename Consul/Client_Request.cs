@@ -81,12 +81,11 @@ namespace Consul
         protected abstract void ApplyOptions(ConsulClientConfiguration clientConfig);
         protected abstract void ApplyHeaders(HttpRequestMessage message, ConsulClientConfiguration clientConfig);
 
-        protected Uri BuildConsulUri(string url, Dictionary<string, string> p)
+        protected internal Uri BuildConsulUri(string url, Dictionary<string, string> p)
         {
-            var builder = new UriBuilder(Client.Config.Address)
-            {
-                Path = url
-            };
+            var builder = new UriBuilder(Client.Config.Address);
+            builder.Path += url;
+            builder.Path = builder.Path.Replace("//", "/");
 
             ApplyOptions(Client.Config);
 

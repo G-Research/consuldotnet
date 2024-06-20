@@ -164,26 +164,19 @@ namespace Consul
             var envAddr = (Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR") ?? string.Empty).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(envAddr))
             {
-                var addrParts = envAddr.Split(':');
-                for (int i = 0; i < addrParts.Length; i++)
+                if (!envAddr.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
                 {
-                    addrParts[i] = addrParts[i].Trim();
+                    envAddr = "http://" + envAddr;
                 }
-                if (!string.IsNullOrEmpty(addrParts[0]))
+
+                var uri = new Uri(envAddr);
+                if (!string.IsNullOrEmpty(uri.Host))
                 {
-                    consulAddress.Host = addrParts[0];
+                    consulAddress.Host = uri.Host;
                 }
-                if (addrParts.Length > 1 && !string.IsNullOrEmpty(addrParts[1]))
-                {
-                    try
-                    {
-                        consulAddress.Port = ushort.Parse(addrParts[1]);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ConsulConfigurationException("Failed parsing port from environment variable CONSUL_HTTP_ADDR", ex);
-                    }
-                }
+
+                consulAddress.Port = uri.Port;
+                consulAddress.Path = uri.AbsolutePath;
             }
 
             var useSsl = (Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL") ?? string.Empty).Trim().ToLowerInvariant();
