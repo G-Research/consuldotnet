@@ -676,6 +676,19 @@ namespace Consul
         public Dictionary<string, string> Labels { get; set; }
     }
 
+    public class AgentAuthorizeParams
+    {
+        public string Target { get; set; }
+        public string ClientCertURI { get; set; }
+        public string ClientCertSerial { get; set; }
+    }
+
+    public class AgentAuthorizeResponse
+    {
+        public bool Authorized { get; set; }
+        public string Reason { get; set; }
+    }
+
     public class CARoots
     {
         public string ActiveRootID { get; set; }
@@ -1175,6 +1188,17 @@ namespace Consul
         public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, QueryOptions q, CancellationToken ct = default)
         {
             return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceId}", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// ConnectAuthorize tests whether a connection is authorized between two services
+        /// </summary>
+        /// <param name="parameters">Parameters for the request</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An Authorize Response</returns>
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParams parameters, CancellationToken ct = default)
+        {
+            return await _client.Post<AgentAuthorizeParams, AgentAuthorizeResponse>("/v1/agent/connect/authorize", parameters, null).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
