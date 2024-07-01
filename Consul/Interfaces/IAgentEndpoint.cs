@@ -63,7 +63,8 @@ namespace Consul
         Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
         Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default);
-        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParams parameters, CancellationToken ct = default);
+        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct = default);
+        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, WriteOptions w, CancellationToken ct = default);
         Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default);
         Task<QueryResult<CARoots>> GetCARoots(QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct = default);

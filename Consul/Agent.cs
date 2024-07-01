@@ -676,7 +676,7 @@ namespace Consul
         public Dictionary<string, string> Labels { get; set; }
     }
 
-    public class AgentAuthorizeParams
+    public class AgentAuthorizeParameters
     {
         public string Target { get; set; }
         public string ClientCertURI { get; set; }
@@ -1196,9 +1196,21 @@ namespace Consul
         /// <param name="parameters">Parameters for the request</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An Authorize Response</returns>
-        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParams parameters, CancellationToken ct = default)
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct = default)
         {
-            return await _client.Post<AgentAuthorizeParams, AgentAuthorizeResponse>("/v1/agent/connect/authorize", parameters, null).Execute(ct).ConfigureAwait(false);
+            return await ConnectAuthorize(parameters, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// ConnectAuthorize tests whether a connection is authorized between two services
+        /// </summary>
+        /// <param name="parameters">Parameters for the request</param>
+        /// <param name="w">Write Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An Authorize Response</returns>
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, WriteOptions w, CancellationToken ct = default)
+        {
+            return await _client.Post<AgentAuthorizeParameters, AgentAuthorizeResponse>("/v1/agent/connect/authorize", parameters, w).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>

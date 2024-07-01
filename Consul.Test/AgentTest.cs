@@ -1028,7 +1028,7 @@ namespace Consul.Test
         [Fact]
         public async Task Agent_ConnectAuthorize()
         {
-            var parameters = new AgentAuthorizeParams
+            var parameters = new AgentAuthorizeParameters
             {
                 Target = "foo",
                 ClientCertSerial = "fake",
