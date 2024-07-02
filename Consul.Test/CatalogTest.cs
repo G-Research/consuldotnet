@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -263,6 +264,53 @@ namespace Consul.Test
                 Assert.Equal(svcID, services.Response[0].ServiceName);
 
                 Assert.True(services.Response[0].ServiceEnableTagOverride);
+            }
+        }
+
+        [Fact]
+        public async Task Catalog_GatewayServices()
+        {
+            using (IConsulClient client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
+            {
+                var terminatingGatewayName = "terminating-gateway";
+                var ingressGatewayName = "ingress-gateway";
+
+                var terminatingGatewayEntry = new CatalogRegistration
+                {
+                    Node = "gateway-service",
+                    Address = "192.168.1.100",
+                    Service = new AgentService
+                    {
+                        ID = "terminating-gateway",
+                        Service = terminatingGatewayName,
+                        Port = 8080,
+                        Kind = ServiceKind.TerminatingGateway,
+                    }
+                };
+                await client.Catalog.Register(terminatingGatewayEntry);
+
+                var ingressGatewayEntry = new CatalogRegistration
+                {
+                    Node = "gateway-service",
+                    Address = "192.168.1.100",
+                    Service = new AgentService
+                    {
+                        ID = "ingress-gateway",
+                        Service = ingressGatewayName,
+                        Port = 8081,
+                        Kind = ServiceKind.IngressGateway,
+                    }
+                };
+                await client.Catalog.Register(ingressGatewayEntry);
+
+                var gatewayServices = await client.Catalog.GatewayService("gateway-service", QueryOptions.Default, CancellationToken.None);
+
+                Assert.NotNull(gatewayServices);
+
             }
         }
 
