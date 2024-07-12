@@ -144,13 +144,13 @@ namespace Consul
     {
         public string Kind { get; set; }
         public string Name { get; set; }
-        public List<LinkedServiceGateway> Services {  get; set; }
+        public List<LinkedServiceGateway> Services { get; set; }
     }
 
     public class LinkedServiceGateway
     {
         public string Name { get; set; }
-        public string CAFile { get; set; }  
+        public string CAFile { get; set; }
         public string CertFile { get; set; }
         public string KeyFile { get; set; }
         public string SNI { get; set; }
@@ -164,7 +164,7 @@ namespace Consul
     }
 
     public class IngressListener
-    { 
+    {
         public int Port { get; set; }
         public List<IngressService> Services { get; set; }
     }
