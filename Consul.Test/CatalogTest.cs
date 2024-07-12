@@ -317,5 +317,102 @@ namespace Consul.Test
             Assert.Contains(services.Response.Services, n => n.ID == svcID);
             Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }
+
+        [Fact]
+        public async Task Catalog_GatewayServices()
+        {
+            using (IConsulClient client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
+            {
+                var terminatingGatewayName = "terminating-gateway";
+                var ingressGatewayName = "ingress-gateway";
+
+                var terminatingGatewayEntry = new CatalogRegistration
+                {
+                    Datacenter = "dc1",
+                    Node = "bar",
+                    Address = "192.168.10.11",
+                    Service = new AgentService
+                    {
+                        ID = "redis",
+                        Service = "redis",
+                        Port = 6379
+                    }
+                };
+                await client.Catalog.Register(terminatingGatewayEntry);
+
+                var terminatingGatewayConfigEntry = new TerminatingGatewayConfigEntry
+                {
+                    Kind = ServiceKind.TerminatingGateway.ToString(),
+                    Name = terminatingGatewayName,
+                    Services = new List<LinkedServiceGateway>
+                    {
+                        new LinkedServiceGateway
+                        {
+                            Name = "api",
+                            CAFile = "api/ca.crt",
+                            CertFile = "api/client.crt",
+                            KeyFile = "api/client.key",
+                            SNI = "my-domain"
+                        },
+                        new LinkedServiceGateway
+                        {
+                            Name = "*",
+                            CAFile = "ca.crt",
+                            CertFile = "client.crt",
+                            KeyFile = "client.key",
+                            SNI = "my-alt-domain"
+                        }
+                    }
+                };
+                await client.Configuration.ApplyConfig(terminatingGatewayConfigEntry);
+
+                var ingressGatewayConfigEntry = new IngressGatewayConfigEntry
+                {
+                    Kind = ServiceKind.IngressGateway.ToString(),
+                    Name = ingressGatewayName,
+                    Listeners = new List<IngressListener>
+                    {
+                        new IngressListener
+                        {
+                            Port = 8888,
+                            Services = new List<IngressService>
+                            {
+                                new IngressService
+                                {
+                                    Name = "api"
+                                }
+                            }
+                        },
+                        new IngressListener
+                        {
+                            Port = 9999,
+                            Services = new List<IngressService>
+                            {
+                                new IngressService
+                                {
+                                    Name = "redis"
+                                }
+                            }
+                        }
+                    }
+                };
+
+                await client.Configuration.ApplyConfig(ingressGatewayConfigEntry);
+
+                var gatewayServices = await client.Catalog.GatewayService(terminatingGatewayName);
+
+                Assert.NotEmpty(gatewayServices.Response);
+                Assert.Equal(ServiceKind.TerminatingGateway, gatewayServices.Response[0].GatewayKind);
+
+                gatewayServices = await client.Catalog.GatewayService(ingressGatewayName);
+
+                Assert.NotEmpty(gatewayServices.Response);
+                Assert.Equal(ServiceKind.IngressGateway, gatewayServices.Response[0].GatewayKind);
+            }
+        }
     }
 }
