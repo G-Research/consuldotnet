@@ -94,7 +94,7 @@ namespace Consul.Test
             coord.Coord.Height = 0.5;
             coord.Coord.Adjustment = 0.0;
             for (int i = 0; i < 8; i++) coord.Coord.Vec.Add(0.0);
-            
+
             var response = await _client.Coordinate.Update(coord);
             Assert.Equal("OK", response.StatusCode.ToString());
 
