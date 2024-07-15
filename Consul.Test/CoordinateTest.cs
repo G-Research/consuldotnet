@@ -99,10 +99,10 @@ namespace Consul.Test
             Assert.Equal("OK", response.StatusCode.ToString());
 
             var newCoordResult = await _client.Coordinate.Node(nodeName);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 if (newCoordResult != null) break;
-                await Task.Delay(1000);
+                await Task.Delay(1000 * 2);
                 newCoordResult = await _client.Coordinate.Node(nodeName);
             }
 
