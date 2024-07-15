@@ -344,13 +344,12 @@ namespace Consul.Test
                 };
                 await client.Catalog.Register(terminatingGatewayEntry);
 
-                var terminatingGatewayConfigEntry = new TerminatingGatewayConfigEntry
+                var terminatingGatewayConfigEntry = new TerminatingGatewayEntry
                 {
-                    Kind = ServiceKind.TerminatingGateway.ToString(),
                     Name = terminatingGatewayName,
-                    Services = new List<LinkedServiceGateway>
+                    Services = new List<LinkedService>
                     {
-                        new LinkedServiceGateway
+                        new LinkedService
                         {
                             Name = "api",
                             CAFile = "api/ca.crt",
@@ -358,7 +357,7 @@ namespace Consul.Test
                             KeyFile = "api/client.key",
                             SNI = "my-domain"
                         },
-                        new LinkedServiceGateway
+                        new LinkedService
                         {
                             Name = "*",
                             CAFile = "ca.crt",
@@ -370,29 +369,28 @@ namespace Consul.Test
                 };
                 await client.Configuration.ApplyConfig(terminatingGatewayConfigEntry);
 
-                var ingressGatewayConfigEntry = new IngressGatewayConfigEntry
+                var ingressGatewayConfigEntry = new IngressGatewayEntry
                 {
-                    Kind = ServiceKind.IngressGateway.ToString(),
                     Name = ingressGatewayName,
-                    Listeners = new List<IngressListener>
+                    Listeners = new List<GatewayListener>
                     {
-                        new IngressListener
+                        new GatewayListener
                         {
                             Port = 8888,
-                            Services = new List<IngressService>
+                            Services = new List<ExternalService>
                             {
-                                new IngressService
+                                new ExternalService
                                 {
                                     Name = "api"
                                 }
                             }
                         },
-                        new IngressListener
+                        new GatewayListener
                         {
                             Port = 9999,
-                            Services = new List<IngressService>
+                            Services = new List<ExternalService>
                             {
-                                new IngressService
+                                new ExternalService
                                 {
                                     Name = "redis"
                                 }
