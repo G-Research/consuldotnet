@@ -32,5 +32,6 @@ namespace Consul
         Task<QueryResult<CoordinateEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default);
         Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default);
     }
 }

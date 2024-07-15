@@ -73,5 +73,46 @@ namespace Consul.Test
             Assert.IsType<CoordinateEntry[]>(nodeDetails);
             Assert.NotEmpty(nodeDetails);
         }
+
+        [Fact]
+        public async Task Coordinate_Update()
+        {
+            var nodeName = "foo-update-lan";
+            var registration = new CatalogRegistration
+            {
+                Node = nodeName,
+                Address = "1.1.1.1"
+            };
+            var register = await _client.Catalog.Register(registration);
+
+            var coord = new CoordinateEntry
+            {
+                Node = nodeName,
+                Coord = new SerfCoordinate()
+            };
+            coord.Coord.Error = 1.5;
+            coord.Coord.Height = 0.5;
+            coord.Coord.Adjustment = 0.0;
+            for (int i = 0; i < 8; i++) coord.Coord.Vec.Add(0.0);
+            
+            var response = await _client.Coordinate.Update(coord);
+            Assert.Equal("OK", response.StatusCode.ToString());
+
+            var newCoordResult = await _client.Coordinate.Node(nodeName);
+            for (int i = 0; i < 4; i++)
+            {
+                if (newCoordResult != null) break;
+                await Task.Delay(1000);
+                newCoordResult = await _client.Coordinate.Node(nodeName);
+            }
+
+            Assert.NotNull(newCoordResult);
+            var newCoord = newCoordResult.Response[0];
+            Assert.Equal(coord.Coord.Vec.Count, newCoord.Coord.Vec.Count);
+            Assert.Equal(coord.Node, newCoord.Node);
+            Assert.True(Math.Abs(coord.Coord.Height - newCoord.Coord.Height) <= 0.00001);
+            Assert.True(Math.Abs(coord.Coord.Adjustment - newCoord.Coord.Adjustment) <= 0.00001);
+            Assert.True(Math.Abs(coord.Coord.Error - newCoord.Coord.Error) <= 0.00001);
+        }
     }
 }

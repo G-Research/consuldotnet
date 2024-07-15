@@ -26,6 +26,7 @@ namespace Consul
     public class CoordinateEntry
     {
         public string Node { get; set; }
+        public string Segment {  get; set; }
         public SerfCoordinate Coord { get; set; }
     }
 
@@ -104,6 +105,11 @@ namespace Consul
         public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default)
+        {
+            return _client.Put("/v1/coordinate/update", entry, null).Execute(ct);
         }
     }
 
