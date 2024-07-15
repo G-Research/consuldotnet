@@ -101,12 +101,12 @@ namespace Consul.Test
             var newCoordResult = await _client.Coordinate.Node(nodeName);
             for (int i = 0; i < 5; i++)
             {
-                if (newCoordResult != null) break;
+                if (newCoordResult.Response != null) break;
                 await Task.Delay(1000 * 2);
                 newCoordResult = await _client.Coordinate.Node(nodeName);
             }
 
-            Assert.NotNull(newCoordResult);
+            Assert.NotNull(newCoordResult.Response);
             var newCoord = newCoordResult.Response[0];
             Assert.Equal(coord.Coord.Vec.Count, newCoord.Coord.Vec.Count);
             Assert.Equal(coord.Node, newCoord.Node);
