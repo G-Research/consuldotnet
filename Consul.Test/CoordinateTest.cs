@@ -88,12 +88,14 @@ namespace Consul.Test
             var coord = new CoordinateEntry
             {
                 Node = nodeName,
-                Coord = new SerfCoordinate()
+                Coord = new SerfCoordinate
+                {
+                    Error = 1.5,
+                    Height = 0.5,
+                    Adjustment = 0.0,
+                    Vec = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+                }
             };
-            coord.Coord.Error = 1.5;
-            coord.Coord.Height = 0.5;
-            coord.Coord.Adjustment = 0.0;
-            for (int i = 0; i < 8; i++) coord.Coord.Vec.Add(0.0);
 
             var response = await _client.Coordinate.Update(coord);
            Assert.Equal(HttpStatusCode.OK, response.StatusCode);;
