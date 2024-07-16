@@ -96,7 +96,7 @@ namespace Consul.Test
             for (int i = 0; i < 8; i++) coord.Coord.Vec.Add(0.0);
 
             var response = await _client.Coordinate.Update(coord);
-            Assert.Equal("OK", response.StatusCode.ToString());
+           Assert.Equal(HttpStatusCode.OK, response.StatusCode);;
 
             var newCoordResult = await _client.Coordinate.Node(nodeName);
             for (int i = 0; i < 5; i++)
