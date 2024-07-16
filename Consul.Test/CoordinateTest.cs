@@ -18,8 +18,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using System.Net;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Consul.Test
