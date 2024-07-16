@@ -318,9 +318,11 @@ namespace Consul.Test
             Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Catalog_GatewayServices()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Terminating and Ingress GatewayEntrys are different since {cutOffVersion}");
             using (IConsulClient client = new ConsulClient(c =>
             {
                 c.Token = TestHelper.MasterToken;
