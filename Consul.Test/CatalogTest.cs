@@ -329,8 +329,8 @@ namespace Consul.Test
                 c.Address = TestHelper.HttpUri;
             }))
             {
-                var terminatingGatewayName = "terminating-gateway";
-                var ingressGatewayName = "ingress-gateway";
+                var terminatingGatewayName = "my-terminating-gateway";
+                var ingressGatewayName = "my-ingress-gateway";
 
                 var terminatingGatewayEntry = new CatalogRegistration
                 {
