@@ -26,6 +26,7 @@ namespace Consul
     public class CoordinateEntry
     {
         public string Node { get; set; }
+        public string Segment { get; set; }
         public SerfCoordinate Coord { get; set; }
     }
 
@@ -104,6 +105,29 @@ namespace Consul
         public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Updates the LAN network coordinates for a node in a given datacenter.
+        /// </summary>
+        /// <param name="entry">The coordinate entry to update</param>
+        /// <param name="q">Customized write options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> Update(CoordinateEntry entry, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Put("/v1/coordinate/update", entry, q).Execute(ct);
+        }
+
+        /// <summary>
+        /// Updates the LAN network coordinates for a node in a given datacenter.
+        /// </summary>
+        /// <param name="entry">The coordinate entry to update</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default)
+        {
+            return Update(entry, WriteOptions.Default, ct);
         }
     }
 
