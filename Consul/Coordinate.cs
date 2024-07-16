@@ -107,9 +107,27 @@ namespace Consul
             return Node(node, QueryOptions.Default, ct);
         }
 
+        /// <summary>
+        /// Updates the LAN network coordinates for a node in a given datacenter.
+        /// </summary>
+        /// <param name="entry">A coordinate entry</param>
+        /// <param name="q">Customized write options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
+        public Task<WriteResult> Update(CoordinateEntry entry, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Put("/v1/coordinate/update", entry, q).Execute(ct);
+        }
+
+        /// <summary>
+        /// Updates the LAN network coordinates for a node in a given datacenter.
+        /// </summary>
+        /// <param name="entry">A coordinate entry</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
         public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default)
         {
-            return _client.Put("/v1/coordinate/update", entry, null).Execute(ct);
+            return Update(entry, WriteOptions.Default, ct);
         }
     }
 

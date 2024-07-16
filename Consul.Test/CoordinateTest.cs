@@ -19,6 +19,7 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Net;
 using Xunit;
 
 namespace Consul.Test
@@ -84,6 +85,8 @@ namespace Consul.Test
                 Address = "1.1.1.1"
             };
             var register = await _client.Catalog.Register(registration);
+            var nodeResult = await _client.Catalog.Node(nodeName);
+            Assert.Equal(HttpStatusCode.OK, nodeResult.StatusCode);
 
             var coord = new CoordinateEntry
             {
@@ -98,17 +101,13 @@ namespace Consul.Test
             };
 
             var response = await _client.Coordinate.Update(coord);
-           Assert.Equal(HttpStatusCode.OK, response.StatusCode);;
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);;
 
-            var newCoordResult = await _client.Coordinate.Node(nodeName);
-            for (int i = 0; i < 5; i++)
-            {
-                if (newCoordResult.Response != null) break;
-                await Task.Delay(1000 * 2);
-                newCoordResult = await _client.Coordinate.Node(nodeName);
-            }
-
+            var q = new QueryOptions { WaitIndex = nodeResult.LastIndex, };
+            var newCoordResult = await _client.Coordinate.Node(nodeName, q);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(newCoordResult.Response);
+
             var newCoord = newCoordResult.Response[0];
             Assert.Equal(coord.Coord.Vec.Count, newCoord.Coord.Vec.Count);
             Assert.Equal(coord.Node, newCoord.Node);
