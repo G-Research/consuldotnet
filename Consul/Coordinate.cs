@@ -110,7 +110,7 @@ namespace Consul
         /// <summary>
         /// Updates the LAN network coordinates for a node in a given datacenter.
         /// </summary>
-        /// <param name="entry">A coordinate entry</param>
+        /// <param name="entry">The coordinate entry to update</param>
         /// <param name="q">Customized write options</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
@@ -122,7 +122,7 @@ namespace Consul
         /// <summary>
         /// Updates the LAN network coordinates for a node in a given datacenter.
         /// </summary>
-        /// <param name="entry">A coordinate entry</param>
+        /// <param name="entry">The coordinate entry to update</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default)
