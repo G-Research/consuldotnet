@@ -404,14 +404,26 @@ namespace Consul.Test
                 await client.Configuration.ApplyConfig(ingressGatewayConfigEntry);
 
                 var gatewayServices = await client.Catalog.GatewayService(terminatingGatewayName);
-
                 Assert.NotEmpty(gatewayServices.Response);
-                Assert.Equal(ServiceKind.TerminatingGateway, gatewayServices.Response[0].GatewayKind);
+
+                var terminatingService = gatewayServices.Response[0];
+                Assert.NotNull(terminatingService.Gateway);
+                Assert.Equal(terminatingGatewayName, terminatingService.Gateway.Name);
+                Assert.NotNull(terminatingService.Service);
+                Assert.Equal(ServiceKind.TerminatingGateway, terminatingService.GatewayKind);
+                Assert.NotNull(terminatingService.CAFile);
+                Assert.NotNull(terminatingService.CertFile);
+                Assert.NotNull(terminatingService.KeyFile);
+                Assert.NotNull(terminatingService.SNI);
 
                 gatewayServices = await client.Catalog.GatewayService(ingressGatewayName);
-
                 Assert.NotEmpty(gatewayServices.Response);
-                Assert.Equal(ServiceKind.IngressGateway, gatewayServices.Response[0].GatewayKind);
+
+                var ingressService = gatewayServices.Response[0];
+                Assert.NotNull(ingressService.Gateway);
+                Assert.Equal(ingressGatewayName, ingressService.Gateway.Name);
+                Assert.NotNull(ingressService.Service);
+                Assert.Equal(ServiceKind.IngressGateway, ingressService.GatewayKind);
             }
         }
     }
