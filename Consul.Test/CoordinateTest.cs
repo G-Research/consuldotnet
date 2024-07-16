@@ -93,12 +93,12 @@ namespace Consul.Test
                     Error = 1.5,
                     Height = 0.5,
                     Adjustment = 0.0,
-                    Vec = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+                    Vec = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
                 }
             };
 
             var response = await _client.Coordinate.Update(coord);
-           Assert.Equal(HttpStatusCode.OK, response.StatusCode);;
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode); ;
 
             var newCoordResult = await _client.Coordinate.Node(nodeName);
             for (int i = 0; i < 5; i++)
