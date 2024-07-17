@@ -1026,6 +1026,20 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Agent_ConnectAuthorize()
+        {
+            var parameters = new AgentAuthorizeParameters
+            {
+                Target = "foo",
+                ClientCertSerial = "fake",
+                ClientCertURI = "spiffe://11111111-2222-3333-4444-555555555555.consul/ns/default/dc/ny1/svc/web",
+            };
+            var result = await _client.Agent.ConnectAuthorize(parameters);
+            Assert.True(result.Response.Authorized);
+            Assert.Equal("Default behavior configured by ACLs", result.Response.Reason);
+        }
+
+        [Fact]
         public async Task Agent_CARoots()
         {
             var caRoots = await _client.Agent.GetCARoots();

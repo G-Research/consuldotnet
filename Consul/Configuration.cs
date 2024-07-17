@@ -215,7 +215,7 @@ namespace Consul
     /// <summary>
     /// IngressGatewayEntry provides configuration for the Ingress Gateway Proxy
     /// </summary>
-    public class IngressGatewayEntry
+    public class IngressGatewayEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "ingress-gateway";
@@ -774,7 +774,7 @@ namespace Consul
     /// <summary>
     /// Configures terminating gateways to proxy traffic from services in the Consul service mesh to services registered with Consul that do not have a service mesh sidecar proxy
     /// </summary>
-    public class TerminalGatewayEntry : IConfigurationEntry
+    public class TerminatingGatewayEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "terminating-gateway";
@@ -793,6 +793,15 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<LinkedService> Services { get; set; }
+    }
+
+    public class LinkedService
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CAFile { get; set; }
@@ -805,15 +814,6 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SNI { get; set; }
-    }
-
-    public class LinkedService
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
     }
 
     /// <summary>

@@ -317,5 +317,116 @@ namespace Consul.Test
             Assert.Contains(services.Response.Services, n => n.ID == svcID);
             Assert.DoesNotContain(services.Response.Services, n => n.ID == svcID2);
         }
+
+        [SkippableFact]
+        public async Task Catalog_GatewayServices()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Terminating and Ingress GatewayEntrys are different since {cutOffVersion}");
+            using (IConsulClient client = new ConsulClient(c =>
+            {
+                c.Token = TestHelper.MasterToken;
+                c.Address = TestHelper.HttpUri;
+            }))
+            {
+                var terminatingGatewayName = "my-terminating-gateway";
+                var ingressGatewayName = "my-ingress-gateway";
+
+                var terminatingGatewayEntry = new CatalogRegistration
+                {
+                    Datacenter = "dc1",
+                    Node = "bar",
+                    Address = "192.168.10.11",
+                    Service = new AgentService
+                    {
+                        ID = "redis",
+                        Service = "redis",
+                        Port = 6379
+                    }
+                };
+                await client.Catalog.Register(terminatingGatewayEntry);
+
+                var terminatingGatewayConfigEntry = new TerminatingGatewayEntry
+                {
+                    Name = terminatingGatewayName,
+                    Services = new List<LinkedService>
+                    {
+                        new LinkedService
+                        {
+                            Name = "api",
+                            CAFile = "api/ca.crt",
+                            CertFile = "api/client.crt",
+                            KeyFile = "api/client.key",
+                            SNI = "my-domain"
+                        },
+                        new LinkedService
+                        {
+                            Name = "*",
+                            CAFile = "ca.crt",
+                            CertFile = "client.crt",
+                            KeyFile = "client.key",
+                            SNI = "my-alt-domain"
+                        }
+                    }
+                };
+                await client.Configuration.ApplyConfig(terminatingGatewayConfigEntry);
+
+                var ingressGatewayConfigEntry = new IngressGatewayEntry
+                {
+                    Name = ingressGatewayName,
+                    Listeners = new List<GatewayListener>
+                    {
+                        new GatewayListener
+                        {
+                            Port = 8888,
+                            Services = new List<ExternalService>
+                            {
+                                new ExternalService
+                                {
+                                    Name = "api"
+                                }
+                            }
+                        },
+                        new GatewayListener
+                        {
+                            Port = 9999,
+                            Services = new List<ExternalService>
+                            {
+                                new ExternalService
+                                {
+                                    Name = "redis"
+                                }
+                            }
+                        }
+                    }
+                };
+
+                await client.Configuration.ApplyConfig(ingressGatewayConfigEntry);
+
+                var gatewayServices = await client.Catalog.GatewayService(terminatingGatewayName);
+                Assert.NotEmpty(gatewayServices.Response);
+
+                var terminatingService = gatewayServices.Response[0];
+                Assert.NotNull(terminatingService.Gateway);
+                Assert.Equal(terminatingGatewayName, terminatingService.Gateway.Name);
+                Assert.NotNull(terminatingService.Service);
+                Assert.Equal(ServiceKind.TerminatingGateway, terminatingService.GatewayKind);
+                Assert.NotNull(terminatingService.CAFile);
+                Assert.NotNull(terminatingService.CertFile);
+                Assert.NotNull(terminatingService.KeyFile);
+                Assert.NotNull(terminatingService.SNI);
+
+                gatewayServices = await client.Catalog.GatewayService(ingressGatewayName);
+                Assert.NotEmpty(gatewayServices.Response);
+
+                var ingressService = gatewayServices.Response[0];
+                Assert.NotNull(ingressService.Gateway);
+                Assert.Equal(ingressGatewayName, ingressService.Gateway.Name);
+                Assert.NotNull(ingressService.Service);
+                Assert.Equal(ServiceKind.IngressGateway, ingressService.GatewayKind);
+                Assert.Equal(8888, ingressService.Port);
+                Assert.NotNull(ingressService.Protocol);
+            }
+        }
     }
 }

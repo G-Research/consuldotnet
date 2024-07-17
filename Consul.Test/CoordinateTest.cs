@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -72,6 +73,47 @@ namespace Consul.Test
 
             Assert.IsType<CoordinateEntry[]>(nodeDetails);
             Assert.NotEmpty(nodeDetails);
+        }
+
+        [Fact]
+        public async Task Coordinate_Update()
+        {
+            var nodeName = "foo-update-lan";
+            var registration = new CatalogRegistration
+            {
+                Node = nodeName,
+                Address = "1.1.1.1"
+            };
+            var register = await _client.Catalog.Register(registration);
+            var nodeResult = await _client.Catalog.Node(nodeName);
+            Assert.Equal(HttpStatusCode.OK, nodeResult.StatusCode);
+
+            var coord = new CoordinateEntry
+            {
+                Node = nodeName,
+                Coord = new SerfCoordinate
+                {
+                    Error = 1.5,
+                    Height = 0.5,
+                    Adjustment = 0.0,
+                    Vec = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+                }
+            };
+
+            var response = await _client.Coordinate.Update(coord);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var q = new QueryOptions { WaitIndex = nodeResult.LastIndex, };
+            var newCoordResult = await _client.Coordinate.Node(nodeName, q);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(newCoordResult.Response);
+
+            var newCoord = newCoordResult.Response[0];
+            Assert.Equal(coord.Coord.Vec.Count, newCoord.Coord.Vec.Count);
+            Assert.Equal(coord.Node, newCoord.Node);
+            Assert.True(Math.Abs(coord.Coord.Height - newCoord.Coord.Height) <= 0.00001);
+            Assert.True(Math.Abs(coord.Coord.Adjustment - newCoord.Coord.Adjustment) <= 0.00001);
+            Assert.True(Math.Abs(coord.Coord.Error - newCoord.Coord.Error) <= 0.00001);
         }
     }
 }
