@@ -118,6 +118,28 @@ namespace Consul
         public int Port { get; set; }
     }
 
+    public class CompoundServiceName
+    {
+        public string Namespace { get; set; }
+        public string Partition { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class GatewayService
+    {
+        public CompoundServiceName Gateway { get; set; }
+        public CompoundServiceName Service { get; set; }
+        public ServiceKind GatewayKind { get; set; }
+        public int Port { get; set; }
+        public string Protocol { get; set; }
+        public List<string> Hosts { get; set; }
+        public string CAFile { get; set; }
+        public string CertFile { get; set; }
+        public string KeyFile { get; set; }
+        public string SNI { get; set; }
+        public bool FromWildcard { get; set; }
+    }
+
     /// <summary>
     /// Catalog can be used to query the Catalog endpoints
     /// </summary>
@@ -351,6 +373,30 @@ namespace Consul
         public Task<QueryResult<NodeService>> ServicesForNode(string node, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<NodeService>(string.Format("/v1/catalog/node-services/{0}", node), q).Execute(ct);
+        }
+
+
+        /// <summary>
+        /// GatewayServices is used to query for the services associated with an ingress gateway or terminating gateway
+        /// </summary>
+        /// <param name="gateway">Gateway name</param>
+        /// <param name="q">Query Parameters</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Gateway services</returns>
+        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<GatewayService[]>($"/v1/catalog/gateway-services/{gateway}", q).Execute(ct);
+        }
+
+        /// <summary>
+        /// GatewayServices is used to query for the services associated with an ingress gateway or terminating gateway
+        /// </summary>
+        /// <param name="gateway">Gateway name</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Gateway services</returns>
+        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway, CancellationToken ct = default)
+        {
+            return GatewayService(gateway, QueryOptions.Default, ct);
         }
     }
 
