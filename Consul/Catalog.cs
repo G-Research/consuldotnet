@@ -32,6 +32,7 @@ namespace Consul
         [JsonProperty(PropertyName = "Node")]
         public string Name { get; set; }
         public string Address { get; set; }
+        public string Datacenter { get; set; }
         public Dictionary<string, string> TaggedAddresses { get; set; }
     }
 

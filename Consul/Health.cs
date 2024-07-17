@@ -338,6 +338,54 @@ namespace Consul
         }
 
         /// <summary>
+        /// Ingress is equivalent to Service and Connect, except that it will only return ingress services
+        /// <param name="service">The service ID</param>
+        /// <param name="tag">The service member tag</param>
+        /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
+        /// <param name="q">Customized query options</param>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>This endpoint returns the nodes providing an ingress service in a given datacenter, or a query result with a null response</returns>
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default)
+        {
+            var req = _client.Get<ServiceEntry[]>(string.Format("/v1/health/ingress/{0}", service), q, filter);
+            if (!string.IsNullOrEmpty(tag))
+            {
+                req.Params["tag"] = tag;
+            }
+            if (passingOnly)
+            {
+                req.Params["passing"] = "1";
+            }
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// Ingress is equivalent to Service and Connect, except that it will only return ingress services
+        /// <param name="service">The service ID</param>
+        /// <param name="tag">The service member tag</param>
+        /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>This endpoint returns the nodes providing an ingress service in a given datacenter, or a query result with a null response</returns>
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
+        {
+            return Ingress(service, tag, passingOnly, q, null, ct);
+        }
+
+        /// <summary>
+        /// Ingress is equivalent to Service and Connect, except that it will only return ingress services
+        /// <param name="service">The service ID</param>
+        /// <param name="tag">The service member tag</param>
+        /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>This endpoint returns the nodes providing an ingress service in a given datacenter, or a query result with a null response</returns>
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct = default)
+        {
+            return Ingress(service, tag, passingOnly, QueryOptions.Default, null, ct);
+        }
+
+        /// <summary>
         /// State is used to retrieve all the checks in a given state. The wildcard "any" state can also be used for all checks.
         /// </summary>
         /// <param name="status">The health status to filter for</param>
