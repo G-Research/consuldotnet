@@ -157,9 +157,12 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
+        [SkippableFact]
         public async void Health_Ingress()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Terminating and Ingress GatewayEntrys are different since {cutOffVersion}");
+
             var registration = new AgentServiceRegistration
             {
                 Name = "foo-ingress",
