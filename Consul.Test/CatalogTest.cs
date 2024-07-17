@@ -424,6 +424,8 @@ namespace Consul.Test
                 Assert.Equal(ingressGatewayName, ingressService.Gateway.Name);
                 Assert.NotNull(ingressService.Service);
                 Assert.Equal(ServiceKind.IngressGateway, ingressService.GatewayKind);
+                Assert.Equal(8888, ingressService.Port);
+                Assert.NotNull(ingressService.Protocol);
             }
         }
     }
