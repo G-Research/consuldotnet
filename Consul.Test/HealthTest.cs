@@ -180,7 +180,7 @@ namespace Consul.Test
                         null); // Passing null for the filter parameter
                     Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
                     lastIndex = checks.LastIndex;
-                } while (checks.Response.Any());
+                } while (!checks.Response.Any());
 
                 Assert.NotEmpty(checks.Response);
             }
