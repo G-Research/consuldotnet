@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Consul.Filtering;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -155,6 +156,54 @@ namespace Consul.Test
             {
                 await _client.Agent.ServiceDeregister(destinationServiceID);
             }
+        }
+
+        [SkippableFact]
+        public async void Health_Ingress()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Terminating and Ingress GatewayEntrys are different since {cutOffVersion}");
+
+            var registration = new AgentServiceRegistration
+            {
+                Name = "foo-ingress",
+                Port = 8000
+            };
+            await _client.Agent.ServiceRegister(registration);
+
+            var gatewayRegistration = new AgentServiceRegistration
+            {
+                Name = "foo-ingress-gateway",
+                Port = 8001,
+                Kind = ServiceKind.IngressGateway
+            };
+            await _client.Agent.ServiceRegister(gatewayRegistration);
+
+            var ingressGatewayConfigEntry = new IngressGatewayEntry
+            {
+                Name = "foo-ingress-gateway",
+                Listeners = new List<GatewayListener>
+                {
+                    new GatewayListener
+                    {
+                        Port = 2222,
+                        Protocol = "tcp",
+                        Services = new List<ExternalService>
+                        {
+                            new ExternalService
+                            {
+                                Name = "foo-ingress"
+                            }
+                        }
+                    }
+                }
+            };
+            await _client.Configuration.ApplyConfig(ingressGatewayConfigEntry);
+
+            var services = await _client.Health.Ingress("foo-ingress", "", false);
+            Assert.Single(services.Response);
+            Assert.NotEmpty(services.Response[0].Node.Datacenter);
+            Assert.Equal(gatewayRegistration.Name, services.Response[0].Service.Service);
         }
 
         [Fact]
