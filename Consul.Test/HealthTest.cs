@@ -85,10 +85,10 @@ namespace Consul.Test
                 Name = svcID,
                 Port = 8000,
                 TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
-                {
-                    { "lan", new ServiceTaggedAddress { Address = "127.0.0.1", Port = 80 } },
-                    { "wan", new ServiceTaggedAddress { Address = "192.168.10.10", Port = 8000 } }
-                }
+                    {
+                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
+                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
+                    }
             };
 
             await _client.Agent.ServiceRegister(registration);
@@ -117,27 +117,7 @@ namespace Consul.Test
             public string Name;
             public List<HealthCheck> Checks;
             public HealthStatus Expected;
-        }
 
-        public class RepeatAttribute : DataAttribute
-        {
-            private readonly int _count;
-
-            public RepeatAttribute(int count)
-            {
-                if (count < 1)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(count),
-                        "Repeat count must be greater than 0.");
-                }
-
-                _count = count;
-            }
-
-            public override IEnumerable<object[]> GetData(MethodInfo testMethod)
-            {
-                return Enumerable.Range(0, _count).Select(x => new object[] { x });
-            }
         }
 
         [Fact]
@@ -183,7 +163,7 @@ namespace Consul.Test
         {
             var cases = new List<AggregatedStatusResult>()
             {
-                new AggregatedStatusResult() { Name = "empty", Expected = HealthStatus.Passing, Checks = null },
+                new AggregatedStatusResult() {Name="empty", Expected=HealthStatus.Passing, Checks = null},
                 new AggregatedStatusResult() {Name="passing", Expected=HealthStatus.Passing, Checks = new List<HealthCheck>()
                 {
                     new HealthCheck() {Status = HealthStatus.Passing }
