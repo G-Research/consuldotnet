@@ -205,30 +205,30 @@ namespace Consul.Test
                     new HealthCheck() { CheckID=HealthStatus.ServiceMaintenancePrefix + "service"}
                 }},
                 new AggregatedStatusResult() {Name="unknown", Expected=HealthStatus.Passing, Checks = new List<HealthCheck>()
-                        {
+                {
                     new HealthCheck() { Status = HealthStatus.Any}
                 }},
                 new AggregatedStatusResult() {Name="maintenance_over_critical", Expected=HealthStatus.Maintenance, Checks = new List<HealthCheck>()
-                        {
-                            new HealthCheck() { CheckID = HealthStatus.NodeMaintenance },
-                            new HealthCheck() { Status = HealthStatus.Critical }
+                {
+                    new HealthCheck() { CheckID=HealthStatus.NodeMaintenance },
+                    new HealthCheck() {Status = HealthStatus.Critical }
                 }},
                 new AggregatedStatusResult() {Name="critical_over_warning", Expected=HealthStatus.Critical, Checks = new List<HealthCheck>()
-                        {
-                            new HealthCheck() { Status = HealthStatus.Critical },
-                            new HealthCheck() { Status = HealthStatus.Warning }
+                {
+                    new HealthCheck() {Status = HealthStatus.Critical },
+                    new HealthCheck() {Status = HealthStatus.Warning }
                 }},
                 new AggregatedStatusResult() {Name="warning_over_passing", Expected=HealthStatus.Warning, Checks = new List<HealthCheck>()
-                        {
-                            new HealthCheck() { Status = HealthStatus.Warning },
-                            new HealthCheck() { Status = HealthStatus.Passing }
+                {
+                    new HealthCheck() {Status = HealthStatus.Warning },
+                    new HealthCheck() {Status = HealthStatus.Passing }
                 }},
                 new AggregatedStatusResult() {Name="lots", Expected=HealthStatus.Warning, Checks = new List<HealthCheck>()
-                    {
-                        new HealthCheck() { Status = HealthStatus.Passing },
-                        new HealthCheck() { Status = HealthStatus.Passing },
-                        new HealthCheck() { Status = HealthStatus.Warning },
-                        new HealthCheck() { Status = HealthStatus.Passing }
+                {
+                    new HealthCheck() {Status = HealthStatus.Passing },
+                    new HealthCheck() {Status = HealthStatus.Passing },
+                    new HealthCheck() {Status = HealthStatus.Warning },
+                    new HealthCheck() {Status = HealthStatus.Passing }
                 }}
             };
             foreach (var test_case in cases)
