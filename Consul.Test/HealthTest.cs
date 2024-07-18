@@ -19,9 +19,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Consul.Test
 {
@@ -117,9 +121,32 @@ namespace Consul.Test
 
         }
 
-        [Fact]
-        public async Task Health_Connect()
+        public class RepeatAttribute : DataAttribute
         {
+            private readonly int _count;
+
+            public RepeatAttribute(int count)
+            {
+                if (count < 1)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(count),
+                        "Repeat count must be greater than 0.");
+                }
+                _count = count;
+            }
+
+            public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+            {
+                return Enumerable.Range(0, _count).Select(x => new object[] { x });
+            }
+        }
+
+        [Theory]
+        [Repeat(1000)]
+        public async Task Health_Connect(int run)
+        {
+            Assert.NotEqual(-1, run);
+
             var destinationServiceID = KVTest.GenerateTestKeyName();
 
             var registration = new AgentServiceRegistration
@@ -147,7 +174,7 @@ namespace Consul.Test
                 // Use the Health.Connect method to query health information for Connect-enabled services
                 var checks = await _client.Health.Connect(destinationServiceID, "", false, QueryOptions.Default, null); // Passing null for the filter parameter
 
-                Assert.NotNull(checks);
+                Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
                 Assert.NotEqual((ulong)0, checks.LastIndex);
                 Assert.NotEmpty(checks.Response);
             }
