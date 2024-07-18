@@ -23,7 +23,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Consul.Filtering;
 using Xunit;
 using Xunit.Sdk;
 
@@ -86,10 +85,10 @@ namespace Consul.Test
                 Name = svcID,
                 Port = 8000,
                 TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
-                    {
-                        {"lan", new ServiceTaggedAddress {Address = "127.0.0.1", Port = 80}},
-                        {"wan", new ServiceTaggedAddress {Address = "192.168.10.10", Port = 8000}}
-                    }
+                {
+                    { "lan", new ServiceTaggedAddress { Address = "127.0.0.1", Port = 80 } },
+                    { "wan", new ServiceTaggedAddress { Address = "192.168.10.10", Port = 8000 } }
+                }
             };
 
             await _client.Agent.ServiceRegister(registration);
@@ -118,7 +117,6 @@ namespace Consul.Test
             public string Name;
             public List<HealthCheck> Checks;
             public HealthStatus Expected;
-
         }
 
         public class RepeatAttribute : DataAttribute
@@ -132,6 +130,7 @@ namespace Consul.Test
                     throw new ArgumentOutOfRangeException(nameof(count),
                         "Repeat count must be greater than 0.");
                 }
+
                 _count = count;
             }
 
@@ -142,8 +141,6 @@ namespace Consul.Test
         }
 
         [Fact]
-        [Repeat(100)]
-        #pragma warning disable xUnit1005
         public async Task Health_Connect()
         {
             var destinationServiceID = KVTest.GenerateTestKeyName();
@@ -153,17 +150,8 @@ namespace Consul.Test
                 ID = destinationServiceID,
                 Name = destinationServiceID,
                 Port = 8000,
-                Check = new AgentServiceCheck
-                {
-                    TTL = TimeSpan.FromSeconds(15)
-                },
-                Connect = new AgentServiceConnect
-                {
-                    SidecarService = new AgentServiceRegistration
-                    {
-                        Port = 8001
-                    }
-                }
+                Check = new AgentServiceCheck { TTL = TimeSpan.FromSeconds(15) },
+                Connect = new AgentServiceConnect { SidecarService = new AgentServiceRegistration { Port = 8001 } }
             };
 
             try
@@ -195,7 +183,7 @@ namespace Consul.Test
         {
             var cases = new List<AggregatedStatusResult>()
             {
-                new AggregatedStatusResult() {Name="empty", Expected=HealthStatus.Passing, Checks = null},
+                new AggregatedStatusResult() { Name = "empty", Expected = HealthStatus.Passing, Checks = null },
                 new AggregatedStatusResult() {Name="passing", Expected=HealthStatus.Passing, Checks = new List<HealthCheck>()
                 {
                     new HealthCheck() {Status = HealthStatus.Passing }
@@ -217,30 +205,30 @@ namespace Consul.Test
                     new HealthCheck() { CheckID=HealthStatus.ServiceMaintenancePrefix + "service"}
                 }},
                 new AggregatedStatusResult() {Name="unknown", Expected=HealthStatus.Passing, Checks = new List<HealthCheck>()
-                {
+                        {
                     new HealthCheck() { Status = HealthStatus.Any}
                 }},
                 new AggregatedStatusResult() {Name="maintenance_over_critical", Expected=HealthStatus.Maintenance, Checks = new List<HealthCheck>()
-                {
-                    new HealthCheck() { CheckID=HealthStatus.NodeMaintenance },
-                    new HealthCheck() {Status = HealthStatus.Critical }
+                        {
+                            new HealthCheck() { CheckID = HealthStatus.NodeMaintenance },
+                            new HealthCheck() { Status = HealthStatus.Critical }
                 }},
                 new AggregatedStatusResult() {Name="critical_over_warning", Expected=HealthStatus.Critical, Checks = new List<HealthCheck>()
-                {
-                    new HealthCheck() {Status = HealthStatus.Critical },
-                    new HealthCheck() {Status = HealthStatus.Warning }
+                        {
+                            new HealthCheck() { Status = HealthStatus.Critical },
+                            new HealthCheck() { Status = HealthStatus.Warning }
                 }},
                 new AggregatedStatusResult() {Name="warning_over_passing", Expected=HealthStatus.Warning, Checks = new List<HealthCheck>()
-                {
-                    new HealthCheck() {Status = HealthStatus.Warning },
-                    new HealthCheck() {Status = HealthStatus.Passing }
+                        {
+                            new HealthCheck() { Status = HealthStatus.Warning },
+                            new HealthCheck() { Status = HealthStatus.Passing }
                 }},
                 new AggregatedStatusResult() {Name="lots", Expected=HealthStatus.Warning, Checks = new List<HealthCheck>()
-                {
-                    new HealthCheck() {Status = HealthStatus.Passing },
-                    new HealthCheck() {Status = HealthStatus.Passing },
-                    new HealthCheck() {Status = HealthStatus.Warning },
-                    new HealthCheck() {Status = HealthStatus.Passing }
+                    {
+                        new HealthCheck() { Status = HealthStatus.Passing },
+                        new HealthCheck() { Status = HealthStatus.Passing },
+                        new HealthCheck() { Status = HealthStatus.Warning },
+                        new HealthCheck() { Status = HealthStatus.Passing }
                 }}
             };
             foreach (var test_case in cases)
