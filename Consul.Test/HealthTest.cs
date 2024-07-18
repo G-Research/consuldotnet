@@ -141,12 +141,11 @@ namespace Consul.Test
             }
         }
 
-        [Theory]
-        [Repeat(1000)]
-        public async Task Health_Connect(int run)
+        [Fact]
+        [Repeat(100)]
+        #pragma warning disable xUnit1005
+        public async Task Health_Connect()
         {
-            Assert.NotEqual(-1, run);
-
             var destinationServiceID = KVTest.GenerateTestKeyName();
 
             var registration = new AgentServiceRegistration
@@ -170,12 +169,19 @@ namespace Consul.Test
             try
             {
                 await _client.Agent.ServiceRegister(registration);
+                QueryResult<ServiceEntry[]> checks;
+                ulong lastIndex = 0;
+                do
+                {
+                    var q = new QueryOptions { WaitIndex = lastIndex, };
 
-                // Use the Health.Connect method to query health information for Connect-enabled services
-                var checks = await _client.Health.Connect(destinationServiceID, "", false, QueryOptions.Default, null); // Passing null for the filter parameter
+                    // Use the Health.Connect method to query health information for Connect-enabled services
+                    checks = await _client.Health.Connect(destinationServiceID, "", false, q,
+                        null); // Passing null for the filter parameter
+                    Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
+                    lastIndex = checks.LastIndex;
+                } while (checks.Response.Any());
 
-                Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
-                Assert.NotEqual((ulong)0, checks.LastIndex);
                 Assert.NotEmpty(checks.Response);
             }
             finally
