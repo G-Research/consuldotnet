@@ -145,6 +145,7 @@ namespace Consul.Test
                     checks = await _client.Health.Connect(destinationServiceID, "", false, q, null,
                         new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
                     Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
+                    Assert.True(checks.LastIndex > q.WaitIndex);
                     lastIndex = checks.LastIndex;
                 } while (!checks.Response.Any());
 
