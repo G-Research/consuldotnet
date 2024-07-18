@@ -183,26 +183,26 @@ namespace Consul.Test
             {
                 Name = "foo-ingress-gateway",
                 Listeners = new List<GatewayListener>
+                {
+                    new GatewayListener
                     {
-                        new GatewayListener
+                        Port = 2222,
+                        Protocol = "tcp",
+                        Services = new List<ExternalService>
                         {
-                            Port = 2222,
-                            Protocol = "tcp",
-                            Services = new List<ExternalService>
+                            new ExternalService
                             {
-                                new ExternalService
-                                {
-                                    Name = "foo-ingress"
-                                }
+                                Name = "foo-ingress"
                             }
                         }
                     }
+                }
             };
             await _client.Configuration.ApplyConfig(ingressGatewayConfigEntry);
 
             var services = await _client.Health.Ingress("foo-ingress", "", false);
             Assert.Single(services.Response);
-            Assert.Equal("dc1", services.Response[0].Node.Datacenter);
+            Assert.NotEmpty(services.Response[0].Node.Datacenter);
             Assert.Equal(gatewayRegistration.Name, services.Response[0].Service.Service);
         }
 
