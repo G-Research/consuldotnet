@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 1.7.14.4
+* Support for non-root consul urls (#333)
+* Added GET GatewayService endpoint (#347)
+* Added Update LAN Coordinates endpoints (#348)
+* Added ConnectAuthorize endpoint (#343)
+* Added Get CALeaf endpoint (#339)
+* Added GetCARoots with QueryOptions parameter (#338)
+* Added Connect CA Roots endpoint (#332)
+* Support for listing nodes for connect-capable service (#312)
+* Added Read LAN Coordinates for a specific node (#314)
+
 ## 1.7.14.3
 * Added the Configuration property to the IConsulClient interface (#298)
 * Added Support for Getting Service Configuration (#278)
