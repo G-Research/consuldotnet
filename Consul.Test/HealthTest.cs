@@ -140,7 +140,7 @@ namespace Consul.Test
                 ulong lastIndex = 0;
                 do
                 {
-                    var q = new QueryOptions { WaitIndex = lastIndex};
+                    var q = new QueryOptions { WaitIndex = lastIndex };
                     // Use the Health.Connect method to query health information for Connect-enabled services
                     checks = await _client.Health.Connect(destinationServiceID, "", false, q, null,
                         new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
