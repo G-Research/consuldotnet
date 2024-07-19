@@ -110,16 +110,18 @@ namespace Consul.Test
 
             public override IEnumerable<object[]> GetData(MethodInfo testMethod)
             {
-                return Enumerable.Range(0, _count).Select(x => new object[] { });
+                return Enumerable.Range(0, _count).Select(x => new object[] {x});
             }
         }
 
-        [Fact]
+        [Theory]
         [Repeat(100)]
         #pragma warning disable xUnit1005
-        public async Task Lock_OneShot()
+        public async Task Lock_OneShot(int x)
         {
-            const string keyName = "test/lock/oneshot";
+            Assert.True(x>=0);
+
+            string keyName = $"test/lock/oneshot/{KVTest.GenerateTestKeyName()}";
             var lockOptions = new LockOptions(keyName)
             {
                 LockTryOnce = true
@@ -173,6 +175,7 @@ namespace Consul.Test
 
             await contender.Release();
             await contender.Destroy();
+            await lockKey.Destroy();
         }
 
         [Fact]
