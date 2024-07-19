@@ -20,9 +20,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Consul.Test
 {
@@ -91,7 +94,29 @@ namespace Consul.Test
             Assert.Equal(numTasks - 1, aggregateException.InnerExceptions.Count);
         }
 
+        public class RepeatAttribute : DataAttribute
+        {
+            private readonly int _count;
+
+            public RepeatAttribute(int count)
+            {
+                if (count < 1)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(count),
+                        "Repeat count must be greater than 0.");
+                }
+                _count = count;
+            }
+
+            public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+            {
+                return Enumerable.Range(0, _count).Select(x => new object[] { });
+            }
+        }
+
         [Fact]
+        [Repeat(100)]
+        #pragma warning disable xUnit1005
         public async Task Lock_OneShot()
         {
             const string keyName = "test/lock/oneshot";
