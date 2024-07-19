@@ -19,8 +19,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using Consul.Filtering;
 using NuGet.Versioning;
 using Xunit;
 
@@ -128,29 +130,28 @@ namespace Consul.Test
                 ID = destinationServiceID,
                 Name = destinationServiceID,
                 Port = 8000,
-                Check = new AgentServiceCheck
-                {
-                    TTL = TimeSpan.FromSeconds(15)
-                },
-                Connect = new AgentServiceConnect
-                {
-                    SidecarService = new AgentServiceRegistration
-                    {
-                        Port = 8001
-                    }
-                }
+                Check = new AgentServiceCheck { TTL = TimeSpan.FromSeconds(15) },
+                Connect = new AgentServiceConnect { SidecarService = new AgentServiceRegistration { Port = 8001 } }
             };
 
             try
             {
                 await _client.Agent.ServiceRegister(registration);
+                QueryResult<ServiceEntry[]> checks;
+                ulong lastIndex = 0;
+                do
+                {
+                    var q = new QueryOptions { WaitIndex = lastIndex, };
+                    // Use the Health.Connect method to query health information for Connect-enabled services
+                    checks = await _client.Health.Connect(destinationServiceID, "", false, q, null,
+                        new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
+                    Assert.Equal(HttpStatusCode.OK, checks.StatusCode);
+                    Assert.True(checks.LastIndex > q.WaitIndex);
+                    lastIndex = checks.LastIndex;
+                } while (!checks.Response.Any());
 
-                // Use the Health.Connect method to query health information for Connect-enabled services
-                var checks = await _client.Health.Connect(destinationServiceID, "", false, QueryOptions.Default, null); // Passing null for the filter parameter
-
-                Assert.NotNull(checks);
-                Assert.NotEqual((ulong)0, checks.LastIndex);
-                Assert.NotEmpty(checks.Response);
+                Assert.Single(checks.Response);
+                Assert.Equal(registration.Connect.SidecarService.Port, checks.Response[0].Service.Port);
             }
             finally
             {
