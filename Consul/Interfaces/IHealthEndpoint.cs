@@ -39,6 +39,9 @@ namespace Consul
         Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
         Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
         Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct = default);
         Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct = default);
         Task<QueryResult<HealthCheck[]>> State(HealthStatus status, QueryOptions q, CancellationToken ct = default);
     }
