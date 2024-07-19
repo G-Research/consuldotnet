@@ -150,7 +150,8 @@ namespace Consul.Test
                     lastIndex = checks.LastIndex;
                 } while (!checks.Response.Any());
 
-                Assert.NotEmpty(checks.Response);
+                Assert.Single(checks.Response);
+                Assert.Equal(registration.Connect.SidecarService.Port, checks.Response[0].Service.Port);
             }
             finally
             {
