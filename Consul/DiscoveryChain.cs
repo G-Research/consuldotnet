@@ -54,12 +54,13 @@ namespace Consul
         public TimeSpan? OverrideConnectTimeout { get; set; }
     }
 
-    public class DiscoveryGraphNode {
-	    public string Type { get; set; }
-	    public string Name { get; set; } // this is NOT necessarily a service
+    public class DiscoveryGraphNode
+    {
+        public string Type { get; set; }
+        public string Name { get; set; } // this is NOT necessarily a service
 
-	    // fields for Type==router
-	    public List<DiscoveryRoute> Routes { get; set; }
+        // fields for Type==router
+        public List<DiscoveryRoute> Routes { get; set; }
 
         // fields for Type==splitter
         public List<DiscoverySplit> Splits { get; set; }
@@ -105,12 +106,13 @@ namespace Consul
         public string Datacenter { get; set; }
         public MeshGatewayConfig MeshGateway { get; set; }
         public ServiceResolverEntry Subset { get; set; }
-        public bool External {  get; set; }
+        public bool External { get; set; }
         public string SNI { get; set; }
         public string Name { get; set; }
     }
 
-    public class CompiledDiscoveryChain {
+    public class CompiledDiscoveryChain
+    {
         public string ServiceName { get; set; }
         public string Namespace { get; set; }
         public string Datacenter { get; set; }
