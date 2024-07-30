@@ -458,6 +458,7 @@ namespace Consul
             _catalog = new Lazy<Catalog>(() => new Catalog(this));
             _coordinate = new Lazy<Coordinate>(() => new Coordinate(this));
             _configuration = new Lazy<Configuration>(() => new Configuration(this));
+            _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
             _event = new Lazy<Event>(() => new Event(this));
             _health = new Lazy<Health>(() => new Health(this));
             _kv = new Lazy<KV>(() => new KV(this));

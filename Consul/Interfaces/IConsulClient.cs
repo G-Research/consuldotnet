@@ -63,6 +63,7 @@ namespace Consul
         IOperatorEndpoint Operator { get; }
         IPreparedQueryEndpoint PreparedQuery { get; }
         ICoordinateEndpoint Coordinate { get; }
+        IDiscoveryChainEndpoint DiscoveryChain { get; }
         ISnapshotEndpoint Snapshot { get; }
     }
 }
