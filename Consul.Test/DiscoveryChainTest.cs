@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NuGet.Versioning;
 using Xunit;
-using Newtonsoft.Json;
 
 namespace Consul.Test
 {
