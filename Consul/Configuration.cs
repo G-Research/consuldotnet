@@ -1011,8 +1011,9 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> Meta { get; set; }
 
+        [JsonConverter(typeof(DurationTimespanConverter))]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ConnectTimeout { get; set; }
+        public TimeSpan? ConnectTimeout { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RequestTimeout { get; set; }
@@ -1023,8 +1024,8 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Filter { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool OnlyPassing { get; set; }
+        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        //public bool OnlyPassing { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DefaultSubset { get; set; }

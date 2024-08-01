@@ -51,6 +51,7 @@ namespace Consul
         /// OverrideConnectTimeout allows for the ConnectTimeout setting to be
 	    /// Overridden for any resolver in the compiled chain.
         /// </summary>
+        [JsonConverter(typeof(DurationTimespanConverter))]
         public TimeSpan? OverrideConnectTimeout { get; set; }
     }
 
@@ -87,7 +88,10 @@ namespace Consul
     public class DiscoveryResolver
     {
         public bool Default { get; set; }
-        public TimeSpan? ConnectionTimeout { get; set; }
+
+        [JsonConverter(typeof(DurationTimespanConverter))]
+        public TimeSpan? ConnectTimeout { get; set; }
+
         public string Target { get; set; }
         public DiscoveryFailover Failover { get; set; }
     }
@@ -146,6 +150,11 @@ namespace Consul
         public Dictionary<string, DiscoveryTarget> Targets { get; set; }
     }
 
+    public class DiscoveryChainResponse
+    {
+        public CompiledDiscoveryChain Chain { get; set; }
+    }
+
     public class DiscoveryChain : IDiscoveryChainEndpoint
     {
         public const string DiscoveryGraphNodeTypeRouter = "router";
@@ -159,22 +168,27 @@ namespace Consul
             _client = c;
         }
 
-        public Task<QueryResult<CompiledDiscoveryChain>> Get(string name, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<CompiledDiscoveryChain>($"/v1/discovery-chain/{name}", q).Execute(ct);
+            return _client.Get<DiscoveryChainResponse>($"/v1/discovery-chain/{name}", q).Execute(ct);
         }
 
-        public Task<QueryResult<CompiledDiscoveryChain>> Get(string name, CancellationToken ct = default)
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default)
         {
             return Get(name, QueryOptions.Default, ct);
         }
 
-        public Task<WriteResult<CompiledDiscoveryChain>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default)
         {
-            return _client.Post<DiscoveryChainOptions, CompiledDiscoveryChain>($"/v1/discovery-chain/{name}", options, q).Execute(ct);
+            var request = _client.Post<DiscoveryChainOptions, DiscoveryChainResponse>($"/v1/discovery-chain/{name}", options, q);
+            if (options != null && options.EvaluateInDatacenter != null)
+            {
+                request.Params["compile-dc"] = options.EvaluateInDatacenter;
+            }
+            return request.Execute(ct);
         }
 
-        public Task<WriteResult<CompiledDiscoveryChain>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default)
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default)
         {
             return Get(name, options, WriteOptions.Default, ct);
         }

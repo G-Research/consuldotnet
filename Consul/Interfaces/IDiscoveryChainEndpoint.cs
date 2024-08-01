@@ -28,9 +28,9 @@ namespace Consul
     /// </summary>
     public interface IDiscoveryChainEndpoint
     {
-        Task<QueryResult<CompiledDiscoveryChain>> Get(string name, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CompiledDiscoveryChain>> Get(string name, CancellationToken ct = default);
-        Task<WriteResult<CompiledDiscoveryChain>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<CompiledDiscoveryChain>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default);
+        Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default);
+        Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default);
     }
 }
