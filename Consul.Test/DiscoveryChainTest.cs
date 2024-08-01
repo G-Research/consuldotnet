@@ -35,34 +35,38 @@ namespace Consul.Test
         [Fact]
         public async Task DiscoveryChain_Get()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.11.0");
+            string defaultPart = "default";
+            if (AgentVersion >= cutOffVersion) defaultPart = "default.default";
+            
             var check = new CompiledDiscoveryChain
             {
                 ServiceName = "web",
                 Namespace = "default",
                 Datacenter = "dc1",
                 Protocol = "tcp",
-                StartNode = "resolver:web.default.dc1",
+                StartNode = "resolver:web." + defaultPart + ".dc1",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
-                    { "resolver:web.default.dc1",
+                    { "resolver:web." + defaultPart + ".dc1",
                         new DiscoveryGraphNode {
                             Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
-                            Name = "web.default.dc1",
+                            Name = "web." + defaultPart + ".dc1",
                             Resolver = new DiscoveryResolver
                             {
                                 Default = true,
                                 ConnectTimeout = new TimeSpan(0, 0, 5),
-                                Target = "web.default.dc1"
+                                Target = "web." + defaultPart + ".dc1"
                             }
                         }
                     }
                 },
                 Targets = new Dictionary<string, DiscoveryTarget>()
                 {
-                    { "web.default.dc1",
+                    { "web." + defaultPart + ".dc1",
                         new DiscoveryTarget
                         {
-                            ID = "web.default.dc1",
+                            ID = "web." + defaultPart + ".dc1",
                             Service = "web",
                             Namespace = "default",
                             Datacenter = "dc1",
@@ -81,15 +85,15 @@ namespace Consul.Test
             Assert.Equal(check.Datacenter, chain.Datacenter);
             Assert.Equal(check.Protocol, chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
-            var nodeCheck = check.Nodes["resolver:web.default.dc1"];
-            var nodeChain = chain.Nodes["resolver:web.default.dc1"];
+            var nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc1"];
+            var nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc1"];
             Assert.Equal(nodeCheck.Type, nodeChain.Type);
             Assert.Equal(nodeCheck.Name, nodeChain.Name);
             Assert.Equal(nodeCheck.Resolver.Default, nodeChain.Resolver.Default);
             Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
             Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
-            var targetCheck = check.Targets["web.default.dc1"];
-            var targetChain = chain.Targets["web.default.dc1"];
+            var targetCheck = check.Targets["web." + defaultPart + ".dc1"];
+            var targetChain = chain.Targets["web." + defaultPart + ".dc1"];
             Assert.Equal(targetCheck.ID, targetChain.ID);
             Assert.Equal(targetCheck.Service, targetChain.Service);
             Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
@@ -103,28 +107,28 @@ namespace Consul.Test
                 Namespace = "default",
                 Datacenter = "dc2",
                 Protocol = "tcp",
-                StartNode = "resolver:web.default.dc2",
+                StartNode = "resolver:web." + defaultPart + ".dc2",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
-                    { "resolver:web.default.dc2",
+                    { "resolver:web." + defaultPart + ".dc2",
                         new DiscoveryGraphNode {
                             Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
-                            Name = "web.default.dc2",
+                            Name = "web." + defaultPart + ".dc2",
                             Resolver = new DiscoveryResolver
                             {
                                 Default = true,
                                 ConnectTimeout = new TimeSpan(0, 0, 5),
-                                Target = "web.default.dc2"
+                                Target = "web." + defaultPart + ".dc2"
                             }
                         }
                     }
                 },
                 Targets = new Dictionary<string, DiscoveryTarget>()
                 {
-                    { "web.default.dc2",
+                    { "web." + defaultPart + ".dc2",
                         new DiscoveryTarget
                         {
-                            ID = "web.default.dc2",
+                            ID = "web." + defaultPart + ".dc2",
                             Service = "web",
                             Namespace = "default",
                             Datacenter = "dc2",
@@ -144,15 +148,15 @@ namespace Consul.Test
             Assert.Equal(check.Datacenter, chain.Datacenter);
             Assert.Equal(check.Protocol, chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
-            nodeCheck = check.Nodes["resolver:web.default.dc2"];
-            nodeChain = chain.Nodes["resolver:web.default.dc2"];
+            nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc2"];
+            nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc2"];
             Assert.Equal(nodeCheck.Type, nodeChain.Type);
             Assert.Equal(nodeCheck.Name, nodeChain.Name);
             Assert.Equal(nodeCheck.Resolver.Default, nodeChain.Resolver.Default);
             Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
             Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
-            targetCheck = check.Targets["web.default.dc2"];
-            targetChain = chain.Targets["web.default.dc2"];
+            targetCheck = check.Targets["web." + defaultPart + ".dc2"];
+            targetChain = chain.Targets["web." + defaultPart + ".dc2"];
             Assert.Equal(targetCheck.ID, targetChain.ID);
             Assert.Equal(targetCheck.Service, targetChain.Service);
             Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
@@ -173,28 +177,28 @@ namespace Consul.Test
                 Namespace = "default",
                 Datacenter = "dc1",
                 Protocol = "tcp",
-                StartNode = "resolver:web.default.dc1",
+                StartNode = "resolver:web." + defaultPart + ".dc1",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
-                    { "resolver:web.default.dc1",
+                    { "resolver:web." + defaultPart + ".dc1",
                         new DiscoveryGraphNode {
                             Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
-                            Name = "web.default.dc1",
+                            Name = "web." + defaultPart + ".dc1",
                             Resolver = new DiscoveryResolver
                             {
                                 Default = false,
                                 ConnectTimeout = new TimeSpan(0, 0, 33),
-                                Target = "web.default.dc1"
+                                Target = "web." + defaultPart + ".dc1"
                             }
                         }
                     }
                 },
                 Targets = new Dictionary<string, DiscoveryTarget>()
                 {
-                    { "web.default.dc1",
+                    { "web." + defaultPart + ".dc1",
                         new DiscoveryTarget
                         {
-                            ID = "web.default.dc1",
+                            ID = "web." + defaultPart + ".dc1",
                             Service = "web",
                             Namespace = "default",
                             Datacenter = "dc1",
@@ -213,15 +217,15 @@ namespace Consul.Test
             Assert.Equal(check.Datacenter, chain.Datacenter);
             Assert.Equal(check.Protocol, chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
-            nodeCheck = check.Nodes["resolver:web.default.dc1"];
-            nodeChain = chain.Nodes["resolver:web.default.dc1"];
+            nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc1"];
+            nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc1"];
             Assert.Equal(nodeCheck.Type, nodeChain.Type);
             Assert.Equal(nodeCheck.Name, nodeChain.Name);
             Assert.Equal(nodeCheck.Resolver.Default, nodeChain.Resolver.Default);
             Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
             Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
-            targetCheck = check.Targets["web.default.dc1"];
-            targetChain = chain.Targets["web.default.dc1"];
+            targetCheck = check.Targets["web." + defaultPart + ".dc1"];
+            targetChain = chain.Targets["web." + defaultPart + ".dc1"];
             Assert.Equal(targetCheck.ID, targetChain.ID);
             Assert.Equal(targetCheck.Service, targetChain.Service);
             Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
@@ -236,28 +240,28 @@ namespace Consul.Test
                 Datacenter = "dc2",
                 Protocol = "grpc",
                 CustomizationHash = "98809527",
-                StartNode = "resolver:web.default.dc2",
+                StartNode = "resolver:web." + defaultPart + ".dc2",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
-                    { "resolver:web.default.dc2",
+                    { "resolver:web." + defaultPart + ".dc2",
                         new DiscoveryGraphNode {
                             Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
-                            Name = "web.default.dc2",
+                            Name = "web." + defaultPart + ".dc2",
                             Resolver = new DiscoveryResolver
                             {
                                 Default = false,
                                 ConnectTimeout = new TimeSpan(0, 0, 22),
-                                Target = "web.default.dc2"
+                                Target = "web." + defaultPart + ".dc2"
                             }
                         }
                     }
                 },
                 Targets = new Dictionary<string, DiscoveryTarget>()
                 {
-                    { "web.default.dc2",
+                    { "web." + defaultPart + ".dc2",
                         new DiscoveryTarget
                         {
-                            ID = "web.default.dc2",
+                            ID = "web." + defaultPart + ".dc2",
                             Service = "web",
                             Namespace = "default",
                             Datacenter = "dc2",
@@ -284,15 +288,15 @@ namespace Consul.Test
             Assert.Equal(check.Datacenter, chain.Datacenter);
             Assert.Equal(check.Protocol, chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
-            nodeCheck = check.Nodes["resolver:web.default.dc2"];
-            nodeChain = chain.Nodes["resolver:web.default.dc2"];
+            nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc2"];
+            nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc2"];
             Assert.Equal(nodeCheck.Type, nodeChain.Type);
             Assert.Equal(nodeCheck.Name, nodeChain.Name);
             Assert.Equal(nodeCheck.Resolver.Default, nodeChain.Resolver.Default);
             Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
             Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
-            targetCheck = check.Targets["web.default.dc2"];
-            targetChain = chain.Targets["web.default.dc2"];
+            targetCheck = check.Targets["web." + defaultPart + ".dc2"];
+            targetChain = chain.Targets["web." + defaultPart + ".dc2"];
             Assert.Equal(targetCheck.ID, targetChain.ID);
             Assert.Equal(targetCheck.Service, targetChain.Service);
             Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
