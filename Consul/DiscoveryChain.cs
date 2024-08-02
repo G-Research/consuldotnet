@@ -31,7 +31,7 @@ namespace Consul
 
         /// <summary>
         /// OverrideMeshGateway allows for the mesh gateway setting to be overridden
-	    /// For any resolver in the compiled chain.
+        /// For any resolver in the compiled chain.
         /// </summary>
         public MeshGatewayConfig OverrideMeshGateway { get; set; }
 
@@ -49,7 +49,7 @@ namespace Consul
 
         /// <summary>
         /// OverrideConnectTimeout allows for the ConnectTimeout setting to be
-	    /// Overridden for any resolver in the compiled chain.
+        /// Overridden for any resolver in the compiled chain.
         /// </summary>
         [JsonConverter(typeof(DurationTimespanConverter))]
         public TimeSpan? OverrideConnectTimeout { get; set; }
@@ -168,16 +168,37 @@ namespace Consul
             _client = c;
         }
 
+        /// <summary>
+        /// Get is used to return the compiled discovery chain for a service.
+        /// </summary>
+        /// <param name="name">Name of the service</param>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
         public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<DiscoveryChainResponse>($"/v1/discovery-chain/{name}", q).Execute(ct);
         }
 
+        /// <summary>
+        /// Get is used to return the compiled discovery chain for a service.
+        /// </summary>
+        /// <param name="name">Name of the service</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
         public Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default)
         {
             return Get(name, QueryOptions.Default, ct);
         }
 
+        /// <summary>
+        /// Get is used to return the compiled discovery chain for a service.
+        /// </summary>
+        /// <param name="name">Name of the service</param>
+        /// <param name="options">Discovery Chain Options</param>
+        /// <param name="q">Write Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
         public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default)
         {
             var request = _client.Post<DiscoveryChainOptions, DiscoveryChainResponse>($"/v1/discovery-chain/{name}", options, q);
@@ -188,6 +209,13 @@ namespace Consul
             return request.Execute(ct);
         }
 
+        /// <summary>
+        /// Get is used to return the compiled discovery chain for a service.
+        /// </summary>
+        /// <param name="name">Name of the service</param>
+        /// <param name="options">Discovery Chain Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An empty write result</returns>
         public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default)
         {
             return Get(name, options, WriteOptions.Default, ct);
