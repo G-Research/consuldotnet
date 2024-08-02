@@ -38,7 +38,7 @@ namespace Consul.Test
             var cutOffVersion = SemanticVersion.Parse("1.11.0");
             string defaultPart = "default";
             if (AgentVersion >= cutOffVersion) defaultPart = "default.default";
-            
+
             var check = new CompiledDiscoveryChain
             {
                 ServiceName = "web",
