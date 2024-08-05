@@ -1003,38 +1003,81 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partition { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Meta { get; set; }
-
-        [JsonConverter(typeof(DurationTimespanConverter))]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan? ConnectTimeout { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RequestTimeout { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Subsets { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Filter { get; set; }
-
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        //public bool OnlyPassing { get; set; }
+        public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DefaultSubset { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Redirect { get; set; }
+        public Dictionary<string, ServiceResolverSubset> Subsets { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceResolverRedirect Redirect { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, ServiceResolverFailover> Failover { get; set; }
+
+        [JsonConverter(typeof(DurationTimespanConverter))]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? ConnectTimeout { get; set; }
+
+        [JsonConverter(typeof(DurationTimespanConverter))]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? RequestTimeout { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public LoadBalancerConfig LoadBalancer { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+    }
+
+    public class ServiceResolverSubset
+    {
+        public string Filter { get; set; }
+        public bool OnlyPassing {  get; set; }
+    }
+
+    public class ServiceResolverRedirect
+    {
+        public string Service { get; set; }
+        public string ServiceSubset { get; set; }
+        public string Namespace { get; set; }
+        public string Partition { get; set; }
+        public string Datacenter { get; set; }
+        public string Peer { get; set; }
+        public string SamenessGroup { get; set; }
+    }
+
+    public class ServiceResolverFailover
+    {
+        public string Service { get; set; }
+        public string ServiceSubset { get; set; }
+        // Referencing other partitions is not supported.
+        public string Namespace { get; set; }
+        public List<string> Datacenters { get; set; }
+        public List<ServiceResolverFailoverTarget> Targets { get; set; }
+        public ServiceResolverFailoverPolicy Policy { get; set; }
+        public string SamenessGroup { get; set; }
+    }
+
+    public class ServiceResolverFailoverTarget
+    {
+        public string Service { get; set; }
+        public string ServiceSubset { get; set; }
+        public string Partition { get; set; }
+        public string Namespace { get; set; }
+        public string Datacenter { get; set; }
+        public string Peer { get; set; }
+    }
+
+    public class ServiceResolverFailoverPolicy
+    {
+        public string Mode { get; set; }
+        public List<string> Regions { get; set; }
     }
 
     public class LoadBalancerConfig
