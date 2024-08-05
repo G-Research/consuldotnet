@@ -1038,7 +1038,7 @@ namespace Consul
     public class ServiceResolverSubset
     {
         public string Filter { get; set; }
-        public bool OnlyPassing {  get; set; }
+        public bool OnlyPassing { get; set; }
     }
 
     public class ServiceResolverRedirect
