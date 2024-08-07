@@ -22,8 +22,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using NuGet.Versioning;
+using Xunit;
 
 namespace Consul.Test
 {
@@ -155,7 +155,8 @@ namespace Consul.Test
             Assert.Equal(entry.Failover["*"].Datacenters[0], returned.Failover["*"].Datacenters[0]);
             Assert.Equal(entry.Failover["v1"].Service, returned.Failover["v1"].Service);
             Assert.Equal(entry.ConnectTimeout.ToString(), returned.ConnectTimeout.ToString());
-            if (entry.Meta != null) {
+            if (entry.Meta != null)
+            {
                 Assert.Equal(entry.Meta.Count, returned.Meta.Count);
                 Assert.Equal(entry.Meta["foo"], returned.Meta["foo"]);
                 Assert.Equal(entry.Meta["gir"], returned.Meta["gir"]);
