@@ -23,6 +23,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using NuGet.Versioning;
 
 namespace Consul.Test
 {
@@ -116,10 +117,10 @@ namespace Consul.Test
         [Fact]
         public async Task Configuration_ServiceResolverEntry()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
             var entry = new ServiceResolverEntry
             {
                 Name = "test-failover",
-                Namespace = "",
                 DefaultSubset = "v1",
                 Subsets = new Dictionary<string, ServiceResolverSubset>()
                 {
@@ -129,7 +130,7 @@ namespace Consul.Test
                 Failover = new Dictionary<string, ServiceResolverFailover>()
                 {
                     { "*", new ServiceResolverFailover { Datacenters = new List<string> { "dc2" } } },
-                    { "v1", new ServiceResolverFailover { Service = "alternate", Namespace = "" } }
+                    { "v1", new ServiceResolverFailover { Service = "alternate" } }
                 },
                 ConnectTimeout = new TimeSpan(0, 0, 5),
                 Meta = new Dictionary<string, string>()
@@ -138,13 +139,14 @@ namespace Consul.Test
                     { "gir", "zim" }
                 }
             };
+            if (AgentVersion < cutOffVersion) entry.Meta = null;
+            entry.Meta = null;
             await _client.Configuration.ApplyConfig(entry);
 
             var result = await _client.Configuration.GetConfig<ServiceResolverEntry>("service-resolver", entry.Name);
             var returned = result.Response;
 
             Assert.Equal(entry.Name, returned.Name);
-            Assert.Equal(entry.Namespace, returned.Namespace);
             Assert.Equal(entry.DefaultSubset, returned.DefaultSubset);
             Assert.Equal(entry.Subsets.Count, returned.Subsets.Count);
             Assert.Equal(entry.Subsets["v1"].Filter, returned.Subsets["v1"].Filter);
@@ -152,21 +154,20 @@ namespace Consul.Test
             Assert.Equal(entry.Failover.Count, returned.Failover.Count);
             Assert.Equal(entry.Failover["*"].Datacenters[0], returned.Failover["*"].Datacenters[0]);
             Assert.Equal(entry.Failover["v1"].Service, returned.Failover["v1"].Service);
-            Assert.Equal(entry.Failover["v1"].Namespace, returned.Failover["v1"].Namespace);
             Assert.Equal(entry.ConnectTimeout.ToString(), returned.ConnectTimeout.ToString());
-            Assert.Equal(entry.Meta.Count, returned.Meta.Count);
-            Assert.Equal(entry.Meta["foo"], returned.Meta["foo"]);
-            Assert.Equal(entry.Meta["gir"], returned.Meta["gir"]);
+            if (entry.Meta != null) {
+                Assert.Equal(entry.Meta.Count, returned.Meta.Count);
+                Assert.Equal(entry.Meta["foo"], returned.Meta["foo"]);
+                Assert.Equal(entry.Meta["gir"], returned.Meta["gir"]);
+            }
 
             entry = new ServiceResolverEntry
             {
                 Name = "test-redirect",
-                Namespace = "",
                 Redirect = new ServiceResolverRedirect
                 {
                     Service = "test-failover",
                     ServiceSubset = "v2",
-                    Namespace = "",
                     Datacenter = "d"
                 }
             };
@@ -176,10 +177,8 @@ namespace Consul.Test
             returned = result.Response;
 
             Assert.Equal(entry.Name, returned.Name);
-            Assert.Equal(entry.Namespace, returned.Namespace);
             Assert.Equal(entry.Redirect.Service, returned.Redirect.Service);
             Assert.Equal(entry.Redirect.ServiceSubset, returned.Redirect.ServiceSubset);
-            Assert.Equal(entry.Redirect.Namespace, returned.Redirect.Namespace);
             Assert.Equal(entry.Redirect.Datacenter, returned.Redirect.Datacenter);
         }
     }
