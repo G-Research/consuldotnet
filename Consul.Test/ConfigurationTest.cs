@@ -118,7 +118,7 @@ namespace Consul.Test
         {
             var entry = new ServiceResolverEntry {
                 Name = "test-failover",
-                Namespace = "default",
+                Namespace = "",
                 DefaultSubset = "v1",
                 Subsets = new Dictionary<string, ServiceResolverSubset>()
                 {
@@ -160,12 +160,12 @@ namespace Consul.Test
             entry = new ServiceResolverEntry
             {
                 Name = "test-redirect",
-                Namespace = "default",
+                Namespace = "",
                 Redirect = new ServiceResolverRedirect
                 {
                     Service = "test-failover",
                     ServiceSubset = "v2",
-                    Namespace = "default",
+                    Namespace = "",
                     Datacenter = "d"
                 }
             };
