@@ -129,7 +129,7 @@ namespace Consul.Test
                 Failover = new Dictionary<string, ServiceResolverFailover>()
                 {
                     { "*", new ServiceResolverFailover { Datacenters = new List<string> { "dc2" } } },
-                    { "v1", new ServiceResolverFailover { Service = "alternate", Namespace = "default" } }
+                    { "v1", new ServiceResolverFailover { Service = "alternate", Namespace = "" } }
                 },
                 ConnectTimeout = new TimeSpan(0, 0, 5),
                 Meta = new Dictionary<string, string>()
