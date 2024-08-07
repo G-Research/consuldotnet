@@ -1028,6 +1028,13 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TimeSpan? RequestTimeout { get; set; }
 
+        // PrioritizeByLocality controls whether the locality of services within the
+        // local partition will be used to prioritize connectivity.
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceResolverPrioritizeByLocality PrioritizeByLocality { get; set; }
+
+        // LoadBalancer determines the load balancing policy and configuration for services
+        // issuing requests to this upstream service.
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public LoadBalancerConfig LoadBalancer { get; set; }
 
@@ -1037,46 +1044,90 @@ namespace Consul
 
     public class ServiceResolverSubset
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Filter { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool OnlyPassing { get; set; }
     }
 
     public class ServiceResolverRedirect
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Service { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceSubset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Datacenter { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Peer { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SamenessGroup { get; set; }
     }
 
     public class ServiceResolverFailover
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Service { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceSubset { get; set; }
+
         // Referencing other partitions is not supported.
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Datacenters { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<ServiceResolverFailoverTarget> Targets { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceResolverFailoverPolicy Policy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SamenessGroup { get; set; }
     }
 
     public class ServiceResolverFailoverTarget
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Service { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ServiceSubset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Datacenter { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Peer { get; set; }
     }
 
     public class ServiceResolverFailoverPolicy
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Mode { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Regions { get; set; }
     }
 
@@ -1096,6 +1147,15 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public CookieConfig CookieConfig { get; set; }
+    }
+
+    public class ServiceResolverPrioritizeByLocality
+    {
+        // Mode specifies the type of prioritization that will be performed
+        // when selecting nodes in the local partition.
+        // Valid values are: "" (default "none"), "none", and "failover".
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Mode { get; set; }
     }
 
     public class LeastRequestConfig

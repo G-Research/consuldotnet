@@ -112,5 +112,74 @@ namespace Consul.Test
             Assert.Equal(HttpStatusCode.NotFound, getDeletedConfigResult.StatusCode);
             Assert.Null(getDeletedConfigResult.Response);
         }
+
+        [Fact]
+        public async Task Configuration_ServiceResolverEntry()
+        {
+            var entry = new ServiceResolverEntry {
+                Name = "test-failover",
+                Namespace = "default",
+                DefaultSubset = "v1",
+                Subsets = new Dictionary<string, ServiceResolverSubset>()
+                {
+                    { "v1", new ServiceResolverSubset { Filter = "Service.Meta.version == v1"} },
+                    { "v2", new ServiceResolverSubset { Filter = "Service.Meta.version == v2"} }
+                },
+                Failover = new Dictionary<string, ServiceResolverFailover>()
+                {
+                    { "*", new ServiceResolverFailover { Datacenters = new List<string> { "dc2" } } },
+                    { "v1", new ServiceResolverFailover { Service = "alternate", Namespace = "default" } }
+                },
+                ConnectTimeout = new TimeSpan(0, 0, 5),
+                Meta = new Dictionary<string, string>()
+                {
+                    { "foo", "bar" },
+                    { "gir", "zim" }
+                }
+            };
+            await _client.Configuration.ApplyConfig(entry);
+
+            var result = await _client.Configuration.GetConfig<ServiceResolverEntry>("service-resolver", entry.Name);
+            var returned = result.Response;
+
+            Assert.Equal(entry.Name, returned.Name);
+            Assert.Equal(entry.Namespace, returned.Namespace);
+            Assert.Equal(entry.DefaultSubset, returned.DefaultSubset);
+            Assert.Equal(entry.Subsets.Count, returned.Subsets.Count);
+            Assert.Equal(entry.Subsets["v1"].Filter, returned.Subsets["v1"].Filter);
+            Assert.Equal(entry.Subsets["v2"].Filter, returned.Subsets["v2"].Filter);
+            Assert.Equal(entry.Failover.Count, returned.Failover.Count);
+            Assert.Equal(entry.Failover["*"].Datacenters[0], returned.Failover["*"].Datacenters[0]);
+            Assert.Equal(entry.Failover["v1"].Service, returned.Failover["v1"].Service);
+            Assert.Equal(entry.Failover["v1"].Namespace, returned.Failover["v1"].Namespace);
+            Assert.Equal(entry.ConnectTimeout.ToString(), returned.ConnectTimeout.ToString());
+            Assert.Equal(entry.Meta.Count, returned.Meta.Count);
+            Assert.Equal(entry.Meta["foo"], returned.Meta["foo"]);
+            Assert.Equal(entry.Meta["gir"], returned.Meta["gir"]);
+
+            entry = new ServiceResolverEntry
+            {
+                Name = "test-redirect",
+                Namespace = "default",
+                Redirect = new ServiceResolverRedirect
+                {
+                    Service = "test-failover",
+                    ServiceSubset = "v2",
+                    Namespace = "default",
+                    Datacenter = "d"
+                }
+            };
+            await _client.Configuration.ApplyConfig(entry);
+
+            result = await _client.Configuration.GetConfig<ServiceResolverEntry>("service-resolver", entry.Name);
+            returned = result.Response;
+
+            Assert.Equal(entry.Name, returned.Name);
+            Assert.Equal(entry.Namespace, returned.Namespace);
+            Assert.Equal(entry.Redirect.Service, returned.Redirect.Service);
+            Assert.Equal(entry.Redirect.ServiceSubset, returned.Redirect.ServiceSubset);
+            Assert.Equal(entry.Redirect.Namespace, returned.Redirect.Namespace);
+            Assert.Equal(entry.Redirect.Datacenter, returned.Redirect.Datacenter);
+        }
     }
 }
