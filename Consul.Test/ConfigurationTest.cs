@@ -116,7 +116,8 @@ namespace Consul.Test
         [Fact]
         public async Task Configuration_ServiceResolverEntry()
         {
-            var entry = new ServiceResolverEntry {
+            var entry = new ServiceResolverEntry
+            {
                 Name = "test-failover",
                 Namespace = "",
                 DefaultSubset = "v1",
