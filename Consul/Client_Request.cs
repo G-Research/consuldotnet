@@ -28,7 +28,9 @@ namespace Consul
     /// <summary>
     /// The consistency mode of a request.
     /// </summary>
-    /// <see cref="http://www.consul.io/docs/agent/http.html"/>
+    /// <remarks>
+    /// <seealso href="http://www.consul.io/docs/agent/http.html"/>
+    /// </remarks>
     public enum ConsistencyMode
     {
         /// <summary>
