@@ -252,6 +252,7 @@ namespace Consul
         /// Acquire is used for a lock acquisition operation. The Key, Flags, Value and Session are respected.
         /// </summary>p.Validate();
         /// <param name="p">The key/value pair to store in Consul</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the acquisition attempt succeeded</returns>
         public Task<WriteResult<bool>> Acquire(KVPair p, CancellationToken ct = default)
         {
@@ -263,6 +264,7 @@ namespace Consul
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the acquisition attempt succeeded</returns>
         public Task<WriteResult<bool>> Acquire(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
@@ -280,6 +282,7 @@ namespace Consul
         /// CAS is used for a Check-And-Set operation. The Key, ModifyIndex, Flags and Value are respected. Returns true on success or false on failures.
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the write attempt succeeded</returns>
         public Task<WriteResult<bool>> CAS(KVPair p, CancellationToken ct = default)
         {
@@ -291,6 +294,7 @@ namespace Consul
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the write attempt succeeded</returns>
         public Task<WriteResult<bool>> CAS(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
@@ -308,6 +312,7 @@ namespace Consul
         /// Delete is used to delete a single key.
         /// </summary>
         /// <param name="key">The key name to delete</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the delete attempt succeeded</returns>
         public Task<WriteResult<bool>> Delete(string key, CancellationToken ct = default)
         {
@@ -319,6 +324,7 @@ namespace Consul
         /// </summary>
         /// <param name="key">The key name to delete</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the delete attempt succeeded</returns>
         public Task<WriteResult<bool>> Delete(string key, WriteOptions q, CancellationToken ct = default)
         {
@@ -330,6 +336,7 @@ namespace Consul
         /// DeleteCAS is used for a Delete Check-And-Set operation. The Key and ModifyIndex are respected. Returns true on success or false on failures.
         /// </summary>
         /// <param name="p">The key/value pair to delete</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the delete attempt succeeded</returns>
         public Task<WriteResult<bool>> DeleteCAS(KVPair p, CancellationToken ct = default)
         {
@@ -341,6 +348,7 @@ namespace Consul
         /// </summary>
         /// <param name="p">The key/value pair to delete</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the delete attempt succeeded</returns>
         public Task<WriteResult<bool>> DeleteCAS(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
@@ -354,6 +362,7 @@ namespace Consul
         /// DeleteTree is used to delete all keys under a prefix
         /// </summary>
         /// <param name="prefix">The key prefix to delete from</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the recursive delete attempt succeeded</returns>
         public Task<WriteResult<bool>> DeleteTree(string prefix, CancellationToken ct = default)
         {
@@ -365,6 +374,7 @@ namespace Consul
         /// </summary>
         /// <param name="prefix">The key prefix to delete from</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the recursiv edelete attempt succeeded</returns>
         public Task<WriteResult<bool>> DeleteTree(string prefix, WriteOptions q, CancellationToken ct = default)
         {
@@ -378,6 +388,7 @@ namespace Consul
         /// Get is used to lookup a single key
         /// </summary>
         /// <param name="key">The key name</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the requested key/value pair, or a query result with a null response if the key does not exist</returns>
         public Task<QueryResult<KVPair>> Get(string key, CancellationToken ct = default)
         {
@@ -402,6 +413,7 @@ namespace Consul
         /// Keys is used to list all the keys under a prefix.
         /// </summary>
         /// <param name="prefix">The key prefix to filter on</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing a list of key names</returns>
         public Task<QueryResult<string[]>> Keys(string prefix, CancellationToken ct = default)
         {
@@ -413,6 +425,7 @@ namespace Consul
         /// </summary>
         /// <param name="prefix">The key prefix to filter on</param>
         /// <param name="separator">The terminating suffix of the filter - e.g. a separator of "/" and a prefix of "/web/" will match "/web/foo" and "/web/foo/" but not "/web/foo/baz"</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing a list of key names</returns>
         public Task<QueryResult<string[]>> Keys(string prefix, string separator, CancellationToken ct = default)
         {
@@ -442,6 +455,7 @@ namespace Consul
         /// List is used to lookup all keys under a prefix
         /// </summary>
         /// <param name="prefix">The prefix to search under. Does not have to be a full path - e.g. a prefix of "ab" will find keys "abcd" and "ab11" but not "acdc"</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the keys matching the prefix</returns>
         public Task<QueryResult<KVPair[]>> List(string prefix, CancellationToken ct = default)
         {
@@ -466,6 +480,7 @@ namespace Consul
         /// Put is used to write a new value. Only the Key, Flags and Value properties are respected.
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the write attempt succeeded</returns>
         public Task<WriteResult<bool>> Put(KVPair p, CancellationToken ct = default)
         {
@@ -477,6 +492,7 @@ namespace Consul
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the write attempt succeeded</returns>
         public Task<WriteResult<bool>> Put(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
@@ -493,6 +509,7 @@ namespace Consul
         /// Release is used for a lock release operation. The Key, Flags, Value and Session are respected.
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the release attempt succeeded</returns>
         public Task<WriteResult<bool>> Release(KVPair p, CancellationToken ct = default)
         {
@@ -504,6 +521,7 @@ namespace Consul
         /// </summary>
         /// <param name="p">The key/value pair to store in Consul</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result indicating if the release attempt succeeded</returns>
         public Task<WriteResult<bool>> Release(KVPair p, WriteOptions q, CancellationToken ct = default)
         {
