@@ -40,5 +40,6 @@ namespace Consul
         Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default);
         Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, CancellationToken ct = default);
         Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, QueryOptions q, CancellationToken ct = default);
     }
 }
