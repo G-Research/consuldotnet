@@ -306,7 +306,7 @@ namespace Consul
         public Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<PreparedQueryExplainResponse>(string.Format("/v1/query/{0}/explain", queryIDOrName), q).Execute(ct);
-        } 
+        }
     }
 
     public partial class ConsulClient : IConsulClient
