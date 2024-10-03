@@ -306,7 +306,19 @@ namespace Consul
         public Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, QueryOptions q, CancellationToken ct = default)
         {
             return _client.Get<PreparedQueryExplainResponse>(string.Format("/v1/query/{0}/explain", queryIDOrName), q).Execute(ct);
-        } 
+        }
+
+        /// <summary>
+        /// Shows which query a name resolves to, the fully interpolated template (if it's a template), as well as additional info about the execution of a query.
+        /// </summary>
+        /// <param name="queryIDOrName">Specifies the UUID of the query to explain. This can also be the name of an existing prepared query,
+        /// or a name that matches a prefix name for a prepared query template</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Returns a single prepared query</returns>
+        public Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, CancellationToken ct = default)
+        {
+            return Explain(queryIDOrName, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
