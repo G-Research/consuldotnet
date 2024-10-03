@@ -109,6 +109,19 @@ namespace Consul.Test
             Assert.True(nodes.Length == 1);
             Assert.Equal("foobaz", results.Nodes[0].Node.Name);
 
+            var query = (await _client.PreparedQuery.Explain(id)).Response.Query;
+
+            Assert.NotNull(query);
+            Assert.True(query.Name == "my-query");
+            Assert.True(query.Service.OnlyPassing == true);
+
+            query = null;
+            query = (await _client.PreparedQuery.Explain("my-query")).Response.Query;
+
+            Assert.NotNull(query);
+            Assert.True(query.Name == "my-query");
+            Assert.True(query.Service.OnlyPassing == true);
+
             await _client.PreparedQuery.Delete(id);
 
             defs = null;
