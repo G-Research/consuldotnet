@@ -76,7 +76,6 @@ namespace Consul.Test
             Assert.True(defs.Length == 1);
             Assert.Equal(def.Service.Service, defs[0].Service.Service);
 
-            defs = null;
             defs = (await _client.PreparedQuery.List(mgmtquerytoken)).Response;
 
             Assert.NotNull(defs);
@@ -87,7 +86,6 @@ namespace Consul.Test
 
             await _client.PreparedQuery.Update(def);
 
-            defs = null;
             defs = (await _client.PreparedQuery.Get(id)).Response;
 
             Assert.NotNull(defs);
@@ -101,7 +99,6 @@ namespace Consul.Test
             Assert.True(nodes.Length == 1);
             Assert.Equal("foobaz", nodes[0].Node.Name);
 
-            results = null;
             results = (await _client.PreparedQuery.Execute("my-query")).Response;
 
             Assert.NotNull(results);
@@ -115,7 +112,6 @@ namespace Consul.Test
             Assert.True(query.Name == "my-query");
             Assert.True(query.Service.OnlyPassing == true);
 
-            query = null;
             query = (await _client.PreparedQuery.Explain("my-query")).Response.Query;
 
             Assert.NotNull(query);
@@ -124,7 +120,6 @@ namespace Consul.Test
 
             await _client.PreparedQuery.Delete(id);
 
-            defs = null;
             defs = (await _client.PreparedQuery.List(mgmtquerytoken)).Response;
 
             Assert.True(defs.Length == 0);
