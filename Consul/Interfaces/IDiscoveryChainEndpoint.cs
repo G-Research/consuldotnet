@@ -29,7 +29,7 @@ namespace Consul.Interfaces
     /// </summary>
     public interface IDiscoveryChainEndpoint
     {
-        Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default); 
-        Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default); 
+        Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default);
     }
 }
