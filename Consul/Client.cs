@@ -473,6 +473,7 @@ namespace Consul
             _aclReplication = new Lazy<ACLReplication>(() => new ACLReplication(this));
             _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
             _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
+            _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
         }
 
         #region IDisposable Support
