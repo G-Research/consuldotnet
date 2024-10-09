@@ -126,6 +126,10 @@ namespace Consul
 
     public class DiscoveryChain : IDiscoveryChainEndpoint
     {
+        public const string DiscoveryGraphNodeTypeRouter = "router";
+        public const string DiscoveryGraphNodeTypeSplitter = "splitter";
+        public const string DiscoveryGraphNodeTypeResolver = "resolver";
+
         private readonly ConsulClient _client;
 
         internal DiscoveryChain(ConsulClient c)
