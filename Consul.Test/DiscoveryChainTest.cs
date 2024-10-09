@@ -41,7 +41,7 @@ namespace Consul.Test
                 ServiceName = "web",
                 Namespace = "default",
                 Datacenter = "dc1",
-                Protocol = "https",
+                Protocol = "tcp",
                 StartNode = "resolver:web." + defaultPart + ".dc1",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
