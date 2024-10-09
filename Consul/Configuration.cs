@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
@@ -1781,6 +1780,7 @@ namespace Consul
         /// </summary>
         /// <param name="q">Write Options</param>
         /// <param name="configurationEntry">The configuration entry</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(WriteOptions q, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
@@ -1792,6 +1792,7 @@ namespace Consul
         ///  This creates or updates the given config entry.
         /// </summary>
         /// <param name="configurationEntry">The configuration entry</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
@@ -1854,7 +1855,6 @@ namespace Consul
         /// <summary>
         /// This Deletes the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="name">The name of config entry</param>
         /// <param name="q">Write Options</param>
@@ -1869,7 +1869,6 @@ namespace Consul
         /// <summary>
         /// This Deletes the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="name">The name of config entry</param>
         /// <param name="ct">Cancellation Token</param>

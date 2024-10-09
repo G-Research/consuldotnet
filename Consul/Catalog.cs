@@ -32,6 +32,7 @@ namespace Consul
         [JsonProperty(PropertyName = "Node")]
         public string Name { get; set; }
         public string Address { get; set; }
+        public string Datacenter { get; set; }
         public Dictionary<string, string> TaggedAddresses { get; set; }
     }
 
@@ -156,6 +157,7 @@ namespace Consul
         /// Register a new catalog item
         /// </summary>
         /// <param name="reg">A catalog registration</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Register(CatalogRegistration reg, CancellationToken ct = default)
         {
@@ -167,6 +169,7 @@ namespace Consul
         /// </summary>
         /// <param name="reg">A catalog registration</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Register(CatalogRegistration reg, WriteOptions q, CancellationToken ct = default)
         {
@@ -177,6 +180,7 @@ namespace Consul
         /// Deregister an existing catalog item
         /// </summary>
         /// <param name="reg">A catalog deregistration</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct = default)
         {
@@ -188,6 +192,7 @@ namespace Consul
         /// </summary>
         /// <param name="reg">A catalog deregistration</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Deregister(CatalogDeregistration reg, WriteOptions q, CancellationToken ct = default)
         {
