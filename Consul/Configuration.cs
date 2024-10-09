@@ -1002,37 +1002,132 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DefaultSubset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, ServiceResolverSubset> Subsets { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceResolverRedirect Redirect { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, ServiceResolverFailover> Failover { get; set; }
+
+        [JsonConverter(typeof(DurationTimespanConverter))]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? ConnectTimeout { get; set; }
+
+        [JsonConverter(typeof(DurationTimespanConverter))]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? RequestTimeout { get; set; }
+
+        // PrioritizeByLocality controls whether the locality of services within the
+        // local partition will be used to prioritize connectivity.
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ServiceResolverPrioritizeByLocality PrioritizeByLocality { get; set; }
+
+        // LoadBalancer determines the load balancing policy and configuration for services
+        // issuing requests to this upstream service.
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public LoadBalancerConfig LoadBalancer { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+    }
+
+    public class ServiceResolverSubset
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Filter { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool OnlyPassing { get; set; }
+    }
+
+    public class ServiceResolverRedirect
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Service { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ServiceSubset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partition { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Meta { get; set; }
+        public string Datacenter { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ConnectTimeout { get; set; }
+        public string Peer { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RequestTimeout { get; set; }
+        public string SamenessGroup { get; set; }
+    }
+
+    public class ServiceResolverFailover
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Service { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Subsets { get; set; }
+        public string ServiceSubset { get; set; }
+
+        // Referencing other partitions is not supported.
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Filter { get; set; }
+        public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool OnlyPassing { get; set; }
+        public List<string> Datacenters { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string DefaultSubset { get; set; }
+        public List<ServiceResolverFailoverTarget> Targets { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Redirect { get; set; }
+        public ServiceResolverFailoverPolicy Policy { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public LoadBalancerConfig LoadBalancer { get; set; }
+        public string SamenessGroup { get; set; }
+    }
+
+    public class ServiceResolverFailoverTarget
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Service { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ServiceSubset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Datacenter { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Peer { get; set; }
+    }
+
+    public class ServiceResolverFailoverPolicy
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Mode { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Regions { get; set; }
     }
 
     public class LoadBalancerConfig
@@ -1051,6 +1146,15 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public CookieConfig CookieConfig { get; set; }
+    }
+
+    public class ServiceResolverPrioritizeByLocality
+    {
+        // Mode specifies the type of prioritization that will be performed
+        // when selecting nodes in the local partition.
+        // Valid values are: "" (default "none"), "none", and "failover".
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Mode { get; set; }
     }
 
     public class LeastRequestConfig
