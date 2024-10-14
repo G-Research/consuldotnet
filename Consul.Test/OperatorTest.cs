@@ -89,5 +89,12 @@ namespace Consul.Test
             var queryResult = await _client.Operator.GetConsulLicense();
             Assert.NotNull(queryResult.Response);
         }
+
+        [EnterpriseOnlyFact]
+        public async Task Segment_List()
+        {
+            var segments = await _client.Operator.SegmentList();
+            Assert.IsType<string[]>(segments.Response);
+        }
     }
 }

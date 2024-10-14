@@ -233,6 +233,22 @@ namespace Consul
         {
             return _client.Get<ConsulLicense>("/v1/operator/license", new QueryOptions { Datacenter = datacenter }).Execute(ct);
         }
+
+        /// <summary>
+        /// // SegmentList returns all the available LAN segments.
+        /// </summary>
+        public Task<QueryResult<string[]>> SegmentList(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<string[]>("/v1/operator/segment", q).Execute(ct);
+        }
+
+        /// <summary>
+        /// // SegmentList returns all the available LAN segments.
+        /// </summary>
+        public Task<QueryResult<string[]>> SegmentList(CancellationToken ct = default)
+        {
+            return SegmentList(QueryOptions.Default, ct);
+        }
     }
 
     public class ConsulLicense
