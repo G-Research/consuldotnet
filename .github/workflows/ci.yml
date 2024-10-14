@@ -18,10 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup .NET SDK v8.0.x
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
       # For the time being (https://github.com/dotnet/format/issues/1500, https://github.com/dotnet/format/issues/1560) we need to use `dotnet-format` instead of `dotnet format`
       - name: Restore tool
         run: dotnet tool restore
@@ -82,8 +80,6 @@ jobs:
           dotnet-version: 7.0.x
       - name: Setup .NET SDK v8.0.x
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
@@ -145,8 +141,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup .NET SDK v8.0.x
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
       - name: Create NuGet packages
         run: |
           if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
