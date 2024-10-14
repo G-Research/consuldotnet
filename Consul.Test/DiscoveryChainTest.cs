@@ -30,7 +30,7 @@ namespace Consul.Test
     {
         public const string TestClusterID = "11111111-2222-3333-4444-555555555555";
         [Fact]
-        public async Task DiscoveryChaing_Get()
+        public async Task DiscoveryChain_Get()
         {
             var cutOffVersion = SemanticVersion.Parse("1.11.0");
             string defaultPart = "default";
