@@ -94,7 +94,7 @@ namespace Consul.Test
         public async Task Segment_List()
         {
             var segments = await _client.Operator.SegmentList();
-            Assert.IsType<string[]>(segments.Response);
+            Assert.NotEmpty(segments.Response);
         }
     }
 }
