@@ -43,5 +43,8 @@ namespace Consul
         Task<WriteResult> KeyringUse(string key, CancellationToken ct = default);
         Task<WriteResult> KeyringUse(string key, WriteOptions q, CancellationToken ct = default);
         Task<QueryResult<ConsulLicense>> GetConsulLicense(string datacenter = "", CancellationToken ct = default);
+        Task<QueryResult<string[]>> SegmentList(QueryOptions q, CancellationToken cancellationToken = default);
+        Task<QueryResult<string[]>> SegmentList(CancellationToken cancellationToken = default);
+
     }
 }
