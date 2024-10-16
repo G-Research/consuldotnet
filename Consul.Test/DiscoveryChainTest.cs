@@ -137,10 +137,11 @@ namespace Consul.Test
                 }
             };
 
-            var options = new DiscoveryChainOptions { EvaluateInDatacenter = "dc2" };
-            var responsePost = await _client.DiscoveryChain.Get("web", options);
-            Assert.NotNull(response.Response);
+            var options = new DiscoveryChainOptions { };
 
+            var responsePost = await _client.DiscoveryChain.Get("web", options, "dc2");
+
+            Assert.NotNull(response.Response);
             chain = responsePost.Response.Chain;
             Assert.Equal(check.ServiceName, chain.ServiceName);
             Assert.Equal(check.Namespace, chain.Namespace);
@@ -202,16 +203,17 @@ namespace Consul.Test
                     }
                 }
             };
+
             options = new DiscoveryChainOptions
             {
-                EvaluateInDatacenter = "dc2",
                 OverrideMeshGateway = new MeshGatewayConfig { Mode = "local" },
                 OverrideProtocol = "grpc",
                 OverrideConnectTimeout = new TimeSpan(0, 0, 22)
             };
-            responsePost = await _client.DiscoveryChain.Get("web", options);
-            Assert.NotNull(response.Response);
 
+            responsePost = await _client.DiscoveryChain.Get("web", options, "dc2");
+
+            Assert.NotNull(response.Response);
             chain = responsePost.Response.Chain;
             Assert.Equal(check.ServiceName, chain.ServiceName);
             Assert.Equal(check.Namespace, chain.Namespace);

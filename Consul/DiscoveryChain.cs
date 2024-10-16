@@ -126,8 +126,6 @@ namespace Consul
 
     public class DiscoveryChainOptions
     {
-        public string EvaluateInDatacenter { get; set; }
-
         /// <summary>
         /// OverrideMeshGateway allows for the mesh gateway setting to be overridden
         /// For any resolver in the compiled chain.
@@ -196,10 +194,11 @@ namespace Consul
         /// <param name="name">Name of the service</param>
         /// <param name="options">Discovery Chain Options</param>
         /// <param name="ct">Cancellation Token</param>
+        /// <param name="compileDataCenter">Datacenter to evaluate the discovery chain in</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct = default)
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter = null, CancellationToken ct = default)
         {
-            return Get(name, options, WriteOptions.Default, ct);
+            return Get(name, options, WriteOptions.Default, compileDataCenter, ct);
         }
 
         /// <summary>
@@ -207,15 +206,16 @@ namespace Consul
         /// </summary>
         /// <param name="name">Name of the service</param>
         /// <param name="options">Discovery Chain Options</param>
+        /// <param name="compileDataCenter">Datacenter to evaluate the discovery chain in</param>
         /// <param name="q">Write Options</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, string compileDataCenter = null, CancellationToken ct = default)
         {
             var request = _client.Post<DiscoveryChainOptions, DiscoveryChainResponse>($"/v1/discovery-chain/{name}", options, q);
-            if (options != null && options.EvaluateInDatacenter != null)
+            if (!string.IsNullOrEmpty(compileDataCenter))
             {
-                request.Params["compile-dc"] = options.EvaluateInDatacenter;
+                request.Params["compile-dc"] = compileDataCenter;
             }
             return request.Execute(ct);
         }
