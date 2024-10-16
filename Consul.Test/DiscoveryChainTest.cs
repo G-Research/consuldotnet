@@ -236,5 +236,5 @@ namespace Consul.Test
     }
 
 }
-    
+
 
