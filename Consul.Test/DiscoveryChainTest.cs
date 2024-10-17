@@ -164,7 +164,6 @@ namespace Consul.Test
             Assert.Equal(targetCheck.SNI, targetChain.SNI);
             Assert.Equal(targetCheck.Name, targetChain.Name);
 
-
             check = new CompiledDiscoveryChain
             {
                 ServiceName = "web",
@@ -236,7 +235,4 @@ namespace Consul.Test
             Assert.Equal(targetCheck.Name, targetChain.Name);
         }
     }
-
 }
-
-
