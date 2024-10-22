@@ -103,11 +103,6 @@ namespace Consul
     public class Area
     {
         /// <summary>
-        /// ID is this identifier for an area (a UUID). This must be left empty
-        /// when creating a new area.
-        /// </summary>
-        public string ID { get; set; }
-        /// <summary>
         /// PeerDatacenter is the peer Consul datacenter that will make up the
         /// other side of this network area. Network areas always involve a pair
         /// of datacenters: the datacenter where the area was created, and the
@@ -128,6 +123,14 @@ namespace Consul
         public bool UseTLS { get; set; }
     }
 
+    public class AreaResponse: Area
+    {
+        /// <summary>
+        /// ID is this identifier for an area (a UUID). This must be left empty
+        /// when creating a new area.
+        /// </summary>
+        public string ID { get; set; }
+    }
     public class Operator : IOperatorEndpoint
     {
         private readonly ConsulClient _client;
@@ -293,7 +296,7 @@ namespace Consul
         /// </summary>
         public async Task<WriteResult<string>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default)
         {
-            var res = await _client.Post<Area, Area>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Post<Area, AreaResponse>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
             return new WriteResult<string>(res, res.Response.ID);
         }
     }
