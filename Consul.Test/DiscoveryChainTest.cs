@@ -99,6 +99,140 @@ namespace Consul.Test
             Assert.Equal(targetCheck.SNI, targetChain.SNI);
             Assert.Equal(targetCheck.Name, targetChain.Name);
 
+            check = new CompiledDiscoveryChain
+            {
+                ServiceName = "web",
+                Namespace = "default",
+                Datacenter = "dc2",
+                Protocol = "tcp",
+                StartNode = "resolver:web." + defaultPart + ".dc2",
+                Nodes = new Dictionary<string, DiscoveryGraphNode>()
+                {
+                    { "resolver:web." + defaultPart + ".dc2",
+                        new DiscoveryGraphNode {
+                            Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
+                            Name = "web." + defaultPart + ".dc2",
+                            Resolver = new DiscoveryResolver
+                            {
+                                Default = true,
+                                ConnectTimeout = new TimeSpan(0, 0, 5),
+                                Target = "web." + defaultPart + ".dc2"
+                            }
+                        }
+                    }
+                },
+                Targets = new Dictionary<string, DiscoveryTarget>()
+                {
+                    { "web." + defaultPart + ".dc2",
+                        new DiscoveryTarget
+                        {
+                            ID = "web." + defaultPart + ".dc2",
+                            Service = "web",
+                            Namespace = "default",
+                            Datacenter = "dc2",
+                            SNI = "web.default.dc2.internal." + TestClusterID + ".consul",
+                            Name = "web.default.dc2.internal." + TestClusterID + ".consul"
+                        }
+                    }
+                }
+            };
+
+            var options = new DiscoveryChainOptions { };
+
+            var responsePost = await _client.DiscoveryChain.Get("web", options, "dc2");
+
+            Assert.NotNull(response.Response);
+            chain = responsePost.Response.Chain;
+            Assert.Equal(check.ServiceName, chain.ServiceName);
+            Assert.Equal(check.Namespace, chain.Namespace);
+            Assert.Equal(check.Datacenter, chain.Datacenter);
+            Assert.Equal(check.Protocol, chain.Protocol);
+            Assert.Equal(check.StartNode, chain.StartNode);
+            nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc2"];
+            nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc2"];
+            Assert.Equal(nodeCheck.Type, nodeChain.Type);
+            Assert.Equal(nodeCheck.Name, nodeChain.Name);
+            Assert.Equal(nodeCheck.Resolver.Default, nodeChain.Resolver.Default);
+            Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
+            Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
+            targetCheck = check.Targets["web." + defaultPart + ".dc2"];
+            targetChain = chain.Targets["web." + defaultPart + ".dc2"];
+            Assert.Equal(targetCheck.ID, targetChain.ID);
+            Assert.Equal(targetCheck.Service, targetChain.Service);
+            Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
+            Assert.Equal(targetCheck.Datacenter, targetChain.Datacenter);
+            Assert.Equal(targetCheck.SNI, targetChain.SNI);
+            Assert.Equal(targetCheck.Name, targetChain.Name);
+
+            check = new CompiledDiscoveryChain
+            {
+                ServiceName = "web",
+                Namespace = "default",
+                Datacenter = "dc2",
+                Protocol = "grpc",
+                CustomizationHash = "98809527",
+                StartNode = "resolver:web." + defaultPart + ".dc2",
+                Nodes = new Dictionary<string, DiscoveryGraphNode>()
+                {
+                    { "resolver:web." + defaultPart + ".dc2",
+                        new DiscoveryGraphNode {
+                            Type = DiscoveryChain.DiscoveryGraphNodeTypeResolver,
+                            Name = "web." + defaultPart + ".dc2",
+                            Resolver = new DiscoveryResolver
+                            {
+                                ConnectTimeout = new TimeSpan(0, 0, 22),
+                                Target = "web." + defaultPart + ".dc2"
+                            }
+                        }
+                    }
+                },
+                Targets = new Dictionary<string, DiscoveryTarget>()
+                {
+                    { "web." + defaultPart + ".dc2",
+                        new DiscoveryTarget
+                        {
+                            ID = "web." + defaultPart + ".dc2",
+                            Service = "web",
+                            Namespace = "default",
+                            Datacenter = "dc2",
+                            MeshGateway = new MeshGatewayConfig { Mode = "local" },
+                            SNI = "web.default.dc2.internal." + TestClusterID + ".consul",
+                            Name = "web.default.dc2.internal." + TestClusterID + ".consul"
+                        }
+                    }
+                }
+            };
+
+            options = new DiscoveryChainOptions
+            {
+                OverrideMeshGateway = new MeshGatewayConfig { Mode = "local" },
+                OverrideProtocol = "grpc",
+                OverrideConnectTimeout = new TimeSpan(0, 0, 22)
+            };
+
+            responsePost = await _client.DiscoveryChain.Get("web", options, "dc2");
+
+            Assert.NotNull(response.Response);
+            chain = responsePost.Response.Chain;
+            Assert.Equal(check.ServiceName, chain.ServiceName);
+            Assert.Equal(check.Namespace, chain.Namespace);
+            Assert.Equal(check.Datacenter, chain.Datacenter);
+            Assert.Equal(check.Protocol, chain.Protocol);
+            Assert.Equal(check.StartNode, chain.StartNode);
+            nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc2"];
+            nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc2"];
+            Assert.Equal(nodeCheck.Type, nodeChain.Type);
+            Assert.Equal(nodeCheck.Name, nodeChain.Name);
+            Assert.Equal(nodeCheck.Resolver.Target, nodeChain.Resolver.Target);
+            Assert.Equal(nodeCheck.Resolver.ConnectTimeout.ToString(), nodeChain.Resolver.ConnectTimeout.ToString());
+            targetCheck = check.Targets["web." + defaultPart + ".dc2"];
+            targetChain = chain.Targets["web." + defaultPart + ".dc2"];
+            Assert.Equal(targetCheck.ID, targetChain.ID);
+            Assert.Equal(targetCheck.Service, targetChain.Service);
+            Assert.Equal(targetCheck.Namespace, targetChain.Namespace);
+            Assert.Equal(targetCheck.Datacenter, targetChain.Datacenter);
+            Assert.Equal(targetCheck.SNI, targetChain.SNI);
+            Assert.Equal(targetCheck.Name, targetChain.Name);
         }
     }
 }
