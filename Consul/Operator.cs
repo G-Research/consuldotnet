@@ -123,7 +123,7 @@ namespace Consul
         public bool UseTLS { get; set; }
     }
 
-    public class AreaResponse : Area
+    public class AreaResponse
     {
         /// <summary>
         /// ID is this identifier for an area (a UUID). This must be left empty
@@ -285,7 +285,7 @@ namespace Consul
         /// CreateArea will create a new network area. The ID in the given structure must
         /// be empty and a generated ID will be returned on success.
         /// </summary>
-        public Task<WriteResult<string>> CreateArea(Area area, CancellationToken ct = default)
+        public Task<WriteResult<AreaResponse>> CreateArea(Area area, CancellationToken ct = default)
         {
             return CreateArea(area, WriteOptions.Default, ct);
         }
@@ -294,10 +294,10 @@ namespace Consul
         /// CreateArea will create a new network area. The ID in the given structure must
         /// be empty and a generated ID will be returned on success.
         /// </summary>
-        public async Task<WriteResult<string>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<AreaResponse>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default)
         {
-            var res = await _client.Post<Area, AreaResponse>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<string>(res, res.Response.ID);
+            var req = await _client.Post<Area, AreaResponse>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<AreaResponse>(req, req.Response);
         }
     }
 

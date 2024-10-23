@@ -45,8 +45,8 @@ namespace Consul
         Task<QueryResult<ConsulLicense>> GetConsulLicense(string datacenter = "", CancellationToken ct = default);
         Task<QueryResult<string[]>> SegmentList(QueryOptions q, CancellationToken cancellationToken = default);
         Task<QueryResult<string[]>> SegmentList(CancellationToken cancellationToken = default);
-        Task<WriteResult<string>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<string>> CreateArea(Area area, CancellationToken ct = default);
+        Task<WriteResult<AreaResponse>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<AreaResponse>> CreateArea(Area area, CancellationToken ct = default);
 
     }
 }
