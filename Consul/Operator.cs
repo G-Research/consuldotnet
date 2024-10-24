@@ -123,7 +123,7 @@ namespace Consul
         public bool UseTLS { get; set; }
     }
 
-    public class AreaResponse
+    public class AreaResponse: Area
     {
         /// <summary>
         /// ID is this identifier for an area (a UUID). This must be left empty
