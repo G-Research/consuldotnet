@@ -100,6 +100,37 @@ namespace Consul
         public int NumNodes { get; set; }
     }
 
+    public class Area
+    {
+        /// <summary>
+        /// PeerDatacenter is the peer Consul datacenter that will make up the
+        /// other side of this network area. Network areas always involve a pair
+        /// of datacenters: the datacenter where the area was created, and the
+        /// peer datacenter. This is required.
+        /// </summary>
+        public string PeerDatacenter { get; set; }
+
+        /// <summary>
+        /// RetryJoin specifies the address of Consul servers to join to, such as
+	    /// an IPs or hostnames with an optional port number. This is optional.
+        /// </summary>
+        public string[] RetryJoin { get; set; }
+
+        /// <summary>
+        /// UseTLS specifies whether gossip over this area should be encrypted with TLS
+        /// if possible.
+        /// </summary>
+        public bool UseTLS { get; set; }
+    }
+
+    public class AreaResponse : Area
+    {
+        /// <summary>
+        /// ID is this identifier for an area (a UUID). This must be left empty
+        /// when creating a new area.
+        /// </summary>
+        public string ID { get; set; }
+    }
     public class Operator : IOperatorEndpoint
     {
         private readonly ConsulClient _client;
@@ -248,6 +279,25 @@ namespace Consul
         public Task<QueryResult<string[]>> SegmentList(CancellationToken ct = default)
         {
             return SegmentList(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// CreateArea will create a new network area. The ID in the given structure must
+        /// be empty and a generated ID will be returned on success.
+        /// </summary>
+        public Task<WriteResult<AreaResponse>> CreateArea(Area area, CancellationToken ct = default)
+        {
+            return CreateArea(area, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// CreateArea will create a new network area. The ID in the given structure must
+        /// be empty and a generated ID will be returned on success.
+        /// </summary>
+        public async Task<WriteResult<AreaResponse>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = await _client.Post<Area, AreaResponse>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<AreaResponse>(req, req.Response);
         }
     }
 
