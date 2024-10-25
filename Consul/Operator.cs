@@ -100,7 +100,7 @@ namespace Consul
         public int NumNodes { get; set; }
     }
 
-    public class Area
+    public class AreaRequest
     {
         /// <summary>
         /// PeerDatacenter is the peer Consul datacenter that will make up the
@@ -123,7 +123,7 @@ namespace Consul
         public bool UseTLS { get; set; }
     }
 
-    public class AreaResponse : Area
+    public class Area : AreaRequest
     {
         /// <summary>
         /// ID is this identifier for an area (a UUID). This must be left empty
@@ -285,7 +285,7 @@ namespace Consul
         /// CreateArea will create a new network area. The ID in the given structure must
         /// be empty and a generated ID will be returned on success.
         /// </summary>
-        public Task<WriteResult<AreaResponse>> CreateArea(Area area, CancellationToken ct = default)
+        public Task<WriteResult<string>> CreateArea(AreaRequest area, CancellationToken ct = default)
         {
             return CreateArea(area, WriteOptions.Default, ct);
         }
@@ -294,10 +294,10 @@ namespace Consul
         /// CreateArea will create a new network area. The ID in the given structure must
         /// be empty and a generated ID will be returned on success.
         /// </summary>
-        public async Task<WriteResult<AreaResponse>> CreateArea(Area area, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<string>> CreateArea(AreaRequest area, WriteOptions q, CancellationToken ct = default)
         {
-            var req = await _client.Post<Area, AreaResponse>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
-            return new WriteResult<AreaResponse>(req, req.Response);
+            var req = await _client.Post<AreaRequest, Area>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(req, req.Response.ID);
         }
     }
 
