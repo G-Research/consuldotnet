@@ -281,7 +281,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// CreateArea will create a new network area.
+        /// CreateArea will create a new network area, a generated ID will be returned on success.
         /// </summary>
         public Task<WriteResult<string>> CreateArea(AreaRequest area, CancellationToken ct = default)
         {
