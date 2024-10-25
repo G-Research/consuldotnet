@@ -126,8 +126,7 @@ namespace Consul
     public class Area : AreaRequest
     {
         /// <summary>
-        /// ID is this identifier for an area (a UUID). This must be left empty
-        /// when creating a new area.
+        /// ID is this identifier for an area (a UUID).
         /// </summary>
         public string ID { get; set; }
     }
@@ -282,8 +281,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// CreateArea will create a new network area. The ID in the given structure must
-        /// be empty and a generated ID will be returned on success.
+        /// CreateArea will create a new network area.
         /// </summary>
         public Task<WriteResult<string>> CreateArea(AreaRequest area, CancellationToken ct = default)
         {
@@ -291,8 +289,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// CreateArea will create a new network area. The ID in the given structure must
-        /// be empty and a generated ID will be returned on success.
+        /// CreateArea will create a new network area.
         /// </summary>
         public async Task<WriteResult<string>> CreateArea(AreaRequest area, WriteOptions q, CancellationToken ct = default)
         {
