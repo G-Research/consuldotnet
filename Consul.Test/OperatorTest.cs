@@ -104,5 +104,11 @@ namespace Consul.Test
             var response = await _client.Operator.CreateArea(check);
             Assert.NotNull(response.Response);
         }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaList()
+        {
+            var req = await _client.Operator.AreaList();
+            Assert.NotNull(req.Response);  
+        }
     }
 }

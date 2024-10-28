@@ -296,6 +296,22 @@ namespace Consul
             var req = await _client.Post<AreaRequest, Area>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
             return new WriteResult<string>(req, req.Response.ID);
         }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(CancellationToken ct = default)
+        {
+            return AreaList(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<List<Area>>("/v1/operator/area", q).Execute(ct);
+        }
     }
 
     public class ConsulLicense

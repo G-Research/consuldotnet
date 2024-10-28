@@ -47,6 +47,7 @@ namespace Consul
         Task<QueryResult<string[]>> SegmentList(CancellationToken cancellationToken = default);
         Task<WriteResult<string>> CreateArea(AreaRequest area, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<string>> CreateArea(AreaRequest area, CancellationToken ct = default);
-
+        Task<QueryResult<List<Area>>> AreaList(CancellationToken cancellationToken = default);
+        Task<QueryResult<List<Area>>> AreaList(QueryOptions q, CancellationToken cancellationToken = default);
     }
 }
