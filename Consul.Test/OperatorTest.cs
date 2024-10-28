@@ -108,7 +108,7 @@ namespace Consul.Test
         public async Task Operator_AreaList()
         {
             var req = await _client.Operator.AreaList();
-            Assert.NotNull(req.Response);  
+            Assert.NotNull(req.Response);
         }
     }
 }
