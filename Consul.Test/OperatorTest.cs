@@ -107,6 +107,8 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Operator_AreaList()
         {
+            await _client.Operator.CreateArea(new AreaRequest { PeerDatacenter = "dc2", UseTLS = false, RetryJoin = null });
+
             var req = await _client.Operator.AreaList();
             Assert.NotNull(req.Response);
         }
