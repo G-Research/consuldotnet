@@ -111,10 +111,15 @@ namespace Consul.Test
         public async Task Operator_AreaList()
         {
             var peerDataCenter = KVTest.GenerateTestKeyName();
-            await _client.Operator.AreaCreate(new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null });
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
+
+            await _client.Operator.AreaCreate(area);
 
             var req = await _client.Operator.AreaList();
             Assert.NotEmpty(req.Response);
+            Assert.Equal(area.PeerDatacenter, req.Response[1].PeerDatacenter);
+            Assert.Equal(area.UseTLS, req.Response[1].UseTLS);
+            Assert.Equal(area.RetryJoin, req.Response[1].RetryJoin);
         }
     }
 }
