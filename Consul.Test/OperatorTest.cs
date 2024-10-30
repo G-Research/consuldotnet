@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -117,9 +118,9 @@ namespace Consul.Test
 
             var req = await _client.Operator.AreaList();
             Assert.NotEmpty(req.Response);
-            Assert.Equal(area.PeerDatacenter, req.Response[1].PeerDatacenter);
-            Assert.Equal(area.UseTLS, req.Response[1].UseTLS);
-            Assert.Equal(area.RetryJoin, req.Response[1].RetryJoin);
+            Assert.Equal(area.PeerDatacenter, req.Response.First().PeerDatacenter);
+            Assert.Equal(area.UseTLS, req.Response.First().UseTLS);
+            Assert.Equal(area.RetryJoin, req.Response.First().RetryJoin);
         }
     }
 }
