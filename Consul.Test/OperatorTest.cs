@@ -25,12 +25,6 @@ namespace Consul.Test
 {
     public class OperatorTest : BaseFixture
     {
-        private static readonly Random Random = new Random();
-        internal static string GeneratePeerDatacenterName()
-        {
-            int randomNumber = Random.Next(100, 1000);
-            return $"ran-dc-{randomNumber}";
-        }
 
         [Fact]
         public async Task Operator_GetRaftGetConfiguration()
@@ -108,7 +102,7 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Operator_CreateArea()
         {
-            var peerDataCenter = GeneratePeerDatacenterName();
+            var peerDataCenter = KVTest.GenerateTestKeyName();
             var check = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
 
             var response = await _client.Operator.CreateArea(check);
@@ -117,7 +111,7 @@ namespace Consul.Test
         [EnterpriseOnlyFact]
         public async Task Operator_AreaList()
         {
-            var peerDataCenter = GeneratePeerDatacenterName();
+            var peerDataCenter = KVTest.GenerateTestKeyName();
             await _client.Operator.CreateArea(new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null });
 
             var req = await _client.Operator.AreaList();
