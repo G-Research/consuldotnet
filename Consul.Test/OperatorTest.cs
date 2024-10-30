@@ -25,7 +25,6 @@ namespace Consul.Test
 {
     public class OperatorTest : BaseFixture
     {
-
         [Fact]
         public async Task Operator_GetRaftGetConfiguration()
         {
@@ -100,19 +99,19 @@ namespace Consul.Test
         }
 
         [EnterpriseOnlyFact]
-        public async Task Operator_CreateArea()
+        public async Task Operator_AreaCreate()
         {
             var peerDataCenter = KVTest.GenerateTestKeyName();
             var check = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
 
-            var response = await _client.Operator.CreateArea(check);
+            var response = await _client.Operator.AreaCreate(check);
             Assert.NotNull(response.Response);
         }
         [EnterpriseOnlyFact]
         public async Task Operator_AreaList()
         {
             var peerDataCenter = KVTest.GenerateTestKeyName();
-            await _client.Operator.CreateArea(new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null });
+            await _client.Operator.AreaCreate(new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null });
 
             var req = await _client.Operator.AreaList();
             Assert.NotEmpty(req.Response);
