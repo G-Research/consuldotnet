@@ -17,6 +17,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -98,11 +101,27 @@ namespace Consul.Test
         }
 
         [EnterpriseOnlyFact]
-        public async Task Operator_CreateArea()
+        public async Task Operator_AreaCreate()
         {
-            var check = new AreaRequest { PeerDatacenter = "dc2", UseTLS = false, RetryJoin = null };
-            var response = await _client.Operator.CreateArea(check);
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var check = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
+
+            var response = await _client.Operator.AreaCreate(check);
             Assert.NotNull(response.Response);
+        }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaList()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = new string[] { "10.1.2.3", "10.1.2.4" } };
+
+            await _client.Operator.AreaCreate(area);
+
+            var req = await _client.Operator.AreaList();
+            var result = req.Response.Single(x => x.PeerDatacenter == area.PeerDatacenter);
+
+            Assert.Equal(area.UseTLS, result.UseTLS);
+            Assert.Equal(area.RetryJoin, result.RetryJoin);
         }
     }
 }

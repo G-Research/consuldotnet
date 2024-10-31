@@ -283,18 +283,34 @@ namespace Consul
         /// <summary>
         /// CreateArea will create a new network area, a generated ID will be returned on success.
         /// </summary>
-        public Task<WriteResult<string>> CreateArea(AreaRequest area, CancellationToken ct = default)
+        public Task<WriteResult<string>> AreaCreate(AreaRequest area, CancellationToken ct = default)
         {
-            return CreateArea(area, WriteOptions.Default, ct);
+            return AreaCreate(area, WriteOptions.Default, ct);
         }
 
         /// <summary>
         /// CreateArea will create a new network area, a generated ID will be returned on success.
         /// </summary>
-        public async Task<WriteResult<string>> CreateArea(AreaRequest area, WriteOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<string>> AreaCreate(AreaRequest area, WriteOptions q, CancellationToken ct = default)
         {
             var req = await _client.Post<AreaRequest, Area>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
             return new WriteResult<string>(req, req.Response.ID);
+        }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(CancellationToken ct = default)
+        {
+            return AreaList(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<List<Area>>("/v1/operator/area", q).Execute(ct);
         }
     }
 
