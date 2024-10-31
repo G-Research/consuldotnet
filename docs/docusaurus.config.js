@@ -223,6 +223,11 @@ const config = {
                 additionalLanguages: ['csharp', 'powershell', 'bash'],
             },
             metadata: [{name: 'twitter:card', content: 'summary'}],
+            algolia: {
+                appId: 'T4HSDGU54M',
+                apiKey: '82d2e06f459e8fbc1fdb908d6ccb367a',
+                indexName: 'consuldot',
+            },
         }),
 };
 
