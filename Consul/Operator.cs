@@ -312,6 +312,21 @@ namespace Consul
         {
             return _client.Get<List<Area>>("/v1/operator/area", q).Execute(ct);
         }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, CancellationToken ct = default)
+        {
+            return AreaUpdate(area, areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public async Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = await _client.Put<AreaRequest, Area>($"/v1/operator/area/{areaId}", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(req, req.Response.ID);
+        }
     }
 
     public class ConsulLicense

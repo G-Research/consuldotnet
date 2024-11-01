@@ -123,5 +123,17 @@ namespace Consul.Test
             Assert.Equal(area.UseTLS, result.UseTLS);
             Assert.Equal(area.RetryJoin, result.RetryJoin);
         }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaUpdate()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
+            var createResponse = await _client.Operator.AreaCreate(area);
+
+            area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.9", "10.1.2.0" } };
+            var updateResponse = await _client.Operator.AreaUpdate(area, createResponse.Response);
+
+            Assert.NotNull(updateResponse.Response);
+        }
     }
 }
