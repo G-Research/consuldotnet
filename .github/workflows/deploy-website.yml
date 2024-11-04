@@ -41,6 +41,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract URL and BASE_URL
+        run: |
+          if [[ "${{ github.repository_owner }}" == "G-Research" ]]; then
+            echo "URL=https://consuldot.net" >> $GITHUB_ENV
+            echo "BASE_URL=/" >> $GITHUB_ENV
+          else
+            echo "URL=https://${{ github.repository_owner }}.github.io" >> $GITHUB_ENV
+            echo "BASE_URL=/${{ github.event.repository.name }}/" >> $GITHUB_ENV
+          fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -72,6 +82,8 @@ jobs:
         working-directory: ./docs
         env:
           CONSUL_DOT_NET_VERSION: ${{ steps.version.outputs.tag }}
+          URL: ${{ env.URL }}
+          BASE_URL: ${{ env.BASE_URL }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
