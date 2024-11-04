@@ -31,29 +31,12 @@ jobs:
         uses: WyriHaximus/github-action-get-previous-tag@v1
         with:
           fallback: "vX.X.X.X" # Optional fallback tag to use when no tag can be found
-      - name: Detect package manager
-        id: detect-package-manager
-        working-directory: ./docs
-        run: |
-          if [ -f "yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine packager manager"
-            exit 1
-          fi
-      - name: change directory
-        run: cd ./docs
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
+          cache: yarn
           cache-dependency-path: docs/yarn.lock
       - name: Setup Pages
         id: pages
@@ -68,13 +51,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docusaurus-build-
       - name: Install dependencies
+        run: yarn install
         working-directory: ./docs
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+
       - name: Build
+        run: yarn run build
         working-directory: ./docs
         env:
           CONSUL_DOT_NET_VERSION: ${{ steps.version.outputs.tag }}
-        run: ${{ steps.detect-package-manager.outputs.manager }} run build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
