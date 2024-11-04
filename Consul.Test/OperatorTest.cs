@@ -133,7 +133,13 @@ namespace Consul.Test
             area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.9", "10.1.2.0" } };
             var updateResponse = await _client.Operator.AreaUpdate(area, createResponse.Response);
 
-            Assert.NotNull(updateResponse.Response);
+            var listReq = await _client.Operator.AreaList();
+            var listResult = listReq.Response.Single(x => x.ID == updateResponse.Response);
+
+            Assert.Equal(updateResponse.Response, createResponse.Response);
+            Assert.Equal(area.UseTLS, listResult.UseTLS);
+            Assert.Equal(area.RetryJoin, listResult.RetryJoin);
+            Assert.Equal(area.PeerDatacenter, listResult.PeerDatacenter);
         }
     }
 }
