@@ -85,6 +85,11 @@ jobs:
           URL: ${{ env.URL }}
           BASE_URL: ${{ env.BASE_URL }}
 
+      - name: Add build identifier
+        run: echo "${{ github.sha }}" > build/.build
+        working-directory: ./docs
+        if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
