@@ -137,7 +137,7 @@ namespace Consul.Test
             var listResult = await _client.Operator.AreaList();
             var updatedArea = listResult.Response.Single(x => x.ID == areaId);
 
-
+            Assert.Equal(areaId, updateResult.Response);
             Assert.Equal(area.UseTLS, updatedArea.UseTLS);
             Assert.Equal(area.RetryJoin, updatedArea.RetryJoin);
             Assert.Equal(area.PeerDatacenter, updatedArea.PeerDatacenter);
