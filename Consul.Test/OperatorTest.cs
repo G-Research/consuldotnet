@@ -132,7 +132,7 @@ namespace Consul.Test
             var areaId = createResult.Response;
 
             area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.9", "10.1.2.0" } };
-            var updateResult = await _client.Operator.AreaUpdate(area, createResult.Response);
+            var updateResult = await _client.Operator.AreaUpdate(area,areaId);
 
             var listResult = await _client.Operator.AreaList();
             var updatedArea = listResult.Response.Single(x => x.ID == areaId);
