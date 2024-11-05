@@ -111,9 +111,17 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Check Algolia secrets availability
+        run: |
+          if [ -n "${{ secrets.ALGOLIA_APP_ID }}" ] && [ -n "${{ secrets.ALGOLIA_API_KEY }}" ] && [ -n "${{ secrets.CRAWLER_USER_ID }}" ] && [ -n "${{ secrets.CRAWLER_API_KEY }}" ]; then
+            echo "ALGOLIA_SECRETS=true" >> $GITHUB_ENV
+          else
+            echo "ALGOLIA_SECRETS=false" >> $GITHUB_ENV
+          fi
+
       - name: Wait for new version to be published
         id: wait-for-new-version
-        if: secrets.ALGOLIA_APP_ID && secrets.ALGOLIA_API_KEY && secrets.CRAWLER_USER_ID && secrets.CRAWLER_API_KEY
+        if: ${{ env.ALGOLIA_SECRETS == 'true' }}
         continue-on-error: true # Allows this step to fail without failing the job
         run: |
           max_retries=5
