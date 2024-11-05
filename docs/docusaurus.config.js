@@ -10,6 +10,8 @@ const dotNetFrameworkMinVersion = `4.6.1`;
 const dotNetCoreMinVersion = `2.0.0`;
 const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X.X`);
 const consulAPIVersion = clean_version(extract_consul_version(consulDotNetVersion));
+const url = process.env.URL || `https://consuldot.net`;
+const baseUrl = process.env.BASE_URL || `/`;
 
 function clean_version(version) {
     if (version) {
@@ -41,8 +43,8 @@ const config = {
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
 
-    url: 'https://consuldot.net',
-    baseUrl: '/',
+    url: url,
+    baseUrl: baseUrl,
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
