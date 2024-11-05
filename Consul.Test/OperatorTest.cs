@@ -128,18 +128,19 @@ namespace Consul.Test
         {
             var peerDataCenter = KVTest.GenerateTestKeyName();
             var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
-            var createResponse = await _client.Operator.AreaCreate(area);
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
 
             area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.9", "10.1.2.0" } };
-            var updateResponse = await _client.Operator.AreaUpdate(area, createResponse.Response);
+            var updateResult = await _client.Operator.AreaUpdate(area, createResult.Response);
 
-            var listReq = await _client.Operator.AreaList();
-            var listResult = listReq.Response.Single(x => x.ID == updateResponse.Response);
+            var listResult = await _client.Operator.AreaList();
+            var updatedArea = listResult.Response.Single(x => x.ID == areaId);
 
-            Assert.Equal(updateResponse.Response, createResponse.Response);
-            Assert.Equal(area.UseTLS, listResult.UseTLS);
-            Assert.Equal(area.RetryJoin, listResult.RetryJoin);
-            Assert.Equal(area.PeerDatacenter, listResult.PeerDatacenter);
+
+            Assert.Equal(area.UseTLS, updatedArea.UseTLS);
+            Assert.Equal(area.RetryJoin, updatedArea.RetryJoin);
+            Assert.Equal(area.PeerDatacenter, updatedArea.PeerDatacenter);
         }
     }
 }
