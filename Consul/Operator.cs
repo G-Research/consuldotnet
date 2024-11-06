@@ -330,16 +330,16 @@ namespace Consul
         /// <summary>
         /// AreaGet returns a single network area
         /// </summary>
-        public Task<QueryResult<Area>> AreaGet(string areaId, CancellationToken ct = default)
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, CancellationToken ct = default)
         {
             return AreaGet(areaId, QueryOptions.Default, ct);
         }
         /// <summary>
         /// AreaGet returns a single network area
         /// </summary>
-        public Task<QueryResult<Area>> AreaGet(string areaId, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<Area>($"/v1/operator/area/{areaId}", q).Execute(ct);
+            return _client.Get<Area[]>($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
     }
 

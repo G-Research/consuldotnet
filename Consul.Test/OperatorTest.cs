@@ -151,7 +151,7 @@ namespace Consul.Test
             var areaId = createResult.Response;
 
             var req = await _client.Operator.AreaGet(areaId);
-            var result = req.Response;
+            var result = req.Response.Single(x => x.ID == areaId);
 
             Assert.Equal(areaId, result.ID);
             Assert.Equal(area.UseTLS, result.UseTLS);
