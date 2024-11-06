@@ -171,8 +171,7 @@ namespace Consul.Test
 
             var req = await _client.Operator.AreaGet(areaId);
 
-            Assert.Null(req);
-
+            Assert.Null(req.Response);
         }
     }
 }
