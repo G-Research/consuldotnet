@@ -170,7 +170,7 @@ namespace Consul.Test
             await _client.Operator.AreaDelete(areaId);
 
             var req = await _client.Operator.AreaGet(areaId);
-            var result = req.Response.SingleOrDefault(x => x.ID == areaId);
+            var result = req.Response.FirstOrDefault(x => x.ID == areaId);
 
             Assert.Null(result);
 
