@@ -158,5 +158,20 @@ namespace Consul.Test
             Assert.Equal(area.RetryJoin, result.RetryJoin);
             Assert.Equal(area.PeerDatacenter, result.PeerDatacenter);
         }
+
+        [EnterpriseOnlyFact]
+        public async Task Operetor_AreaDelete()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.7", "10.1.2.0" } };
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
+
+            await _client.Operator.AreaDelete(areaId);
+
+            var req = await _client.Operator.AreaGet(areaId);
+
+            Assert.Null(req.Response);
+        }
     }
 }

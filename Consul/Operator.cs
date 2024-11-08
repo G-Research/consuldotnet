@@ -341,6 +341,20 @@ namespace Consul
         {
             return _client.Get<Area[]>($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, CancellationToken ct = default)
+        {
+            return AreaDelete(areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
+        }
     }
 
     public class ConsulLicense
