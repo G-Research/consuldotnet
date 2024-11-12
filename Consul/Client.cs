@@ -175,7 +175,7 @@ namespace Consul
                     consulAddress.Host = uri.Host;
                 }
 
-                consulAddress.Port = uri.Port;
+                consulAddress.Port = uri.IsDefaultPort ? 8500 : uri.Port;
                 consulAddress.Path = uri.AbsolutePath;
             }
 
