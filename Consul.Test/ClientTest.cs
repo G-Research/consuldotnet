@@ -36,6 +36,10 @@ namespace Consul.Test
         [InlineData("1.2.3.4:5678", "https://1.2.3.4:5678/")]
         [InlineData("1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
         [InlineData("http://1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("127.0.0.1", "http://127.0.0.1:8500")]
+        [InlineData("http://127.0.0.1/", "http://127.0.0.1:8500")]
+        [InlineData("http://127.0.0.1:8500/", "http://127.0.0.1:8500")]
+        [InlineData("http://127.0.0.1:80/", "http://127.0.0.1:80")]
         public void Client_DefaultConfig_env(string addr, string expected)
         {
             const string token = "abcd1234";
@@ -319,22 +323,6 @@ namespace Consul.Test
                 Assert.NotNull(c.HttpHandler.Proxy);
             }
 #endif
-        }
-
-        [Theory]
-        [InlineData("127.0.0.1", "127.0.0.1", 8500)]
-        [InlineData("http://127.0.0.1/", "127.0.0.1", 8500)]
-        [InlineData("http://127.0.0.1:8500/", "127.0.0.1", 8500)]
-        [InlineData("http://127.0.0.1:80/", "127.0.0.1", 80)]
-        public void ConsulClient_Parses_ConsulHttpAddr_Correctly(string consulHttpAddr, string expectedHost, int expectedPort)
-        {
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", consulHttpAddr);
-
-            var client = new ConsulClient();
-            var config = client.Config;
-
-            Assert.Equal(expectedHost, config.Address.Host);
-            Assert.Equal(expectedPort, config.Address.Port);
         }
     }
 }
