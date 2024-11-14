@@ -174,8 +174,14 @@ namespace Consul
                 {
                     consulAddress.Host = uri.Host;
                 }
-
-                consulAddress.Port = uri.IsDefaultPort ? 8500 : uri.Port;
+                if (envAddr.Contains($"{uri.Host}:{uri.Port}"))
+                {
+                    consulAddress.Port = uri.Port;
+                }
+                else
+                {
+                    consulAddress.Port = 8500;
+                }
                 consulAddress.Path = uri.AbsolutePath;
             }
 

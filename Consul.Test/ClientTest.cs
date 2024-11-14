@@ -320,5 +320,21 @@ namespace Consul.Test
             }
 #endif
         }
+
+        [Theory]
+        [InlineData("127.0.0.1", "127.0.0.1", 8500)]
+        [InlineData("http://127.0.0.1/", "127.0.0.1", 8500)]
+        [InlineData("http://127.0.0.1:8500/", "127.0.0.1", 8500)]
+        [InlineData("http://127.0.0.1:80/", "127.0.0.1", 80)]
+        public void ConsulClient_Parses_ConsulHttpAddr_Correctly(string consulHttpAddr, string expectedHost, int expectedPort)
+        {
+            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", consulHttpAddr);
+
+            var client = new ConsulClient();
+            var config = client.Config;
+
+            Assert.Equal(expectedHost, config.Address.Host);
+            Assert.Equal(expectedPort, config.Address.Port);
+        }
     }
 }
