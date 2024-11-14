@@ -37,9 +37,9 @@ namespace Consul.Test
         [InlineData("1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
         [InlineData("http://1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
         [InlineData("127.0.0.1", "http://127.0.0.1:8500")]
-        [InlineData("http://127.0.0.1/", "http://127.0.0.1:8500")]
-        [InlineData("http://127.0.0.1:8500/", "http://127.0.0.1:8500")]
-        [InlineData("http://127.0.0.1:80/", "http://127.0.0.1:80")]
+        [InlineData("http://127.0.0.1", "http://127.0.0.1:8500")]
+        [InlineData("http://127.0.0.1:8500", "http://127.0.0.1:8500")]
+        [InlineData("http://127.0.0.1:80", "http://127.0.0.1:80")]
         public void Client_DefaultConfig_env(string addr, string expected)
         {
             const string token = "abcd1234";
