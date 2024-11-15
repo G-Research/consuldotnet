@@ -85,6 +85,11 @@ jobs:
           URL: ${{ env.URL }}
           BASE_URL: ${{ env.BASE_URL }}
 
+      - name: Add build identifier
+        run: echo "${{ github.sha }}" > build/.build
+        working-directory: ./docs
+        if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
@@ -105,3 +110,45 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Check Algolia secrets availability
+        run: |
+          if [ -n "${{ secrets.ALGOLIA_APP_ID }}" ] && [ -n "${{ secrets.ALGOLIA_API_KEY }}" ] && [ -n "${{ secrets.CRAWLER_USER_ID }}" ] && [ -n "${{ secrets.CRAWLER_API_KEY }}" ]; then
+            echo "ALGOLIA_SECRETS=true" >> $GITHUB_ENV
+          else
+            echo "ALGOLIA_SECRETS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Wait for new version to be published
+        id: wait-for-new-version
+        if: ${{ env.ALGOLIA_SECRETS == 'true' }}
+        continue-on-error: true # Allows this step to fail without failing the job
+        run: |
+          max_retries=5
+          new_version="${{ github.sha }}"
+          for i in $(seq 1 $max_retries); do
+            published_version=$(curl -s -f ${{ steps.deployment.outputs.page_url }}.build)
+            if [ "$published_version" == "$new_version" ]; then
+              echo "New version published!"
+              exit 0
+            else
+              sleep_time=$((2**$i)) # exponential backoff
+              echo "Waiting for new version to be published for $sleep_time seconds ..."
+              sleep $sleep_time
+            fi
+          done
+          echo "New version not published after $max_retries attempts!"
+          exit 1
+
+      - name: Trigger Algolia DocSearch Crawler
+        uses: algolia/algoliasearch-crawler-github-actions@v1
+        if: ${{ steps.wait-for-new-version.outcome == 'success' }} # Only if the new version was successfully published
+        continue-on-error: true # Allows this step to fail without failing the job
+        with:
+          algolia-app-id: ${{ secrets.ALGOLIA_APP_ID }} # required
+          algolia-api-key: ${{ secrets.ALGOLIA_API_KEY }} # required
+          crawler-user-id: ${{ secrets.CRAWLER_USER_ID }} # required
+          crawler-api-key: ${{ secrets.CRAWLER_API_KEY }} # required
+          crawler-name: consuldot
+          override-config: false
+          site-url: 'https://consuldot.net'
