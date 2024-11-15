@@ -123,5 +123,55 @@ namespace Consul.Test
             Assert.Equal(area.UseTLS, result.UseTLS);
             Assert.Equal(area.RetryJoin, result.RetryJoin);
         }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaUpdate()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = false, RetryJoin = null };
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
+
+            area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.9", "10.1.2.0" } };
+            var updateResult = await _client.Operator.AreaUpdate(area, areaId);
+
+            var listResult = await _client.Operator.AreaList();
+            var updatedArea = listResult.Response.Single(x => x.ID == areaId);
+
+            Assert.Equal(areaId, updateResult.Response);
+            Assert.Equal(area.UseTLS, updatedArea.UseTLS);
+            Assert.Equal(area.RetryJoin, updatedArea.RetryJoin);
+            Assert.Equal(area.PeerDatacenter, updatedArea.PeerDatacenter);
+        }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaGet()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.7", "10.1.2.0" } };
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
+
+            var req = await _client.Operator.AreaGet(areaId);
+            var result = req.Response.Single(x => x.ID == areaId);
+
+            Assert.Equal(areaId, result.ID);
+            Assert.Equal(area.UseTLS, result.UseTLS);
+            Assert.Equal(area.RetryJoin, result.RetryJoin);
+            Assert.Equal(area.PeerDatacenter, result.PeerDatacenter);
+        }
+
+        [EnterpriseOnlyFact]
+        public async Task Operetor_AreaDelete()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.2.7", "10.1.2.0" } };
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
+
+            await _client.Operator.AreaDelete(areaId);
+
+            var req = await _client.Operator.AreaGet(areaId);
+
+            Assert.Null(req.Response);
+        }
     }
 }

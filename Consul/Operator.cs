@@ -312,6 +312,49 @@ namespace Consul
         {
             return _client.Get<List<Area>>("/v1/operator/area", q).Execute(ct);
         }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, CancellationToken ct = default)
+        {
+            return AreaUpdate(area, areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public async Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = await _client.Put<AreaRequest, Area>($"/v1/operator/area/{areaId}", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(req, req.Response.ID);
+        }
+        /// <summary>
+        /// AreaGet returns a single network area
+        /// </summary>
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, CancellationToken ct = default)
+        {
+            return AreaGet(areaId, QueryOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaGet returns a single network area
+        /// </summary>
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<Area[]>($"/v1/operator/area/{areaId}", q).Execute(ct);
+        }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, CancellationToken ct = default)
+        {
+            return AreaDelete(areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
+        }
     }
 
     public class ConsulLicense
