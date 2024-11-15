@@ -178,10 +178,6 @@ namespace Consul
                 {
                     consulAddress.Port = uri.Port;
                 }
-                else
-                {
-                    consulAddress.Port = 8500;
-                }
                 consulAddress.Path = uri.AbsolutePath;
             }
 
