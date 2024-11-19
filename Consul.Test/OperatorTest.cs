@@ -173,5 +173,18 @@ namespace Consul.Test
 
             Assert.Null(req.Response);
         }
+        [EnterpriseOnlyFact]
+        public async Task Operator_AreaJoin()
+        {
+            var peerDataCenter = KVTest.GenerateTestKeyName();
+            var area = new AreaRequest { PeerDatacenter = peerDataCenter, UseTLS = true, RetryJoin = new string[] { "10.1.3.7", "10.1.3.0" } };
+            var createResult = await _client.Operator.AreaCreate(area);
+            var areaId = createResult.Response;
+
+            var joinReq = await _client.Operator.AreaJoin(areaId, new List<string> { "10.1.2.3", "10.1.2.4", "10.1.2.5" });
+            var joinResult = joinReq.Response.Single(x => x.Address == "10.1.2.3");
+
+            Assert.Null(joinResult);
+        }
     }
 }

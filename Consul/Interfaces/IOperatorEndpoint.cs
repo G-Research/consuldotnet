@@ -55,5 +55,8 @@ namespace Consul
         Task<QueryResult<Area[]>> AreaGet(string areaId, QueryOptions q, CancellationToken cancellationToken = default);
         Task<WriteResult> AreaDelete(string areaId, CancellationToken cancellationToken = default);
         Task<WriteResult> AreaDelete(string areaId, WriteOptions q, CancellationToken cancellationToken = default);
+        Task<WriteResult<List<AreaJoinResponse>>> AreaJoin(string areaId, List<string> addresses, CancellationToken ct = default);
+        Task<WriteResult<List<AreaJoinResponse>>> AreaJoin(string areaId, List<string> addresses, WriteOptions q, CancellationToken ct = default);
+
     }
 }
