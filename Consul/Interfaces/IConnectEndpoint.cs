@@ -19,10 +19,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Consul.Interfaces
 {
     public interface IConnectEndpoint
     {
+        Task<QueryResult<CARootList>> CARoots(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CARootList>> CARoots(CancellationToken ct = default);
     }
 }
