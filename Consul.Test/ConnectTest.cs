@@ -21,10 +21,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Consul.Test
 {
     public class ConnectTest : BaseFixture
     {
+        [Fact]
+        public async Task Connect_CARoots()
+        {
+            var req = await _client.Connect.CARoots();
+            var result = req.Response;
+            Assert.Equal("11111111-2222-3333-4444-555555555555.consul", result.TrustDomain);
+        }
     }
 }
