@@ -476,6 +476,7 @@ namespace Consul
             _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
             _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
             _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
+            _connect = new Lazy<Connect>(() => new Connect(this));
         }
 
         #region IDisposable Support
