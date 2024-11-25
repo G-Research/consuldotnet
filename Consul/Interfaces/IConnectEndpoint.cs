@@ -26,7 +26,7 @@ namespace Consul.Interfaces
 {
     public interface IConnectEndpoint
     {
-        Task<QueryResult<CARootList>> CARoots(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CARootList>> CARoots(CancellationToken ct = default);
+        Task<QueryResult<CARoots>> CARoots(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CARoots>> CARoots(CancellationToken ct = default);
     }
 }

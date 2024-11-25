@@ -26,38 +26,6 @@ using Consul.Interfaces;
 
 namespace Consul
 {
-    public class CARootList
-    {
-        public string ActiveRootID { get; set; }
-        public string TrustDomain { get; set; }
-        public List<CARoot> Roots { get; set; }
-    }
-    public class CARoot
-    {
-        /// <summary>
-        /// ID is a globally unique ID (UUID) representing this CA root.
-        /// </summary>
-        public string ID { get; set; }
-        /// <summary>
-        /// Name is a human-friendly name for this CA root.
-        /// This value is opaque to Consul and is not used for anything internally.
-        /// </summary>
-        public string Name { get; set; }
-        /// <summary>
-        /// RootCertPEM is the PEM-encoded public certificate.
-        /// </summary>
-        public string RootCertPEM { get; set; }
-        /// <summary>
-        /// Active is true if this is the current active CA. This must only
-        /// be true for exactly one CA. For any method that modifies roots in the
-        /// state store, tests should be written to verify that multiple roots
-        /// cannot be active.
-        /// </summary>
-        public bool Active { get; set; }
-        public ulong CreateIndex { get; set; }
-        public ulong ModifyIndex { get; set; }
-    }
-
     public class Connect : IConnectEndpoint
     {
         private readonly ConsulClient _client;
@@ -69,18 +37,17 @@ namespace Consul
         /// <summary>
         /// CARoots queries the list of available roots.
         /// </summary>
-        public Task<QueryResult<CARootList>> CARoots(CancellationToken ct = default)
+        public Task<QueryResult<CARoots>> CARoots(CancellationToken ct = default)
         {
             return CARoots(QueryOptions.Default, ct);
         }
         /// <summary>
         /// CARoots queries the list of available roots.
         /// </summary>
-        public Task<QueryResult<CARootList>> CARoots(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<CARoots>> CARoots(QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<CARootList>("/v1/connect/ca/roots", q).Execute(ct);
+            return _client.Get<CARoots>("/v1/connect/ca/roots", q).Execute(ct);
         }
-
     }
 
     public partial class ConsulClient : IConsulClient

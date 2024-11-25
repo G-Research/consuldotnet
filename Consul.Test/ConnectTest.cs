@@ -32,7 +32,14 @@ namespace Consul.Test
         {
             var req = await _client.Connect.CARoots();
             var result = req.Response;
+            var root = result.Roots.First();
             Assert.Equal("11111111-2222-3333-4444-555555555555.consul", result.TrustDomain);
+            Assert.NotEmpty(result.Roots);
+            Assert.NotEmpty(result.ActiveRootID);
+            Assert.NotEmpty(root.RootCert);
+            Assert.NotEmpty(root.Name);
+            Assert.NotNull(root.RootCert);
+            Assert.NotNull(root.SigningKeyID);
         }
     }
 }
