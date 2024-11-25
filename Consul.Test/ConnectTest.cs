@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace Consul.Test
 {
-    public class ConnectTest: BaseFixture
+    public class ConnectTest : BaseFixture
     {
     }
 }
