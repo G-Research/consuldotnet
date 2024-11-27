@@ -43,7 +43,7 @@ namespace Consul.Test
         [InlineData("http://my.consul.com:5678", "", "http://my.consul.com:5678/")]
         [InlineData("my.consul.com", "", "http://my.consul.com:8500/")]
 
-        [InlineData("https://127.0.0.1:80", "", "https://127.0.0.1/")]
+        [InlineData("https://127.0.0.1:80", "", "https://127.0.0.1:80/")]
         [InlineData("https://my.consul.com:5678", "", "https://my.consul.com:5678/")]
 
         [InlineData("1.2.3.4:5678", "1", "https://1.2.3.4:5678/")]

@@ -177,6 +177,7 @@ namespace Consul
                     consulAddress.Port = uri.Port;
                 }
                 consulAddress.Path = uri.AbsolutePath;
+                consulAddress.Scheme = uri.Scheme;
             }
 
             var useSsl = (Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL") ?? string.Empty).Trim().ToLowerInvariant();
