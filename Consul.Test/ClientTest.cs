@@ -33,14 +33,30 @@ namespace Consul.Test
     public class ClientTest : BaseFixture
     {
         [Theory]
-        [InlineData("1.2.3.4:5678", "https://1.2.3.4:5678/")]
-        [InlineData("1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
-        [InlineData("http://1.2.3.4:5678/sub-path", "https://1.2.3.4:5678/sub-path")]
-        [InlineData("127.0.0.1", "https://127.0.0.1:8500/")]
-        [InlineData("http://127.0.0.1", "https://127.0.0.1:8500/")]
-        [InlineData("http://127.0.0.1:8500", "https://127.0.0.1:8500/")]
-        [InlineData("http://127.0.0.1:80", "https://127.0.0.1:80/")]
-        public void Client_DefaultConfig_env(string addr, string expected)
+        [InlineData("1.2.3.4:5678", "", "http://1.2.3.4:5678/")]
+        [InlineData("http://1.2.3.4:5678/sub-path", "", "http://1.2.3.4:5678/sub-path")]
+        [InlineData("127.0.0.1", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:8500", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:80", "", "http://127.0.0.1/")]
+        [InlineData("my.consul.com:5678", "", "http://my.consul.com:5678/")]
+        [InlineData("http://my.consul.com:5678", "", "http://my.consul.com:5678/")]
+        [InlineData("my.consul.com", "", "http://my.consul.com:8500/")]
+
+        [InlineData("https://127.0.0.1:80", "", "https://127.0.0.1/")]
+        [InlineData("https://my.consul.com:5678", "", "https://my.consul.com:5678/")]
+
+        [InlineData("1.2.3.4:5678", "1", "https://1.2.3.4:5678/")]
+        [InlineData("1.2.3.4:5678/sub-path", "1", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("http://1.2.3.4:5678/sub-path", "1", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("127.0.0.1", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:8500", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:80", "1", "https://127.0.0.1:80/")]
+        [InlineData("my.consul.com:5678", "1", "https://my.consul.com:5678/")]
+        [InlineData("http://my.consul.com:5678", "1", "https://my.consul.com:5678/")]
+        [InlineData("my.consul.com", "1", "https://my.consul.com:8500/")]
+        public void Client_DefaultConfig_env(string addr, string ssl, string expected)
         {
             const string token = "abcd1234";
             const string auth = "username:password";
@@ -56,7 +72,7 @@ namespace Consul.Test
                 Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
                 Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
                 Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
-                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", "1");
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", ssl);
                 Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
 
                 var client = new ConsulClient();
@@ -68,8 +84,6 @@ namespace Consul.Test
                 Assert.NotNull(config.HttpAuth);
                 Assert.Equal("username", config.HttpAuth.UserName);
                 Assert.Equal("password", config.HttpAuth.Password);
-#pragma warning restore CS0618 // Type or member is obsolete
-                Assert.Equal("https", config.Address.Scheme);
 
 #if !(NETSTANDARD || NETCOREAPP)
                 Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
