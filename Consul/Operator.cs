@@ -122,6 +122,21 @@ namespace Consul
         /// </summary>
         public bool UseTLS { get; set; }
     }
+    public class AreaJoinResponse
+    {
+        /// <summary>
+        /// The address that was joined.
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// Whether or not the join was a success.
+        /// </summary>
+        public bool Joined { get; set; }
+        /// <summary>
+        /// If we couldn't join, this is the message with information.
+        /// </summary>
+        public string Error { get; set; }
+    }
 
     public class Area : AreaRequest
     {
@@ -354,6 +369,22 @@ namespace Consul
         public Task<WriteResult> AreaDelete(string areaId, WriteOptions q, CancellationToken ct = default)
         {
             return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
+        }
+        /// <summary>
+        /// AreaJoin attempts to join the given set of join addresses to the given
+        /// network area. See the Area structure for details about join addresses.
+        /// </summary>
+        public Task<WriteResult<List<AreaJoinResponse>>> AreaJoin(string areaId, List<string> addresses, CancellationToken ct = default)
+        {
+            return AreaJoin(areaId, addresses, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaJoin attempts to join the given set of join addresses to the given
+        /// network area. See the Area structure for details about join addresses.
+        /// </summary>
+        public Task<WriteResult<List<AreaJoinResponse>>> AreaJoin(string areaId, List<string> addresses, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Put<List<string>, List<AreaJoinResponse>>($"/v1/operator/area/{areaId}/join", addresses, q).Execute(ct);
         }
     }
 
