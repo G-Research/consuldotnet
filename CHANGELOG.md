@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.7.14.6
+* Fix parsing a string based host name (#401)
+* Add support for connect List CA Roots (#400)
+
 ## 1.7.14.5
 * Restore default port 8500 for CONSUL_HTTP_ADDR (#395)
 * Add support for deleting Network Area (#393)
