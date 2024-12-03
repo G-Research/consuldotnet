@@ -47,7 +47,7 @@ namespace Consul.Test
         {
             var req = await _client.Connect.CAGetConfig();
             var result = req.Response;
-    
+
             Assert.Equal("consul", result.Provider);
         }
     }
