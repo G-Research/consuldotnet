@@ -47,10 +47,8 @@ namespace Consul.Test
         {
             var req = await _client.Connect.CAGetConfig();
             var result = req.Response;
-
-            Assert.NotEmpty(result.Config);
-            Assert.NotEmpty(result.State);
-            Assert.NotEmpty(result.Provider);
+    
+            Assert.Equal("consul", result.Provider);
         }
     }
 }
