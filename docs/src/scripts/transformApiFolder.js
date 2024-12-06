@@ -23,15 +23,16 @@ function loadYamlFile(filePath) {
 
 
 /**
- * Singularize a word.
+ * Singularize a section.
  * @param {string} word - The word to singularize.
  */
 function singularizeWord(word) {
     const mapping = {
-        "Classes": "Class",
-        "Interfaces": "Interface",
-        "Enums": "Enum",
         "Namespaces": "Namespace",
+        "Classes": "Class",
+        "Enums": "Enum",
+        "Interfaces": "Interface",
+        "Structs": "Struct",
     }
     return mapping[word] || word.slice(0, -1);
 }
@@ -42,11 +43,12 @@ function singularizeWord(word) {
  * @param tocContent - The table of content.
  */
 function buildNavigation(tocContent) {
-    const navigation = {}; // [href]: {href, title, sidebar_position}
+    const navigation = {}; // [oldHref]: {href, title, sidebar_position}
     let parentIndex = 0;
     const parentSection = `Namespaces`;
     const parentPrefix = `${singularizeWord(parentSection)} `;
 
+    // iterate over root items (namespaces)
     for (const rootItem of tocContent) {
         if (!rootItem.href) {
             console.warn(`Root item ${rootItem.name} has no href.`);
@@ -122,10 +124,15 @@ function updateFileContent(file, content, navigation) {
  * Extract title from the content of a file.
  * @param {string} content - The content of the file.
  */
-function extractTitle(content) {
-    const firstLine = content.split('\n')[0];
-    const parts = firstLine.split('</a> ')
-    return parts[parts.length - 1].replaceAll("\\", "").trim();
+function extractTitleFromContent(content) {
+    const lines = content.split('\n');
+    if (!lines?.length) return '';
+    const firstLine = lines[0];
+    const firstLineParts = firstLine.split('</a> ');
+    if (!firstLineParts?.length) return '';
+    return firstLineParts[firstLineParts.length - 1]
+        .replaceAll("\\", "")
+        .trim();
 }
 
 
@@ -152,7 +159,7 @@ function transformApiReferenceFolder(relativePath) {
     // load table of content
     const tocContent = loadYamlFile(tocPath);
     console.log('Table of content:');
-    console.log(tocContent);
+    console.log(JSON.stringify(tocContent, null, 2));
 
     // remove toc.yml file
     fs.unlinkSync(tocPath);
@@ -178,7 +185,7 @@ function transformApiReferenceFolder(relativePath) {
 
             // Update content
             const updatedContent = updateFileContent(file, fs.readFileSync(filePath, 'utf-8'), navigation);
-            const frontMatter = `---\ntitle: "${extractTitle(updatedContent)}"\nsidebar_position: ${fileNavigation.sidebar_position}\n---\n\n`;
+            const frontMatter = `---\ntitle: "${extractTitleFromContent(updatedContent)}"\nsidebar_position: ${fileNavigation.sidebar_position}\n---\n\n`;
 
             // Prepare new file
             const newPath = path.join(folderPath, fileNavigation.href);
