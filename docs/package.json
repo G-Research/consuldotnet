@@ -13,6 +13,10 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
+    "generate-api-folder": "docfx metadata docfx.json",
+    "transform-api-folder": "node src/scripts/transformApiFolder.js --path=api",
+    "api:generate": "yarn generate-api-folder && yarn transform-api-folder",
+    "api:clean": "rimraf api",
     "typecheck": "tsc"
   },
   "dependencies": {
