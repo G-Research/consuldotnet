@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'docs/**'
+      - 'Consul/**'
   pull_request:
     paths:
       - 'docs/**'
@@ -75,6 +76,16 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: ./docs
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - name: Restore tool
+        run: dotnet tool restore
+
+      - name: Generate API reference using DocFX
+        run: yarn run api:generate
         working-directory: ./docs
 
       - name: Build
