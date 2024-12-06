@@ -100,21 +100,26 @@ function buildNavigation(tocContent) {
 function updateFileContent(file, content, navigation) {
     let updatedContent = content;
     const fileNavigation = navigation[file];
+    const linkRegex = /(?<previous>.)?\[(?<text>[^\]]+)]\((?<url>(?:\\\)|[^)])+)\)(?<next>.)?/g;
 
-    // fix broken links
-    updatedContent = updatedContent.replaceAll("\\-", "-");
-
-    // Replace hrefs
-    for (const [key, value] of Object.entries(navigation)) {
-        const oldString = key;
-        const newString = '../'.repeat(fileNavigation.href_levels - 1) + value.href;
-        updatedContent = updatedContent.replaceAll(oldString, newString);
-    }
-
-    // fix links when wrapped on <>
-    updatedContent = updatedContent.replaceAll(")<", ") <");
-    updatedContent = updatedContent.replaceAll(")\\", ") \\");
-    updatedContent = updatedContent.replaceAll(")?", ") ?");
+    // fix broken links and special characters escaping in links
+    updatedContent = updatedContent.replace(linkRegex, (match, previous, text, url, next) => {
+        const newText = text; // keep original text (special chars escaped)
+        let newUrl = url.replaceAll(/\\(?<escaped>[^)(])/g, '$<escaped>'); // escape parentheses only in url
+        let fragment = '';
+        const newUrlParts = newUrl.split('#');
+        if (newUrlParts.length > 1) {
+            newUrl = newUrlParts[0];
+            fragment = `#${newUrlParts[1]}`;
+        }
+        if (newUrl in navigation) {
+            const linkNavigation = navigation[newUrl];
+            newUrl = '../'.repeat(fileNavigation.href_levels - 1) + linkNavigation.href;
+        }
+        const newPrevious = previous?.trim()? `${previous} ` : (previous || '');
+        const newNext = next?.trim()? ` ${next}` : (next || '');
+        return `${newPrevious}[${newText}](${newUrl}${fragment})${newNext}`;
+    });
 
     return updatedContent;
 }
