@@ -190,7 +190,7 @@ function transformApiReferenceFolder(relativePath) {
 
             // Update content
             const updatedContent = updateFileContent(file, fs.readFileSync(filePath, 'utf-8'), navigation);
-            const frontMatter = `---\ntitle: "${extractTitleFromContent(updatedContent)}"\nsidebar_position: ${fileNavigation.sidebar_position}\n---\n\n`;
+            const frontMatter = `---\ntitle: "${extractTitleFromContent(updatedContent) || fileNavigation.title}"\nsidebar_position: ${fileNavigation.sidebar_position}\n---\n\n`;
 
             // Prepare new file
             const newPath = path.join(folderPath, fileNavigation.href);
