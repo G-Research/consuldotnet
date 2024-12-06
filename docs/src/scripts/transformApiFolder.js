@@ -99,15 +99,20 @@ function updateFileContent(file, content, navigation) {
     let updatedContent = content;
     const fileNavigation = navigation[file];
 
+    // fix broken links
+    updatedContent = updatedContent.replaceAll("\\-", "-");
+
     // Replace hrefs
     for (const [key, value] of Object.entries(navigation)) {
-        const oldString = key.replace("-", "\\-");
+        const oldString = key;
         const newString = '../'.repeat(fileNavigation.href_levels - 1) + value.href;
         updatedContent = updatedContent.replaceAll(oldString, newString);
     }
 
     // fix links when wrapped on <>
-    updatedContent = updatedContent.replaceAll(")\\>", ") >");
+    updatedContent = updatedContent.replaceAll(")<", ") <");
+    updatedContent = updatedContent.replaceAll(")\\", ") \\");
+    updatedContent = updatedContent.replaceAll(")?", ") ?");
 
     return updatedContent;
 }
