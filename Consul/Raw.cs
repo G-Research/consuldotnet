@@ -35,6 +35,7 @@ namespace Consul
             _client = c;
         }
 
+
         /// <summary>
         /// Query is used to do a GET request against an endpoint and deserialize the response into an interface using standard Consul conventions.
         /// </summary>
