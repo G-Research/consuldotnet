@@ -1,6 +1,7 @@
 name: Format
-
 on:
+
+  # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
   pull_request_target:
     paths:
       - '**.editorconfig'
@@ -16,6 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - name: Install the dotnet-format
+        # Installing the tool globally to avoid any interference from potentially malicious code checked out in the next step
+        run: dotnet tool install dotnet-format -g --version 5.1.250801
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -23,21 +32,8 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
 
-      - name: Cache .NET tools
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: dotnet-tools-${{ runner.os }}-${{ hashFiles('.config/dotnet-tools.json') }}
-          restore-keys: dotnet-tools-${{ runner.os }}-
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-
-      - name: Restore tools
-        run: dotnet tool restore
-
-      - name: Format scripts
-        run: dotnet tool run dotnet-format --fix-whitespace --no-restore
+       - name: Format scripts
+        run: dotnet-format --fix-whitespace --no-restore
 
       - name: Set Git config
         run: |
