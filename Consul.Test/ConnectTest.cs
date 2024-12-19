@@ -49,6 +49,10 @@ namespace Consul.Test
             var result = req.Response;
 
             Assert.Equal("consul", result.Provider);
+            Assert.NotEmpty(result.Config);
+            Assert.False(result.ForceWithoutCrossSigning);
+            Assert.Equal((ulong)8, result.CreateIndex);
+            Assert.Equal((ulong)12, result.ModifyIndex);
         }
     }
 }
