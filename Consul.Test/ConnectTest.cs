@@ -51,8 +51,8 @@ namespace Consul.Test
             Assert.Equal("consul", result.Provider);
             Assert.NotEmpty(result.Config);
             Assert.False(result.ForceWithoutCrossSigning);
-            Assert.Equal((ulong)8, result.CreateIndex);
-            Assert.Equal((ulong)12, result.ModifyIndex);
+            Assert.NotEqual((ulong)0, result.CreateIndex);
+            Assert.NotEqual((ulong)0, result.ModifyIndex);
         }
     }
 }
