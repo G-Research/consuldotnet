@@ -43,7 +43,7 @@ namespace Consul.Test
         }
 
         [Fact]
-        public async Task Connent_GetCAConfigurationTest()
+        public async Task Connect_GetCAConfigurationTest()
         {
             var req = await _client.Connect.CAGetConfig();
             var result = req.Response;
