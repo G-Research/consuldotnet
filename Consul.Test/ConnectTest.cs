@@ -41,5 +41,18 @@ namespace Consul.Test
             Assert.NotNull(root.RootCert);
             Assert.NotNull(root.SigningKeyID);
         }
+
+        [Fact]
+        public async Task Connect_GetCAConfigurationTest()
+        {
+            var req = await _client.Connect.CAGetConfig();
+            var result = req.Response;
+
+            Assert.Equal("consul", result.Provider);
+            Assert.NotEmpty(result.Config);
+            Assert.False(result.ForceWithoutCrossSigning);
+            Assert.NotEqual((ulong)0, result.CreateIndex);
+            Assert.NotEqual((ulong)0, result.ModifyIndex);
+        }
     }
 }

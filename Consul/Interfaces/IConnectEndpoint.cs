@@ -28,5 +28,7 @@ namespace Consul.Interfaces
     {
         Task<QueryResult<CARoots>> CARoots(QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<CARoots>> CARoots(CancellationToken ct = default);
+        Task<QueryResult<CAConfig>> CAGetConfig(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct = default);
     }
 }
