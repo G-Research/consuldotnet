@@ -54,5 +54,23 @@ namespace Consul.Test
             Assert.NotEqual((ulong)0, result.CreateIndex);
             Assert.NotEqual((ulong)0, result.ModifyIndex);
         }
+
+        [Fact]
+        public async Task Connect_CASetConfig()
+        {
+            var req = await _client.Connect.CAGetConfig();
+            var config = req.Response;
+
+            config.Config["test_state"] = new Dictionary<string, string> { { "foo", "bar" } };
+            config.Config["PrivateKey"] = "";
+
+            await _client.Connect.CASetConfig(config);
+            req = await _client.Connect.CAGetConfig();
+            var updatedConfig = req.Response;
+
+            Assert.Equal("consul", updatedConfig.Provider);
+            Assert.Equal("bar", updatedConfig.State["foo"]);
+            Assert.Equal("", updatedConfig.Config["PrivateKey"]);
+        }
     }
 }

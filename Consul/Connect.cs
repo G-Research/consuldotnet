@@ -90,6 +90,23 @@ namespace Consul
         {
             return _client.Get<CAConfig>("/v1/connect/ca/configuration", q).Execute(ct);
         }
+
+        /// <summary>
+        /// CASetConfig sets the current CA configuration.
+        /// </summary>
+        public Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default)
+        {
+            return CASetConfig(config, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// CASetConfig sets the current CA configuration.
+        /// </summary>
+        public  Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default)
+        {
+            return  _client.Put("/v1/connect/ca/configuration", config, q).Execute(ct);
+            
+        }
     }
 
     public partial class ConsulClient : IConsulClient
