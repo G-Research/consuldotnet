@@ -102,10 +102,10 @@ namespace Consul
         /// <summary>
         /// CASetConfig sets the current CA configuration.
         /// </summary>
-        public  Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default)
         {
-            return  _client.Put("/v1/connect/ca/configuration", config, q).Execute(ct);
-            
+            return _client.Put("/v1/connect/ca/configuration", config, q).Execute(ct);
+
         }
     }
 

@@ -31,6 +31,6 @@ namespace Consul.Interfaces
         Task<QueryResult<CAConfig>> CAGetConfig(QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct = default);
         Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default); 
+        Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default);
     }
 }
