@@ -23,6 +23,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using Consul.Filtering;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -61,6 +62,11 @@ namespace Consul
                 OnUpdated(new EventArgs());
             }
         }
+
+        /// <summary>
+        /// Allows to configure the serialization settings for a Consul client.
+        /// </summary>
+        public Action<JsonSerializerSettings> ConfigureSerializerSettings { get; set; }
 
         /// <summary>
         /// The Uri to connect to the Consul agent.

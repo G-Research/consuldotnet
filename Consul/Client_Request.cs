@@ -57,7 +57,7 @@ namespace Consul
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
 
-        internal readonly JsonSerializer _serializer = new JsonSerializer();
+        internal readonly JsonSerializer _serializer;
 
         internal ConsulRequest(ConsulClient client, string url, HttpMethod method)
         {
@@ -77,6 +77,17 @@ namespace Consul
             if (!string.IsNullOrEmpty(client.Config.Namespace))
             {
                 Params["ns"] = client.Config.Namespace;
+            }
+
+            if (client.Config.ConfigureSerializerSettings == null)
+            {
+                _serializer = new JsonSerializer();
+            }
+            else
+            {
+                var settings = new JsonSerializerSettings();
+                client.Config.ConfigureSerializerSettings(settings);
+                _serializer = JsonSerializer.Create(settings);
             }
         }
 
