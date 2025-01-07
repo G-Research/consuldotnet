@@ -164,19 +164,20 @@ namespace Consul
             var envAddr = (Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR") ?? string.Empty).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(envAddr))
             {
-                if (!Uri.TryCreate(envAddr, UriKind.Absolute, out Uri uri))
+                if (!Uri.TryCreate(envAddr, UriKind.Absolute, out Uri uri) ||
+                    string.IsNullOrEmpty(uri.Host))
                 {
-                    // If the URI cannot be parsed it probably lacks the schema, use http as a default
-                    uri = new Uri($"http://{envAddr}");
+                    uri = new Uri($"http://{envAddr}", UriKind.Absolute);
                 }
 
-                if (!string.IsNullOrEmpty(uri.Host))
-                {
-                    consulAddress.Host = uri.Host;
-                }
+                consulAddress.Host = uri.Host;
 
-                consulAddress.Port = uri.Port;
+                if (envAddr.Contains($"{uri.Host}:{uri.Port}"))
+                {
+                    consulAddress.Port = uri.Port;
+                }
                 consulAddress.Path = uri.AbsolutePath;
+                consulAddress.Scheme = uri.Scheme;
             }
 
             var useSsl = (Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL") ?? string.Empty).Trim().ToLowerInvariant();
@@ -474,6 +475,7 @@ namespace Consul
             _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
             _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
             _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
+            _connect = new Lazy<Connect>(() => new Connect(this));
         }
 
         #region IDisposable Support

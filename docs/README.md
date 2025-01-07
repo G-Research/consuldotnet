@@ -20,6 +20,28 @@ yarn start
 This command starts a local development server and opens up a browser window. Most changes are reflected live without
 having to restart the server.
 
+### Generating the "API Reference" section
+
+You can generate an API Reference section automatically based on the source code
+using [DocFX](https://dotnet.github.io/docfx/) by running the following commands:
+
+```shell
+# restore the DocFX tool
+dotnet tool restore
+
+# generate markdown files using DocFX
+yarn run generate-api-folder
+
+# transform the generated markdown files
+yarn run transform-api-folder
+
+# or using one command that does both
+yarn run api:generate
+
+# to clean the generated files
+yarn run api:clean
+```
+
 ## Build
 
 ```shell

@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 1.7.14.6
+* Fix parsing a string based host name (#401)
+* Add support for connect List CA Roots (#400)
+
+## 1.7.14.5
+* Restore default port 8500 for CONSUL_HTTP_ADDR (#395)
+* Add support for deleting Network Area (#393)
+* Add support for updating Network Area (#389)
+* Add support for getting Network Area (#392) 
+* Add support for creating Network Area (#382) 
+* Add support for discovery Chain Post (#378) 
+* Add support for list segments endpoint (#374) 
+* Add support for discovery chain get method (#369) 
+* Add support for explain prepared query API endpoint (#368)
+* Add GenerateDocumentationFile to make summaries show up in IDEs (#365)
+* Add GET List Ingress Health for Service (#350)
+
 ## 1.7.14.4
 * Support for non-root consul urls (#333)
 * Added GET GatewayService endpoint (#347)
