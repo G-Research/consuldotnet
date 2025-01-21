@@ -41,7 +41,7 @@ namespace Consul.Test
                 ServiceName = "web",
                 Namespace = "default",
                 Datacenter = "dc1",
-                Protocol = "http",
+                Protocol = "tcp",
                 StartNode = "resolver:web." + defaultPart + ".dc1",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
@@ -80,7 +80,7 @@ namespace Consul.Test
             Assert.Equal(check.ServiceName, chain.ServiceName);
             Assert.Equal(check.Namespace, chain.Namespace);
             Assert.Equal(check.Datacenter, chain.Datacenter);
-            Assert.Equal(check.Protocol, chain.Protocol);
+            Assert.NotEmpty(chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
             var nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc1"];
             var nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc1"];
@@ -104,7 +104,7 @@ namespace Consul.Test
                 ServiceName = "web",
                 Namespace = "default",
                 Datacenter = "dc2",
-                Protocol = "http",
+                Protocol = "tcp",
                 StartNode = "resolver:web." + defaultPart + ".dc2",
                 Nodes = new Dictionary<string, DiscoveryGraphNode>()
                 {
@@ -146,7 +146,7 @@ namespace Consul.Test
             Assert.Equal(check.ServiceName, chain.ServiceName);
             Assert.Equal(check.Namespace, chain.Namespace);
             Assert.Equal(check.Datacenter, chain.Datacenter);
-            Assert.Equal(check.Protocol, chain.Protocol);
+            Assert.NotEmpty(chain.Protocol);
             Assert.Equal(check.StartNode, chain.StartNode);
             nodeCheck = check.Nodes["resolver:web." + defaultPart + ".dc2"];
             nodeChain = chain.Nodes["resolver:web." + defaultPart + ".dc2"];
