@@ -57,13 +57,15 @@ jobs:
         framework: [net461, net8.0] # Latest LTS
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
+
           - framework: net9.0 # Latest stable release
             consul: 1.20.0            
             os: ubuntu-latest
-        include:
+
           - os: macos-13  # macos-13 for x86_x64 arch
             framework: net8.0
-            consul: 1.20.0     
+            consul: 1.20.0 
+
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
