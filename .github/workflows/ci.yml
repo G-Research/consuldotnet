@@ -63,15 +63,15 @@ jobs:
         os: [ubuntu-latest]
         include:
             - consul: 1.20.0
-              framework: net9.0
+              framework: net8.0
               os: windows-latest
 
             - consul: 1.20.0
-              framework: net9.0
+              framework: net8.0
               os: macos-latest
 
             - consul: 1.20.0
-              framework: net9.0
+              framework: net8.0
               os: macos-13 # for x86_x64 arch
 
       fail-fast: false
