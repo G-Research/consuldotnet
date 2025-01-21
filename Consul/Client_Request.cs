@@ -57,7 +57,7 @@ namespace Consul
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
 
-        internal readonly JsonSerializer _serializer = new JsonSerializer();
+        private readonly JsonSerializer _serializer = new JsonSerializer();
 
         internal ConsulRequest(ConsulClient client, string url, HttpMethod method)
         {
@@ -120,6 +120,13 @@ namespace Consul
             }
         }
 
-        protected static byte[] Serialize(object value) => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
+        protected  byte[] Serialize(object value)
+        {
+            using (var sw = new StringWriter())
+            {
+                _serializer.Serialize(sw, value);
+                return Encoding.UTF8.GetBytes(sw.ToString());
+            }
+        }
     }
 }
