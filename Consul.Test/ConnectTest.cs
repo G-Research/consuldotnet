@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -55,9 +56,12 @@ namespace Consul.Test
             Assert.NotEqual((ulong)0, result.ModifyIndex);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Connect_CASetConfig()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but setting CA config is only supported from Consul {cutOffVersion}");
+
             var req = await _client.Connect.CAGetConfig();
             var config = req.Response;
 
