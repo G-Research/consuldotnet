@@ -64,6 +64,10 @@ jobs:
         extended:
           - { consul: [1.18.2, 1.19.2], framework: [net6.0, net7.0], os: [macos-13] }
 
+        # Then include both sets
+        include:
+          - ${{ matrix.primary }}
+          - ${{ matrix.extended }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
