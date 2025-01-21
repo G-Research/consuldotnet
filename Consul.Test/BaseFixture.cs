@@ -87,11 +87,13 @@ namespace Consul.Test
 
         static BaseFixture()
         {
+#if !NETFRAMEWORK // It will not compile for .NET Framework due to ambiguity of Newtonsoft.Json types
             // We use invalid settings here to make sure that our library doesn't depend on default settings
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Objects,
             };
+#endif
 
             // Some Consul object (e.g. semaphores) use multiple http connections,
             // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
