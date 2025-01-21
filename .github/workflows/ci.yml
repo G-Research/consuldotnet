@@ -63,7 +63,7 @@ jobs:
         os: [ubuntu-latest]
         include:
         - consul: 1.9.17 # Lst consul with a free enterprise license
-          framework: net461
+          framework: net461, net6.0
           os: windows-latest
         - consul: 1.20.0
           framework: [net461, net6.0, net7.0, net8.0]
