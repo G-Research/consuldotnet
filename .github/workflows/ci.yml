@@ -64,7 +64,7 @@ jobs:
         exclude:        
           # Exclude all old .NET Framework tests on macOS
           - framework: net461
-            os: macos-*
+
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
