@@ -74,12 +74,9 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Setup .NET SDK v9.0.x
-        if: matrix.framework == 'net9.0'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
