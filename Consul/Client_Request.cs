@@ -120,7 +120,7 @@ namespace Consul
             }
         }
 
-        protected  byte[] Serialize(object value)
+        protected byte[] Serialize(object value)
         {
             using (var sw = new StringWriter())
             {
