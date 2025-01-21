@@ -20,6 +20,9 @@ $releases = Get-GitHubRelease -OwnerName $owner -RepositoryName $repo | Where-Ob
 $latest = @{}
 foreach ($release in $releases)
 {
+  if ($($version.Minor) <= 7)
+	continue
+
   $version = [version]($release.tag_name.Substring(1))
   $minor = "$($version.Major).$($version.Minor)"
   if (!$latest.ContainsKey($minor) -or $latest[$minor] -lt $version)
