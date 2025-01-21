@@ -58,36 +58,33 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        consul: [1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.9, 1.14.11, 1.15.10, 1.16.6, 1.17.3, 1.18.2, 1.19.2, 1.20.0]
-        framework: [net461, net7.0, net8.0]
-        os: [ubuntu-latest]
+        # First define both matrices and combine them using their own names
+        primary:
+          - { consul: [1.7.14, 1.20.0], framework: [net461, net8.0], os: [ubuntu-latest, windows-latest] }
+        extended:
+          - { consul: [1.18.2, 1.19.2], framework: [net6.0, net7.0], os: [macos-13] }
+
+        # Then include both sets
         include:
-            - consul: 1.20.0
-              framework: net8.0
-              os: windows-latest
-
-            - consul: 1.20.0
-              framework: net8.0
-              os: macos-latest
-
-            - consul: 1.20.0
-              framework: net8.0
-              os: macos-13 # for x86_x64 arch
-
+          - ${{ matrix.primary[0] }}
+          - ${{ matrix.extended[0] }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup .NET SDK v6.0.x
+        if: matrix.framework == 'net6.0'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
       - name: Setup .NET SDK v7.0.x
         if: matrix.framework == 'net7.0'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
-      - name: Setup .NET SDK v8.0.x
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
