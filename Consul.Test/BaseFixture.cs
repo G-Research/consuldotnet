@@ -4,6 +4,8 @@ using System.Net;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NuGet.Versioning;
 using Xunit;
 
@@ -85,10 +87,20 @@ namespace Consul.Test
 
         static BaseFixture()
         {
+#if !NETFRAMEWORK // It will not compile for .NET Framework due to ambiguity of Newtonsoft.Json types
+            // We use invalid settings here to make sure that our library doesn't depend on default settings
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects,
+            };
+#endif
+
+#if NETFRAMEWORK
             // Some Consul object (e.g. semaphores) use multiple http connections,
             // but on .NETFramework the default limit is sometimes very low (2) so we need to bump it to higher value.
             // E.g. https://github.com/microsoft/referencesource/blob/5697c29004a34d80acdaf5742d7e699022c64ecd/System.Web/HttpRuntime.cs#L1200
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+#endif
 
             // As for HTTP connections, we need multiple threads to test semaphores and locks.
             // XUnit sets the initial number of worker threads to the number of CPU cores.

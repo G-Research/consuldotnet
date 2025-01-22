@@ -146,7 +146,8 @@ namespace Consul.Test
         [Fact]
         public async Task Catalog_GetTaggedAddressesService()
         {
-            var svcID = KVTest.GenerateTestKeyName();
+            var svcID1 = KVTest.GenerateTestKeyName();
+            var svcID2 = KVTest.GenerateTestKeyName();
             var registration = new CatalogRegistration
             {
                 Datacenter = "dc1",
@@ -154,8 +155,8 @@ namespace Consul.Test
                 Address = "192.168.10.10",
                 Service = new AgentService
                 {
-                    ID = svcID,
-                    Service = "redis",
+                    ID = svcID1,
+                    Service = svcID2,
                     Tags = new[] { "master", "v1" },
                     Port = 8000,
                     TaggedAddresses = new Dictionary<string, ServiceTaggedAddress>
@@ -168,7 +169,7 @@ namespace Consul.Test
 
             await _client.Catalog.Register(registration);
 
-            var services = await _client.Catalog.Service("redis");
+            var services = await _client.Catalog.Service(svcID2);
 
             Assert.True(services.Response.Length > 0);
             Assert.True(services.Response[0].ServiceTaggedAddresses.Count > 0);
