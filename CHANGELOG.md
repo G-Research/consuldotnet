@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.7.14.7
+
+* Do not use static JsonConvert (#417)
+* Embed PDBs (#412)
+* Add support for Update CA Configuration (#411)
+* Add support for CAGetConfiguration (#404)
+
 ## 1.7.14.6
 * Fix parsing a string based host name (#401)
 * Add support for connect List CA Roots (#400)
