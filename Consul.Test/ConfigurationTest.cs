@@ -23,6 +23,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Consul;
+using Newtonsoft.Json;
 
 namespace Consul.Test
 {
@@ -109,6 +111,42 @@ namespace Consul.Test
             var getDeletedConfigResult = await _client.Configuration.GetConfig<ServiceDefaultsEntry>(payload.Kind, payload.Name);
             Assert.Equal(HttpStatusCode.NotFound, getDeletedConfigResult.StatusCode);
             Assert.Null(getDeletedConfigResult.Response);
+        }
+
+        [Fact]
+        public async Task Configuration_ListIntentions()
+        {
+            var firstEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Autobots Assembler",
+            };
+
+            var secondEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Decepticon Assembler",
+                
+                
+            };
+
+
+            var resultOne = await _client.Configuration.ApplyConfig(firstEntry);
+            Assert.Equal(HttpStatusCode.OK, resultOne.StatusCode);
+
+            var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
+            Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
+
+            var intentionsQuery = await _client.Configuration.ListIntentions();
+            Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
+
+            var intentions = intentionsQuery.Response;
+            Assert.NotNull(intentions);
+            Assert.Contains(intentions, i => i.Name == firstEntry.Name);
+            Assert.Contains(intentions, i => i.Equals(secondEntry.Name));
+
+            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
     }
 }

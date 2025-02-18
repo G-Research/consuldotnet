@@ -1773,6 +1773,29 @@ namespace Consul
         {
             return DeleteConfig(kind, name, WriteOptions.Default, ct);
         }
+        /// <summary>
+        /// Retrieves a list of all configured service intentions
+        /// </summary>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A list of service intentions</returns>
+        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(CancellationToken ct = default)
+        {
+            return ListIntentions(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        ///Retrieves a list of all configured service intentions with query options
+        /// </summary>
+        /// <param name="q">Custom query options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A list of service intentions</returns>
+        ///
+        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<List<ServiceIntentionsEntry>>("/v1/connect/intentions", q);
+            var res = req.Execute(ct);
+            return res;
+        }
     }
     public partial class ConsulClient : IConsulClient
     {
