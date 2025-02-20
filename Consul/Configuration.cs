@@ -1131,7 +1131,7 @@ namespace Consul
         public string Action { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<IntentionPermission> Permisions { get; set; }
+        public List<IntentionPermission> Permissions { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int Precedence { get; set; }
@@ -1149,10 +1149,10 @@ namespace Consul
         public Dictionary<string, string> LegacyMeta { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan LegacyCreateTime { get; set; }
+        public DateTime LegacyCreateTime { get; set; } = DateTime.UtcNow;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan LegacyUpdateTime { get; set; }
+        public DateTime LegacyUpdateTime { get; set; } = DateTime.UtcNow;
     }
 
     public class IntentionPermission
@@ -1870,9 +1870,9 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of service intentions</returns>
-        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(CancellationToken ct = default)
+        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(CancellationToken ct = default)
         {
-            return ListIntentions(QueryOptions.Default, ct);
+            return ListIntentions<ServiceIntentionsEntry>(QueryOptions.Default, ct);
         }
 
         /// <summary>
@@ -1882,7 +1882,7 @@ namespace Consul
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of service intentions</returns>
         ///
-        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(QueryOptions q, CancellationToken ct = default)
         {
             var req = _client.Get<List<ServiceIntentionsEntry>>("/v1/connect/intentions", q);
             var res = req.Execute(ct);

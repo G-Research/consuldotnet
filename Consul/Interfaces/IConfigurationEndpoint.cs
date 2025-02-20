@@ -34,7 +34,7 @@ namespace Consul.Interfaces
         Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry;
         Task<WriteResult> DeleteConfig(string kind, string name, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct = default);
-        Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(CancellationToken ct = default);
-        Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(CancellationToken ct = default);
+        Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(QueryOptions q, CancellationToken ct = default);
     }
 }

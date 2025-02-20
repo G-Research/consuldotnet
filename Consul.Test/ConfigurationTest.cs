@@ -25,12 +25,19 @@ using System.Threading.Tasks;
 using Consul;
 using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     [Collection(nameof(ExclusiveCollection))]
     public class ConfigurationTest : BaseFixture
     {
+        private readonly ITestOutputHelper _output;
+
+        public ConfigurationTest(ITestOutputHelper output)
+        {
+            _output = output;
+        }
         [Fact]
         public async Task Configuration_ApplyConfig()
         {
@@ -119,14 +126,71 @@ namespace Consul.Test
             var firstEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
-                Name = "Autobots Assembler",
+                Name = "Autobots-Assembler",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "fortunate",
+                        Action = "allow"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Prad",
+                        Action = "allow"
+                    }
+                    //new SourceIntention
+                    //{
+                    //    Name = "!Optimus-Prime",
+                    //    Permissions = new List<IntentionPermission>
+                    //    {
+                    //       new IntentionPermission
+                    //       {
+                    //           Action = "allow",
+                    //           HTTP = new IntentionHTTPPermission
+                    //           {
+                    //               PathPrefix = "/",
+                    //               Methods = new List<string>{"GET", "POST"}
+                    //           }
+                    //       }
+                    //    }
+                    //}
+                }
             };
 
             var secondEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
-                Name = "Decepticon Assembler",
-
+                Name = "*",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "middle",
+                        Action = "deny"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "center",
+                        Action = "allow"
+                    }
+                    //new SourceIntention
+                    //{
+                    //    Name = "!Megatron",
+                    //    Permissions = new List<IntentionPermission>
+                    //    {
+                    //       new IntentionPermission
+                    //       {
+                    //           Action = "allow",
+                    //           HTTP = new IntentionHTTPPermission
+                    //           {
+                    //               PathPrefix = "/v2",
+                    //               Methods = new List<string>{"DELETE", "POST"}
+                    //           }
+                    //       }
+                    //    }
+                    //}
+                }
 
             };
 
@@ -137,13 +201,21 @@ namespace Consul.Test
             var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
             Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
 
-            var intentionsQuery = await _client.Configuration.ListIntentions();
+            var intentionsQuery = await _client.Configuration.ListIntentions<ServiceIntentionsEntry>();
             Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
 
             var intentions = intentionsQuery.Response;
             Assert.NotNull(intentions);
-            Assert.Contains(intentions, i => i.Name == firstEntry.Name);
-            Assert.Contains(intentions, i => i.Equals(secondEntry.Name));
+            //foreach (var intention in intentions)
+            //{
+            //    _output.WriteLine($"Intentions: {intention.Name}");
+            //    foreach (var source in intention.Sources)
+            //    {
+            //        _output.WriteLine($"Intentions: {source}");
+            //    }
+            //}
+            Assert.Contains(intentions, i => i.Name == "Autobots-Assembler");
+            Assert.Contains(intentions, i => i.Name == "*");
 
             await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
             await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
