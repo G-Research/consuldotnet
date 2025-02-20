@@ -22,9 +22,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using Consul;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace Consul.Test
 {
@@ -126,8 +126,8 @@ namespace Consul.Test
             {
                 Kind = "service-intentions",
                 Name = "Decepticon Assembler",
-                
-                
+
+
             };
 
 
