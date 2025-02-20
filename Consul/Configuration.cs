@@ -1160,7 +1160,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Action { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IntentionHTTPPermission HTTP {  get; set; }
+        public IntentionHTTPPermission HTTP { get; set; }
     }
 
     public class IntentionHTTPPermission
