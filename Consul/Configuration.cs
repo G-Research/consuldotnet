@@ -1107,12 +1107,104 @@ namespace Consul
         public Dictionary<string, string> Meta { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<SourceIntention> Sources { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> JWT { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Provider> Providers { get; set; }
     }
 
+    public class SourceIntention
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Action { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IntentionPermission> Permisions { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Precedence { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Type { get; set; } = "consul";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LegacyID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> LegacyMeta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan LegacyCreateTime { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan LegacyUpdateTime { get; set; }
+    }
+
+    public class IntentionPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Action { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IntentionHTTPPermission HTTP {  get; set; }
+    }
+
+    public class IntentionHTTPPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathExact { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathPrefix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathRegex { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Methods { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IntentionHTTPHeaderPermission> Header { get; set; }
+
+    }
+
+    public class IntentionHTTPHeaderPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Present { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Exact { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Prefix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Suffix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Regex { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Invert { get; set; }
+    }
     public class Provider
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
