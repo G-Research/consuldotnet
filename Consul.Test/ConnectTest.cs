@@ -86,7 +86,6 @@ namespace Consul.Test
         public async Task Connect_ListIntentions()
         {
          
-            //var cutOffVersion = SemanticVersion.Parse("1.11.0");
             var firstEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
