@@ -31,7 +31,7 @@ namespace Consul.Test
 {
     public class ConnectTest : BaseFixture
     {
-       
+
         [Fact]
         public async Task Connect_CARoots()
         {
@@ -85,7 +85,7 @@ namespace Consul.Test
         [Fact]
         public async Task Connect_ListIntentions()
         {
-         
+
             //var cutOffVersion = SemanticVersion.Parse("1.11.0");
             var firstEntry = new ServiceIntentionsEntry
             {
@@ -107,7 +107,7 @@ namespace Consul.Test
                     {
                         Name = "Medhi",
                         Action = "allow"
-                    }      
+                    }
                 }
             };
 
@@ -144,7 +144,7 @@ namespace Consul.Test
             var intentions = intentionsQuery.Response;
             Assert.NotNull(intentions);
 
-          
+
             Assert.Contains(intentions, i => i.SourceName == "fortunate");
             Assert.Contains(intentions, i => i.DestinationName == firstEntry.Name);
 
