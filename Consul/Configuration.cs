@@ -1086,7 +1086,7 @@ namespace Consul
         public bool Terminal { get; set; }
     }
 
-  
+
     public class Provider
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -1747,7 +1747,7 @@ namespace Consul
         {
             return DeleteConfig(kind, name, WriteOptions.Default, ct);
         }
-      
+
     }
     public partial class ConsulClient : IConsulClient
     {

@@ -32,7 +32,7 @@ namespace Consul.Test
     [Collection(nameof(ExclusiveCollection))]
     public class ConfigurationTest : BaseFixture
     {
-      
+
         [Fact]
         public async Task Configuration_ApplyConfig()
         {
@@ -115,6 +115,6 @@ namespace Consul.Test
             Assert.Null(getDeletedConfigResult.Response);
         }
 
-      
+
     }
 }
