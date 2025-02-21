@@ -19,15 +19,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     public class ConnectTest : BaseFixture
     {
+       
         [Fact]
         public async Task Connect_CARoots()
         {
@@ -75,6 +79,77 @@ namespace Consul.Test
             Assert.Equal("consul", updatedConfig.Provider);
             Assert.Equal("bar", updatedConfig.State["foo"]);
             Assert.Equal("", updatedConfig.Config["PrivateKey"]);
+        }
+
+
+        [Fact]
+        public async Task Connect_ListIntentions()
+        {
+         
+            //var cutOffVersion = SemanticVersion.Parse("1.11.0");
+            var firstEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Autobots-Assembler",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "fortunate",
+                        Action = "allow"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Prad",
+                        Action = "allow"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Medhi",
+                        Action = "allow"
+                    }      
+                }
+            };
+
+            var secondEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Test",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "Optimus-Prime",
+                        Action = "allow"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Megatron",
+                        Action = "deny"
+                    }
+                }
+
+            };
+
+
+            var resultOne = await _client.Configuration.ApplyConfig(firstEntry);
+            Assert.Equal(HttpStatusCode.OK, resultOne.StatusCode);
+
+            var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
+            Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
+
+            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntentionsEntryResponse>();
+            Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
+
+            var intentions = intentionsQuery.Response;
+            Assert.NotNull(intentions);
+
+          
+            Assert.Contains(intentions, i => i.SourceName == "fortunate");
+            Assert.Contains(intentions, i => i.DestinationName == firstEntry.Name);
+
+            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
     }
 }

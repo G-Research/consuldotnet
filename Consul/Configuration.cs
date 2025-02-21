@@ -1086,125 +1086,7 @@ namespace Consul
         public bool Terminal { get; set; }
     }
 
-    /// <summary>
-    /// Configures control access between services in the service mesh.
-    /// </summary>
-    public class ServiceIntentionsEntry : IConfigurationEntry
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Kind { get; set; } = "service-intentions";
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Partition { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Meta { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<SourceIntention> Sources { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> JWT { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Provider> Providers { get; set; }
-    }
-
-    public class SourceIntention
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Partition { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Action { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<IntentionPermission> Permissions { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Precedence { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Type { get; set; } = "consul";
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LegacyID { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> LegacyMeta { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LegacyCreateTime { get; set; } = DateTime.UtcNow;
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LegacyUpdateTime { get; set; } = DateTime.UtcNow;
-    }
-
-    public class IntentionPermission
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Action { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IntentionHTTPPermission HTTP { get; set; }
-    }
-
-    public class IntentionHTTPPermission
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string PathExact { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string PathPrefix { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string PathRegex { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Methods { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<IntentionHTTPHeaderPermission> Header { get; set; }
-
-    }
-
-    public class IntentionHTTPHeaderPermission
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool Present { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Exact { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Prefix { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Suffix { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Regex { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool Invert { get; set; }
-    }
+  
     public class Provider
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -1865,29 +1747,7 @@ namespace Consul
         {
             return DeleteConfig(kind, name, WriteOptions.Default, ct);
         }
-        /// <summary>
-        /// Retrieves a list of all configured service intentions
-        /// </summary>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>A list of service intentions</returns>
-        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(CancellationToken ct = default)
-        {
-            return ListIntentions<ServiceIntentionsEntry>(QueryOptions.Default, ct);
-        }
-
-        /// <summary>
-        ///Retrieves a list of all configured service intentions with query options
-        /// </summary>
-        /// <param name="q">Custom query options</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns>A list of service intentions</returns>
-        ///
-        public Task<QueryResult<List<ServiceIntentionsEntry>>> ListIntentions<ServiceIntentionsEntry>(QueryOptions q, CancellationToken ct = default)
-        {
-            var req = _client.Get<List<ServiceIntentionsEntry>>("/v1/connect/intentions", q);
-            var res = req.Execute(ct);
-            return res;
-        }
+      
     }
     public partial class ConsulClient : IConsulClient
     {

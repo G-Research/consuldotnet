@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Consul.Interfaces;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -53,6 +54,178 @@ namespace Consul
         public ulong CreateIndex { get; set; }
         public ulong ModifyIndex { get; set; }
     }
+
+
+    /// <summary>
+    /// Configures control access between services in the service mesh.
+    /// </summary>
+    public class ServiceIntentionsEntry : IConfigurationEntry
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Kind { get; set; } = "service-intentions";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<SourceIntention> Sources { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> JWT { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<Provider> Providers { get; set; }
+    }
+
+    public class SourceIntention
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Action { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IntentionPermission> Permissions { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Precedence { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Type { get; set; } = "consul";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LegacyID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> LegacyMeta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime LegacyCreateTime { get; set; } = DateTime.UtcNow;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime LegacyUpdateTime { get; set; } = DateTime.UtcNow;
+    }
+
+    public class IntentionPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Action { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IntentionHTTPPermission HTTP { get; set; }
+    }
+
+    public class IntentionHTTPPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathExact { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathPrefix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PathRegex { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Methods { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IntentionHTTPHeaderPermission> Header { get; set; }
+
+    }
+
+    public class IntentionHTTPHeaderPermission
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Present { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Exact { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Prefix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Suffix { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Regex { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool Invert { get; set; }
+    }
+
+    /// <summary>
+    /// This handles the response for any operation carried out on the ServiceIntentionsEntry Model
+    /// </summary>
+    public class ServiceIntentionsEntryResponse
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Guid ID { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SourceNS { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SourceName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationNS { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DestinationName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string SourceType { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Action { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int Precedence { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime UpdatedAt { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int CreateIndex { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int ModifyIndex { get; set; }
+
+    }
+
+
     public class Connect : IConnectEndpoint
     {
         private readonly ConsulClient _client;
@@ -105,6 +278,29 @@ namespace Consul
         public Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default)
         {
             return _client.Put("/v1/connect/ca/configuration", config, q).Execute(ct);
+
+        }
+        /// <summary>
+        /// Retrieves a list of all configured service intentions
+        /// </summary>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A list of service intentions</returns>
+        public Task<QueryResult<List<ServiceIntentionResponse>>> ListIntentions<ServiceIntentionResponse>(CancellationToken ct = default)
+        {
+            return ListIntentions<ServiceIntentionResponse>(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        ///Retrieves a list of all configured service intentions with query options
+        /// </summary>
+        /// <param name="q">Custom query options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>A list of service intentions</returns>
+        ///
+        public Task<QueryResult<List<ServiceIntentionResponse>>> ListIntentions<ServiceIntentionResponse>(QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<List<ServiceIntentionResponse>>("/v1/connect/intentions", q);
+            return req.Execute(ct);
 
         }
     }
