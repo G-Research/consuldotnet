@@ -85,7 +85,7 @@ namespace Consul.Test
         [Fact]
         public async Task Connect_ListIntentions()
         {
-         
+
             var firstEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
