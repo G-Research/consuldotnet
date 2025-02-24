@@ -278,6 +278,7 @@ namespace Consul
             return _client.Put("/v1/connect/ca/configuration", config, q).Execute(ct);
 
         }
+
         /// <summary>
         /// Retrieves a list of all configured service intentions
         /// </summary>
