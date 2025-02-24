@@ -179,10 +179,10 @@ namespace Consul
     /// <summary>
     /// This handles the response for any operation carried out on the ServiceIntentionsEntry Model
     /// </summary>
-    public class ServiceIntentionsEntryResponse
+    public class ServiceIntentionsEntryPayload
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Guid ID { get; set; }
+        public string ID { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -222,9 +222,7 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int ModifyIndex { get; set; }
-
     }
-
 
     public class Connect : IConnectEndpoint
     {
@@ -291,7 +289,7 @@ namespace Consul
         }
 
         /// <summary>
-        ///Retrieves a list of all configured service intentions with query options
+        /// Retrieves a list of all configured service intentions with query options
         /// </summary>
         /// <param name="q">Custom query options</param>
         /// <param name="ct">Cancellation Token</param>
@@ -301,7 +299,6 @@ namespace Consul
         {
             var req = _client.Get<List<ServiceIntentionResponse>>("/v1/connect/intentions", q);
             return req.Execute(ct);
-
         }
     }
 

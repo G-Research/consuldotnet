@@ -31,7 +31,6 @@ namespace Consul.Test
 {
     public class ConnectTest : BaseFixture
     {
-
         [Fact]
         public async Task Connect_CARoots()
         {
@@ -81,11 +80,9 @@ namespace Consul.Test
             Assert.Equal("", updatedConfig.Config["PrivateKey"]);
         }
 
-
         [Fact]
         public async Task Connect_ListIntentions()
         {
-         
             var firstEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
@@ -109,11 +106,10 @@ namespace Consul.Test
                     }
                 }
             };
-
             var secondEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
-                Name = "Test",
+                Name = "Second",
                 Sources = new List<SourceIntention>
                 {
                     new SourceIntention
@@ -125,30 +121,40 @@ namespace Consul.Test
                     {
                         Name = "Megatron",
                         Action = "deny"
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Sentinel-Prime",
+                        Action = "deny"
                     }
                 }
-
             };
-
-
             var resultOne = await _client.Configuration.ApplyConfig(firstEntry);
             Assert.Equal(HttpStatusCode.OK, resultOne.StatusCode);
 
             var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
             Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
 
-            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntentionsEntryResponse>();
+            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntentionsEntryPayload>();
             Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
 
             var intentions = intentionsQuery.Response;
             Assert.NotNull(intentions);
 
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.DestinationName));
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceName));
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.DestinationNS));
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceType));
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceNS));
+            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.Action) && i.Action == "allow" || i.Action == "deny");
+            Assert.Contains(intentions, i => i.CreateIndex > 0);
+            Assert.Contains(intentions, i => i.ModifyIndex > 0);
+            Assert.Contains(intentions, i => i.Precedence > 0);
+            Assert.Contains(intentions, i => i.SourceName == "fortunate" && i.DestinationName == firstEntry.Name);
+            Assert.Contains(intentions, i => i.SourceName == "Optimus-Prime" && i.DestinationName == secondEntry.Name);
 
-            Assert.Contains(intentions, i => i.SourceName == "fortunate");
-            Assert.Contains(intentions, i => i.DestinationName == firstEntry.Name);
-
-            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
-            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
+            //await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            //await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
     }
 }

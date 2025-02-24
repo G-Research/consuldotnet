@@ -22,7 +22,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Consul;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -32,7 +31,6 @@ namespace Consul.Test
     [Collection(nameof(ExclusiveCollection))]
     public class ConfigurationTest : BaseFixture
     {
-
         [Fact]
         public async Task Configuration_ApplyConfig()
         {
