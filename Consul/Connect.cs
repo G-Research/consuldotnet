@@ -284,9 +284,9 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of service intentions</returns>
-        public Task<QueryResult<List<ServiceIntentionResponse>>> ListIntentions<ServiceIntentionResponse>(CancellationToken ct = default)
+        public Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct = default)
         {
-            return ListIntentions<ServiceIntentionResponse>(QueryOptions.Default, ct);
+            return ListIntentions<ServiceIntention>(QueryOptions.Default, ct);
         }
 
         /// <summary>
@@ -296,9 +296,9 @@ namespace Consul
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of service intentions</returns>
         ///
-        public Task<QueryResult<List<ServiceIntentionResponse>>> ListIntentions<ServiceIntentionResponse>(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(QueryOptions q, CancellationToken ct = default)
         {
-            var req = _client.Get<List<ServiceIntentionResponse>>("/v1/connect/intentions", q);
+            var req = _client.Get<List<ServiceIntention>>("/v1/connect/intentions", q);
             return req.Execute(ct);
         }
     }
