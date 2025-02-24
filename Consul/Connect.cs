@@ -218,10 +218,10 @@ namespace Consul
         public DateTime UpdatedAt { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int CreateIndex { get; set; }
+        public ulong CreateIndex { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int ModifyIndex { get; set; }
+        public ulong ModifyIndex { get; set; }
     }
 
     public class Connect : IConnectEndpoint
