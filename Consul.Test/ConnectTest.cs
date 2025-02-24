@@ -135,7 +135,7 @@ namespace Consul.Test
             var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
             Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
 
-            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntentionsEntryPayload>();
+            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntention>();
             Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
 
             var intentions = intentionsQuery.Response;

@@ -179,7 +179,7 @@ namespace Consul
     /// <summary>
     /// This handles the response for any operation carried out on the ServiceIntentionsEntry Model
     /// </summary>
-    public class ServiceIntentionsEntryPayload
+    public class ServiceIntention
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ID { get; set; }
