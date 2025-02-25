@@ -170,7 +170,7 @@ namespace Consul.Test
             };
 
             var req = await _client.Connect.CreateIntention(newEntry);
-            Assert.Equal(HttpStatusCode.OK, req.StatusCode);            
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
         }
     }
 }
