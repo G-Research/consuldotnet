@@ -92,17 +92,23 @@ namespace Consul.Test
                     new SourceIntention
                     {
                         Name = "fortunate",
-                        Action = "allow"
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     },
                     new SourceIntention
                     {
                         Name = "Prad",
-                        Action = "allow"
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     },
                     new SourceIntention
                     {
                         Name = "Medhi",
-                        Action = "allow"
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     }
                 }
             };
@@ -115,17 +121,23 @@ namespace Consul.Test
                     new SourceIntention
                     {
                         Name = "Optimus-Prime",
-                        Action = "allow"
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     },
                     new SourceIntention
                     {
                         Name = "Megatron",
-                        Action = "deny"
+                        Action = "deny",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     },
                     new SourceIntention
                     {
                         Name = "Sentinel-Prime",
-                        Action = "deny"
+                        Action = "deny",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
                     }
                 }
             };

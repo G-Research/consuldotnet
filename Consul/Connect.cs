@@ -78,18 +78,15 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<SourceIntention> Sources { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> JWT { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Provider> Providers { get; set; }
     }
 
     public class SourceIntention
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Peer { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
@@ -119,10 +116,10 @@ namespace Consul
         public Dictionary<string, string> LegacyMeta { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LegacyCreateTime { get; set; } = DateTime.UtcNow;
+        public DateTime LegacyCreateTime { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime LegacyUpdateTime { get; set; } = DateTime.UtcNow;
+        public DateTime LegacyUpdateTime { get; set; }
     }
 
     public class IntentionPermission
