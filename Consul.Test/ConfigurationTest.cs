@@ -22,7 +22,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -110,5 +112,7 @@ namespace Consul.Test
             Assert.Equal(HttpStatusCode.NotFound, getDeletedConfigResult.StatusCode);
             Assert.Null(getDeletedConfigResult.Response);
         }
+
+
     }
 }
