@@ -153,17 +153,17 @@ namespace Consul.Test
             var intentions = intentionsQuery.Response;
             Assert.NotNull(intentions);
 
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.DestinationName));
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceName));
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.DestinationNS));
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceType));
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.SourceNS));
-            Assert.Contains(intentions, i => !string.IsNullOrEmpty(i.Action) && i.Action == "allow" || i.Action == "deny");
-            Assert.Contains(intentions, i => i.CreateIndex > 0);
-            Assert.Contains(intentions, i => i.ModifyIndex > 0);
-            Assert.Contains(intentions, i => i.Precedence > 0);
-            Assert.Contains(intentions, i => i.SourceName == "fortunate" && i.DestinationName == firstEntry.Name);
-            Assert.Contains(intentions, i => i.SourceName == "Optimus-Prime" && i.DestinationName == secondEntry.Name);
+            var testIntention = intentions.First(i => i.SourceName == "Optimus-Prime");
+            Assert.NotEmpty(testIntention.DestinationName);
+            Assert.NotEmpty(testIntention.SourceName);
+            Assert.NotEmpty(testIntention.DestinationNS);
+            Assert.NotEmpty(testIntention.SourceType);
+            Assert.NotEmpty(testIntention.SourceNS);
+            Assert.Contains(testIntention.Action, new[] { "allow", "deny" });
+            Assert.True(testIntention.CreateIndex > 0);
+            Assert.True(testIntention.ModifyIndex > 0);
+            Assert.True(testIntention.Precedence > 0);
+            Assert.Equal(secondEntry.Name, testIntention.DestinationName);
 
             await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
             await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);

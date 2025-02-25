@@ -112,7 +112,5 @@ namespace Consul.Test
             Assert.Equal(HttpStatusCode.NotFound, getDeletedConfigResult.StatusCode);
             Assert.Null(getDeletedConfigResult.Response);
         }
-
-
     }
 }
