@@ -153,8 +153,8 @@ namespace Consul.Test
             Assert.Contains(intentions, i => i.SourceName == "fortunate" && i.DestinationName == firstEntry.Name);
             Assert.Contains(intentions, i => i.SourceName == "Optimus-Prime" && i.DestinationName == secondEntry.Name);
 
-            //await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
-            //await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
+            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
     }
 }
