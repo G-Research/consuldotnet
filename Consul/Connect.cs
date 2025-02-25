@@ -301,6 +301,30 @@ namespace Consul
             var req = _client.Get<List<ServiceIntention>>("/v1/connect/intentions", q);
             return req.Execute(ct);
         }
+
+        /// <summary>
+        /// Creates a new intention
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns the ID of the created intention.</returns>
+        public Task<WriteResult> CreateIntention(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Post("v1/connect/intentions", intention, q);
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// Creates a new intention
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns the ID of the created intention</returns>
+        public Task<WriteResult> CreateIntention(ServiceIntention intention, CancellationToken ct = default)
+        {
+            return CreateIntention(intention, WriteOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
