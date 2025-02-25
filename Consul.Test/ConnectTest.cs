@@ -153,8 +153,24 @@ namespace Consul.Test
             Assert.Contains(intentions, i => i.SourceName == "fortunate" && i.DestinationName == firstEntry.Name);
             Assert.Contains(intentions, i => i.SourceName == "Optimus-Prime" && i.DestinationName == secondEntry.Name);
 
-            //await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
-            //await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
+            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
+        }
+
+        [Fact]
+        public async Task Connect_CreateIntentionWithID()
+        {
+            var newEntry = new ServiceIntention
+            {
+                SourceName = "Originals",
+                Description = "The first vampires",
+                DestinationName = "New Orleans",
+                Action = "allow",
+                SourceType = "consul"
+            };
+
+            var req = await _client.Connect.CreateIntention(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);            
         }
     }
 }
