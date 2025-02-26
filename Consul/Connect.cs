@@ -104,7 +104,7 @@ namespace Consul
         public int Precedence { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Type { get; set; } = "consul";
+        public string Type { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
