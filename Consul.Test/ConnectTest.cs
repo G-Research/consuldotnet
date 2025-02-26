@@ -105,7 +105,7 @@ namespace Consul.Test
                     },
                     new SourceIntention
                     {
-                        Name = "Medhi",
+                        Name = "Mehdi",
                         Action = "allow",
                         LegacyCreateTime = DateTime.UtcNow,
                         LegacyUpdateTime = DateTime.UtcNow,
