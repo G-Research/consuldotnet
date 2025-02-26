@@ -83,6 +83,9 @@ namespace Consul.Test
         [Fact]
         public async Task Connect_ListIntentions()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `logjson` is only supported from Consul {cutOffVersion}");
+
             var firstEntry = new ServiceIntentionsEntry
             {
                 Kind = "service-intentions",
