@@ -55,7 +55,6 @@ namespace Consul
         public ulong ModifyIndex { get; set; }
     }
 
-
     /// <summary>
     /// Configures control access between services in the service mesh.
     /// </summary>

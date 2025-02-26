@@ -1747,7 +1747,6 @@ namespace Consul
         {
             return DeleteConfig(kind, name, WriteOptions.Default, ct);
         }
-
     }
     public partial class ConsulClient : IConsulClient
     {
