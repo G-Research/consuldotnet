@@ -80,7 +80,7 @@ namespace Consul.Test
             Assert.Equal("", updatedConfig.Config["PrivateKey"]);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Connect_ListIntentions()
         {
             var cutOffVersion = SemanticVersion.Parse("1.9.0");
