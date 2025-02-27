@@ -19,10 +19,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -75,6 +78,98 @@ namespace Consul.Test
             Assert.Equal("consul", updatedConfig.Provider);
             Assert.Equal("bar", updatedConfig.State["foo"]);
             Assert.Equal("", updatedConfig.Config["PrivateKey"]);
+        }
+
+        [SkippableFact]
+        public async Task Connect_ListIntentions()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var firstEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Autobots-Assembler",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "fortunate",
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Prad",
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Mehdi",
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    }
+                }
+            };
+            var secondEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = "Second",
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = "Optimus-Prime",
+                        Action = "allow",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Megatron",
+                        Action = "deny",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    },
+                    new SourceIntention
+                    {
+                        Name = "Sentinel-Prime",
+                        Action = "deny",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    }
+                }
+            };
+            var resultOne = await _client.Configuration.ApplyConfig(firstEntry);
+            Assert.Equal(HttpStatusCode.OK, resultOne.StatusCode);
+
+            var resultTwo = await _client.Configuration.ApplyConfig(secondEntry);
+            Assert.Equal(HttpStatusCode.OK, resultTwo.StatusCode);
+
+            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntention>();
+            Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
+
+            var intentions = intentionsQuery.Response;
+            Assert.NotNull(intentions);
+
+            var testIntention = intentions.First(i => i.SourceName == "Optimus-Prime");
+            Assert.NotEmpty(testIntention.DestinationName);
+            Assert.NotEmpty(testIntention.SourceName);
+            Assert.NotEmpty(testIntention.DestinationNS);
+            Assert.NotEmpty(testIntention.SourceType);
+            Assert.NotEmpty(testIntention.SourceNS);
+            Assert.Contains(testIntention.Action, new[] { "allow", "deny" });
+            Assert.True(testIntention.CreateIndex > 0);
+            Assert.True(testIntention.ModifyIndex > 0);
+            Assert.True(testIntention.Precedence > 0);
+            Assert.Equal(secondEntry.Name, testIntention.DestinationName);
+
+            await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
+            await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
     }
 }

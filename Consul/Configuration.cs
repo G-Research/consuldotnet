@@ -1086,32 +1086,6 @@ namespace Consul
         public bool Terminal { get; set; }
     }
 
-    /// <summary>
-    /// Configures control access between services in the service mesh.
-    /// </summary>
-    public class ServiceIntentionsEntry : IConfigurationEntry
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Kind { get; set; } = "service-intentions";
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Partition { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Meta { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> JWT { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Provider> Providers { get; set; }
-    }
 
     public class Provider
     {
