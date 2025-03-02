@@ -85,6 +85,9 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Peer { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
