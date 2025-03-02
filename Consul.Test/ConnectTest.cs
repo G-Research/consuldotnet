@@ -192,5 +192,39 @@ namespace Consul.Test
             Assert.NotNull(req.Response);
             await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_ReadIntentionByID()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var newEntry = new ServiceIntention
+            {
+                SourceName = "Katherina Petrova",
+                Description = "Vampire",
+                DestinationName = "Mystic Falls",
+                Action = "deny",
+                SourceType = "consul"
+            };
+            var req = await _client.Connect.CreateIntentionWithID(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+            Assert.NotNull(req.Response);
+
+            var uuid = req.Response.ID;
+            var intentionQuery = await _client.Connect.ReadIntentionByID<ServiceIntention>(uuid);
+            var intention = intentionQuery.Response;
+            Assert.NotNull(intention);
+            Assert.NotEmpty(intention.DestinationName);
+            Assert.NotEmpty(intention.SourceName);
+            Assert.NotEmpty(intention.DestinationNS);
+            Assert.NotEmpty(intention.SourceType);
+            Assert.NotEmpty(intention.SourceNS);
+            Assert.Contains(intention.Action, new[] { "allow", "deny" });
+            Assert.True(intention.CreateIndex > 0);
+            Assert.True(intention.ModifyIndex > 0);
+            Assert.True(intention.Precedence > 0);
+            await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
+        }
     }
 }

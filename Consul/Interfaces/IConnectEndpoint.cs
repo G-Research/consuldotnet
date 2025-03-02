@@ -36,5 +36,7 @@ namespace Consul.Interfaces
         Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, QueryOptions q, CancellationToken ct = default);
     }
 }

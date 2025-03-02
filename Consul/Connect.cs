@@ -322,6 +322,32 @@ namespace Consul
         {
             return CreateIntentionWithID(intention, WriteOptions.Default, ct);
         }
+
+        /// <summary>
+        /// Reads a specific intention by ID.
+        /// </summary>
+        /// <typeparam name="ServiceIntention"></typeparam>
+        /// <param name="uuid"></param>
+        /// <param name="ct"></param>
+        /// <returns>A service intention</returns>
+        public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, CancellationToken ct = default)
+        {
+            return ReadIntentionByID<ServiceIntention>(uuid, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Reads a specific intention by ID.
+        /// </summary>
+        /// <typeparam name="ServiceIntention"></typeparam>
+        /// <param name="uuid"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>A service intention</returns>
+        public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<ServiceIntention>($"v1/connect/intentions/{uuid}", q);
+            return req.Execute(ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
