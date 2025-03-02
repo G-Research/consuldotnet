@@ -309,7 +309,7 @@ namespace Consul
         /// <returns>Returns the ID of the created intention.</returns>
         public async Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
         {
-            return await _client.Post<ServiceIntention, ServiceIntentionCreateResponse>("v1/connect/intentions", intention, q).Execute(ct).ConfigureAwait(false);   
+            return await _client.Post<ServiceIntention, ServiceIntentionCreateResponse>("v1/connect/intentions", intention, q).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
