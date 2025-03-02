@@ -171,5 +171,26 @@ namespace Consul.Test
             await _client.Configuration.DeleteConfig(firstEntry.Kind, firstEntry.Name);
             await _client.Configuration.DeleteConfig(secondEntry.Kind, secondEntry.Name);
         }
+
+        [SkippableFact]
+        public async Task Connect_CreateIntentionWithID()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var newEntry = new ServiceIntention
+            {
+                SourceName = "Damon Salvatore",
+                Description = "Vampire",
+                DestinationName = "Mystic Falls",
+                Action = "allow",
+                SourceType = "consul"
+            };
+
+            var req = await _client.Connect.CreateIntentionWithID(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+            Assert.NotNull(req.Response);
+            await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
+        }
     }
 }

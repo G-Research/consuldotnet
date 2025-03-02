@@ -85,9 +85,6 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Peer { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -220,6 +217,11 @@ namespace Consul
         public ulong ModifyIndex { get; set; }
     }
 
+    public class ServiceIntentionCreateResponse
+    {
+        public string ID { get; set; }
+    }
+
     public class Connect : IConnectEndpoint
     {
         private readonly ConsulClient _client;
@@ -296,6 +298,29 @@ namespace Consul
         {
             var req = _client.Get<List<ServiceIntention>>("/v1/connect/intentions", q);
             return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// Creates a new intention
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns the ID of the created intention.</returns>
+        public async Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
+        {
+            return await _client.Post<ServiceIntention, ServiceIntentionCreateResponse>("v1/connect/intentions", intention, q).Execute(ct).ConfigureAwait(false);   
+        }
+
+        /// <summary>
+        /// Creates a new intention
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns the ID of the created intention</returns>
+        public Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, CancellationToken ct = default)
+        {
+            return CreateIntentionWithID(intention, WriteOptions.Default, ct);
         }
     }
 
