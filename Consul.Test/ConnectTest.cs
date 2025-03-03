@@ -226,5 +226,24 @@ namespace Consul.Test
             Assert.True(intention.Precedence > 0);
             await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_UpsertIntentionByName()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but setting CA config is only supported from Consul {cutOffVersion}");
+
+            var newEntry = new ServiceIntention
+            {
+                Action = "allow",
+                SourceType = "consul",
+            };
+
+            var req = await _client.Connect.UpsertIntentionsByName(newEntry, "LukaDoncic", "Lakers");
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+            Assert.True(req.Response);
+
+        }
+
     }
 }

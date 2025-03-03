@@ -351,6 +351,35 @@ namespace Consul
             var req = _client.Get<ServiceIntention>($"v1/connect/intentions/{uuid}", q);
             return req.Execute(ct);
         }
+
+        /// <summary>
+        /// creates a new intention 
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>True if the intention was created successfully or False if not</returns>
+        public async Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, string source, string destination, WriteOptions q, CancellationToken ct = default)
+        {
+            var res = await _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact?source={source}&destination={destination}", intention, q).Execute(ct).ConfigureAwait(false);
+            return res;
+        }
+
+        /// <summary>
+        /// creates a new intention 
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="ct"></param>
+        /// <returns>True if the intention was created successfully or False if not</returns>
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, string source, string destination, CancellationToken ct = default)
+        {
+            return UpsertIntentionsByName(intention, source, destination, WriteOptions.Default, ct);
+        }
+
     }
 
     public partial class ConsulClient : IConsulClient
