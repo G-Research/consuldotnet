@@ -307,6 +307,7 @@ namespace Consul
         /// <param name="q"></param>
         /// <param name="ct"></param>
         /// <returns>Returns the ID of the created intention.</returns>
+        [Obsolete("This feature is deprecated in Consul 1.9.0. Please use UpsertIntentionByName instead")]
         public async Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
         {
             return await _client.Post<ServiceIntention, ServiceIntentionCreateResponse>("v1/connect/intentions", intention, q).Execute(ct).ConfigureAwait(false);
@@ -318,6 +319,7 @@ namespace Consul
         /// <param name="intention"></param>
         /// <param name="ct"></param>
         /// <returns>Returns the ID of the created intention</returns>
+        [Obsolete("This feature is deprecated in Consul 1.9.0. Please use UpsertIntentionByName instead")]
         public Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, CancellationToken ct = default)
         {
             return CreateIntentionWithID(intention, WriteOptions.Default, ct);
