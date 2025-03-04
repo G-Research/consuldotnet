@@ -361,7 +361,7 @@ namespace Consul
         /// <returns>True if the intention was created successfully or False if not</returns>
         public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
         {
-            var req =  _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact", intention, q);
+            var req = _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact", intention, q);
             req.Params["source"] = intention.SourceName;
             req.Params["destination"] = intention.DestinationName;
             var res = req.Execute(ct);
@@ -374,7 +374,7 @@ namespace Consul
         /// <param name="intention"></param>
         /// <param name="ct"></param>
         /// <returns>True if the intention was created successfully or False if not</returns>
-        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention,CancellationToken ct = default)
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default)
         {
             return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
         }
