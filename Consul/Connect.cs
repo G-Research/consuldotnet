@@ -356,14 +356,15 @@ namespace Consul
         /// creates a new intention 
         /// </summary>
         /// <param name="intention"></param>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
         /// <param name="q"></param>
         /// <param name="ct"></param>
         /// <returns>True if the intention was created successfully or False if not</returns>
-        public async Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, string source, string destination, WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
         {
-            var res = await _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact?source={source}&destination={destination}", intention, q).Execute(ct).ConfigureAwait(false);
+            var req =  _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact", intention, q);
+            req.Params["source"] = intention.SourceName;
+            req.Params["destination"] = intention.DestinationName;
+            var res = req.Execute(ct);
             return res;
         }
 
@@ -371,15 +372,12 @@ namespace Consul
         /// creates a new intention 
         /// </summary>
         /// <param name="intention"></param>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
         /// <param name="ct"></param>
         /// <returns>True if the intention was created successfully or False if not</returns>
-        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, string source, string destination, CancellationToken ct = default)
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention,CancellationToken ct = default)
         {
-            return UpsertIntentionsByName(intention, source, destination, WriteOptions.Default, ct);
+            return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
         }
-
     }
 
     public partial class ConsulClient : IConsulClient

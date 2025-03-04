@@ -237,13 +237,14 @@ namespace Consul.Test
             {
                 Action = "allow",
                 SourceType = "consul",
+                DestinationName = "Lakers",
+                SourceName = "Luka"
             };
 
-            var req = await _client.Connect.UpsertIntentionsByName(newEntry, "LukaDoncic", "Lakers");
+            var req = await _client.Connect.UpsertIntentionsByName(newEntry);
             Assert.Equal(HttpStatusCode.OK, req.StatusCode);
             Assert.True(req.Response);
-
+            await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
         }
-
     }
 }
