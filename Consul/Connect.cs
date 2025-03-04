@@ -333,6 +333,7 @@ namespace Consul
         /// <param name="uuid"></param>
         /// <param name="ct"></param>
         /// <returns>A service intention</returns>
+        [Obsolete("This feature is deprecated in Consul 1.9.0. Please use ReadSpecificIntentionByName instead")]
         public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, CancellationToken ct = default)
         {
             return ReadIntentionByID<ServiceIntention>(uuid, QueryOptions.Default, ct);
@@ -346,6 +347,7 @@ namespace Consul
         /// <param name="q"></param>
         /// <param name="ct"></param>
         /// <returns>A service intention</returns>
+        [Obsolete("This feature is deprecated in Consul 1.9.0. Please use ReadSpecificIntentionByName instead")]
         public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, QueryOptions q, CancellationToken ct = default)
         {
             var req = _client.Get<ServiceIntention>($"v1/connect/intentions/{uuid}", q);
