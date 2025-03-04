@@ -378,6 +378,37 @@ namespace Consul
         {
             return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
         }
+
+        /// <summary>
+        /// reads a specific intention by its unique source and destination.
+        /// </summary>
+        /// <typeparam name="ServiceIntention"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>A service intention</returns>
+        public Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<ServiceIntention>("v1/connect/intentions/exact", q);
+            req.Params["source"] = source;
+            req.Params["destination"] = destination;
+            var res = req.Execute(ct);
+            return res;
+        }
+
+        /// <summary>
+        /// reads a specific intention by its unique source and destination.
+        /// </summary>
+        /// <typeparam name="ServiceIntention"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="ct"></param>
+        /// <returns>A service intention</returns>
+        public Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct = default)
+        {
+            return ReadSpecificIntentionByName<ServiceIntention>(source, destination, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
