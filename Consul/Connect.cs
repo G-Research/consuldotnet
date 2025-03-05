@@ -313,7 +313,7 @@ namespace Consul
             req.Params["source"] = source;
             req.Params["destination"] = destination;
         }
-        
+
         /// Creates a new intention.
         /// The intentions created by this endpoint will not be assigned the following fields: ID, CreatedAt, UpdatedAt.
         /// Additionally, the Meta field cannot be persisted using this endpoint and will require editing the enclosing service-intentions config entry for the destination.
