@@ -36,5 +36,7 @@ namespace Consul.Interfaces
         Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default);
+        Task<WriteResult> DeleteIntentionByName(string source, string destination, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct = default);
     }
 }

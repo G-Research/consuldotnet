@@ -328,6 +328,35 @@ namespace Consul
         {
             return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
         }
+
+        /// <summary>
+        /// Deletes a specific intention by its unique source and destination.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>A Write Option</returns>
+        public Task<WriteResult> DeleteIntentionByName(string source, string destination, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Delete("v1/connect/intentions/exact", q);
+            req.Params["source"] = source;
+            req.Params["destination"] = destination;
+            var res = req.Execute(ct);
+            return res;
+        }
+
+        /// <summary>
+        /// Deletes a specific intention by its unique source and destination.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="ct"></param>
+        /// <returns>A Write Option</returns>
+        public Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct = default)
+        {
+            return DeleteIntentionByName(source, destination, WriteOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
