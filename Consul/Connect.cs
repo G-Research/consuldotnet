@@ -220,11 +220,6 @@ namespace Consul
         public ulong ModifyIndex { get; set; }
     }
 
-    public class ServiceIntentionCreateResponse
-    {
-        public string ID { get; set; }
-    }
-
     public class Connect : IConnectEndpoint
     {
         private readonly ConsulClient _client;
@@ -301,82 +296,6 @@ namespace Consul
         {
             var req = _client.Get<List<ServiceIntention>>("/v1/connect/intentions", q);
             return req.Execute(ct);
-        }
-
-        /// <summary>
-        /// Creates a new intention
-        /// </summary>
-        /// <param name="intention"></param>
-        /// <param name="q"></param>
-        /// <param name="ct"></param>
-        /// <returns>Returns the ID of the created intention.</returns>
-        public async Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
-        {
-            return await _client.Post<ServiceIntention, ServiceIntentionCreateResponse>("v1/connect/intentions", intention, q).Execute(ct).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Creates a new intention
-        /// </summary>
-        /// <param name="intention"></param>
-        /// <param name="ct"></param>
-        /// <returns>Returns the ID of the created intention</returns>
-        public Task<WriteResult<ServiceIntentionCreateResponse>> CreateIntentionWithID(ServiceIntention intention, CancellationToken ct = default)
-        {
-            return CreateIntentionWithID(intention, WriteOptions.Default, ct);
-        }
-
-        /// <summary>
-        /// Reads a specific intention by ID.
-        /// </summary>
-        /// <typeparam name="ServiceIntention"></typeparam>
-        /// <param name="uuid"></param>
-        /// <param name="ct"></param>
-        /// <returns>A service intention</returns>
-        public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, CancellationToken ct = default)
-        {
-            return ReadIntentionByID<ServiceIntention>(uuid, QueryOptions.Default, ct);
-        }
-
-        /// <summary>
-        /// Reads a specific intention by ID.
-        /// </summary>
-        /// <typeparam name="ServiceIntention"></typeparam>
-        /// <param name="uuid"></param>
-        /// <param name="q"></param>
-        /// <param name="ct"></param>
-        /// <returns>A service intention</returns>
-        public Task<QueryResult<ServiceIntention>> ReadIntentionByID<ServiceIntention>(string uuid, QueryOptions q, CancellationToken ct = default)
-        {
-            var req = _client.Get<ServiceIntention>($"v1/connect/intentions/{uuid}", q);
-            return req.Execute(ct);
-        }
-
-        /// <summary>
-        /// creates a new intention 
-        /// </summary>
-        /// <param name="intention"></param>
-        /// <param name="q"></param>
-        /// <param name="ct"></param>
-        /// <returns>True if the intention was created successfully or False if not</returns>
-        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
-        {
-            var req = _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact", intention, q);
-            req.Params["source"] = intention.SourceName;
-            req.Params["destination"] = intention.DestinationName;
-            var res = req.Execute(ct);
-            return res;
-        }
-
-        /// <summary>
-        /// creates a new intention 
-        /// </summary>
-        /// <param name="intention"></param>
-        /// <param name="ct"></param>
-        /// <returns>True if the intention was created successfully or False if not</returns>
-        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default)
-        {
-            return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
         }
 
         /// <summary>
