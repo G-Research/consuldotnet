@@ -176,7 +176,7 @@ namespace Consul.Test
         public async Task Connect_UpsertIntentionByName()
         {
             var cutOffVersion = SemanticVersion.Parse("1.9.0");
-            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but setting CA config is only supported from Consul {cutOffVersion}");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` is only supported from Consul {cutOffVersion}");
 
             var newEntry = new ServiceIntention
             {
@@ -202,7 +202,7 @@ namespace Consul.Test
             Assert.NotEmpty(testIntention.DestinationNS);
             Assert.NotEmpty(testIntention.SourceType);
             Assert.NotEmpty(testIntention.SourceNS);
-            Assert.Contains(testIntention.Action, new[] { "allow", "deny" });
+            Assert.Equal("allow", testIntention.Action);
             Assert.True(testIntention.CreateIndex > 0);
             Assert.True(testIntention.ModifyIndex > 0);
             Assert.True(testIntention.Precedence > 0);
