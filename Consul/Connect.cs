@@ -297,6 +297,37 @@ namespace Consul
             var req = _client.Get<List<ServiceIntention>>("/v1/connect/intentions", q);
             return req.Execute(ct);
         }
+
+        /// <summary>
+        /// Creates a new intention.
+        /// The intentions created by this endpoint will not be assigned the following fields: ID, CreatedAt, UpdatedAt.
+        /// Additionally, the Meta field cannot be persisted using this endpoint and will require editing the enclosing service-intentions config entry for the destination.
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>True if the intention was created successfully or False if not</returns>
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Put<ServiceIntention, bool>($"v1/connect/intentions/exact", intention, q);
+            req.Params["source"] = intention.SourceName;
+            req.Params["destination"] = intention.DestinationName;
+            var res = req.Execute(ct);
+            return res;
+        }
+
+        /// <summary>
+        /// Creates a new intention.
+        /// The intentions created by this endpoint will not be assigned the following fields: ID, CreatedAt, UpdatedAt.
+        /// Additionally, the Meta field cannot be persisted using this endpoint and will require editing the enclosing service-intentions config entry for the destination.
+        /// </summary>
+        /// <param name="intention"></param>
+        /// <param name="ct"></param>
+        /// <returns>True if the intention was created successfully or False if not</returns>
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default)
+        {
+            return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

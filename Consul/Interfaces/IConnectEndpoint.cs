@@ -34,5 +34,7 @@ namespace Consul.Interfaces
         Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default);
         Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct = default);
         Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(QueryOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default);
     }
 }
