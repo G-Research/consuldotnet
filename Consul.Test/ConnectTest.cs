@@ -206,7 +206,7 @@ namespace Consul.Test
             Assert.NotEmpty(intention.DestinationNS);
             Assert.NotEmpty(intention.SourceType);
             Assert.NotEmpty(intention.SourceNS);
-            Assert.Contains(intention.Action, new[] { "allow", "deny" });
+            Assert.Equal("deny", intention.Action);
             Assert.True(intention.CreateIndex > 0);
             Assert.True(intention.ModifyIndex > 0);
             Assert.True(intention.Precedence > 0);
