@@ -409,6 +409,32 @@ namespace Consul
         {
             return ReadSpecificIntentionByName<ServiceIntention>(source, destination, QueryOptions.Default, ct);
         }
+
+        /// <summary>
+        /// This endpoint deletes a specific intention.
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>A write result</returns>
+        [Obsolete("This feature is deprecated from Consul 1.9.0. Please use DeleteIntentionByNameInstead")]
+        public Task<WriteResult> DeleteIntentionByID(string uuid, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Delete($"v1/connect/intentions/{uuid}", q);
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// This endpoint deletes a specific intention.
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <param name="ct"></param>
+        /// <returns>A write result</returns>
+        [Obsolete("This feature is deprecated from Consul 1.9.0. Please use DeleteIntentionByNameInstead")]
+        public Task<WriteResult> DeleteIntentionByID(string uuid, CancellationToken ct = default)
+        {
+            return DeleteIntentionByID(uuid, WriteOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

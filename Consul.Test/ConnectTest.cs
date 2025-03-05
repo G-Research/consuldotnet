@@ -279,5 +279,28 @@ namespace Consul.Test
             Assert.True(intention.Precedence > 0);
             await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_DeleteIntentionByID()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var newEntry = new ServiceIntention
+            {
+                SourceName = "Kanye",
+                Description = "Drama King",
+                DestinationName = "Grammys",
+                Action = "deny",
+                SourceType = "consul"
+            };
+            var req = await _client.Connect.CreateIntentionWithID(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+            Assert.NotNull(req.Response);
+
+            var uuid = req.Response.ID;
+            var delIntentionQuery = await _client.Connect.DeleteIntentionByID(uuid);
+            Assert.Equal(HttpStatusCode.OK, delIntentionQuery.StatusCode);
+        }
     }
 }
