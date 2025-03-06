@@ -315,7 +315,7 @@ namespace Consul
             var res = req.Execute(ct);
             return res;
         }
-  
+
         /// <summary>
         /// reads a specific intention by its unique source and destination.
         /// </summary>
