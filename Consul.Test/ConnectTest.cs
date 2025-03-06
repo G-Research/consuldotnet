@@ -237,6 +237,12 @@ namespace Consul.Test
 
             var deleteReq = await _client.Connect.DeleteIntentionByName(intention.SourceName, intention.DestinationName);
             Assert.Equal(HttpStatusCode.OK, deleteReq.StatusCode);
+
+            var allIntentions = await _client.Connect.ListIntentions<ServiceIntention>();
+            Assert.Equal(HttpStatusCode.OK, allIntentions.StatusCode);
+
+            var deletedIntention = allIntentions.Response.Any(x => x.SourceName == newEntry.SourceName);
+            Assert.False(deletedIntention);
         }
     }
 }
