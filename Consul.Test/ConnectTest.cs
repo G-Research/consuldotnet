@@ -241,8 +241,8 @@ namespace Consul.Test
             var allIntentions = await _client.Connect.ListIntentions<ServiceIntention>();
             Assert.Equal(HttpStatusCode.OK, allIntentions.StatusCode);
 
-            var deletedIntention = allIntentions.Response.Any(x => x.SourceName == newEntry.SourceName);
-            Assert.False(deletedIntention);
+            var deletedIntentionExists = allIntentions.Response.Any(x => x.SourceName == newEntry.SourceName);
+            Assert.False(deletedIntentionExists);
         }
     }
 }
