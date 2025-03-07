@@ -386,6 +386,34 @@ namespace Consul
         {
             return ReadSpecificIntentionByName<ServiceIntention>(source, destination, QueryOptions.Default, ct);
         }
+
+        /// <summary>
+        /// lists the intentions that match a given source or destination.
+        /// </summary>
+        /// <param name="by">Specifies whether to match the "name" value by "source" or "destination".</param>
+        /// <param name="name">Specifies a name to match according to the source or destination</param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>A list of intentions that match the source of destination specified</returns>
+        public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<Dictionary<string, List<ServiceIntention>>>("v1/connect/intentions/match", q);
+            req.Params["by"] = by;
+            req.Params["name"] = name;
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// lists the intentions that match a given source or destination.
+        /// </summary>
+        /// <param name="by">Specifies whether to match the "name" value by "source" or "destination".</param>
+        /// <param name="name">Specifies a name to match according to the source or destination</param>
+        /// <param name="ct"></param>
+        /// <returns>A list of intentions that match the source of destination specified</returns>
+        public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct = default)
+        {
+            return ListMatchingIntentions(by, name, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

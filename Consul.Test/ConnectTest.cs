@@ -289,5 +289,64 @@ namespace Consul.Test
 
             await _client.Configuration.DeleteConfig("service-intentions", destinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_ListMatchingIntentions()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var firstIntention = new ServiceIntention
+            {
+                Action = "allow",
+                SourceType = "consul",
+                DestinationName = "Heaven",
+                SourceName = "Fortunate"
+            };
+            var secondIntention = new ServiceIntention
+            {
+                Action = "deny",
+                SourceType = "consul",
+                DestinationName = "Heaven",
+                SourceName = "Adolf-Hitler"
+            };
+            
+            var req1 = await _client.Connect.UpsertIntentionsByName(firstIntention);
+            Assert.Equal(HttpStatusCode.OK, req1.StatusCode);
+
+            var req2 = await _client.Connect.UpsertIntentionsByName(secondIntention);
+            Assert.Equal(HttpStatusCode.OK, req2.StatusCode);
+
+            var matchingIntentionQuery1 = await _client.Connect.ListMatchingIntentions("destination", firstIntention.DestinationName);
+            Assert.Equal(HttpStatusCode.OK, matchingIntentionQuery1.StatusCode);
+            Assert.NotNull(matchingIntentionQuery1.Response);
+
+            var matchingIntentionQuery2 = await _client.Connect.ListMatchingIntentions("source", secondIntention.SourceName);
+            Assert.Equal(HttpStatusCode.OK, matchingIntentionQuery2.StatusCode);
+            Assert.NotNull(matchingIntentionQuery2.Response);
+
+            var matchingIntentionsList1 = matchingIntentionQuery1.Response;
+            var matchingIntentionsList2 = matchingIntentionQuery2.Response;
+
+            var keysForMatchingIntentions1 = matchingIntentionsList1.Keys;
+            var keysForMatchingIntentions2 = matchingIntentionsList2.Keys;
+
+            Assert.Contains(keysForMatchingIntentions1, i => i.Contains("Heaven"));
+            Assert.Contains(keysForMatchingIntentions2, i => i.Contains("Adolf-Hitler"));
+
+            var heavenMatchingIntentions = matchingIntentionsList1["Heaven"];
+            Assert.Contains(heavenMatchingIntentions, i => i.SourceName == "Fortunate");
+            Assert.Contains(heavenMatchingIntentions, i => i.SourceName == "Adolf-Hitler");
+            Assert.All(heavenMatchingIntentions, i => Assert.Equal("Heaven", i.DestinationName));
+            Assert.All(heavenMatchingIntentions, i => Assert.Contains(i.Action, new[] { "allow", "deny" }));
+
+            var hitlerMatchingIntentions = matchingIntentionsList2["Adolf-Hitler"];
+            Assert.All(hitlerMatchingIntentions, i => Assert.Equal("Adolf-Hitler", i.SourceName));
+            Assert.All(hitlerMatchingIntentions, i => Assert.Equal("Heaven", i.DestinationName));
+            Assert.All(hitlerMatchingIntentions, i => Assert.Equal("deny", i.Action));
+
+            await _client.Connect.DeleteIntentionByName(firstIntention.SourceName, firstIntention.DestinationName);
+            await _client.Connect.DeleteIntentionByName(secondIntention.SourceName, secondIntention.DestinationName);
+        }
     }
 }
