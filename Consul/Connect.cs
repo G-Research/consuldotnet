@@ -342,8 +342,7 @@ namespace Consul
             var req = _client.Delete("v1/connect/intentions/exact", q);
             req.Params["source"] = source;
             req.Params["destination"] = destination;
-            var res = req.Execute(ct);
-            return res;
+            return req.Execute(ct);
         }
 
         /// <summary>
