@@ -208,5 +208,41 @@ namespace Consul.Test
             Assert.True(testIntention.Precedence > 0);
             await _client.Configuration.DeleteConfig("service-intentions", newEntry.DestinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_DeleteIntentionByName()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` is only supported from Consul {cutOffVersion}");
+
+            var newEntry = new ServiceIntention
+            {
+                Action = "allow",
+                SourceType = "consul",
+                DestinationName = "Haran",
+                SourceName = "Kyle Crane"
+            };
+
+            var req = await _client.Connect.UpsertIntentionsByName(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+            Assert.True(req.Response);
+
+            var intentionsQuery = await _client.Connect.ListIntentions<ServiceIntention>();
+            Assert.Equal(HttpStatusCode.OK, intentionsQuery.StatusCode);
+
+            var intentions = intentionsQuery.Response;
+            Assert.NotNull(intentions);
+
+            var intention = intentions.First(i => i.SourceName == newEntry.SourceName);
+
+            var deleteReq = await _client.Connect.DeleteIntentionByName(intention.SourceName, intention.DestinationName);
+            Assert.Equal(HttpStatusCode.OK, deleteReq.StatusCode);
+
+            var allIntentions = await _client.Connect.ListIntentions<ServiceIntention>();
+            Assert.Equal(HttpStatusCode.OK, allIntentions.StatusCode);
+
+            var deletedIntentionExists = allIntentions.Response.Any(x => x.SourceName == newEntry.SourceName);
+            Assert.False(deletedIntentionExists);
+        }
     }
 }
