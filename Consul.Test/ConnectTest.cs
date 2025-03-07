@@ -244,5 +244,50 @@ namespace Consul.Test
             var deletedIntentionExists = allIntentions.Response.Any(x => x.SourceName == newEntry.SourceName);
             Assert.False(deletedIntentionExists);
         }
+
+        [SkippableFact]
+        public async Task Connect_ReadSpecificIntentionByName()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            string sourceName = "Kanye West";
+            string destinationName = "Oscars";
+
+            var newEntry = new ServiceIntentionsEntry
+            {
+                Kind = "service-intentions",
+                Name = destinationName,
+                Sources = new List<SourceIntention>
+                {
+                    new SourceIntention
+                    {
+                        Name = sourceName,
+                        Action = "deny",
+                        LegacyCreateTime = DateTime.UtcNow,
+                        LegacyUpdateTime = DateTime.UtcNow,
+                    }
+                }
+            };
+
+            var req = await _client.Configuration.ApplyConfig(newEntry);
+            Assert.Equal(HttpStatusCode.OK, req.StatusCode);
+
+            var intentionQuery = await _client.Connect.ReadSpecificIntentionByName<ServiceIntention>(sourceName, destinationName);
+            var intention = intentionQuery.Response;
+
+            Assert.NotNull(intention);
+            Assert.NotEmpty(intention.DestinationName);
+            Assert.NotEmpty(intention.SourceName);
+            Assert.NotEmpty(intention.DestinationNS);
+            Assert.NotEmpty(intention.SourceType);
+            Assert.NotEmpty(intention.SourceNS);
+            Assert.Equal("deny", intention.Action);
+            Assert.True(intention.CreateIndex > 0);
+            Assert.True(intention.ModifyIndex > 0);
+            Assert.True(intention.Precedence > 0);
+
+            await _client.Configuration.DeleteConfig("service-intentions", destinationName);
+        }
     }
 }
