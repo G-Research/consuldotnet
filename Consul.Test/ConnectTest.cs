@@ -310,7 +310,7 @@ namespace Consul.Test
                 DestinationName = "Krusty-Krab",
                 SourceName = "Plankton"
             };
-            
+
             var req1 = await _client.Connect.UpsertIntentionsByName(firstIntention);
             Assert.Equal(HttpStatusCode.OK, req1.StatusCode);
 
