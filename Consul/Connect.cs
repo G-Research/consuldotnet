@@ -220,6 +220,12 @@ namespace Consul
         public ulong ModifyIndex { get; set; }
     }
 
+    public class ServiceIntentionResultResponse
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore )]
+        public bool Allowed { get; set; }
+    }
+
     public class Connect : IConnectEndpoint
     {
         private readonly ConsulClient _client;
@@ -413,6 +419,36 @@ namespace Consul
         public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct = default)
         {
             return ListMatchingIntentions(by, name, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Evaluates the intentions for a specific source and destination.
+        /// This endpoint will always evaluate matching intentions with L7 Permissions defined as deny intentions because there is no request to check against.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns true or false which indicates whether the connection would be authorized or not</returns>
+        public Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, QueryOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Get<ServiceIntentionResultResponse>("v1/connect/intentions/check", q);
+            req.Params["source"] = source;
+            req.Params["destination"] = destination;
+            return req.Execute(ct);
+        }
+
+        /// <summary>
+        /// Evaluates the intentions for a specific source and destination.
+        /// This endpoint will always evaluate matching intentions with L7 Permissions defined as deny intentions because there is no request to check against.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns true or false which indicates whether the connection would be authorized or not</returns>
+        public Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct = default)
+        {
+            return CheckIntentionResult(source, destination, QueryOptions.Default, ct);
         }
     }
 

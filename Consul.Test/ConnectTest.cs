@@ -351,5 +351,44 @@ namespace Consul.Test
             await _client.Connect.DeleteIntentionByName(firstIntention.SourceName, firstIntention.DestinationName);
             await _client.Connect.DeleteIntentionByName(secondIntention.SourceName, secondIntention.DestinationName);
         }
+
+        [SkippableFact]
+        public async Task Connect_CheckIntentionResult()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var firstIntention = new ServiceIntention
+            {
+                Action = "allow",
+                SourceType = "consul",
+                DestinationName = "Secret-Formula",
+                SourceName = "Mr-Krabbs"
+            };
+            var secondIntention = new ServiceIntention
+            {
+                Action = "deny",
+                SourceType = "consul",
+                DestinationName = "Secret-Formula",
+                SourceName = "Plankton"
+            };
+
+            var upsertIntention1 = await _client.Connect.UpsertIntentionsByName(firstIntention);
+            Assert.Equal(HttpStatusCode.OK, upsertIntention1.StatusCode);
+
+            var upsertIntention2 = await _client.Connect.UpsertIntentionsByName(secondIntention);
+            Assert.Equal(HttpStatusCode.OK, upsertIntention2.StatusCode);
+
+            var intentionResultOne = await _client.Connect.CheckIntentionResult(firstIntention.SourceName, firstIntention.DestinationName);
+            Assert.Equal(HttpStatusCode.OK, intentionResultOne.StatusCode);
+            Assert.True(intentionResultOne.Response.Allowed);
+
+            var intentionResultTwo = await _client.Connect.CheckIntentionResult(secondIntention.SourceName, secondIntention.DestinationName);
+            Assert.Equal(HttpStatusCode.OK, intentionResultTwo.StatusCode);
+            Assert.False(intentionResultTwo.Response.Allowed);
+
+            await _client.Connect.DeleteIntentionByName(firstIntention.SourceName, firstIntention.DestinationName);
+            await _client.Connect.DeleteIntentionByName(secondIntention.SourceName, secondIntention.DestinationName);
+        }
     }
 }
