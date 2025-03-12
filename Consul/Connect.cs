@@ -222,7 +222,7 @@ namespace Consul
 
     public class ServiceIntentionResultResponse
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore )]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool Allowed { get; set; }
     }
 
