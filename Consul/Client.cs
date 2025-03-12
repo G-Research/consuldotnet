@@ -164,26 +164,20 @@ namespace Consul
             var envAddr = (Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR") ?? string.Empty).Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(envAddr))
             {
-                var addrParts = envAddr.Split(':');
-                for (int i = 0; i < addrParts.Length; i++)
+                if (!Uri.TryCreate(envAddr, UriKind.Absolute, out Uri uri) ||
+                    string.IsNullOrEmpty(uri.Host))
                 {
-                    addrParts[i] = addrParts[i].Trim();
+                    uri = new Uri($"http://{envAddr}", UriKind.Absolute);
                 }
-                if (!string.IsNullOrEmpty(addrParts[0]))
+
+                consulAddress.Host = uri.Host;
+
+                if (envAddr.Contains($"{uri.Host}:{uri.Port}"))
                 {
-                    consulAddress.Host = addrParts[0];
+                    consulAddress.Port = uri.Port;
                 }
-                if (addrParts.Length > 1 && !string.IsNullOrEmpty(addrParts[1]))
-                {
-                    try
-                    {
-                        consulAddress.Port = ushort.Parse(addrParts[1]);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ConsulConfigurationException("Failed parsing port from environment variable CONSUL_HTTP_ADDR", ex);
-                    }
-                }
+                consulAddress.Path = uri.AbsolutePath;
+                consulAddress.Scheme = uri.Scheme;
             }
 
             var useSsl = (Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL") ?? string.Empty).Trim().ToLowerInvariant();
@@ -480,6 +474,8 @@ namespace Consul
             _aclReplication = new Lazy<ACLReplication>(() => new ACLReplication(this));
             _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
             _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
+            _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
+            _connect = new Lazy<Connect>(() => new Connect(this));
         }
 
         #region IDisposable Support

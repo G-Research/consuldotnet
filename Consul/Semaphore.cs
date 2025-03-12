@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -267,6 +268,7 @@ namespace Consul
         private Task _sessionRenewTask;
         private Task _monitorTask;
 
+        private readonly JsonSerializer _serializer = new JsonSerializer();
         internal SemaphoreOptions Opts { get; set; }
 
         public bool IsHeld
@@ -721,14 +723,17 @@ namespace Consul
         /// <returns>A K/V pair with the lock data encoded in the Value field</returns>
         private KVPair EncodeLock(SemaphoreLock l, ulong oldIndex)
         {
-            var jsonValue = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(l));
-
-            return new KVPair(string.Join("/", Opts.Prefix, DefaultSemaphoreKey))
+            using (var sw = new StringWriter())
             {
-                Value = jsonValue,
-                Flags = SemaphoreFlagValue,
-                ModifyIndex = oldIndex
-            };
+                _serializer.Serialize(sw, l);
+                var jsonValue = Encoding.UTF8.GetBytes(sw.ToString());
+                return new KVPair(string.Join("/", Opts.Prefix, DefaultSemaphoreKey))
+                {
+                    Value = jsonValue,
+                    Flags = SemaphoreFlagValue,
+                    ModifyIndex = oldIndex
+                };
+            }
         }
 
         /// <summary>

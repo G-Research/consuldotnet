@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
@@ -215,7 +214,7 @@ namespace Consul
     /// <summary>
     /// IngressGatewayEntry provides configuration for the Ingress Gateway Proxy
     /// </summary>
-    public class IngressGatewayEntry
+    public class IngressGatewayEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "ingress-gateway";
@@ -774,7 +773,7 @@ namespace Consul
     /// <summary>
     /// Configures terminating gateways to proxy traffic from services in the Consul service mesh to services registered with Consul that do not have a service mesh sidecar proxy
     /// </summary>
-    public class TerminalGatewayEntry : IConfigurationEntry
+    public class TerminatingGatewayEntry : IConfigurationEntry
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Kind { get; set; } = "terminating-gateway";
@@ -793,6 +792,15 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<LinkedService> Services { get; set; }
+    }
+
+    public class LinkedService
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Namespace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CAFile { get; set; }
@@ -805,15 +813,6 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SNI { get; set; }
-    }
-
-    public class LinkedService
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
     }
 
     /// <summary>
@@ -1087,32 +1086,6 @@ namespace Consul
         public bool Terminal { get; set; }
     }
 
-    /// <summary>
-    /// Configures control access between services in the service mesh.
-    /// </summary>
-    public class ServiceIntentionsEntry : IConfigurationEntry
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Kind { get; set; } = "service-intentions";
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Partition { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Meta { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> JWT { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Provider> Providers { get; set; }
-    }
 
     public class Provider
     {
@@ -1677,6 +1650,7 @@ namespace Consul
         /// </summary>
         /// <param name="q">Write Options</param>
         /// <param name="configurationEntry">The configuration entry</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(WriteOptions q, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
@@ -1688,6 +1662,7 @@ namespace Consul
         ///  This creates or updates the given config entry.
         /// </summary>
         /// <param name="configurationEntry">The configuration entry</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
         {
@@ -1750,7 +1725,6 @@ namespace Consul
         /// <summary>
         /// This Deletes the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="name">The name of config entry</param>
         /// <param name="q">Write Options</param>
@@ -1765,7 +1739,6 @@ namespace Consul
         /// <summary>
         /// This Deletes the given config entry.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
         /// <param name="kind">The kind of config entry</param>
         /// <param name="name">The name of config entry</param>
         /// <param name="ct">Cancellation Token</param>

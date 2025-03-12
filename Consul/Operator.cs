@@ -100,6 +100,36 @@ namespace Consul
         public int NumNodes { get; set; }
     }
 
+    public class AreaRequest
+    {
+        /// <summary>
+        /// PeerDatacenter is the peer Consul datacenter that will make up the
+        /// other side of this network area. Network areas always involve a pair
+        /// of datacenters: the datacenter where the area was created, and the
+        /// peer datacenter. This is required.
+        /// </summary>
+        public string PeerDatacenter { get; set; }
+
+        /// <summary>
+        /// RetryJoin specifies the address of Consul servers to join to, such as
+	    /// an IPs or hostnames with an optional port number. This is optional.
+        /// </summary>
+        public string[] RetryJoin { get; set; }
+
+        /// <summary>
+        /// UseTLS specifies whether gossip over this area should be encrypted with TLS
+        /// if possible.
+        /// </summary>
+        public bool UseTLS { get; set; }
+    }
+
+    public class Area : AreaRequest
+    {
+        /// <summary>
+        /// ID is this identifier for an area (a UUID).
+        /// </summary>
+        public string ID { get; set; }
+    }
     public class Operator : IOperatorEndpoint
     {
         private readonly ConsulClient _client;
@@ -232,6 +262,98 @@ namespace Consul
         public Task<QueryResult<ConsulLicense>> GetConsulLicense(string datacenter = "", CancellationToken ct = default)
         {
             return _client.Get<ConsulLicense>("/v1/operator/license", new QueryOptions { Datacenter = datacenter }).Execute(ct);
+        }
+
+        /// <summary>
+        /// // SegmentList returns all the available LAN segments.
+        /// </summary>
+        public Task<QueryResult<string[]>> SegmentList(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<string[]>("/v1/operator/segment", q).Execute(ct);
+        }
+
+        /// <summary>
+        /// // SegmentList returns all the available LAN segments.
+        /// </summary>
+        public Task<QueryResult<string[]>> SegmentList(CancellationToken ct = default)
+        {
+            return SegmentList(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// CreateArea will create a new network area, a generated ID will be returned on success.
+        /// </summary>
+        public Task<WriteResult<string>> AreaCreate(AreaRequest area, CancellationToken ct = default)
+        {
+            return AreaCreate(area, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// CreateArea will create a new network area, a generated ID will be returned on success.
+        /// </summary>
+        public async Task<WriteResult<string>> AreaCreate(AreaRequest area, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = await _client.Post<AreaRequest, Area>("/v1/operator/area", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(req, req.Response.ID);
+        }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(CancellationToken ct = default)
+        {
+            return AreaList(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// AreaList returns all the available network areas
+        /// </summary>
+        public Task<QueryResult<List<Area>>> AreaList(QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<List<Area>>("/v1/operator/area", q).Execute(ct);
+        }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, CancellationToken ct = default)
+        {
+            return AreaUpdate(area, areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaUpdate will update the configuration of the network area with the given area Id.
+        /// </summary>
+        public async Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = await _client.Put<AreaRequest, Area>($"/v1/operator/area/{areaId}", area, q).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<string>(req, req.Response.ID);
+        }
+        /// <summary>
+        /// AreaGet returns a single network area
+        /// </summary>
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, CancellationToken ct = default)
+        {
+            return AreaGet(areaId, QueryOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaGet returns a single network area
+        /// </summary>
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, QueryOptions q, CancellationToken ct = default)
+        {
+            return _client.Get<Area[]>($"/v1/operator/area/{areaId}", q).Execute(ct);
+        }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, CancellationToken ct = default)
+        {
+            return AreaDelete(areaId, WriteOptions.Default, ct);
+        }
+        /// <summary>
+        /// AreaDelete deletes the given network area.
+        /// </summary>
+        public Task<WriteResult> AreaDelete(string areaId, WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
     }
 

@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+## 1.7.14.7
+
+* Do not use static JsonConvert (#417)
+* Embed PDBs (#412)
+* Add support for Update CA Configuration (#411)
+* Add support for CAGetConfiguration (#404)
+
+## 1.7.14.6
+* Fix parsing a string based host name (#401)
+* Add support for connect List CA Roots (#400)
+
+## 1.7.14.5
+* Restore default port 8500 for CONSUL_HTTP_ADDR (#395)
+* Add support for deleting Network Area (#393)
+* Add support for updating Network Area (#389)
+* Add support for getting Network Area (#392) 
+* Add support for creating Network Area (#382) 
+* Add support for discovery Chain Post (#378) 
+* Add support for list segments endpoint (#374) 
+* Add support for discovery chain get method (#369) 
+* Add support for explain prepared query API endpoint (#368)
+* Add GenerateDocumentationFile to make summaries show up in IDEs (#365)
+* Add GET List Ingress Health for Service (#350)
+
+## 1.7.14.4
+* Support for non-root consul urls (#333)
+* Added GET GatewayService endpoint (#347)
+* Added Update LAN Coordinates endpoints (#348)
+* Added ConnectAuthorize endpoint (#343)
+* Added Get CALeaf endpoint (#339)
+* Added GetCARoots with QueryOptions parameter (#338)
+* Added Connect CA Roots endpoint (#332)
+* Support for listing nodes for connect-capable service (#312)
+* Added Read LAN Coordinates for a specific node (#314)
+
 ## 1.7.14.3
 * Added the Configuration property to the IConsulClient interface (#298)
 * Added Support for Getting Service Configuration (#278)

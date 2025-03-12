@@ -261,7 +261,7 @@ namespace Consul
         /// <summary>
         /// Create makes a new session. Providing a session entry can customize the session. It can also be null to use defaults.
         /// </summary>
-        /// <param name="se">The SessionEntry options to use</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
 
         public Task<WriteResult<string>> Create(CancellationToken ct = default)
@@ -283,6 +283,7 @@ namespace Consul
         /// </summary>
         /// <param name="se">The SessionEntry options to use</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
         public async Task<WriteResult<string>> Create(SessionEntry se, WriteOptions q, CancellationToken ct = default)
         {
@@ -301,6 +302,7 @@ namespace Consul
         /// CreateNoChecks is like Create but is used specifically to create a session with no associated health checks.
         /// </summary>
         /// <param name="se">The SessionEntry options to use</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
         public Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct = default)
         {
@@ -312,6 +314,7 @@ namespace Consul
         /// </summary>
         /// <param name="se">The SessionEntry options to use</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
         public Task<WriteResult<string>> CreateNoChecks(SessionEntry se, WriteOptions q, CancellationToken ct = default)
         {
@@ -335,6 +338,7 @@ namespace Consul
         /// Destroy invalidates a given session
         /// </summary>
         /// <param name="id">The session ID to destroy</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the result of the session destruction</returns>
         public Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default)
         {
@@ -346,6 +350,7 @@ namespace Consul
         /// </summary>
         /// <param name="id">The session ID to destroy</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the result of the session destruction</returns>
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default)
         {
@@ -356,6 +361,7 @@ namespace Consul
         /// Info looks up a single session
         /// </summary>
         /// <param name="id">The session ID to look up</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the session information, or an empty query result if the session entry does not exist</returns>
         public Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct = default)
         {
@@ -367,6 +373,7 @@ namespace Consul
         /// </summary>
         /// <param name="id">The session ID to look up</param>
         /// <param name="q">Customized query options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the session information, or an empty query result if the session entry does not exist</returns>
         public async Task<QueryResult<SessionEntry>> Info(string id, QueryOptions q, CancellationToken ct = default)
         {
@@ -387,6 +394,7 @@ namespace Consul
         /// List gets all active sessions
         /// </summary>
         /// <param name="q">Customized query options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the list of sessions, or an empty query result if no sessions exist</returns>
         public Task<QueryResult<SessionEntry[]>> List(QueryOptions q, CancellationToken ct = default)
         {
@@ -397,6 +405,7 @@ namespace Consul
         /// Node gets all sessions for a node
         /// </summary>
         /// <param name="node">The node ID</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the list of sessions, or an empty query result if no sessions exist</returns>
         public Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct = default)
         {
@@ -408,6 +417,7 @@ namespace Consul
         /// </summary>
         /// <param name="node">The node ID</param>
         /// <param name="q">Customized query options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the list of sessions, or an empty query result if no sessions exist</returns>
         public Task<QueryResult<SessionEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default)
         {
@@ -418,6 +428,7 @@ namespace Consul
         /// Renew renews the TTL on a given session
         /// </summary>
         /// <param name="id">The session ID to renew</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An updated session entry</returns>
         public Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct = default)
         {
@@ -429,6 +440,7 @@ namespace Consul
         /// </summary>
         /// <param name="id">The session ID to renew</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An updated session entry</returns>
         public async Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default)
         {

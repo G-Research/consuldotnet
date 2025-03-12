@@ -52,6 +52,7 @@ namespace Consul
         /// <param name="endpoint">The URL endpoint to access</param>
         /// <param name="obj">The object to serialize and send to the endpoint. Must be able to be JSON serialized, or be an object of type byte[], which is sent without serialzation.</param>
         /// <param name="q">Custom write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>The data returned by the custom endpoint in response to the write request</returns>
         public Task<WriteResult<dynamic>> Write(string endpoint, object obj, WriteOptions q, CancellationToken ct = default)
         {

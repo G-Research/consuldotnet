@@ -6,7 +6,15 @@
       "version": "5.1.250801",
       "commands": [
         "dotnet-format"
-      ]
+      ],
+      "rollForward": false
+    },
+    "docfx": {
+      "version": "2.78.2",
+      "commands": [
+        "docfx"
+      ],
+      "rollForward": false
     }
   }
 }

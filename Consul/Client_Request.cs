@@ -28,7 +28,9 @@ namespace Consul
     /// <summary>
     /// The consistency mode of a request.
     /// </summary>
-    /// <see cref="http://www.consul.io/docs/agent/http.html"/>
+    /// <remarks>
+    /// <seealso href="http://www.consul.io/docs/agent/http.html"/>
+    /// </remarks>
     public enum ConsistencyMode
     {
         /// <summary>
@@ -55,7 +57,7 @@ namespace Consul
         internal Stream ResponseStream { get; set; }
         internal string Endpoint { get; set; }
 
-        internal readonly JsonSerializer _serializer = new JsonSerializer();
+        private readonly JsonSerializer _serializer = new JsonSerializer();
 
         internal ConsulRequest(ConsulClient client, string url, HttpMethod method)
         {
@@ -81,12 +83,11 @@ namespace Consul
         protected abstract void ApplyOptions(ConsulClientConfiguration clientConfig);
         protected abstract void ApplyHeaders(HttpRequestMessage message, ConsulClientConfiguration clientConfig);
 
-        protected Uri BuildConsulUri(string url, Dictionary<string, string> p)
+        protected internal Uri BuildConsulUri(string url, Dictionary<string, string> p)
         {
-            var builder = new UriBuilder(Client.Config.Address)
-            {
-                Path = url
-            };
+            var builder = new UriBuilder(Client.Config.Address);
+            builder.Path += url;
+            builder.Path = builder.Path.Replace("//", "/");
 
             ApplyOptions(Client.Config);
 
@@ -119,6 +120,13 @@ namespace Consul
             }
         }
 
-        protected static byte[] Serialize(object value) => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
+        protected byte[] Serialize(object value)
+        {
+            using (var sw = new StringWriter())
+            {
+                _serializer.Serialize(sw, value);
+                return Encoding.UTF8.GetBytes(sw.ToString());
+            }
+        }
     }
 }

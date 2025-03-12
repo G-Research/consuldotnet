@@ -1,6 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+const fs = require('node:fs');
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
@@ -10,6 +11,9 @@ const dotNetFrameworkMinVersion = `4.6.1`;
 const dotNetCoreMinVersion = `2.0.0`;
 const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X.X`);
 const consulAPIVersion = clean_version(extract_consul_version(consulDotNetVersion));
+const url = process.env.URL || `https://consuldot.net`;
+const baseUrl = process.env.BASE_URL || `/`;
+const shouldIncludeApiReference = fs.existsSync('./api');
 
 function clean_version(version) {
     if (version) {
@@ -41,8 +45,8 @@ const config = {
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
 
-    url: 'https://consuldot.net',
-    baseUrl: '/',
+    url: url,
+    baseUrl: baseUrl,
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
@@ -81,6 +85,18 @@ const config = {
         ],
     ],
 
+    plugins: [
+        shouldIncludeApiReference && [
+            '@docusaurus/plugin-content-docs',
+            {
+                id: 'api',
+                path: 'api',
+                routeBasePath: 'api',
+                sidebarPath: require.resolve('./sidebars.js'),
+            },
+        ],
+    ],
+
     themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
@@ -97,6 +113,13 @@ const config = {
                         docId: 'README',
                         type: 'doc',
                         label: 'Docs',
+                        position: 'left',
+                    },
+                    shouldIncludeApiReference && {
+                        docsPluginId: 'api',
+                        docId: 'Consul/README',
+                        type: 'doc',
+                        label: 'API Reference',
                         position: 'left',
                     },
                     {
@@ -124,7 +147,7 @@ const config = {
                         className: 'header-twitter-link',
                         'aria-label': 'Twitter',
                     },
-                ],
+                ].filter(Boolean),
             },
             footer: {
                 links: [
@@ -223,6 +246,11 @@ const config = {
                 additionalLanguages: ['csharp', 'powershell', 'bash'],
             },
             metadata: [{name: 'twitter:card', content: 'summary'}],
+            algolia: {
+                appId: 'T4HSDGU54M',
+                apiKey: '82d2e06f459e8fbc1fdb908d6ccb367a',
+                indexName: 'consuldot',
+            },
         }),
 };
 

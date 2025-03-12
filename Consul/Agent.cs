@@ -676,6 +676,57 @@ namespace Consul
         public Dictionary<string, string> Labels { get; set; }
     }
 
+    public class AgentAuthorizeParameters
+    {
+        public string Target { get; set; }
+        public string ClientCertURI { get; set; }
+        public string ClientCertSerial { get; set; }
+    }
+
+    public class AgentAuthorizeResponse
+    {
+        public bool Authorized { get; set; }
+        public string Reason { get; set; }
+    }
+
+    public class CARoots
+    {
+        public string ActiveRootID { get; set; }
+        public string TrustDomain { get; set; }
+        public List<Root> Roots { get; set; }
+    }
+
+    public class Root
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public long SerialNumber { get; set; }
+        public string SigningKeyID { get; set; }
+        public string ExternalTrustDomain { get; set; }
+        public string NotBefore { get; set; }
+        public string NotAfter { get; set; }
+        public string RootCert { get; set; }
+        public List<string> IntermediateCerts { get; set; }
+        public bool Active { get; set; }
+        public string PrivateKeyType { get; set; }
+        public long PrivateKeyBits { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+    }
+
+    public class CALeaf
+    {
+        public string SerialNumber { get; set; }
+        public string CertPEM { get; set; }
+        public string PrivateKeyPEM { get; set; }
+        public string Service { get; set; }
+        public string ServiceURI { get; set; }
+        public DateTime ValidAfter { get; set; }
+        public DateTime ValidBefore { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+    }
+
     /// <summary>
     /// Agent can be used to query the Agent endpoints
     /// </summary>
@@ -743,6 +794,7 @@ namespace Consul
         /// Checks returns the locally registered checks
         /// </summary>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A map of the registered check names and check data</returns>
         public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(Filter filter, CancellationToken ct = default)
         {
@@ -762,6 +814,7 @@ namespace Consul
         /// Services returns the locally registered services
         /// </summary>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A map of the registered services and service data</returns>
         public async Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default)
         {
@@ -786,6 +839,7 @@ namespace Consul
         /// ServiceRegister is used to register a new service with the local agent
         /// </summary>
         /// <param name="service">A service registration object</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default)
         {
@@ -797,6 +851,7 @@ namespace Consul
         /// </summary>
         /// <param name="service">A service registration object</param>
         /// <param name="replaceExistingChecks">Missing health checks from the request will be deleted from the agent.</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default)
         {
@@ -812,6 +867,7 @@ namespace Consul
         /// ServiceRegister is used to register a new service with the local agent
         /// </summary>
         /// <param name="serviceID">The service ID</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default)
         {
@@ -823,6 +879,7 @@ namespace Consul
         /// </summary>
         /// <param name="checkID">The check ID</param>
         /// <param name="note">An optional, arbitrary string to write to the check status</param>
+        /// <param name="ct">The cancellation token</param>
         public Task PassTTL(string checkID, string note, CancellationToken ct = default)
         {
             return LegacyUpdateTTL(checkID, note, TTLStatus.Pass, ct);
@@ -833,6 +890,7 @@ namespace Consul
         /// </summary>
         /// <param name="checkID">The check ID</param>
         /// <param name="note">An optional, arbitrary string to write to the check status</param>
+        /// <param name="ct">The cancellation token</param>
         public Task WarnTTL(string checkID, string note, CancellationToken ct = default)
         {
             return LegacyUpdateTTL(checkID, note, TTLStatus.Warn, ct);
@@ -843,6 +901,7 @@ namespace Consul
         /// </summary>
         /// <param name="checkID">The check ID</param>
         /// <param name="note">An optional, arbitrary string to write to the check status</param>
+        /// <param name="ct">The cancellation token</param>
         public Task FailTTL(string checkID, string note, CancellationToken ct = default)
         {
             return LegacyUpdateTTL(checkID, note, TTLStatus.Critical, ct);
@@ -854,6 +913,7 @@ namespace Consul
         /// <param name="checkID">The check ID</param>
         /// <param name="output">An optional, arbitrary string to write to the check status</param>
         /// <param name="status">The state to set the check to</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default)
         {
@@ -871,6 +931,7 @@ namespace Consul
         /// <param name="checkID">The check ID</param>
         /// <param name="note">An optional, arbitrary string to note on the check status</param>
         /// <param name="status">The state to set the check to</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         private Task<WriteResult> LegacyUpdateTTL(string checkID, string note, TTLStatus status, CancellationToken ct = default)
         {
@@ -886,6 +947,7 @@ namespace Consul
         /// CheckRegister is used to register a new check with the local agent
         /// </summary>
         /// <param name="check">A check registration object</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> CheckRegister(AgentCheckRegistration check, CancellationToken ct = default)
         {
@@ -896,6 +958,7 @@ namespace Consul
         /// CheckDeregister is used to deregister a check with the local agent
         /// </summary>
         /// <param name="checkID">The check ID to deregister</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> CheckDeregister(string checkID, CancellationToken ct = default)
         {
@@ -907,6 +970,7 @@ namespace Consul
         /// </summary>
         /// <param name="addr">The address to join to</param>
         /// <param name="wan">Join the WAN pool</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> Join(string addr, bool wan, CancellationToken ct = default)
         {
@@ -922,6 +986,7 @@ namespace Consul
         /// ForceLeave is used to have the agent eject a failed node
         /// </summary>
         /// <param name="node">The node name to remove</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> ForceLeave(string node, CancellationToken ct = default)
         {
@@ -950,6 +1015,7 @@ namespace Consul
         /// Reload triggers a configuration reload for the agent we are connected to.
         /// </summary>
         /// <param name="node">The node name to reload</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         [Obsolete]
         public Task<WriteResult> Reload(string node, CancellationToken ct = default)
@@ -962,6 +1028,7 @@ namespace Consul
         /// </summary>
         /// <param name="serviceID">The service ID</param>
         /// <param name="reason">An optional reason</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> EnableServiceMaintenance(string serviceID, string reason, CancellationToken ct = default)
         {
@@ -975,6 +1042,7 @@ namespace Consul
         /// DisableServiceMaintenance toggles service maintenance mode off for the given service ID
         /// </summary>
         /// <param name="serviceID">The service ID</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> DisableServiceMaintenance(string serviceID, CancellationToken ct = default)
         {
@@ -987,6 +1055,7 @@ namespace Consul
         /// EnableNodeMaintenance toggles node maintenance mode on for the agent we are connected to
         /// </summary>
         /// <param name="reason">An optional reason</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         public Task<WriteResult> EnableNodeMaintenance(string reason, CancellationToken ct = default)
         {
@@ -1038,6 +1107,8 @@ namespace Consul
         /// GetLocalServiceHealth returns the health info of a service registered on the local agent
         /// </summary>
         /// <param name="serviceName">Name of service</param>
+        /// <param name="q"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
         public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
         {
@@ -1048,6 +1119,7 @@ namespace Consul
         /// GetLocalServiceHealth returns the health info of a service registered on the local agent
         /// </summary>
         /// <param name="serviceName">Name of service</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
         public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct = default)
         {
@@ -1058,6 +1130,8 @@ namespace Consul
         /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
         /// </summary>
         /// <param name="serviceName">Name of service</param>
+        /// <param name="q"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>passing, warning, or critical</returns>
         public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default)
         {
@@ -1070,6 +1144,7 @@ namespace Consul
         /// GetWorstLocalServiceHealth returns the worst aggregated status of a service registered on the local agent
         /// </summary>
         /// <param name="serviceName">Name of service</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>passing, warning, or critical</returns>
         public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default)
         {
@@ -1080,6 +1155,8 @@ namespace Consul
         /// GetLocalServiceHealthByID returns the health info of a service registered on the local agent by ID
         /// </summary>
         /// <param name="serviceID">ID of the service</param>
+        /// <param name="q"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
         public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default)
         {
@@ -1090,6 +1167,7 @@ namespace Consul
         /// GetLocalServiceHealthByID returns the health info of a service registered on the local agent by ID
         /// </summary>
         /// <param name="serviceID">ID of the service</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
         public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
         {
@@ -1099,7 +1177,7 @@ namespace Consul
         /// <summary>
         /// GetAgentHostInfo returns the host info of the agent
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>Agent Host Information</returns>
         public async Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default)
         {
@@ -1109,7 +1187,7 @@ namespace Consul
         /// <summary>
         /// GetAgentVersion returns the version of the agent
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>Version of the agent</returns>
         public async Task<QueryResult<AgentVersion>> GetAgentVersion(CancellationToken ct = default)
         {
@@ -1137,6 +1215,73 @@ namespace Consul
         public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, QueryOptions q, CancellationToken ct = default)
         {
             return await _client.Get<ServiceConfiguration>($"/v1/agent/service/{serviceId}", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// ConnectAuthorize tests whether a connection is authorized between two services
+        /// </summary>
+        /// <param name="parameters">Parameters for the request</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An Authorize Response</returns>
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct = default)
+        {
+            return await ConnectAuthorize(parameters, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// ConnectAuthorize tests whether a connection is authorized between two services
+        /// </summary>
+        /// <param name="parameters">Parameters for the request</param>
+        /// <param name="w">Write Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>An Authorize Response</returns>
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, WriteOptions w, CancellationToken ct = default)
+        {
+            return await _client.Post<AgentAuthorizeParameters, AgentAuthorizeResponse>("/v1/agent/connect/authorize", parameters, w).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCARoots returns root certificates in the cluster
+        /// </summary>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Root certificates</returns>
+        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default)
+        {
+            return await GetCARoots(QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCARoots returns root certificates in the cluster
+        /// </summary>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Root certificates</returns>
+        public async Task<QueryResult<CARoots>> GetCARoots(QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<CARoots>("v1/agent/connect/ca/roots", q).Execute(ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCALeaf, returns the leaf certificate representing a single service
+        /// </summary>
+        /// <param name="serviceId">Id of service to fetch</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Leaf certificate</returns>
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct = default)
+        {
+            return await GetCALeaf(serviceId, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// GetCALeaf, returns the leaf certificate representing a single service
+        /// </summary>
+        /// <param name="serviceId">Id of service to fetch</param>
+        /// <param name="q">Query Options</param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <returns>Leaf certificate</returns>
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, QueryOptions q, CancellationToken ct = default)
+        {
+            return await _client.Get<CALeaf>($"v1/agent/connect/ca/leaf/{serviceId}", q).Execute(ct).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1183,7 +1328,7 @@ namespace Consul
         /// <summary>
         /// GetAgentMetrics returns the metrics of the local agent
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>Metrics of the local agent</returns>
         public async Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default)
         {

@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -28,49 +29,81 @@ using Xunit;
 
 namespace Consul.Test
 {
+    [Collection(nameof(ExclusiveCollection))]
     public class ClientTest : BaseFixture
     {
-        [Fact]
-        public void Client_DefaultConfig_env()
+        [Theory]
+        [InlineData("1.2.3.4:5678", "", "http://1.2.3.4:5678/")]
+        [InlineData("http://1.2.3.4:5678/sub-path", "", "http://1.2.3.4:5678/sub-path")]
+        [InlineData("127.0.0.1", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:8500", "", "http://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:80", "", "http://127.0.0.1/")]
+        [InlineData("my.consul.com:5678", "", "http://my.consul.com:5678/")]
+        [InlineData("http://my.consul.com:5678", "", "http://my.consul.com:5678/")]
+        [InlineData("my.consul.com", "", "http://my.consul.com:8500/")]
+
+        [InlineData("https://127.0.0.1:80", "", "https://127.0.0.1:80/")]
+        [InlineData("https://my.consul.com:5678", "", "https://my.consul.com:5678/")]
+
+        [InlineData("1.2.3.4:5678", "1", "https://1.2.3.4:5678/")]
+        [InlineData("1.2.3.4:5678/sub-path", "1", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("http://1.2.3.4:5678/sub-path", "1", "https://1.2.3.4:5678/sub-path")]
+        [InlineData("127.0.0.1", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:8500", "1", "https://127.0.0.1:8500/")]
+        [InlineData("http://127.0.0.1:80", "1", "https://127.0.0.1:80/")]
+        [InlineData("my.consul.com:5678", "1", "https://my.consul.com:5678/")]
+        [InlineData("http://my.consul.com:5678", "1", "https://my.consul.com:5678/")]
+        [InlineData("my.consul.com", "1", "https://my.consul.com:8500/")]
+        public void Client_DefaultConfig_env(string addr, string ssl, string expected)
         {
-            const string addr = "1.2.3.4:5678";
             const string token = "abcd1234";
             const string auth = "username:password";
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", "1");
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
 
-            var client = new ConsulClient();
-            var config = client.Config;
+            var consulHttpAddr = Environment.GetEnvironmentVariable("CONSUL_HTTP_ADDR");
+            var consulHttpToken = Environment.GetEnvironmentVariable("CONSUL_HTTP_TOKEN");
+            var consulHttpAuth = Environment.GetEnvironmentVariable("CONSUL_HTTP_AUTH");
+            var consulHttpSsl = Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL");
+            var consulHttpSslVerify = Environment.GetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY");
 
-            Assert.Equal(addr, string.Format("{0}:{1}", config.Address.Host, config.Address.Port));
-            Assert.Equal(token, config.Token);
+            try
+            {
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", ssl);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
+
+                var client = new ConsulClient();
+                var config = client.Config;
+
+                Assert.Equal(expected, config.Address.ToString());
+                Assert.Equal(token, config.Token);
 #pragma warning disable CS0618 // Type or member is obsolete
-            Assert.NotNull(config.HttpAuth);
-            Assert.Equal("username", config.HttpAuth.UserName);
-            Assert.Equal("password", config.HttpAuth.Password);
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Equal("https", config.Address.Scheme);
-
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", string.Empty);
-
+                Assert.NotNull(config.HttpAuth);
+                Assert.Equal("username", config.HttpAuth.UserName);
+                Assert.Equal("password", config.HttpAuth.Password);
 
 #if !(NETSTANDARD || NETCOREAPP)
-            Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
-                SslPolicyErrors.RemoteCertificateChainErrors));
-            ServicePointManager.ServerCertificateValidationCallback = null;
+                Assert.True((client.HttpHandler as WebRequestHandler).ServerCertificateValidationCallback(null, null, null,
+                    SslPolicyErrors.RemoteCertificateChainErrors));
+                ServicePointManager.ServerCertificateValidationCallback = null;
 #else
-            Assert.True((client.HttpHandler as HttpClientHandler).ServerCertificateCustomValidationCallback(null, null, null,
-                SslPolicyErrors.RemoteCertificateChainErrors));
+                Assert.True((client.HttpHandler as HttpClientHandler).ServerCertificateCustomValidationCallback(null, null, null,
+                    SslPolicyErrors.RemoteCertificateChainErrors));
 #endif
 
-            Assert.NotNull(client);
+                Assert.NotNull(client);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", consulHttpAddr);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", consulHttpToken);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", consulHttpAuth);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", consulHttpSsl);
+                Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", consulHttpSslVerify);
+            }
         }
 
         [Fact]
@@ -139,6 +172,21 @@ namespace Consul.Test
                 Assert.Equal("1m40s", request.Params["wait"]);
             }
         }
+
+        [Fact]
+        public void Client_NonRootUri()
+        {
+            using (var client = new ConsulClient(c =>
+                   {
+                       c.Address = new Uri("http://127.0.0.1:1234/my-subpath");
+                   }))
+            {
+                var request = client.Get<KVPair>("/v1/kv/foo");
+                var uri = request.BuildConsulUri("/v1/kv/foo", new Dictionary<string, string>());
+                Assert.Equal("http://127.0.0.1:1234/my-subpath/v1/kv/foo", uri.AbsoluteUri);
+            }
+        }
+
         [Fact]
         public async Task Client_SetWriteOptions()
         {

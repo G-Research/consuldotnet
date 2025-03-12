@@ -41,6 +41,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up mono
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt install mono-complete 
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3

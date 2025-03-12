@@ -202,6 +202,7 @@ namespace Consul
         /// [Deprecated] Create is used to generate a new token with the given parameters
         /// </summary>
         /// <param name="acl">The ACL entry to create</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the newly created ACL token</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult<string>> Create(ACLEntry acl, CancellationToken ct = default)
@@ -214,6 +215,7 @@ namespace Consul
         /// </summary>
         /// <param name="acl">The ACL entry to create</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the newly created ACL token</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<WriteResult<string>> Create(ACLEntry acl, WriteOptions q, CancellationToken ct = default)
@@ -226,6 +228,7 @@ namespace Consul
         /// [Deprecated] Update is used to update the rules of an existing token
         /// </summary>
         /// <param name="acl">The ACL entry to update</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult> Update(ACLEntry acl, CancellationToken ct = default)
@@ -238,6 +241,7 @@ namespace Consul
         /// </summary>
         /// <param name="acl">The ACL entry to update</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult> Update(ACLEntry acl, WriteOptions q, CancellationToken ct = default)
@@ -249,6 +253,7 @@ namespace Consul
         /// [Deprecated] Destroy is used to destroy a given ACL token ID
         /// </summary>
         /// <param name="id">The ACL ID to destroy</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default)
@@ -261,6 +266,7 @@ namespace Consul
         /// </summary>
         /// <param name="id">The ACL ID to destroy</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default)
@@ -272,6 +278,7 @@ namespace Consul
         /// [Deprecated] Clone is used to return a new token cloned from an existing one
         /// </summary>
         /// <param name="id">The ACL ID to clone</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the newly created ACL token</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<WriteResult<string>> Clone(string id, CancellationToken ct = default)
@@ -284,6 +291,7 @@ namespace Consul
         /// </summary>
         /// <param name="id">The ACL ID to clone</param>
         /// <param name="q">Customized write options</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the newly created ACL token</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public async Task<WriteResult<string>> Clone(string id, WriteOptions q, CancellationToken ct = default)
@@ -296,6 +304,7 @@ namespace Consul
         /// [Deprecated] Info is used to query for information about an ACL token
         /// </summary>
         /// <param name="id">The ACL ID to request information about</param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the ACL entry matching the provided ID, or a query result with a null response if no token matched the provided ID</returns>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         public Task<QueryResult<ACLEntry>> Info(string id, CancellationToken ct = default)

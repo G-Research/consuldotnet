@@ -612,9 +612,9 @@ namespace Consul
         public TimeSpan MonitorRetryTime { get; set; }
 
         /// <summary>
-        /// When set to false, <see cref="Lock.Acquire"/> will block forever until the lock is acquired. LockWaitTime is ignored in this case.
+        /// When set to false, <see cref="Lock.Acquire()"/> will block forever until the lock is acquired. LockWaitTime is ignored in this case.
         /// <br/>
-        /// When set to true, <see cref="Lock.Acquire"/> the lock within a timestamp (It is analogous to <c>SemaphoreSlim.Wait(Timespan timeout)</c>.
+        /// When set to true, <see cref="Lock.Acquire()"/> the lock within a timestamp (It is analogous to <c>SemaphoreSlim.Wait(Timespan timeout)</c>.
         /// Under the hood, it attempts to acquire the lock multiple times if needed (due to the HTTP Long Poll returning early),
         /// and will do so as many times as it can within the bounds set by LockWaitTime.
         /// If LockWaitTime is set to 0, there will be only single attempt to acquire the lock.
@@ -666,7 +666,7 @@ namespace Consul
         /// AcquireLock creates a lock that is already acquired when this call returns.
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
         public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default)
         {
@@ -681,7 +681,7 @@ namespace Consul
         /// AcquireLock creates a lock that is already acquired when this call returns.
         /// </summary>
         /// <param name="opts"></param>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
         public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default)
         {
@@ -700,6 +700,7 @@ namespace Consul
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
         public Task ExecuteLocked(string key, Action action, CancellationToken ct = default)
         {
@@ -715,6 +716,7 @@ namespace Consul
         /// </summary>
         /// <param name="opts"></param>
         /// <param name="action"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
         public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default)
         {
@@ -747,7 +749,7 @@ namespace Consul
         /// ExecuteLock accepts a delegate to execute in the context of a lock, releasing the lock when completed.
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <param name="action"></param>
         /// <returns></returns>
         [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(string, Action, CancellationToken)")]
@@ -768,7 +770,7 @@ namespace Consul
         /// ExecuteLock accepts a delegate to execute in the context of a lock, releasing the lock when completed.
         /// </summary>
         /// <param name="opts"></param>
-        /// <param name="ct"></param>
+        /// <param name="ct">The cancellation token</param>
         /// <param name="action"></param>
         /// <returns></returns>
         [Obsolete("This method will be removed in a future release. Replace calls with the method signature ExecuteLocked(LockOptions, Action, CancellationToken)")]
