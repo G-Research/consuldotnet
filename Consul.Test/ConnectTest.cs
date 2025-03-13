@@ -353,7 +353,6 @@ namespace Consul.Test
         }
 
         [SkippableTheory]
-``` ?
         [InlineData("Mr-Krabbs", "Secret-Formula", "allow", true)]
         [InlineData("Plankton", "Secret-Formula", "deny", false)]
         public async Task Connect_CheckIntentionResult_Parametrized(string sourceName, string destinationName, string action, bool expectedAllowed)
