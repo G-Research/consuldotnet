@@ -351,5 +351,31 @@ namespace Consul.Test
             await _client.Connect.DeleteIntentionByName(firstIntention.SourceName, firstIntention.DestinationName);
             await _client.Connect.DeleteIntentionByName(secondIntention.SourceName, secondIntention.DestinationName);
         }
+
+        [SkippableTheory]
+        [InlineData("Mr-Krabbs", "Secret-Formula", "allow", true)]
+        [InlineData("Plankton", "Secret-Formula", "deny", false)]
+        public async Task Connect_CheckIntentionResult_Parametrized(string sourceName, string destinationName, string action, bool expectedAllowed)
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `service intentions` are only supported from Consul {cutOffVersion}");
+
+            var intention = new ServiceIntention
+            {
+                Action = action,
+                SourceType = "consul",
+                DestinationName = destinationName,
+                SourceName = sourceName
+            };
+
+            var upsertIntention = await _client.Connect.UpsertIntentionsByName(intention);
+            Assert.Equal(HttpStatusCode.OK, upsertIntention.StatusCode);
+
+            var intentionResult = await _client.Connect.CheckIntentionResult(sourceName, destinationName);
+            Assert.Equal(HttpStatusCode.OK, intentionResult.StatusCode);
+            Assert.Equal(expectedAllowed, intentionResult.Response.Allowed);
+
+            await _client.Connect.DeleteIntentionByName(sourceName, destinationName);
+        }
     }
 }

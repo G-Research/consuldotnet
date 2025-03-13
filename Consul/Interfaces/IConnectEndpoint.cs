@@ -42,5 +42,7 @@ namespace Consul.Interfaces
         Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct = default);
     }
 }
