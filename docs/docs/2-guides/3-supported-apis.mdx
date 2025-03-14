@@ -1,132 +1,133 @@
 ---
 title: Supported APIs
 ---
-import {ConsulAPIBadge} from "@site/src/components/CustomBadge";
 
-<ConsulAPIBadge inline={false}/>
+import { ConsulAPIBadge } from "@site/src/components/CustomBadge";
 
-*This version indicates the version of Consul API that is fully supported. Recent versions may still work, but with some missing features.*
+<ConsulAPIBadge inline={false} />
+
+_This version indicates the version of Consul API that is fully supported. Recent versions may still work, but with some missing features._
 
 ✅ supported · 🚧 in progress · ❌ not supported
 
 | Group                           | Endpoint                                                | Route                                          | Status                    |
-|---------------------------------|---------------------------------------------------------|------------------------------------------------|---------------------------|
-| **Admin Partition**             | Create a Partition                                      | PUT v1/partition                               |  🚧                         |
-|                                 | Read a Partition                                        | GET v1/partition/:name                         | ❌                         |
-|                                 | Update a Partition                                      | PUT v1/partition/:name                         | ❌                         |
-|                                 | Delete a Partition                                      | DELETE v1/partition/:name                      | ❌                         |
-|                                 | List all Partitions                                     | GET v1/partitions                              | ❌                         |
-| **Agent**                       | Retrieve host information                               | GET v1/agent/host                              | ✅                         |
-|                                 | List Members                                            | GET v1/agent/members                           | ✅                         |
-|                                 | Read Configuration                                      | GET v1/agent/self                              | ✅                         |
-|                                 | Reload Agent                                            | PUT v1/agent/reload                            | ✅                         |
-|                                 | Enable Maintenance Mode                                 | PUT v1/agent/maintenance                       | ✅                         |
-|                                 | View Metrics                                            | GET v1/agent/metrics                           | ✅                         |
-|                                 | Stream Logs                                             | GET v1/agent/monitor                           | ✅                         |
-|                                 | Join Agent                                              | PUT v1/agent/join/:address                     | ✅                         |
-|                                 | Graceful Leave and Shutdown                             | PUT v1/agent/leave                             | ✅                         |
-|                                 | Force Leave and Shutdown                                | PUT v1/agent/force-leave/:node                 | ✅                         |
-| **Agent-Checks**                | List Checks                                             | GET v1/agent/checks                            | ✅                         |
-|                                 | Register Check                                          | PUT v1/agent/check/register                    | ✅                         |
-|                                 | Deregister Check                                        | PUT v1/agent/check/deregister/:check_id        | ✅                         |
-|                                 | TTL Check Pass                                          | PUT v1/agent/check/pass/:check_id              | ✅                         |
-|                                 | TTL Check Warn                                          | PUT v1/agent/check/warn/:check_id              | ✅                         |
-|                                 | TTL Check Fail                                          | PUT v1/agent/check/fail/:check_id              | ✅                         |
-|                                 | TTL Check Update                                        | PUT /agent/check/update/:check_id              | ✅                         |
-| **Agent-Services**              | List Services                                           | GET v1/agent/services                          | ✅                         |
-|                                 | Get Service Configuration                               | GET v1/agent/service/:service_id               | ✅                         |
-|                                 | Get local service health                                | GET v1/agent/health/service/name/:service_name | ✅                         |
-|                                 | Get local service health by ID                          | GET v1/agent/health/service/id/:service_id     | ✅                         |
-|                                 | Register Service                                        | PUT v1/agent/service/register                  | ✅                         |
-|                                 | Deregister Service                                      | PUT v1/agent/service/deregister/:service_id    | ✅                         |
-|                                 | Enable Maintenance Mode                                 | PUT v1/agent/service/maintenance/:service_id   | ✅                         |
-| **Connect**                     | Authorize                                               | POST v1/agent/connect/authorize                | ✅                         |
-|                                 | Certificate Authority (CA) Roots                        | GET v1/agent/connect/ca/roots                  | ✅                         |
-|                                 | Service Leaf Certificate                                | GET v1/agent/connect/ca/leaf/:service          | ✅                         |
-| **Catalog**                     | Register Entity                                         | PUT v1/catalog/register                        | ✅                         |
-|                                 | Deregister Entity                                       | PUT v1/catalog/deregister                      | ✅                         |
-|                                 | List Datacenters                                        | GET v1/catalog/datacenters                     | ✅                         |
-|                                 | List Nodes                                              | GET v1/catalog/nodes                           | ✅                         |
-|                                 | List Services                                           | GET v1/catalog/services                        | ✅                         |
-|                                 | List Nodes for Service                                  | GET v1/catalog/service/:service                | ✅                         |
-|                                 | Retrieve Map of Services for a Node                     | GET v1/catalog/node/:node                      | ✅                         |
-|                                 | List Services for Node                                  | GET v1/catalog/node-services/:node             | ✅                         |
-|                                 | List Services for Gateway                               | GET v1/catalog/gateway-services/:gateway       | ✅                         |
-| **Config**                      | Apply Configuration                                     | PUT v1/config                                  | ✅                         |
-|                                 | Get Configuration                                       | GET v1/config/:kind/:name                      | ✅                         |
-|                                 | List Configurations                                     | GET v1/config/:kind/:name                      | ✅                         |
-|                                 | Delete Configuration                                    | DELETE v1/config/:kind/:name                   | ✅                         |
-| **Connect**                     | List CA Root Certificates                               | GET v1/connect/ca/roots                        | ✅                         |
-|                                 | Get CA Configuration                                    | GET v1/connect/ca/configuration                | 🚧                         |
-|                                 | Update CA Configuration                                 | PUT v1/connect/ca/configuration                | ❌                         |
-|                                 | Upsert Intention by Name                                | PUT v1/connect/intentions/exact                | ❌                         |
-|                                 | Create Intention with ID                                | POST v1/connect/intentions                     | ❌                         |
-|                                 | Update Intention by ID                                  | PUT v1/connect/intentions/:uuid                | ❌                         |
-|                                 | Read Specific Intention by Name                         | GET v1/connect/intentions/exact                | ❌                         |
-|                                 | Read Specific Intention by ID                           | GET v1/connect/intentions/:uuid                | ❌                         |
-|                                 | List Intentions                                         | GET v1/connect/intentions                      | ❌                         |
-|                                 | Delete Intention by Name                                | DELETE v1/connect/intentions/exact             | ❌                         |
-|                                 | Delete Intention by ID                                  | DELETE v1/connect/intentions/:uuid             | ❌                         |
-|                                 | Check Intention Result                                  | GET v1/connect/intentions/check                | ❌                         |
-|                                 | List Matching Intentions                                | GET v1/connect/intentions/match                | ❌                         |
-| **Coordinate**                  | Read WAN Coordinates                                    | GET v1/coordinate/datacenters                  | ✅                         |
-|                                 | Read LAN Coordinates for all nodes                      | GET v1/coordinate/nodes                        | ✅                         |
-|                                 | Read LAN Coordinates for a node                         | GET v1/coordinate/node/:node                   | ✅                         |
-|                                 | Update LAN Coordinates for a node                       | PUT v1/coordinate/update                       | ✅                         |
+| ------------------------------- | ------------------------------------------------------- | ---------------------------------------------- | ------------------------- |
+| **Admin Partition**             | Create a Partition                                      | PUT v1/partition                               | 🚧                        |
+|                                 | Read a Partition                                        | GET v1/partition/:name                         | ❌                        |
+|                                 | Update a Partition                                      | PUT v1/partition/:name                         | ❌                        |
+|                                 | Delete a Partition                                      | DELETE v1/partition/:name                      | ❌                        |
+|                                 | List all Partitions                                     | GET v1/partitions                              | ❌                        |
+| **Agent**                       | Retrieve host information                               | GET v1/agent/host                              | ✅                        |
+|                                 | List Members                                            | GET v1/agent/members                           | ✅                        |
+|                                 | Read Configuration                                      | GET v1/agent/self                              | ✅                        |
+|                                 | Reload Agent                                            | PUT v1/agent/reload                            | ✅                        |
+|                                 | Enable Maintenance Mode                                 | PUT v1/agent/maintenance                       | ✅                        |
+|                                 | View Metrics                                            | GET v1/agent/metrics                           | ✅                        |
+|                                 | Stream Logs                                             | GET v1/agent/monitor                           | ✅                        |
+|                                 | Join Agent                                              | PUT v1/agent/join/:address                     | ✅                        |
+|                                 | Graceful Leave and Shutdown                             | PUT v1/agent/leave                             | ✅                        |
+|                                 | Force Leave and Shutdown                                | PUT v1/agent/force-leave/:node                 | ✅                        |
+| **Agent-Checks**                | List Checks                                             | GET v1/agent/checks                            | ✅                        |
+|                                 | Register Check                                          | PUT v1/agent/check/register                    | ✅                        |
+|                                 | Deregister Check                                        | PUT v1/agent/check/deregister/:check_id        | ✅                        |
+|                                 | TTL Check Pass                                          | PUT v1/agent/check/pass/:check_id              | ✅                        |
+|                                 | TTL Check Warn                                          | PUT v1/agent/check/warn/:check_id              | ✅                        |
+|                                 | TTL Check Fail                                          | PUT v1/agent/check/fail/:check_id              | ✅                        |
+|                                 | TTL Check Update                                        | PUT /agent/check/update/:check_id              | ✅                        |
+| **Agent-Services**              | List Services                                           | GET v1/agent/services                          | ✅                        |
+|                                 | Get Service Configuration                               | GET v1/agent/service/:service_id               | ✅                        |
+|                                 | Get local service health                                | GET v1/agent/health/service/name/:service_name | ✅                        |
+|                                 | Get local service health by ID                          | GET v1/agent/health/service/id/:service_id     | ✅                        |
+|                                 | Register Service                                        | PUT v1/agent/service/register                  | ✅                        |
+|                                 | Deregister Service                                      | PUT v1/agent/service/deregister/:service_id    | ✅                        |
+|                                 | Enable Maintenance Mode                                 | PUT v1/agent/service/maintenance/:service_id   | ✅                        |
+| **Connect**                     | Authorize                                               | POST v1/agent/connect/authorize                | ✅                        |
+|                                 | Certificate Authority (CA) Roots                        | GET v1/agent/connect/ca/roots                  | ✅                        |
+|                                 | Service Leaf Certificate                                | GET v1/agent/connect/ca/leaf/:service          | ✅                        |
+| **Catalog**                     | Register Entity                                         | PUT v1/catalog/register                        | ✅                        |
+|                                 | Deregister Entity                                       | PUT v1/catalog/deregister                      | ✅                        |
+|                                 | List Datacenters                                        | GET v1/catalog/datacenters                     | ✅                        |
+|                                 | List Nodes                                              | GET v1/catalog/nodes                           | ✅                        |
+|                                 | List Services                                           | GET v1/catalog/services                        | ✅                        |
+|                                 | List Nodes for Service                                  | GET v1/catalog/service/:service                | ✅                        |
+|                                 | Retrieve Map of Services for a Node                     | GET v1/catalog/node/:node                      | ✅                        |
+|                                 | List Services for Node                                  | GET v1/catalog/node-services/:node             | ✅                        |
+|                                 | List Services for Gateway                               | GET v1/catalog/gateway-services/:gateway       | ✅                        |
+| **Config**                      | Apply Configuration                                     | PUT v1/config                                  | ✅                        |
+|                                 | Get Configuration                                       | GET v1/config/:kind/:name                      | ✅                        |
+|                                 | List Configurations                                     | GET v1/config/:kind/:name                      | ✅                        |
+|                                 | Delete Configuration                                    | DELETE v1/config/:kind/:name                   | ✅                        |
+| **Connect**                     | List CA Root Certificates                               | GET v1/connect/ca/roots                        | ✅                        |
+|                                 | Get CA Configuration                                    | GET v1/connect/ca/configuration                | 🚧                        |
+|                                 | Update CA Configuration                                 | PUT v1/connect/ca/configuration                | ❌                        |
+|                                 | Upsert Intention by Name                                | PUT v1/connect/intentions/exact                | ✅                        |
+|                                 | Create Intention with ID                                | POST v1/connect/intentions                     | 🛑 (Deprecated in 1.10.0) |
+|                                 | Update Intention by ID                                  | PUT v1/connect/intentions/:uuid                | 🛑 (Deprecated in 1.10.0) |
+|                                 | Read Specific Intention by Name                         | GET v1/connect/intentions/exact                | ✅                        |
+|                                 | Read Specific Intention by ID                           | GET v1/connect/intentions/:uuid                | 🛑 (Deprecated in 1.10.0) |
+|                                 | List Intentions                                         | GET v1/connect/intentions                      | ✅                        |
+|                                 | Delete Intention by Name                                | DELETE v1/connect/intentions/exact             | ✅                        |
+|                                 | Delete Intention by ID                                  | DELETE v1/connect/intentions/:uuid             | 🛑 (Deprecated in 1.10.0) |
+|                                 | Check Intention Result                                  | GET v1/connect/intentions/check                | ✅                        |
+|                                 | List Matching Intentions                                | GET v1/connect/intentions/match                | ✅                        |
+| **Coordinate**                  | Read WAN Coordinates                                    | GET v1/coordinate/datacenters                  | ✅                        |
+|                                 | Read LAN Coordinates for all nodes                      | GET v1/coordinate/nodes                        | ✅                        |
+|                                 | Read LAN Coordinates for a node                         | GET v1/coordinate/node/:node                   | ✅                        |
+|                                 | Update LAN Coordinates for a node                       | PUT v1/coordinate/update                       | ✅                        |
 | **Discovery Chain**             | Read Compiled Discovery Chain                           | GET v1/discovery-chain/:service                | ✅                        |
-|                                 | POST v1/discovery-chain/:service                        | POST v1/discovery-chain/:service               |✅                        |
-| **Events**                      | Fire Event                                              | PUT v1/event/fire/:name                        | ✅                         |
-|                                 | List Events                                             | GET v1/event/list                              | ✅                         |
-| **Health**                      | List Checks for Node                                    | GET v1/health/node/:node                       | ✅                         |
-|                                 | List Checks for Service                                 | GET v1/health/checks/:service                  | ✅                         |
-|                                 | List Nodes for Service                                  | GET v1/health/service/:service                 | ✅                         |
-|                                 | List Nodes for Connect-capable Service                  | GET v1/health/connect/:service                 | ✅                         |
-|                                 | List Nodes for Ingress Gateways Associated to a Service | GET v1/health/ingress/:service                 | ✅                         |
-|                                 | List Checks in State                                    | GET v1/health/state/:state                     | ✅                         |
-| **KV Store**                    | Read Key                                                | GET v1/kv/:key                                 | ✅                         |
-|                                 | Create/Update Key                                       | PUT v1/kv/:key                                 | ✅                         |
-|                                 | Delete Key                                              | DELETE v1/kv/:key                              | ✅                         |
-| **Operator-Area**               | Create Network Area                                     | POST v1/operator/area                          | ✅                         |
-|                                 | List Network Areas                                      | GET v1/operator/area                           |✅                         |
-|                                 | Update Network Area                                     | PUT v1/operator/area/:uuid                     |   ✅                         |
-|                                 | List Specific Network Area                              | GET v1/operator/area/:uuid                     |✅                         |
-|                                 | Delete Network Area                                     | DELETE v1/operator/area/:uuid                  |✅                         |
-|                                 | Join Network Area                                       | PUT v1/operator/area/:uuid/join                |  🚧                         |
-|                                 | List Network Area Members                               | GET v1/operator/area/:uuid/members             | ❌                         |
-| **Autopilot Operator**          | Read Configuration                                      | GET v1/operator/autopilot/configuration        | ❌                         |
-|                                 | Update Configuration                                    | PUT v1/operator/autopilot/configuration        | ❌                         |
-|                                 | Read Health                                             | GET v1/operator/autopilot/health               | ❌                         |
-|                                 | Read the Autopilot State                                | GET v1/operator/autopilot/state                | ❌                         |
-| **Keyring Operator**            | List Gossip Encryption Keys                             | GET v1/operator/keyring                        | ✅                         |
-|                                 | Add New Gossip Encryption Key                           | POST v1/operator/keyring                       | ✅                         |
-|                                 | Change Primary Gossip Encryption Key                    | PUT v1/operator/keyring                        | ✅                         |
-|                                 | Delete Gossip Encryption Key                            | DELETE v1/operator/keyring                     | ✅                         |
-| **License - Operator**          | Getting the Consul License                              | GET v1/operator/license                        | ✅                         |
+|                                 | POST v1/discovery-chain/:service                        | POST v1/discovery-chain/:service               | ✅                        |
+| **Events**                      | Fire Event                                              | PUT v1/event/fire/:name                        | ✅                        |
+|                                 | List Events                                             | GET v1/event/list                              | ✅                        |
+| **Health**                      | List Checks for Node                                    | GET v1/health/node/:node                       | ✅                        |
+|                                 | List Checks for Service                                 | GET v1/health/checks/:service                  | ✅                        |
+|                                 | List Nodes for Service                                  | GET v1/health/service/:service                 | ✅                        |
+|                                 | List Nodes for Connect-capable Service                  | GET v1/health/connect/:service                 | ✅                        |
+|                                 | List Nodes for Ingress Gateways Associated to a Service | GET v1/health/ingress/:service                 | ✅                        |
+|                                 | List Checks in State                                    | GET v1/health/state/:state                     | ✅                        |
+| **KV Store**                    | Read Key                                                | GET v1/kv/:key                                 | ✅                        |
+|                                 | Create/Update Key                                       | PUT v1/kv/:key                                 | ✅                        |
+|                                 | Delete Key                                              | DELETE v1/kv/:key                              | ✅                        |
+| **Operator-Area**               | Create Network Area                                     | POST v1/operator/area                          | ✅                        |
+|                                 | List Network Areas                                      | GET v1/operator/area                           | ✅                        |
+|                                 | Update Network Area                                     | PUT v1/operator/area/:uuid                     | ✅                        |
+|                                 | List Specific Network Area                              | GET v1/operator/area/:uuid                     | ✅                        |
+|                                 | Delete Network Area                                     | DELETE v1/operator/area/:uuid                  | ✅                        |
+|                                 | Join Network Area                                       | PUT v1/operator/area/:uuid/join                | 🚧                        |
+|                                 | List Network Area Members                               | GET v1/operator/area/:uuid/members             | ❌                        |
+| **Autopilot Operator**          | Read Configuration                                      | GET v1/operator/autopilot/configuration        | ❌                        |
+|                                 | Update Configuration                                    | PUT v1/operator/autopilot/configuration        | ❌                        |
+|                                 | Read Health                                             | GET v1/operator/autopilot/health               | ❌                        |
+|                                 | Read the Autopilot State                                | GET v1/operator/autopilot/state                | ❌                        |
+| **Keyring Operator**            | List Gossip Encryption Keys                             | GET v1/operator/keyring                        | ✅                        |
+|                                 | Add New Gossip Encryption Key                           | POST v1/operator/keyring                       | ✅                        |
+|                                 | Change Primary Gossip Encryption Key                    | PUT v1/operator/keyring                        | ✅                        |
+|                                 | Delete Gossip Encryption Key                            | DELETE v1/operator/keyring                     | ✅                        |
+| **License - Operator**          | Getting the Consul License                              | GET v1/operator/license                        | ✅                        |
 |                                 | Updating the Consul License                             | PUT v1/operator/license                        | 🛑 (Deprecated in 1.10.0) |
 |                                 | Resetting the Consul License                            | DELETE v1/operator/license                     | 🛑 (Deprecated in 1.10.0) |
-| **Raft Operator**               | Read Configuration                                      | GET v1/operator/raft/configuration             | ✅                         |
-|                                 | Delete Raft Peer                                        | DELETE v1/operator/raft/peer                   | ✅                         |
-| **Network Segments - Operator** | List Network Segments                                   | GET v1/operator/segment                        | ✅                         |
-| **Namespace**                   | Create a Namespace                                      | PUT v1/namespace                               | ✅                         |
-|                                 | Read a Namespace                                        | GET v1/namespace/:name                         | ✅                         |
-|                                 | Update a Namespace                                      | PUT v1/namespace/:name                         | ✅                         |
-|                                 | Delete a Namespace                                      | DELETE v1/namespace/:name                      | ✅                         |
-|                                 | List all Namespaces                                     | GET v1/namespaces                              | ✅                         |
-| **Prepared Query**              | Create Prepared Query                                   | POST v1/query                                  | ✅                         |
-|                                 | List Prepared Queries                                   | GET v1/query                                   | ✅                         |
-|                                 | Update Prepared Query                                   | PUT v1/query/:uuid                             | ✅                         |
-|                                 | Read Prepared Query                                     | GET v1/query/:uuid                             | ✅                         |
-|                                 | Delete Prepared Query                                   | DELETE v1/query/:uuid                          | ✅                         |
-|                                 | Execute Prepared Query                                  | GET v1/query/:uuid/execute                     | ✅                         |
-|                                 | Explain Prepared Query                                  | GET v1/query/:uuid/explain                     | ✅                         |
-| **Session**                     | Create Session                                          | PUT v1/session/create                          | ✅                         |
-|                                 | Delete Session                                          | PUT v1/session/destroy/:uuid                   | ✅                         |
-|                                 | Read Session                                            | GET v1/session/info/:uuid                      | ✅                         |
-|                                 | List Sessions for Node                                  | GET v1/session/node/:node                      | ✅                         |
-|                                 | List Sessions                                           | GET v1/session/list                            | ✅                         |
-|                                 | Renew Session                                           | PUT v1/session/renew/:uuid                     | ✅                         |
-| **Snapshot**                    | Generate Snapshot                                       | GET v1/snapshot                                | ✅                         |
-|                                 | Restore Snapshot                                        | PUT v1/snapshot                                | ✅                         |
-| **Status**                      | Get Raft Leader                                         | GET v1/status/leader                           | ✅                         |
-|                                 | List Raft Peers                                         | GET v1/status/peers                            | ✅                         |
-| **Transactions**                | Create Transaction                                      | PUT v1/txn                                     | ✅                         |
+| **Raft Operator**               | Read Configuration                                      | GET v1/operator/raft/configuration             | ✅                        |
+|                                 | Delete Raft Peer                                        | DELETE v1/operator/raft/peer                   | ✅                        |
+| **Network Segments - Operator** | List Network Segments                                   | GET v1/operator/segment                        | ✅                        |
+| **Namespace**                   | Create a Namespace                                      | PUT v1/namespace                               | ✅                        |
+|                                 | Read a Namespace                                        | GET v1/namespace/:name                         | ✅                        |
+|                                 | Update a Namespace                                      | PUT v1/namespace/:name                         | ✅                        |
+|                                 | Delete a Namespace                                      | DELETE v1/namespace/:name                      | ✅                        |
+|                                 | List all Namespaces                                     | GET v1/namespaces                              | ✅                        |
+| **Prepared Query**              | Create Prepared Query                                   | POST v1/query                                  | ✅                        |
+|                                 | List Prepared Queries                                   | GET v1/query                                   | ✅                        |
+|                                 | Update Prepared Query                                   | PUT v1/query/:uuid                             | ✅                        |
+|                                 | Read Prepared Query                                     | GET v1/query/:uuid                             | ✅                        |
+|                                 | Delete Prepared Query                                   | DELETE v1/query/:uuid                          | ✅                        |
+|                                 | Execute Prepared Query                                  | GET v1/query/:uuid/execute                     | ✅                        |
+|                                 | Explain Prepared Query                                  | GET v1/query/:uuid/explain                     | ✅                        |
+| **Session**                     | Create Session                                          | PUT v1/session/create                          | ✅                        |
+|                                 | Delete Session                                          | PUT v1/session/destroy/:uuid                   | ✅                        |
+|                                 | Read Session                                            | GET v1/session/info/:uuid                      | ✅                        |
+|                                 | List Sessions for Node                                  | GET v1/session/node/:node                      | ✅                        |
+|                                 | List Sessions                                           | GET v1/session/list                            | ✅                        |
+|                                 | Renew Session                                           | PUT v1/session/renew/:uuid                     | ✅                        |
+| **Snapshot**                    | Generate Snapshot                                       | GET v1/snapshot                                | ✅                        |
+|                                 | Restore Snapshot                                        | PUT v1/snapshot                                | ✅                        |
+| **Status**                      | Get Raft Leader                                         | GET v1/status/leader                           | ✅                        |
+|                                 | List Raft Peers                                         | GET v1/status/peers                            | ✅                        |
+| **Transactions**                | Create Transaction                                      | PUT v1/txn                                     | ✅                        |
