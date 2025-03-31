@@ -64,7 +64,7 @@ namespace Consul.Test
         [InlineData("dc1", "Food", "192.168.10.11", "KFC", "Mid-chow", "Meeeeh", 8000)]
         public async Task Catalog_ListServices(string dc, string node, string address, string service, string tag1, string tag2, int port)
         {
-           
+
             var id = KVTest.GenerateTestKeyName();
             var registration1 = new CatalogRegistration
             {
@@ -81,7 +81,7 @@ namespace Consul.Test
             };
 
             var registerReq = await _client.Catalog.Register(registration1);
-            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);    
+            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);
 
             var filter = Selectors.ServiceName == service;
             var servicesList = await _client.Catalog.Services(dc, filter);
