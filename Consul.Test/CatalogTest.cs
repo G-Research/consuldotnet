@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Consul.Filtering;
 using NuGet.Versioning;
 using Xunit;
 
@@ -59,29 +60,29 @@ namespace Consul.Test
         }
 
         [SkippableTheory]
-        [InlineData("dc1", "", "Football", "192.168.10.10", "Arsenal", "Trophyless", "Near Success Syndrome", 8000)]
-        [InlineData("dc1", "", "Food", "192.168.10.11", "KFC", "Mid-chow", "Meeeeh", 8000)]
-        public async Task Catalog_ListServices(string dc, string filter, string node, string address, string service, string tag1, string tag2, int port)
+        [InlineData("dc1", "Football", "192.168.10.10", "Arsenal", "Trophyless", "Near Success Syndrome", 8000)]
+        [InlineData("dc1", "Food", "192.168.10.11", "KFC", "Mid-chow", "Meeeeh", 8000)]
+        public async Task Catalog_ListServices(string dc, string node, string address, string service, string tag1, string tag2, int port)
         {
-           
-            filter = $"ServiceName=={service}";
-            var registration1 = new CatalogRegistration
+            var id = KVTest.GenerateTestKeyName();
+            var registration = new CatalogRegistration
             {
                 Datacenter = dc,
                 Node = node,
                 Address = address,
                 Service = new AgentService
                 {
-                    ID = KVTest.GenerateTestKeyName(),
+                    ID = id,
                     Service = service,
                     Tags = new[] { tag1, tag2 },
                     Port = port,
                 }
             };
 
-            var registerReq = await _client.Catalog.Register(registration1);
-            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);    
+            var registerReq = await _client.Catalog.Register(registration);
+            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);
 
+            var filter = Selectors.ServiceName == service;
             var servicesList = await _client.Catalog.Services(dc, filter);
             Assert.NotEmpty(servicesList.Response);
 
