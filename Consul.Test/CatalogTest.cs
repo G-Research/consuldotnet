@@ -83,7 +83,7 @@ namespace Consul.Test
             };
 
             var registerReq = await _client.Catalog.Register(registration);
-            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);    
+            Assert.Equal(HttpStatusCode.OK, registerReq.StatusCode);
 
             var filter = Selectors.ServiceName == service;
             var servicesList = await _client.Catalog.Services(dc, filter);
