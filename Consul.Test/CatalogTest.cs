@@ -66,6 +66,7 @@ namespace Consul.Test
         {
             var cutOffVersion = SemanticVersion.Parse("1.14.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Catalog` is only supported from Consul {cutOffVersion}");
+
             var id = KVTest.GenerateTestKeyName();
             var registration = new CatalogRegistration
             {
