@@ -243,18 +243,37 @@ namespace Consul
         /// <returns>A list of all services</returns>
         public Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default)
         {
-            return Services(QueryOptions.Default, ct);
+            return Services(string.Empty, null, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Services is used to query for all known services
+        /// </summary>
+        /// <param name="dc"></param>
+        /// <param name="filter"></param>
+        /// <param name="ct"></param>
+        /// <returns>Alist of services registered in a given datacenter.</returns>
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, CancellationToken ct = default)
+        {
+            return Services(dc, filter, QueryOptions.Default, ct);
         }
 
         /// <summary>
         /// Services is used to query for all known services
         /// </summary>
         /// <param name="q">Customized query options</param>
+        /// <param name="dc">Specifies the datacenter to query</param>
+        /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data.</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of all services</returns>
-        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, QueryOptions q, CancellationToken ct = default)
         {
-            return _client.Get<Dictionary<string, string[]>>("/v1/catalog/services", q).Execute(ct);
+            var req = _client.Get<Dictionary<string, string[]>>("/v1/catalog/services", q, filter);
+            if (!string.IsNullOrEmpty(dc))
+            {
+                req.Params["dc"] = dc;
+            }
+            return req.Execute(ct);
         }
 
         /// <summary>
