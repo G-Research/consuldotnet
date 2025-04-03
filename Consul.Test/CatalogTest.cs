@@ -63,7 +63,9 @@ namespace Consul.Test
         [InlineData("dc1", "Football", "192.168.10.10", "Arsenal", "Trophyless", "Near Success Syndrome", 8000)]
         [InlineData("dc1", "Food", "192.168.10.11", "KFC", "Mid-chow", "Meeeeh", 8000)]
         public async Task Catalog_ListServices(string dc, string node, string address, string service, string tag1, string tag2, int port)
-        {        
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Catalog` is only supported from Consul {cutOffVersion}");
             var id = KVTest.GenerateTestKeyName();
             var registration = new CatalogRegistration
             {
