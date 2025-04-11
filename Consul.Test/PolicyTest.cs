@@ -79,18 +79,12 @@ namespace Consul.Test
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
-            var policyEntry = new PolicyEntry()
-            {
-                Name = "UnitTestPolicy",
-                Description = "Policy for API Unit Testing",
-                Rules = "key \"\" { policy = \"deny\" }"
-            };
-
-            var newPolicyResult = await _client.Policy.Create(policyEntry);
-            Assert.NotNull(newPolicyResult.Response);
-
-            var policy = await _client.Policy.ReadATemplatedPolicyByName(policyEntry.Name);
-            Assert.NotNull(policy);
+            var templatedPolicyName = "builtin/api-gateway";
+            var policy = await _client.Policy.ReadATemplatedPolicyByName(templatedPolicyName);
+            Assert.NotNull(policy.Response);
+            Assert.Equal(templatedPolicyName, policy.Response.TemplateName);
+            Assert.True(!string.IsNullOrEmpty(policy.Response.Template));
+            Assert.True(!string.IsNullOrEmpty(policy.Response.Schema));
         }
     }
 }
