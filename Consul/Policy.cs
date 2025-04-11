@@ -94,6 +94,16 @@ namespace Consul
     }
 
     /// <summary>
+    /// Handles responses for templated policies
+    /// </summary>
+    public class TemplatedPolicyResponse
+    {
+        public string TemplateName { get; set; }
+        public string Schema { get; set; }
+        public string Template { get; set; }
+    }
+
+    /// <summary>
     /// Policy is used to interact with ACL Policies in Consul through the API
     /// </summary>
     public class Policy : IPolicyEndpoint
@@ -228,6 +238,30 @@ namespace Consul
         {
             var res = await _client.Put<PolicyEntry, PolicyActionResult>($"/v1/acl/policy/{policy.ID}", policy, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<PolicyEntry>(res, res.Response);
+        }
+
+        /// <summary>
+        /// Reads an ACL policy with the given ID or name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns an ACL Policy</returns>
+        public async Task<QueryResult<TemplatedPolicyResponse>> ReadATemplatedPolicyByName(string name, QueryOptions q, CancellationToken ct = default)
+        {
+            var res = await _client.Get<TemplatedPolicyResponse>($"v1/acl/templated-policy/name/{name}", q).Execute(ct).ConfigureAwait(false);
+            return new QueryResult<TemplatedPolicyResponse>(res, res.Response);
+        }
+
+        /// <summary>
+        /// Reads an ACL policy with the given ID or name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns an ACL Policy</returns>
+        public Task<QueryResult<TemplatedPolicyResponse>> ReadATemplatedPolicyByName(string name, CancellationToken ct = default)
+        {
+            return ReadATemplatedPolicyByName(name, QueryOptions.Default, ct);
         }
     }
 
