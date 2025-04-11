@@ -17,7 +17,9 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -77,25 +79,20 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Policy_PreviewATemplatedPolicyByName()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.17.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Templated Policies` are only supported from Consul {cutOffVersion}");
+
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
-            var policyEntry = new PolicyEntry()
-            {
-                Name = "AuraForAura",
-                Description = "",
-                Rules = "key \"\" { policy = \"deny\" }"
-            };
+            var templatedPolicyName = "builtin/dns";
+            var templatedPolicy = await _client.Policy.PreviewTemplatedPolicy(templatedPolicyName);
 
-            var newPolicyResult = await _client.Policy.Create(policyEntry);
-            Assert.NotNull(newPolicyResult.Response);
-
-            var policy = await _client.Policy.PreviewTemplatedPolicy(policyEntry.Name);
-            Assert.NotNull(policy);
-
-            Assert.NotNull(policy.Response.ID);
-            Assert.Equal(policyEntry.Description, policy.Response.Description);
-            Assert.Equal(policyEntry.Name, policy.Response.Name);
-            Assert.Equal(policyEntry.Rules, policy.Response.Rules);
+            Assert.Equal(HttpStatusCode.OK, templatedPolicy.StatusCode);
+            Assert.NotNull(templatedPolicy.Response);
+            Assert.NotNull(templatedPolicy.Response.ID);
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Name));
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Rules));
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Description));
         }
     }
 }
