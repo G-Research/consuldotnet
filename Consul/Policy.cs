@@ -229,6 +229,30 @@ namespace Consul
             var res = await _client.Put<PolicyEntry, PolicyActionResult>($"/v1/acl/policy/{policy.ID}", policy, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<PolicyEntry>(res, res.Response);
         }
+
+        /// <summary>
+        /// Shows the policy created from a templated policy.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>An ACL Policy</returns>
+        public async Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, QueryOptions q, CancellationToken ct = default)
+        {
+            var res = await _client.Get<PolicyEntry>($"/v1/acl/templated-policy/preview/{name}", q).Execute(ct).ConfigureAwait(false);
+            return new QueryResult<PolicyEntry>(res, res.Response);
+        }
+
+        /// <summary>
+        /// Shows the policy created from a templated policy.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ct"></param>
+        /// <returns>An ACL Policy</returns>
+        public Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default)
+        {
+            return PreviewTemplatedPolicy(name, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

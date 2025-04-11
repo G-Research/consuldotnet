@@ -73,5 +73,29 @@ namespace Consul.Test
             Assert.NotEqual(TimeSpan.Zero, aclPolicyList.RequestTime);
             Assert.True(aclPolicyList.Response.Length >= 1);
         }
+
+        [SkippableFact]
+        public async Task Policy_PreviewATemplatedPolicyByNamw()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var policyEntry = new PolicyEntry()
+            {
+                Name = "UnitTestPolicy",
+                Description = "Policy for API Unit Testing",
+                Rules = "key \"\" { policy = \"deny\" }"
+            };
+
+            var newPolicyResult = await _client.Policy.Create(policyEntry);
+            Assert.NotNull(newPolicyResult.Response);
+
+            var policy = await _client.Policy.PreviewTemplatedPolicy(policyEntry.Name);
+            Assert.NotNull(policy);
+
+            Assert.NotNull(policy.Response.ID);
+            Assert.Equal(policyEntry.Description, policy.Response.Description);
+            Assert.Equal(policyEntry.Name, policy.Response.Name);
+            Assert.Equal(policyEntry.Rules, policy.Response.Rules);
+        }
     }
 }
