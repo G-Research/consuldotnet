@@ -37,7 +37,7 @@ namespace Consul
         Task<QueryResult<PolicyEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, CancellationToken ct = default);
         Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default);
+        Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default);
     }
 }

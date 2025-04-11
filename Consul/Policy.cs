@@ -234,13 +234,13 @@ namespace Consul
         /// Shows the policy created from a templated policy.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="q"></param>
+        /// <param name="options"></param>
         /// <param name="ct"></param>
         /// <returns>An ACL Policy</returns>
-        public async Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, QueryOptions q, CancellationToken ct = default)
+        public async Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, WriteOptions options, CancellationToken ct = default)
         {
-            var res = await _client.Get<PolicyEntry>($"/v1/acl/templated-policy/preview/{name}", q).Execute(ct).ConfigureAwait(false);
-            return new QueryResult<PolicyEntry>(res, res.Response);
+            var res = await _client.Post<string, PolicyEntry>($"/v1/acl/templated-policy/preview/{name}", null, options).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<PolicyEntry>(res, res.Response);
         }
 
         /// <summary>
@@ -249,9 +249,9 @@ namespace Consul
         /// <param name="name"></param>
         /// <param name="ct"></param>
         /// <returns>An ACL Policy</returns>
-        public Task<QueryResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default)
+        public Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default)
         {
-            return PreviewTemplatedPolicy(name, QueryOptions.Default, ct);
+            return PreviewTemplatedPolicy(name, WriteOptions.Default, ct);
         }
     }
 

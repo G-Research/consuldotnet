@@ -75,14 +75,14 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Policy_PreviewATemplatedPolicyByNamw()
+        public async Task Policy_PreviewATemplatedPolicyByName()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var policyEntry = new PolicyEntry()
             {
-                Name = "UnitTestPolicy",
-                Description = "Policy for API Unit Testing",
+                Name = "AuraForAura",
+                Description = "",
                 Rules = "key \"\" { policy = \"deny\" }"
             };
 
