@@ -73,5 +73,16 @@ namespace Consul.Test
             Assert.NotEqual(TimeSpan.Zero, aclPolicyList.RequestTime);
             Assert.True(aclPolicyList.Response.Length >= 1);
         }
+
+        [SkippableFact]
+        public async Task Policy_ListTemplatedPolicies()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var templatedPolicyList = await _client.Policy.ListTemplatedPolicies();
+
+            Assert.NotNull(templatedPolicyList.Response);
+            Assert.True(templatedPolicyList.Response.Count > 0);
+        }
     }
 }
