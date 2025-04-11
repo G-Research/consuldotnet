@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -85,6 +86,7 @@ namespace Consul.Test
 
             var templatedPolicyList = await _client.Policy.ListTemplatedPolicies();
 
+            Assert.Equal(HttpStatusCode.OK, templatedPolicyList.StatusCode);
             Assert.NotNull(templatedPolicyList.Response);
             Assert.True(templatedPolicyList.Response.Count > 0);
         }
