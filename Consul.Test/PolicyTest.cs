@@ -18,6 +18,7 @@
 
 using System;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -77,6 +78,9 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Policy_ListTemplatedPolicies()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.17.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Templated Policies` are only supported from Consul {cutOffVersion}");
+
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var templatedPolicyList = await _client.Policy.ListTemplatedPolicies();
