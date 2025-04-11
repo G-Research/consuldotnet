@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -84,11 +85,13 @@ namespace Consul.Test
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var templatedPolicyName = "builtin/api-gateway";
-            var policy = await _client.Policy.ReadATemplatedPolicyByName(templatedPolicyName);
-            Assert.NotNull(policy.Response);
-            Assert.Equal(templatedPolicyName, policy.Response.TemplateName);
-            Assert.True(!string.IsNullOrEmpty(policy.Response.Template));
-            Assert.True(!string.IsNullOrEmpty(policy.Response.Schema));
+            var templatedPolicy = await _client.Policy.ReadATemplatedPolicyByName(templatedPolicyName);
+
+            Assert.Equal(HttpStatusCode.OK, templatedPolicy.StatusCode);
+            Assert.NotNull(templatedPolicy.Response);
+            Assert.Equal(templatedPolicyName, templatedPolicy.Response.TemplateName);
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Template));
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Schema));
         }
     }
 }
