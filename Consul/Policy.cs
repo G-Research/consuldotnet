@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -91,6 +92,15 @@ namespace Consul
             Datacenters = datacenters;
         }
         public static implicit operator PolicyLink(PolicyEntry p) => new PolicyLink(p.ID);
+    }
+    /// <summary>
+    /// Handles responses for templated policies
+    /// </summary>
+    public class TemplatedPolicyResponse
+    {
+        public string TemplateName { get; set; }
+        public string Schema { get; set; }
+        public string Template { get; set; }
     }
 
     /// <summary>
@@ -252,6 +262,28 @@ namespace Consul
         public Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default)
         {
             return PreviewTemplatedPolicy(name, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Returns a list of all templated policies
+        /// </summary>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(QueryOptions q, CancellationToken ct = default)
+        {
+            var res = _client.Get<Dictionary<string, TemplatedPolicyResponse>>("v1/acl/templated-policies", q);
+            return res.Execute(ct);
+        }
+
+        /// <summary>
+        /// Returns a list of all templated policies
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(CancellationToken ct = default)
+        {
+            return ListTemplatedPolicies(QueryOptions.Default, ct);
         }
     }
 

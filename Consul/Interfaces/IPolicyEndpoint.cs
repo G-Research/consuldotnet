@@ -17,6 +17,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,5 +40,7 @@ namespace Consul
         Task<WriteResult<PolicyEntry>> Update(PolicyEntry policy, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(CancellationToken ct = default);
     }
 }
