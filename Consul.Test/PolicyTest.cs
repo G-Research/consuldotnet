@@ -17,7 +17,9 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -72,6 +74,25 @@ namespace Consul.Test
             Assert.NotNull(aclPolicyList.Response);
             Assert.NotEqual(TimeSpan.Zero, aclPolicyList.RequestTime);
             Assert.True(aclPolicyList.Response.Length >= 1);
+        }
+
+        [SkippableFact]
+        public async Task Policy_PreviewATemplatedPolicyByName()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.17.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Templated Policies` are only supported from Consul {cutOffVersion}");
+
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var templatedPolicyName = "builtin/dns";
+            var templatedPolicy = await _client.Policy.PreviewTemplatedPolicy(templatedPolicyName);
+
+            Assert.Equal(HttpStatusCode.OK, templatedPolicy.StatusCode);
+            Assert.NotNull(templatedPolicy.Response);
+            Assert.NotNull(templatedPolicy.Response.ID);
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Name));
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Rules));
+            Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Description));
         }
     }
 }
