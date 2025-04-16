@@ -41,5 +41,7 @@ namespace Consul
         Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct = default);
         Task<WriteResult<TokenEntry>> Update(TokenEntry token, WriteOptions q, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> ReadSelfToken(string token, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> ReadSelfToken(string token, QueryOptions q, CancellationToken ct = default);
     }
 }

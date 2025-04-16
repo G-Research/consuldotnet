@@ -235,5 +235,23 @@ namespace Consul.Test
             Assert.NotEqual(TimeSpan.Zero, aclList.RequestTime);
             Assert.True(aclList.Response.Length >= 1);
         }
+
+        [SkippableFact]
+        public async Task Token_ReadSelfToken()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var tokenEntry = await _client.Token.Read("self");
+            Assert.NotNull(tokenEntry.Response);
+
+            var token = tokenEntry.Response.SecretID;
+            var selfTokenEntry = await _client.Token.ReadSelfToken(token);
+
+            Assert.NotNull(selfTokenEntry.Response);
+            Assert.NotEqual(TimeSpan.Zero, selfTokenEntry.RequestTime);
+            Assert.Equal(selfTokenEntry.Response.SecretID, TestHelper.MasterToken);
+            Assert.Equal(selfTokenEntry.Response.SecretID, tokenEntry.Response.SecretID);
+            Assert.Equal(selfTokenEntry.Response.AccessorID, tokenEntry.Response.AccessorID);
+        }
     }
 }
