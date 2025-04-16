@@ -285,6 +285,30 @@ namespace Consul
         {
             return ListTemplatedPolicies(QueryOptions.Default, ct);
         }
+
+        /// <summary>
+        /// Reads an ACL policy with the given ID or name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="q"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns an ACL Policy</returns>
+        public async Task<QueryResult<TemplatedPolicyResponse>> ReadTemplatedPolicyByName(string name, QueryOptions q, CancellationToken ct = default)
+        {
+            var res = await _client.Get<TemplatedPolicyResponse>($"v1/acl/templated-policy/name/{name}", q).Execute(ct).ConfigureAwait(false);
+            return new QueryResult<TemplatedPolicyResponse>(res, res.Response);
+        }
+
+        /// <summary>
+        /// Reads an ACL policy with the given ID or name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ct"></param>
+        /// <returns>Returns an ACL Policy</returns>
+        public Task<QueryResult<TemplatedPolicyResponse>> ReadTemplatedPolicyByName(string name, CancellationToken ct = default)
+        {
+            return ReadTemplatedPolicyByName(name, QueryOptions.Default, ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

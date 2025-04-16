@@ -42,5 +42,7 @@ namespace Consul
         Task<WriteResult<PolicyEntry>> PreviewTemplatedPolicy(string name, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, TemplatedPolicyResponse>>> ListTemplatedPolicies(CancellationToken ct = default);
+        Task<QueryResult<TemplatedPolicyResponse>> ReadTemplatedPolicyByName(string name, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<TemplatedPolicyResponse>> ReadTemplatedPolicyByName(string name, CancellationToken ct = default);
     }
 }
