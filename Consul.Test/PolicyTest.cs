@@ -127,5 +127,17 @@ namespace Consul.Test
             Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Template));
             Assert.True(!string.IsNullOrEmpty(templatedPolicy.Response.Schema));
         }
+
+        [SkippableFact]
+        public async Task Policy_ReadPolicyByName()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var policyEntry = await _client.Policy.ReadPolicyByName("global-management");
+
+            Assert.NotNull(policyEntry.Response);
+            Assert.NotEqual(TimeSpan.Zero, policyEntry.RequestTime);
+            Assert.Equal("00000000-0000-0000-0000-000000000001", policyEntry.Response.ID);
+        }
     }
 }
