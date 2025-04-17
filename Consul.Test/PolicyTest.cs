@@ -131,6 +131,9 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Policy_ReadPolicyByName()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `ACL Policies` are only supported from Consul {cutOffVersion}");
+
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var policyEntry = await _client.Policy.ReadPolicyByName("global-management");
