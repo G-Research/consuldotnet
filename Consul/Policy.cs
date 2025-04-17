@@ -309,6 +309,30 @@ namespace Consul
         {
             return ReadTemplatedPolicyByName(name, QueryOptions.Default, ct);
         }
+
+        /// <summary>
+        /// Gets the requested ACL Policy from Consul
+        /// </summary>
+        /// <param name="name">The name of the ACL Policy to get</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the requested ACL Policy</returns>
+        public Task<QueryResult<PolicyEntry>> ReadPolicyByName(string name, CancellationToken ct = default)
+        {
+            return ReadPolicyByName(name, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Gets the requested ACL Policy from Consul
+        /// </summary>
+        /// <param name="name">The name of the ACL Policy to get</param>
+        /// <param name="queryOptions">Customised query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the requested ACL Policy</returns>
+        public async Task<QueryResult<PolicyEntry>> ReadPolicyByName(string name, QueryOptions queryOptions, CancellationToken ct = default)
+        {
+            var res = await _client.Get<PolicyEntry>($"/v1/acl/policy/name/{name}", queryOptions).Execute(ct).ConfigureAwait(false);
+            return new QueryResult<PolicyEntry>(res, res.Response);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
