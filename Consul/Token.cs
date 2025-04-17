@@ -293,6 +293,34 @@ namespace Consul
         {
             return _client.Get<TokenEntry[]>("/v1/acl/tokens", queryOptions).Execute(ct);
         }
+
+        /// <summary>
+        /// Gets the ACL token that matches the secret ID specified with the X-Consul-Token header or the token query parameter.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the requested ACL Token</returns>
+        public Task<QueryResult<TokenEntry>> ReadSelfToken(string token, CancellationToken ct = default)
+        {
+            return ReadSelfToken(token, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Gets the ACL token that matches the secret ID specified with the X-Consul-Token header or the token query parameter.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="queryOptions">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the requested ACL Token</returns>
+        public Task<QueryResult<TokenEntry>> ReadSelfToken(string token, QueryOptions queryOptions, CancellationToken ct = default)
+        {
+            var res = _client.Get<TokenEntry>($"/v1/acl/token/self", queryOptions);
+            if (!string.IsNullOrEmpty(token))
+            {
+                res.Params["token"] = token;
+            }
+            return res.Execute(ct);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
