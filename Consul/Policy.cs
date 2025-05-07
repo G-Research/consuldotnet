@@ -93,6 +93,15 @@ namespace Consul
         }
         public static implicit operator PolicyLink(PolicyEntry p) => new PolicyLink(p.ID);
     }
+
+    /// <summary>
+    /// Represents the variables used to populate an ACL policy template
+    /// </summary>
+    public class ACLTemplatedPolicyVariable
+    {
+        public string Name { get; set; }
+    }
+
     /// <summary>
     /// Handles responses for templated policies
     /// </summary>
