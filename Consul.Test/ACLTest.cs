@@ -215,8 +215,8 @@ namespace Consul.Test
             Assert.Equal("default", response.Description);
             Assert.True(!string.IsNullOrEmpty(response.AuthMethod));
             Assert.Equal("default", response.AuthMethod);
-            
-             
+
+
         }
     }
 

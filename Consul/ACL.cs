@@ -207,7 +207,7 @@ namespace Consul
 
         [JsonProperty("ModifyIndex")]
         public ulong ModifyIndex { get; set; }
-    } 
+    }
 
 
     /// <summary>
@@ -432,7 +432,7 @@ namespace Consul
             return new QueryResult<string>(res, res.Response);
         }
 
-    //  ==========================================================================   
+        //  ==========================================================================   
         /// <summary>
         /// read an ACL binding rule with the given ID.
         /// </summary>

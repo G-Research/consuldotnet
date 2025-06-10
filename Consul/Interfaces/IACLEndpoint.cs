@@ -64,6 +64,6 @@ namespace Consul
 
         Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, CancellationToken ct = default);
         Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, QueryOptions q, CancellationToken ct = default);
-        
+
     }
 }
