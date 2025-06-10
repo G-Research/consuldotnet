@@ -19,9 +19,11 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
@@ -192,5 +194,31 @@ namespace Consul.Test
             Assert.True(destroyResponse.Response);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
+
+        [SkippableFact]
+        [Obsolete]
+        public async Task ACL_ReadBindingRule()
+        {
+            SkipIfAclNotSupported();
+            //TASK: UNDERSTAND CREATING A BINDING RULE
+            var binding = await _client.ACL.ReadBindingRule("default");
+            var response = binding.Response;
+            Assert.NotNull(response);
+            Assert.NotEqual(TimeSpan.Zero, binding.RequestTime);
+            Assert.True(!string.IsNullOrEmpty(response.ID));
+            Assert.Equal("default", response.ID);
+            Assert.True(!string.IsNullOrEmpty(response.BindName));
+            Assert.Equal("default", response.BindName);
+            Assert.True(!string.IsNullOrEmpty(response.BindType));
+            Assert.Equal("default", response.BindType);
+            Assert.True(!string.IsNullOrEmpty(response.Description));
+            Assert.Equal("default", response.Description);
+            Assert.True(!string.IsNullOrEmpty(response.AuthMethod));
+            Assert.Equal("default", response.AuthMethod);
+            
+             
+        }
     }
+
+
 }

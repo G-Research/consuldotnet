@@ -180,6 +180,37 @@ namespace Consul
     }
 
     /// <summary>
+    /// Represents an ACL Binding Rule
+    /// </summary>
+    public class ACLBindingRule
+    {
+        [JsonProperty("ID")]
+        public string ID { get; set; }
+
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+
+        [JsonProperty("AuthMethod")]
+        public string AuthMethod { get; set; }
+
+        [JsonProperty("BindType")]
+        public string BindType { get; set; }
+
+        [JsonProperty("BindName")]
+        public string BindName { get; set; }
+
+        [JsonProperty("Selector")]
+        public string Selector { get; set; }
+
+        [JsonProperty("CreateIndex")]
+        public ulong CreateIndex { get; set; }
+
+        [JsonProperty("ModifyIndex")]
+        public ulong ModifyIndex { get; set; }
+    } 
+
+
+    /// <summary>
     /// [Deprecated] ACL can be used to query the ACL endpoints
     /// </summary>
     [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
@@ -400,7 +431,33 @@ namespace Consul
             var res = await _client.Get($"/v1/acl/rules/translate/{id}", q).Execute(ct).ConfigureAwait(false);
             return new QueryResult<string>(res, res.Response);
         }
+
+    //  ==========================================================================   
+        /// <summary>
+        /// read an ACL binding rule with the given ID.
+        /// </summary>
+        /// <param name="id">The binding rule ID to read.</param>
+        /// <param name="ct">The cancellation token.</param>
+        /// <returns>A query result containing the ACL Binding Rule.</returns>
+        public Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, CancellationToken ct = default)
+        {
+            return ReadBindingRule(id, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// read an ACL binding rule with the given ID.
+        /// </summary>
+        /// <param name="id">The binding rule ID to read.</param>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A query result containing the ACL Binding Rule, or a query result with a null response if no binding rule matched the provided ID</returns>
+        public async Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, QueryOptions q, CancellationToken ct = default)
+        {
+            var res = await _client.Get<ACLBindingRule>($"/v1/acl/binding-rule/{id}", q).Execute(ct).ConfigureAwait(false);
+            return new QueryResult<ACLBindingRule>(res, res.Response);
+        }
     }
+    // =====================================================================================
 
     public partial class ConsulClient : IConsulClient
     {

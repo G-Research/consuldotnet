@@ -137,6 +137,7 @@ namespace Consul
         /// WaitTime limits how long a Watch will block. If not provided, the agent default values will be used.
         /// </summary>
         public TimeSpan? WaitTime { get; set; }
+        public HttpClient HttpClient { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of a Consul client configuration.

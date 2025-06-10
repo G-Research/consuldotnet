@@ -61,5 +61,9 @@ namespace Consul
         Task<QueryResult<string>> TranslateLegacyTokenRules(string id, CancellationToken ct = default);
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
         Task<QueryResult<string>> TranslateLegacyTokenRules(string id, QueryOptions q, CancellationToken ct = default);
+
+        Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRule>> ReadBindingRule(string id, QueryOptions q, CancellationToken ct = default);
+        
     }
 }
