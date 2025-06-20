@@ -86,6 +86,29 @@ namespace Consul.Test
             }
         }
 
+        [Fact] 
+        public async Task Operator_AutopilotGetConfiguration_ReturnsConfiguration()
+        {
+            var result = await _client.Operator.AutopilotGetConfiguration();
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Response);
+
+            var config = result.Response;
+
+            Assert.False(string.IsNullOrEmpty(config.LastContactThreshold));
+            Assert.False(string.IsNullOrEmpty(config.ServerStabilizationTime));
+            Assert.True(config.MaxTrailingLogs >= 0);
+            Assert.True(config.MinQuorum >= 0);
+            Assert.True(config.CreateIndex >= 0);
+            Assert.True(config.ModifyIndex >= 0);
+
+            Assert.True(result.RequestTime > TimeSpan.Zero);
+            Assert.True(result.LastIndex >= 0);
+        }
+
+       
+
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {

@@ -355,6 +355,27 @@ namespace Consul
         {
             return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
+
+         /// <summary>
+        /// Retrieves the current Autopilot configuration
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns>A query result containing the Autopilot configuration</returns>
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetConfiguration(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the current Autopilot configuration with query options
+        /// </summary>
+        /// <param name="q">Query options including datacenter and consistency mode</param>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns>A query result containing the Autopilot configuration</returns>
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotConfiguration>("/v1/operator/autopilot/configuration", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -383,6 +404,39 @@ namespace Consul
         public Flags Flags { get; set; }
         public string[] Features { get; set; }
         public bool Temporary { get; set; }
+    }
+
+    public class AutopilotConfiguration
+    {
+        [JsonProperty("CleanupDeadServers")]
+        public bool CleanupDeadServers { get; set; }
+
+        [JsonProperty("LastContactThreshold")]
+        public string LastContactThreshold { get; set; } = string.Empty;
+
+        [JsonProperty("MaxTrailingLogs")]
+        public int MaxTrailingLogs { get; set; }
+
+        [JsonProperty("MinQuorum")]
+        public int MinQuorum { get; set; }
+
+        [JsonProperty("ServerStabilizationTime")]
+        public string ServerStabilizationTime { get; set; } = string.Empty;
+
+        [JsonProperty("RedundancyZoneTag")]
+        public string RedundancyZoneTag { get; set; } = string.Empty;
+
+        [JsonProperty("DisableUpgradeMigration")]
+        public bool DisableUpgradeMigration { get; set; }
+
+        [JsonProperty("UpgradeVersionTag")]
+        public string UpgradeVersionTag { get; set; } = string.Empty;
+
+        [JsonProperty("CreateIndex")]
+        public ulong CreateIndex { get; set; }
+
+        [JsonProperty("ModifyIndex")]
+        public ulong ModifyIndex { get; set; }
     }
 
     public class Flags
