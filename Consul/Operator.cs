@@ -356,7 +356,7 @@ namespace Consul
             return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
 
-         /// <summary>
+        /// <summary>
         /// Retrieves the current Autopilot configuration
         /// </summary>
         /// <param name="cancellationToken">Cancellation token for the request</param>

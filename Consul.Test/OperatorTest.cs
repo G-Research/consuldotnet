@@ -86,7 +86,7 @@ namespace Consul.Test
             }
         }
 
-        [Fact] 
+        [Fact]
         public async Task Operator_AutopilotGetConfiguration_ReturnsConfiguration()
         {
             var result = await _client.Operator.AutopilotGetConfiguration();
@@ -107,7 +107,7 @@ namespace Consul.Test
             Assert.True(result.LastIndex >= 0);
         }
 
-       
+
 
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
