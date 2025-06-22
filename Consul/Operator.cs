@@ -417,9 +417,6 @@ namespace Consul
         [JsonProperty("MaxTrailingLogs")]
         public int MaxTrailingLogs { get; set; }
 
-        [JsonProperty("MinQuorum")]
-        public int MinQuorum { get; set; }
-
         [JsonProperty("ServerStabilizationTime")]
         public string ServerStabilizationTime { get; set; } = string.Empty;
 

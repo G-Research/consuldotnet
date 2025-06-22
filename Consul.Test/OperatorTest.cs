@@ -96,18 +96,20 @@ namespace Consul.Test
 
             var config = result.Response;
 
-            Assert.False(string.IsNullOrEmpty(config.LastContactThreshold));
-            Assert.False(string.IsNullOrEmpty(config.ServerStabilizationTime));
+            Assert.True(config.CleanupDeadServers == true || config.CleanupDeadServers == false);
+            Assert.NotEmpty(config.LastContactThreshold);
+            Assert.NotEmpty(config.ServerStabilizationTime);
             Assert.True(config.MaxTrailingLogs >= 0);
-            Assert.True(config.MinQuorum >= 0);
             Assert.True(config.CreateIndex >= 0);
             Assert.True(config.ModifyIndex >= 0);
+
+            Assert.NotNull(config.RedundancyZoneTag);
+            Assert.NotNull(config.UpgradeVersionTag);
+            Assert.True(config.DisableUpgradeMigration == true || config.DisableUpgradeMigration == false);
 
             Assert.True(result.RequestTime > TimeSpan.Zero);
             Assert.True(result.LastIndex >= 0);
         }
-
-
 
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
