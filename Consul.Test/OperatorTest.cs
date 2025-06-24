@@ -96,7 +96,6 @@ namespace Consul.Test
 
             var config = result.Response;
 
-            Assert.True(config.CleanupDeadServers == true || config.CleanupDeadServers == false);
             Assert.NotEmpty(config.LastContactThreshold);
             Assert.NotEmpty(config.ServerStabilizationTime);
             Assert.True(config.MaxTrailingLogs >= 0);
@@ -105,7 +104,6 @@ namespace Consul.Test
 
             Assert.NotNull(config.RedundancyZoneTag);
             Assert.NotNull(config.UpgradeVersionTag);
-            Assert.True(config.DisableUpgradeMigration == true || config.DisableUpgradeMigration == false);
 
             Assert.True(result.RequestTime > TimeSpan.Zero);
             Assert.True(result.LastIndex >= 0);
