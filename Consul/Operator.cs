@@ -412,7 +412,7 @@ namespace Consul
         public bool CleanupDeadServers { get; set; }
 
         [JsonProperty("LastContactThreshold")]
-        public string LastContactThreshold { get; set; } 
+        public string LastContactThreshold { get; set; }
 
         [JsonProperty("MaxTrailingLogs")]
         public int MaxTrailingLogs { get; set; }
@@ -424,7 +424,7 @@ namespace Consul
         public string ServerStabilizationTime { get; set; }
 
         [JsonProperty("RedundancyZoneTag")]
-        public string RedundancyZoneTag { get; set; } 
+        public string RedundancyZoneTag { get; set; }
 
         [JsonProperty("DisableUpgradeMigration")]
         public bool DisableUpgradeMigration { get; set; }
