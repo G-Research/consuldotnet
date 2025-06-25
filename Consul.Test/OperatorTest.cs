@@ -99,6 +99,7 @@ namespace Consul.Test
             Assert.NotEmpty(config.LastContactThreshold);
             Assert.NotEmpty(config.ServerStabilizationTime);
             Assert.True(config.MaxTrailingLogs >= 0);
+            Assert.True(config.MinQuorum >= 0);
             Assert.True(config.CreateIndex >= 0);
             Assert.True(config.ModifyIndex >= 0);
 

@@ -412,22 +412,25 @@ namespace Consul
         public bool CleanupDeadServers { get; set; }
 
         [JsonProperty("LastContactThreshold")]
-        public string LastContactThreshold { get; set; } = string.Empty;
+        public string LastContactThreshold { get; set; } 
 
         [JsonProperty("MaxTrailingLogs")]
         public int MaxTrailingLogs { get; set; }
 
+        [JsonProperty("MinQuorum")]
+        public int MinQuorum { get; set; }
+
         [JsonProperty("ServerStabilizationTime")]
-        public string ServerStabilizationTime { get; set; } = string.Empty;
+        public string ServerStabilizationTime { get; set; }
 
         [JsonProperty("RedundancyZoneTag")]
-        public string RedundancyZoneTag { get; set; } = string.Empty;
+        public string RedundancyZoneTag { get; set; } 
 
         [JsonProperty("DisableUpgradeMigration")]
         public bool DisableUpgradeMigration { get; set; }
 
         [JsonProperty("UpgradeVersionTag")]
-        public string UpgradeVersionTag { get; set; } = string.Empty;
+        public string UpgradeVersionTag { get; set; }
 
         [JsonProperty("CreateIndex")]
         public ulong CreateIndex { get; set; }
