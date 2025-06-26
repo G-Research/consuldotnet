@@ -382,7 +382,7 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Query parameters</param>
         /// <returns>The autopilot health information</returns>
-        public Task<QueryResult<AutopilotHealth>> AAutopilotGetHealth(CancellationToken cancellationToken= default)
+        public Task<QueryResult<AutopilotHealth>> AAutopilotGetHealth(CancellationToken cancellationToken = default)
         {
             return AutopilotGetHealth(null, cancellationToken);
         }
