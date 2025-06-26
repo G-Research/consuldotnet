@@ -58,7 +58,6 @@ namespace Consul
 
         Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(CancellationToken cancellationToken = default);
         Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(QueryOptions q, CancellationToken cancellationToken = default);
-
         Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(CancellationToken cancellationToken = default);
         Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(QueryOptions q, CancellationToken cancellationToken = default);
 
