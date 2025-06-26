@@ -110,6 +110,42 @@ namespace Consul.Test
             Assert.True(result.LastIndex >= 0);
         }
 
+        [Fact]
+        public async Task Operator_AutopilotGetHealth_ReturnsHealthStatus()
+        {
+            var result = await _client.Operator.AutopilotGetHealth();
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.Servers);
+
+            var health = result.Response;
+
+            Assert.IsType<List<AutopilotServerHealth>>(health.Servers);
+            Assert.True(health.FailureTolerance >= 0);
+
+            if (health.Servers.Count > 0)
+            {
+                foreach (var server in health.Servers)
+                {
+                    Assert.False(string.IsNullOrEmpty(server.ID));
+                    Assert.False(string.IsNullOrEmpty(server.Name));
+                    Assert.False(string.IsNullOrEmpty(server.Address));
+                    Assert.False(string.IsNullOrEmpty(server.Version));
+                    Assert.True(server.LastTerm >= 0);
+                    Assert.True(server.LastIndex >= 0);
+                    Assert.NotEqual(DateTime.MinValue, server.StableSince);
+
+                    if (health.Servers.Count == 1)
+                    {
+                        Assert.True(server.Leader);
+                        Assert.True(server.Voter);
+                    }
+                }
+            }
+        }
+
+
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {
