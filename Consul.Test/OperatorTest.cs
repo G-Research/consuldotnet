@@ -145,7 +145,6 @@ namespace Consul.Test
             }
         }
 
-
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {
