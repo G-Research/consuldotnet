@@ -132,8 +132,8 @@ namespace Consul.Test
                     Assert.False(string.IsNullOrEmpty(server.Name));
                     Assert.False(string.IsNullOrEmpty(server.Address));
                     Assert.False(string.IsNullOrEmpty(server.Version));
-                    Assert.True(server.LastTerm >= 0);
-                    Assert.True(server.LastIndex >= 0);
+                    Assert.True(server.LastTerm > 0);
+                    Assert.True(server.LastIndex > 0);
                     Assert.NotEqual(DateTime.MinValue, server.StableSince);
 
                     if (health.Servers.Count == 1)
