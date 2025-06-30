@@ -376,6 +376,27 @@ namespace Consul
         {
             return _client.Get<AutopilotConfiguration>("/v1/operator/autopilot/configuration", q).Execute(cancellationToken);
         }
+
+        /// <summary>
+        /// Retrieves the autopilot health status of the cluster (synchronous version)
+        /// </summary>
+        /// <param name="cancellationToken">Query parameters</param>
+        /// <returns>The autopilot health information</returns>
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetHealth(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot health status of the cluster
+        /// </summary>
+        /// <param name="q">Query parameters</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot health information</returns>
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotHealth>("/v1/operator/autopilot/health", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -437,6 +458,57 @@ namespace Consul
 
         [JsonProperty("ModifyIndex")]
         public ulong ModifyIndex { get; set; }
+    }
+
+    public class AutopilotHealth
+    {
+        [JsonProperty("Healthy")]
+        public bool Healthy { get; set; }
+
+        [JsonProperty("FailureTolerance")]
+        public int FailureTolerance { get; set; }
+
+        [JsonProperty("Servers")]
+        public List<AutopilotServerHealth> Servers { get; set; }
+    }
+
+    public class AutopilotServerHealth
+    {
+        [JsonProperty("ID")]
+        public string ID { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Address")]
+        public string Address { get; set; }
+
+        [JsonProperty("SerfStatus")]
+        public string SerfStatus { get; set; }
+
+        [JsonProperty("Version")]
+        public string Version { get; set; }
+
+        [JsonProperty("Leader")]
+        public bool Leader { get; set; }
+
+        [JsonProperty("LastContact")]
+        public string LastContact { get; set; }
+
+        [JsonProperty("LastTerm")]
+        public long LastTerm { get; set; }
+
+        [JsonProperty("LastIndex")]
+        public long LastIndex { get; set; }
+
+        [JsonProperty("Healthy")]
+        public bool Healthy { get; set; }
+
+        [JsonProperty("Voter")]
+        public bool Voter { get; set; }
+
+        [JsonProperty("StableSince")]
+        public DateTime StableSince { get; set; }
     }
 
     public class Flags
