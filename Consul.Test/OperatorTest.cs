@@ -144,6 +144,45 @@ namespace Consul.Test
                 }
             }
         }
+        [Fact]
+        public async Task Operator_AutopilotSetConfiguration_UpdatesConfiguration()
+        {
+
+            var configuration = new AutopilotConfiguration
+            {
+                CleanupDeadServers = true,
+                LastContactThreshold = "500ms",
+                MaxTrailingLogs = 100,
+                MinQuorum = 3,
+                ServerStabilizationTime = "30s",
+                RedundancyZoneTag = "az",
+                DisableUpgradeMigration = false,
+                UpgradeVersionTag = "version"
+            };
+
+            var result = await _client.Operator.AutopilotSetConfiguration(configuration);
+
+            Assert.NotNull(result);
+            Assert.True(result.RequestTime > TimeSpan.Zero);
+
+            var getResult = await _client.Operator.AutopilotGetConfiguration();
+            Assert.NotNull(getResult);
+            Assert.NotNull(getResult.Response);
+
+            var retrievedConfig = getResult.Response;
+            Assert.Equal(configuration.CleanupDeadServers, retrievedConfig.CleanupDeadServers);
+            Assert.Equal(configuration.LastContactThreshold, retrievedConfig.LastContactThreshold);
+            Assert.Equal(configuration.MaxTrailingLogs, retrievedConfig.MaxTrailingLogs);
+            Assert.Equal(configuration.MinQuorum, retrievedConfig.MinQuorum);
+            Assert.Equal(configuration.ServerStabilizationTime, retrievedConfig.ServerStabilizationTime);
+            Assert.Equal(configuration.RedundancyZoneTag, retrievedConfig.RedundancyZoneTag);
+            Assert.Equal(configuration.DisableUpgradeMigration, retrievedConfig.DisableUpgradeMigration);
+            Assert.Equal(configuration.UpgradeVersionTag, retrievedConfig.UpgradeVersionTag);
+
+            Assert.True(retrievedConfig.CreateIndex > 0);
+            Assert.True(retrievedConfig.ModifyIndex > 0);
+            Assert.True(retrievedConfig.ModifyIndex >= retrievedConfig.CreateIndex);
+        }
 
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
