@@ -168,7 +168,6 @@ namespace Consul.Test
 
                     Assert.False(string.IsNullOrEmpty(serverId));
                     Assert.NotNull(server);
-
                     Assert.False(string.IsNullOrEmpty(server.ID));
                     Assert.Equal(serverId, server.ID);
                     Assert.False(string.IsNullOrEmpty(server.Name));
