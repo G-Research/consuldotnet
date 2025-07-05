@@ -152,23 +152,23 @@ namespace Consul.Test
             Assert.NotNull(result);
             Assert.NotNull(result.Response);
             Assert.NotNull(result.Response.Servers);
-            
+
             var state = result.Response;
             Assert.IsType<Dictionary<string, AutopilotServerState>>(state.Servers);
             Assert.True(state.FailureTolerance >= 0);
             Assert.True(state.OptimisticFailureTolerance >= 0);
             Assert.NotNull(state.Voters);
-            
+
             if (state.Servers.Count > 0)
             {
                 foreach (var kvp in state.Servers)
                 {
                     var serverId = kvp.Key;
                     var server = kvp.Value;
-                    
+
                     Assert.False(string.IsNullOrEmpty(serverId));
                     Assert.NotNull(server);
-                    
+
                     Assert.False(string.IsNullOrEmpty(server.ID));
                     Assert.Equal(serverId, server.ID);
                     Assert.False(string.IsNullOrEmpty(server.Name));
@@ -182,22 +182,22 @@ namespace Consul.Test
                     Assert.True(server.LastIndex > 0);
                     Assert.NotNull(server.Meta);
                 }
-                
+
                 if (state.Healthy)
                 {
                     Assert.False(string.IsNullOrEmpty(state.Leader));
                     Assert.Contains(state.Leader, state.Servers.Keys);
-                    
+
                     var leaderServer = state.Servers[state.Leader];
                     Assert.Equal("leader", leaderServer.Status);
                 }
-                
+
                 Assert.True(state.Voters.Count > 0);
                 foreach (var voter in state.Voters)
                 {
                     Assert.Contains(voter, state.Servers.Keys);
                 }
-                
+
                 if (state.ReadReplicas != null && state.ReadReplicas.Count > 0)
                 {
                     foreach (var replica in state.ReadReplicas)

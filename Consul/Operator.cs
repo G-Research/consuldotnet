@@ -536,31 +536,31 @@ namespace Consul
     {
         [JsonProperty("Healthy")]
         public bool Healthy { get; set; }
-        
+
         [JsonProperty("FailureTolerance")]
         public int FailureTolerance { get; set; }
-        
+
         [JsonProperty("OptimisticFailureTolerance")]
         public int OptimisticFailureTolerance { get; set; }
-        
+
         [JsonProperty("Servers")]
         public Dictionary<string, AutopilotServerState> Servers { get; set; }
-        
+
         [JsonProperty("Leader")]
         public string Leader { get; set; }
-        
+
         [JsonProperty("Voters")]
         public List<string> Voters { get; set; }
-        
+
         [JsonProperty("RedundancyZones")]
         public Dictionary<string, object> RedundancyZones { get; set; }
-        
+
         [JsonProperty("ReadReplicas")]
         public List<string> ReadReplicas { get; set; }
-        
+
         [JsonProperty("Upgrade")]
         public object Upgrade { get; set; }
-        
+
         public AutopilotState()
         {
             Servers = new Dictionary<string, AutopilotServerState>();
@@ -572,52 +572,52 @@ namespace Consul
     {
         [JsonProperty("ID")]
         public string ID { get; set; }
-        
+
         [JsonProperty("Name")]
         public string Name { get; set; }
-        
+
         [JsonProperty("Address")]
         public string Address { get; set; }
-        
+
         [JsonProperty("NodeStatus")]
         public string NodeStatus { get; set; }
-        
+
         [JsonProperty("Version")]
         public string Version { get; set; }
-        
+
         [JsonProperty("LastContact")]
         public string LastContact { get; set; }
-        
+
         [JsonProperty("LastTerm")]
         public long LastTerm { get; set; }
-        
+
         [JsonProperty("LastIndex")]
         public long LastIndex { get; set; }
-        
+
         [JsonProperty("Healthy")]
         public bool Healthy { get; set; }
-        
+
         [JsonProperty("StableSince")]
         public DateTime StableSince { get; set; }
-        
+
         [JsonProperty("ReadReplica")]
         public bool ReadReplica { get; set; }
-        
+
         [JsonProperty("Status")]
         public string Status { get; set; }
-        
+
         [JsonProperty("Meta")]
         public Dictionary<string, string> Meta { get; set; }
-        
+
         [JsonProperty("NodeType")]
         public string NodeType { get; set; }
-        
+
         [JsonProperty("RedundancyZone")]
         public string RedundancyZone { get; set; }
-        
+
         [JsonProperty("UpgradeVersion")]
         public string UpgradeVersion { get; set; }
-        
+
         public AutopilotServerState()
         {
             Meta = new Dictionary<string, string>();
