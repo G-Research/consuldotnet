@@ -144,20 +144,30 @@ namespace Consul.Test
                 }
             }
         }
-        [Fact]
-        public async Task Operator_AutopilotSetConfiguration_UpdatesConfiguration()
-        {
 
+        [Theory]
+        [InlineData(true, "500ms", 100, 3, "30s", "az", false, "v1")]
+        [InlineData(false, "1s", 200, 5, "60s", "zone-b", true, "v2")]
+        public async Task Operator_AutopilotSetConfiguration_UpdatesConfiguration(
+            bool cleanupDeadServers,
+            string lastContactThreshold,
+            int maxTrailingLogs,
+            int minQuorum,
+            string serverStabilizationTime,
+            string redundancyZoneTag,
+            bool disableUpgradeMigration,
+            string upgradeVersionTag)
+        {
             var configuration = new AutopilotConfiguration
             {
-                CleanupDeadServers = true,
-                LastContactThreshold = "500ms",
-                MaxTrailingLogs = 100,
-                MinQuorum = 3,
-                ServerStabilizationTime = "30s",
-                RedundancyZoneTag = "az",
-                DisableUpgradeMigration = false,
-                UpgradeVersionTag = "version"
+                CleanupDeadServers = cleanupDeadServers,
+                LastContactThreshold = lastContactThreshold,
+                MaxTrailingLogs = maxTrailingLogs,
+                MinQuorum = minQuorum,
+                ServerStabilizationTime = serverStabilizationTime,
+                RedundancyZoneTag = redundancyZoneTag,
+                DisableUpgradeMigration = disableUpgradeMigration,
+                UpgradeVersionTag = upgradeVersionTag
             };
 
             var result = await _client.Operator.AutopilotSetConfiguration(configuration);

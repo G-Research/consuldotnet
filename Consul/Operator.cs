@@ -398,8 +398,7 @@ namespace Consul
         public async Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, WriteOptions q, CancellationToken cancellationToken = default)
         {
             var req = await _client.Put<AutopilotConfiguration>("/v1/operator/autopilot/configuration", configuration, q).Execute(cancellationToken).ConfigureAwait(false);
-            return new WriteResult<AutopilotConfiguration>(req);
-
+            return new WriteResult<AutopilotConfiguration>(req)
         }
 
         /// <summary>
