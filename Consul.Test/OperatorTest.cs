@@ -147,7 +147,7 @@ namespace Consul.Test
 
         [Theory]
         [InlineData(true, "500ms", 100, 3, "30s", "az", false, "")]
-        [InlineData(false, "1s", 200, 5, "60s", "zone-b", true, "version")]
+        [InlineData(false, "1s", 200, 5, "59s", "zone-b", true, "version")]
         public async Task Operator_AutopilotSetConfiguration_UpdatesConfiguration(
             bool cleanupDeadServers,
             string lastContactThreshold,
