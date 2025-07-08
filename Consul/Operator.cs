@@ -378,6 +378,30 @@ namespace Consul
         }
 
         /// <summary>
+        /// Updates the autopilot configuration of the cluster (synchronous version)
+        /// </summary>
+        /// <param name="configuration">The autopilot configuration to set</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The write result</returns>
+        public Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, CancellationToken cancellationToken = default)
+        {
+            return AutopilotSetConfiguration(configuration, WriteOptions.Default, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates the autopilot configuration of the cluster
+        /// </summary>
+        /// <param name="configuration">The autopilot configuration to set</param>
+        /// <param name="q">Write options</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The write result</returns>
+        public async Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, WriteOptions q, CancellationToken cancellationToken = default)
+        {
+            var req = await _client.Put<AutopilotConfiguration>("/v1/operator/autopilot/configuration", configuration, q).Execute(cancellationToken).ConfigureAwait(false);
+            return new WriteResult<AutopilotConfiguration>(req);
+        }
+
+        /// <summary>
         /// Retrieves the autopilot health status of the cluster (synchronous version)
         /// </summary>
         /// <param name="cancellationToken">Query parameters</param>
