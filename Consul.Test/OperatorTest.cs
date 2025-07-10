@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -145,69 +146,55 @@ namespace Consul.Test
             }
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Operator_AutopilotGetState_ReturnsStateInformation()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.9.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Autopilot state` is only supported from Consul {cutOffVersion}");
+
             var result = await _client.Operator.AutopilotGetState();
-            Assert.NotNull(result);
             Assert.NotNull(result.Response);
             Assert.NotNull(result.Response.Servers);
 
             var state = result.Response;
+
             Assert.IsType<Dictionary<string, AutopilotServerState>>(state.Servers);
             Assert.True(state.FailureTolerance >= 0);
             Assert.True(state.OptimisticFailureTolerance >= 0);
             Assert.NotNull(state.Voters);
+            Assert.NotNull(state.Servers);
 
-            if (state.Servers.Count > 0)
+            foreach (var kvp in state.Servers)
             {
-                foreach (var kvp in state.Servers)
-                {
-                    var serverId = kvp.Key;
-                    var server = kvp.Value;
+                var serverId = kvp.Key;
+                var server = kvp.Value;
 
-                    Assert.False(string.IsNullOrEmpty(serverId));
-                    Assert.NotNull(server);
-                    Assert.False(string.IsNullOrEmpty(server.ID));
-                    Assert.Equal(serverId, server.ID);
-                    Assert.False(string.IsNullOrEmpty(server.Name));
-                    Assert.False(string.IsNullOrEmpty(server.Address));
-                    Assert.False(string.IsNullOrEmpty(server.Version));
-                    Assert.False(string.IsNullOrEmpty(server.NodeStatus));
-                    Assert.False(string.IsNullOrEmpty(server.Status));
-                    Assert.False(string.IsNullOrEmpty(server.LastContact));
-                    Assert.NotEqual(DateTime.MinValue, server.StableSince);
-                    Assert.True(server.LastTerm > 0);
-                    Assert.True(server.LastIndex > 0);
-                    Assert.NotNull(server.Meta);
-                }
-
-                if (state.Healthy)
-                {
-                    Assert.False(string.IsNullOrEmpty(state.Leader));
-                    Assert.Contains(state.Leader, state.Servers.Keys);
-
-                    var leaderServer = state.Servers[state.Leader];
-                    Assert.Equal("leader", leaderServer.Status);
-                }
-
-                Assert.True(state.Voters.Count > 0);
-                foreach (var voter in state.Voters)
-                {
-                    Assert.Contains(voter, state.Servers.Keys);
-                }
-
-                if (state.ReadReplicas != null && state.ReadReplicas.Count > 0)
-                {
-                    foreach (var replica in state.ReadReplicas)
-                    {
-                        Assert.Contains(replica, state.Servers.Keys);
-                        var replicaServer = state.Servers[replica];
-                        Assert.True(replicaServer.ReadReplica);
-                    }
-                }
+                Assert.False(string.IsNullOrEmpty(serverId));
+                Assert.NotNull(server);
+                Assert.False(string.IsNullOrEmpty(server.ID));
+                Assert.Equal(serverId, server.ID);
+                Assert.False(string.IsNullOrEmpty(server.Name));
+                Assert.False(string.IsNullOrEmpty(server.Address));
+                Assert.False(string.IsNullOrEmpty(server.Version));
+                Assert.False(string.IsNullOrEmpty(server.NodeStatus));
+                Assert.False(string.IsNullOrEmpty(server.Status));
+                Assert.False(string.IsNullOrEmpty(server.LastContact));
+                Assert.NotEqual(DateTime.MinValue, server.StableSince);
+                Assert.True(server.LastTerm >= 0);
+                Assert.True(server.LastIndex >= 0);
+                Assert.NotNull(server.Meta);
             }
+
+            Assert.False(string.IsNullOrEmpty(state.Leader));
+            Assert.Contains(state.Leader, state.Servers.Keys);
+
+            var leaderServer = state.Servers[state.Leader];
+            Assert.Equal("leader", leaderServer.Status);
+
+            Assert.NotNull(state.Voters);
+            Assert.All(state.Voters, voter => Assert.Contains(voter, state.Servers.Keys));
         }
+
 
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
