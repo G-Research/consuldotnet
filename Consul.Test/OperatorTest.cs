@@ -195,7 +195,55 @@ namespace Consul.Test
             Assert.All(state.Voters, voter => Assert.Contains(voter, state.Servers.Keys));
         }
 
+        [Theory]
+        [InlineData(true, "500ms", 100, 3, "30s", "az", false, "")]
+        [InlineData(false, "1s", 200, 5, "59s", "zone-b", true, "version")]
+        public async Task Operator_AutopilotSetConfiguration_UpdatesConfiguration(
+            bool cleanupDeadServers,
+            string lastContactThreshold,
+            int maxTrailingLogs,
+            int minQuorum,
+            string serverStabilizationTime,
+            string redundancyZoneTag,
+            bool disableUpgradeMigration,
+            string upgradeVersionTag)
+        {
+            var configuration = new AutopilotConfiguration
+            {
+                CleanupDeadServers = cleanupDeadServers,
+                LastContactThreshold = lastContactThreshold,
+                MaxTrailingLogs = maxTrailingLogs,
+                MinQuorum = minQuorum,
+                ServerStabilizationTime = serverStabilizationTime,
+                RedundancyZoneTag = redundancyZoneTag,
+                DisableUpgradeMigration = disableUpgradeMigration,
+                UpgradeVersionTag = upgradeVersionTag
+            };
 
+            var result = await _client.Operator.AutopilotSetConfiguration(configuration);
+
+            Assert.NotNull(result);
+            Assert.True(result.RequestTime > TimeSpan.Zero);
+
+            var getResult = await _client.Operator.AutopilotGetConfiguration();
+            Assert.NotNull(getResult);
+            Assert.NotNull(getResult.Response);
+
+            var retrievedConfig = getResult.Response;
+            Assert.Equal(configuration.CleanupDeadServers, retrievedConfig.CleanupDeadServers);
+            Assert.Equal(configuration.LastContactThreshold, retrievedConfig.LastContactThreshold);
+            Assert.Equal(configuration.MaxTrailingLogs, retrievedConfig.MaxTrailingLogs);
+            Assert.Equal(configuration.MinQuorum, retrievedConfig.MinQuorum);
+            Assert.Equal(configuration.ServerStabilizationTime, retrievedConfig.ServerStabilizationTime);
+            Assert.Equal(configuration.RedundancyZoneTag, retrievedConfig.RedundancyZoneTag);
+            Assert.Equal(configuration.DisableUpgradeMigration, retrievedConfig.DisableUpgradeMigration);
+            Assert.Equal(configuration.UpgradeVersionTag, retrievedConfig.UpgradeVersionTag);
+
+            Assert.True(retrievedConfig.CreateIndex > 0);
+            Assert.True(retrievedConfig.ModifyIndex > 0);
+            Assert.True(retrievedConfig.ModifyIndex >= retrievedConfig.CreateIndex);
+        }
+        
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {
