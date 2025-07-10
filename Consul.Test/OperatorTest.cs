@@ -243,7 +243,7 @@ namespace Consul.Test
             Assert.True(retrievedConfig.ModifyIndex > 0);
             Assert.True(retrievedConfig.ModifyIndex >= retrievedConfig.CreateIndex);
         }
-        
+
         [EnterpriseOnlyFact]
         public async Task Operator_GetLicense()
         {
