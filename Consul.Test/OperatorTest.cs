@@ -187,7 +187,6 @@ namespace Consul.Test
 
             Assert.False(string.IsNullOrEmpty(state.Leader));
             Assert.Contains(state.Leader, state.Servers.Keys);
-
             var leaderServer = state.Servers[state.Leader];
             Assert.Equal("leader", leaderServer.Status);
 
