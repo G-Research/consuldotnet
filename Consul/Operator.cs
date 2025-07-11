@@ -423,7 +423,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// Retrieves the autopilot state of the cluster (synchronous version)
+        /// Retrieves the autopilot state of the cluster
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The autopilot state information</returns>
