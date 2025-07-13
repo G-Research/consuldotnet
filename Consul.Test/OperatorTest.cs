@@ -52,6 +52,30 @@ namespace Consul.Test
         }
 
         [Fact]
+        public async Task Operator_RaftTransferLeader()
+        {
+            var result = await _client.Operator.RaftTransferLeader();
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Operator_RaftTransferLeaderById()
+        {
+            try
+            {
+                var config = await _client.Operator.RaftGetConfiguration();
+                var serverId = config.Response.Servers[0].ID;
+
+                var result = await _client.Operator.RaftTransferLeader(serverId);
+                Assert.NotNull(result);
+            }
+            catch (ConsulRequestException e)
+            {
+                Assert.Contains("cannot transfer leadership to itself", e.Message);
+            }
+        }
+
+        [Fact]
         public async Task Operator_KeyringInstallListPutRemove()
         {
             const string oldKey = "d8wu8CSUrqgtjVsvcBPmhQ==";
