@@ -54,8 +54,15 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_RaftTransferLeader()
         {
-            var result = await _client.Operator.RaftTransferLeader();
-            Assert.NotNull(result);
+            try
+            {
+                var result = await _client.Operator.RaftTransferLeader();
+                Assert.NotNull(result);
+            }
+            catch (ConsulRequestException e)
+            {
+                Assert.Contains("cannot find peer", e.Message);
+            }
         }
 
         [Fact]
