@@ -421,6 +421,27 @@ namespace Consul
         {
             return _client.Get<AutopilotHealth>("/v1/operator/autopilot/health", q).Execute(cancellationToken);
         }
+
+        /// <summary>
+        /// Retrieves the autopilot state of the cluster
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot state information</returns>
+        public Task<QueryResult<AutopilotState>> AutopilotGetState(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetState(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot state of the cluster
+        /// </summary>
+        /// <param name="q">Query parameters</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot state information</returns>
+        public Task<QueryResult<AutopilotState>> AutopilotGetState(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -533,6 +554,39 @@ namespace Consul
 
         [JsonProperty("StableSince")]
         public DateTime StableSince { get; set; }
+    }
+
+    public class AutopilotState
+    {
+        public bool Healthy { get; set; }
+        public int FailureTolerance { get; set; }
+        public int OptimisticFailureTolerance { get; set; }
+        public Dictionary<string, AutopilotServerState> Servers { get; set; }
+        public string Leader { get; set; }
+        public List<string> Voters { get; set; }
+        public Dictionary<string, object> RedundancyZones { get; set; }
+        public List<string> ReadReplicas { get; set; }
+        public object Upgrade { get; set; }
+    }
+
+    public class AutopilotServerState
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string NodeStatus { get; set; }
+        public string Version { get; set; }
+        public string LastContact { get; set; }
+        public long LastTerm { get; set; }
+        public long LastIndex { get; set; }
+        public bool Healthy { get; set; }
+        public DateTime StableSince { get; set; }
+        public bool ReadReplica { get; set; }
+        public string Status { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+        public string NodeType { get; set; }
+        public string RedundancyZone { get; set; }
+        public string UpgradeVersion { get; set; }
     }
 
     public class Flags
