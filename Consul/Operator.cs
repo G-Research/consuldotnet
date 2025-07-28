@@ -355,6 +355,93 @@ namespace Consul
         {
             return _client.Delete($"/v1/operator/area/{areaId}", q).Execute(ct);
         }
+
+        /// <summary>
+        /// Retrieves the current Autopilot configuration
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns>A query result containing the Autopilot configuration</returns>
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetConfiguration(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the current Autopilot configuration with query options
+        /// </summary>
+        /// <param name="q">Query options including datacenter and consistency mode</param>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns>A query result containing the Autopilot configuration</returns>
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotConfiguration>("/v1/operator/autopilot/configuration", q).Execute(cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates the autopilot configuration of the cluster (synchronous version)
+        /// </summary>
+        /// <param name="configuration">The autopilot configuration to set</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The write result</returns>
+        public Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, CancellationToken cancellationToken = default)
+        {
+            return AutopilotSetConfiguration(configuration, WriteOptions.Default, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates the autopilot configuration of the cluster
+        /// </summary>
+        /// <param name="configuration">The autopilot configuration to set</param>
+        /// <param name="q">Write options</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The write result</returns>
+        public async Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, WriteOptions q, CancellationToken cancellationToken = default)
+        {
+            var req = await _client.Put<AutopilotConfiguration>("/v1/operator/autopilot/configuration", configuration, q).Execute(cancellationToken).ConfigureAwait(false);
+            return new WriteResult<AutopilotConfiguration>(req);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot health status of the cluster (synchronous version)
+        /// </summary>
+        /// <param name="cancellationToken">Query parameters</param>
+        /// <returns>The autopilot health information</returns>
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetHealth(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot health status of the cluster
+        /// </summary>
+        /// <param name="q">Query parameters</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot health information</returns>
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotHealth>("/v1/operator/autopilot/health", q).Execute(cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot state of the cluster
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot state information</returns>
+        public Task<QueryResult<AutopilotState>> AutopilotGetState(CancellationToken cancellationToken = default)
+        {
+            return AutopilotGetState(null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves the autopilot state of the cluster
+        /// </summary>
+        /// <param name="q">Query parameters</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The autopilot state information</returns>
+        public Task<QueryResult<AutopilotState>> AutopilotGetState(QueryOptions q, CancellationToken cancellationToken = default)
+        {
+            return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -383,6 +470,123 @@ namespace Consul
         public Flags Flags { get; set; }
         public string[] Features { get; set; }
         public bool Temporary { get; set; }
+    }
+
+    public class AutopilotConfiguration
+    {
+        [JsonProperty("CleanupDeadServers")]
+        public bool CleanupDeadServers { get; set; }
+
+        [JsonProperty("LastContactThreshold")]
+        public string LastContactThreshold { get; set; }
+
+        [JsonProperty("MaxTrailingLogs")]
+        public int MaxTrailingLogs { get; set; }
+
+        [JsonProperty("MinQuorum")]
+        public int MinQuorum { get; set; }
+
+        [JsonProperty("ServerStabilizationTime")]
+        public string ServerStabilizationTime { get; set; }
+
+        [JsonProperty("RedundancyZoneTag")]
+        public string RedundancyZoneTag { get; set; }
+
+        [JsonProperty("DisableUpgradeMigration")]
+        public bool DisableUpgradeMigration { get; set; }
+
+        [JsonProperty("UpgradeVersionTag")]
+        public string UpgradeVersionTag { get; set; }
+
+        [JsonProperty("CreateIndex")]
+        public ulong CreateIndex { get; set; }
+
+        [JsonProperty("ModifyIndex")]
+        public ulong ModifyIndex { get; set; }
+    }
+
+    public class AutopilotHealth
+    {
+        [JsonProperty("Healthy")]
+        public bool Healthy { get; set; }
+
+        [JsonProperty("FailureTolerance")]
+        public int FailureTolerance { get; set; }
+
+        [JsonProperty("Servers")]
+        public List<AutopilotServerHealth> Servers { get; set; }
+    }
+
+    public class AutopilotServerHealth
+    {
+        [JsonProperty("ID")]
+        public string ID { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Address")]
+        public string Address { get; set; }
+
+        [JsonProperty("SerfStatus")]
+        public string SerfStatus { get; set; }
+
+        [JsonProperty("Version")]
+        public string Version { get; set; }
+
+        [JsonProperty("Leader")]
+        public bool Leader { get; set; }
+
+        [JsonProperty("LastContact")]
+        public string LastContact { get; set; }
+
+        [JsonProperty("LastTerm")]
+        public long LastTerm { get; set; }
+
+        [JsonProperty("LastIndex")]
+        public long LastIndex { get; set; }
+
+        [JsonProperty("Healthy")]
+        public bool Healthy { get; set; }
+
+        [JsonProperty("Voter")]
+        public bool Voter { get; set; }
+
+        [JsonProperty("StableSince")]
+        public DateTime StableSince { get; set; }
+    }
+
+    public class AutopilotState
+    {
+        public bool Healthy { get; set; }
+        public int FailureTolerance { get; set; }
+        public int OptimisticFailureTolerance { get; set; }
+        public Dictionary<string, AutopilotServerState> Servers { get; set; }
+        public string Leader { get; set; }
+        public List<string> Voters { get; set; }
+        public Dictionary<string, object> RedundancyZones { get; set; }
+        public List<string> ReadReplicas { get; set; }
+        public object Upgrade { get; set; }
+    }
+
+    public class AutopilotServerState
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string NodeStatus { get; set; }
+        public string Version { get; set; }
+        public string LastContact { get; set; }
+        public long LastTerm { get; set; }
+        public long LastIndex { get; set; }
+        public bool Healthy { get; set; }
+        public DateTime StableSince { get; set; }
+        public bool ReadReplica { get; set; }
+        public string Status { get; set; }
+        public Dictionary<string, string> Meta { get; set; }
+        public string NodeType { get; set; }
+        public string RedundancyZone { get; set; }
+        public string UpgradeVersion { get; set; }
     }
 
     public class Flags
