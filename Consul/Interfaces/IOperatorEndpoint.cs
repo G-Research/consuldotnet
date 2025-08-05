@@ -64,5 +64,9 @@ namespace Consul
         Task<QueryResult<AutopilotState>> AutopilotGetState(QueryOptions q, CancellationToken cancellationToken = default);
         Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, CancellationToken cancellationToken = default);
         Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, WriteOptions q, CancellationToken cancellationToken = default);
+        Task<WriteResult> RaftTransferLeader(CancellationToken ct = default);
+        Task<WriteResult> RaftTransferLeader(WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult> RaftTransferLeader(string id, CancellationToken ct = default);
+        Task<WriteResult> RaftTransferLeader(string id, WriteOptions q, CancellationToken ct = default);
     }
 }
