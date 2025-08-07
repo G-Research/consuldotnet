@@ -250,11 +250,11 @@ namespace Consul
         /// Services is used to query for all known services
         /// </summary>
         /// <param name="q">Customized query options</param>
-        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <param name="ct"></param>
         /// <returns>A list of all services</returns>
         public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default)
         {
-            return Services(string.Empty, null, QueryOptions.Default, ct);
+            return Services(null, null, q, ct);
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// Returns the nodes providing a mesh-capable service in a given datacenter. 
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
         /// </summary>
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
