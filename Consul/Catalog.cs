@@ -243,6 +243,17 @@ namespace Consul
         /// <returns>A list of all services</returns>
         public Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default)
         {
+            return Services(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Services is used to query for all known services
+        /// </summary>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of all services</returns>
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default)
+        {
             return Services(string.Empty, null, QueryOptions.Default, ct);
         }
 
