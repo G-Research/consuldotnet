@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* [BUG FIX]: Restore missing Services() overload - fix for broken ABI compatibility (#496)
+
 ## 1.7.14.8
 
 * Add support for reading Autopilot State (#484)
