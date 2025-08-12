@@ -91,11 +91,16 @@ jobs:
         run: |
           echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
 
-      - name: Set up mono
+      - name: Set up mono (Linux)
         if: runner.os == 'Linux'
         shell: bash
         run: |
           sudo apt install mono-complete 
+
+      - name: Set up mono (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install mono 
 
         # We've decided to pause using the CONSUL_LICENSE for tests because the license would need to be renewed periodically.
         # Otherwise, new builds of consul are going to fail with "license expiration date is before version build date" errors.
