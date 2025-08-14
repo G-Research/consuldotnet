@@ -98,9 +98,14 @@ jobs:
           sudo apt install mono-complete 
 
       - name: Set up mono (macOS)
-        if: matrix.os == 'macos-latest'
+        if: runner.os == 'macos-latest'
         run: |
-          brew install mono 
+          if brew list --versions mono > /dev/null; then
+            echo "Mono is already installed."
+          else
+            echo "Mono not found, installing..."
+            brew install mono
+          fi
 
         # We've decided to pause using the CONSUL_LICENSE for tests because the license would need to be renewed periodically.
         # Otherwise, new builds of consul are going to fail with "license expiration date is before version build date" errors.
