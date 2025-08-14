@@ -100,7 +100,7 @@ jobs:
       - name: Set up mono (macOS)
         if: runner.os == 'macos'
         run: |
-          if brew list --versions mono > /dev/null; then
+          if command -v mono > /dev/null 2>&1; then
             echo "Mono is already installed."
           else
             echo "Mono not found, installing..."
