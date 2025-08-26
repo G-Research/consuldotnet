@@ -102,7 +102,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
         with:
           path: ./docs/build
