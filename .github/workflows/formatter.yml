@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
 
       - name: Install the dotnet-format
         # Installing the tool globally to avoid any interference from potentially malicious code checked out in the next step
