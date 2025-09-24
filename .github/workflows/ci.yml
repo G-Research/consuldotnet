@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       # For the time being (https://github.com/dotnet/format/issues/1500, https://github.com/dotnet/format/issues/1560) we need to use `dotnet-format` instead of `dotnet format`
       - name: Restore tool
         run: dotnet tool restore
@@ -36,14 +36,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup .NET SDK v8.0.x
         if: matrix.framework == 'net8.0'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
       - name: Setup .NET SDK v9.0.x
-        uses: actions/setup-dotnet@v4    
+        uses: actions/setup-dotnet@v5    
         with:
           dotnet-version: 9.0.x
       - name: Build
@@ -72,16 +72,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup .NET SDK v8.0.x
         if: matrix.framework == 'net8.0'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
       - name: Setup .NET SDK v9.0.x
         with:
           dotnet-version: 9.0.x
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       - name: Setup Consul Enterprise URL
         # Consul enterprise until version 1.10.0 can be run even without a valid license,
         # so we take advantage of that and run enterprise tests for versions lower than 1.10.0.
@@ -91,11 +91,21 @@ jobs:
         run: |
           echo "RUN_CONSUL_ENTERPRISE_TESTS=1" >> $GITHUB_ENV
 
-      - name: Set up mono
+      - name: Set up mono (Linux)
         if: runner.os == 'Linux'
         shell: bash
         run: |
           sudo apt install mono-complete 
+
+      - name: Set up mono (macOS)
+        if: runner.os == 'macos'
+        run: |
+          if command -v mono > /dev/null 2>&1; then
+            echo "Mono is already installed."
+          else
+            echo "Mono not found, installing..."
+            brew install mono
+          fi
 
         # We've decided to pause using the CONSUL_LICENSE for tests because the license would need to be renewed periodically.
         # Otherwise, new builds of consul are going to fail with "license expiration date is before version build date" errors.
@@ -140,9 +150,9 @@ jobs:
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       - name: Create NuGet packages
         run: |
           if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
@@ -181,7 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: nuget-packages
           path: dist
@@ -197,7 +207,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: nuget-packages
           path: dist
