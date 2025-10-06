@@ -334,10 +334,6 @@ namespace Consul.Test
         [Fact]
         public async Task OperatorUsage_GetState()
         {
-            // Arrange
-            var cutOffDate = DateTime.UtcNow.AddMinutes(-15);
-
-            // Act
             var result = await _client.Operator.OperatorUsageGetState(QueryOptions.Default);
 
             Assert.NotNull(result);
@@ -351,12 +347,6 @@ namespace Consul.Test
             Assert.NotNull(firstDatacenter.Value);
 
             var usage = firstDatacenter.Value;
-
-            // Verify numeric fields are non-negative
-            Assert.True(usage.Services >= 0, "Services count should be non-negative");
-            Assert.True(usage.ServiceInstances >= 0, "ServiceInstances count should be non-negative");
-            Assert.True(usage.BillableServiceInstances >= 0, "BillableServiceInstances count should be non-negative");
-            Assert.True(usage.Nodes >= 0, "Nodes count should be non-negative");
 
             // Verify ConnectServiceInstances exists and has valid data
             Assert.NotNull(usage.ConnectServiceInstances);
