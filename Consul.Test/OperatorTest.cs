@@ -330,5 +330,45 @@ namespace Consul.Test
 
             Assert.Null(req.Response);
         }
+
+        [Fact]
+        public async Task OperatorUsage_GetState()
+        {
+            // Arrange
+            var cutOffDate = DateTime.UtcNow.AddMinutes(-15);
+
+            // Act
+            var result = await _client.Operator.OperatorUsageGetState(QueryOptions.Default);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.Usage);
+            Assert.True(result.Response.Usage.Count > 0, "Expected at least one datacenter in usage response");
+
+            // Verify we have at least one datacenter with valid data
+            var firstDatacenter = result.Response.Usage.First();
+            Assert.False(string.IsNullOrEmpty(firstDatacenter.Key), "Datacenter name should not be empty");
+            Assert.NotNull(firstDatacenter.Value);
+
+            var usage = firstDatacenter.Value;
+
+            // Verify numeric fields are non-negative
+            Assert.True(usage.Services >= 0, "Services count should be non-negative");
+            Assert.True(usage.ServiceInstances >= 0, "ServiceInstances count should be non-negative");
+            Assert.True(usage.BillableServiceInstances >= 0, "BillableServiceInstances count should be non-negative");
+            Assert.True(usage.Nodes >= 0, "Nodes count should be non-negative");
+
+            // Verify ConnectServiceInstances exists and has valid data
+            Assert.NotNull(usage.ConnectServiceInstances);
+            Assert.True(usage.ConnectServiceInstances.ConnectNative >= 0);
+            Assert.True(usage.ConnectServiceInstances.ConnectProxy >= 0);
+            Assert.True(usage.ConnectServiceInstances.IngressGateway >= 0);
+            Assert.True(usage.ConnectServiceInstances.MeshGateway >= 0);
+            Assert.True(usage.ConnectServiceInstances.TerminatingGateway >= 0);
+
+            // Verify QueryResult metadata
+            Assert.True(result.LastIndex > 0, "LastIndex should be greater than 0");
+        }
+
     }
 }
