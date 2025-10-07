@@ -443,14 +443,14 @@ namespace Consul
             return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
         }
 
-        public Task<QueryResult<OperatorUsageState>> OperatorUsageGetState(CancellationToken cancellationToken = default)
+        public Task<QueryResult<OperatorUsageInformation>> OperatorUsageGetState(CancellationToken cancellationToken = default)
         {
             return OperatorUsageGetState(null, cancellationToken);
         }
-        public Task<QueryResult<OperatorUsageState>> OperatorUsageGetState(QueryOptions q,
+        public Task<QueryResult<OperatorUsageInformation>> OperatorUsageGetState(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
-            return _client.Get<OperatorUsageState>("/v1/operator/usage", q).Execute(cancellationToken);
+            return _client.Get<OperatorUsageInformation>("/v1/operator/usage", q).Execute(cancellationToken);
         }
     }
 
@@ -599,7 +599,7 @@ namespace Consul
         public string UpgradeVersion { get; set; }
     }
 
-    public class OperatorUsageState
+    public class OperatorUsageInformation
     {
         [JsonProperty("Usage")]
         public Dictionary<string, DatacenterUsage> Usage { get; set; }

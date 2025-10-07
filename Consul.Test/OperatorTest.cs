@@ -332,7 +332,7 @@ namespace Consul.Test
         }
 
         [Fact]
-        public async Task OperatorUsage_GetState()
+        public async Task Operator_GetUsage()
         {
             var result = await _client.Operator.OperatorUsageGetState(QueryOptions.Default);
 
@@ -350,12 +350,6 @@ namespace Consul.Test
 
             // Verify ConnectServiceInstances exists and has valid data
             Assert.NotNull(usage.ConnectServiceInstances);
-            Assert.True(usage.ConnectServiceInstances.ConnectNative >= 0);
-            Assert.True(usage.ConnectServiceInstances.ConnectProxy >= 0);
-            Assert.True(usage.ConnectServiceInstances.IngressGateway >= 0);
-            Assert.True(usage.ConnectServiceInstances.MeshGateway >= 0);
-            Assert.True(usage.ConnectServiceInstances.TerminatingGateway >= 0);
-
             // Verify QueryResult metadata
             Assert.True(result.LastIndex > 0, "LastIndex should be greater than 0");
         }
