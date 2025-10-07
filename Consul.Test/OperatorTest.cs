@@ -334,7 +334,9 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_GetUsage()
         {
-            var result = await _client.Operator.OperatorUsageGetState(QueryOptions.Default);
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var result = await _client.Operator.OperatorGetUsage(QueryOptions.Default);
 
             Assert.NotNull(result);
             Assert.NotNull(result.Response);

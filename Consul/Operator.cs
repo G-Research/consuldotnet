@@ -443,11 +443,11 @@ namespace Consul
             return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
         }
 
-        public Task<QueryResult<OperatorUsageInformation>> OperatorUsageGetState(CancellationToken cancellationToken = default)
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(CancellationToken cancellationToken = default)
         {
-            return OperatorUsageGetState(null, cancellationToken);
+            return OperatorGetUsage(null, cancellationToken);
         }
-        public Task<QueryResult<OperatorUsageInformation>> OperatorUsageGetState(QueryOptions q,
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
             return _client.Get<OperatorUsageInformation>("/v1/operator/usage", q).Execute(cancellationToken);
