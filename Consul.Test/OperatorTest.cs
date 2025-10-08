@@ -331,7 +331,7 @@ namespace Consul.Test
             Assert.Null(req.Response);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Operator_GetUsage()
         {
             var cutOffVersion = SemanticVersion.Parse("1.15.0");
