@@ -145,13 +145,13 @@ namespace Consul.Test
 
             var serviceIdentityOne = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentityone",
+                ServiceName = "apitestingplaceholderserviceidentityone",
                 Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentitytwo",
+                ServiceName = "apitestingplaceholderserviceidentitytwo",
                 Datacenters = new string[] { }
             };
 
@@ -247,13 +247,13 @@ namespace Consul.Test
 
             var serviceIdentityOne = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentityone",
+                ServiceName = "apitestingplaceholderserviceidentityone",
                 Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentitytwo",
+                ServiceName = "apitestingplaceholderserviceidentitytwo",
                 Datacenters = new string[] { }
             };
 

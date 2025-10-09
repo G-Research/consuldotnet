@@ -154,13 +154,13 @@ namespace Consul.Test
 
             var serviceIdentityOne = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentityone",
+                ServiceName = "apitestingplaceholderserviceidentityone",
                 Datacenters = new[] { "dc1", "dc2" }
             };
 
             var serviceIdentityTwo = new ServiceIdentity
             {
-                ServiceName = "apitestingdummyserviceidentitytwo",
+                ServiceName = "apitestingholderserviceidentitytwo",
                 Datacenters = new string[] { }
             };
 

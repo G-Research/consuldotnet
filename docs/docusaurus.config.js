@@ -126,13 +126,13 @@ const config = {
                         to: '/docs/category/contributing',
                         label: 'Contribute',
                         position: 'left',
-                        activeBaseRegex: `dummy-never-match`,
+                        activeBaseRegex: `placeholder-never-match`,
                     },
                     {
                         to: '/docs/support',
                         label: 'Community',
                         position: 'left',
-                        activeBaseRegex: `dummy-never-match`,
+                        activeBaseRegex: `place-never-match`,
                     },
                     // right
                     {

@@ -470,7 +470,7 @@ namespace Consul.Test
                 Assert.Equal(1ul, getResult.LockIndex);
                 Assert.Equal(id, getResult.Session);
 
-                // Sanity check using the regular GET API.
+                // Confidence check using the regular GET API.
                 var pair = await _client.KV.Get(keyName);
 
                 Assert.NotNull(pair.Response);
