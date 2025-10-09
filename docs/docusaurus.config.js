@@ -132,7 +132,7 @@ const config = {
                         to: '/docs/support',
                         label: 'Community',
                         position: 'left',
-                        activeBaseRegex: `place-never-match`,
+                        activeBaseRegex: `placeholder-never-match`,
                     },
                     // right
                     {
