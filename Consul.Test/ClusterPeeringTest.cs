@@ -18,15 +18,19 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
 {
     public class ClusterPeeringTest : BaseFixture
     {
-        [Fact]
+        [SkippableFact]
         public async Task ClusterPeeringTest_Create()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.6.10");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
             var clusterPeeringEntry = new ClusterPeeringEntry
             {
                 PeerName = "cluster-02",
