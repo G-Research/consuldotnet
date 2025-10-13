@@ -24,24 +24,24 @@ using Consul.Interfaces;
 
 namespace Consul
 {
-    public class ClusterPeeringEntry
+    public class ClusterPeeringTokenEntry
     {
         public string PeerName { get; set; }
         public Dictionary<string, string> Meta { get; set; }
 
-        public ClusterPeeringEntry()
+        public ClusterPeeringTokenEntry()
             : this(string.Empty, null)
         {
         }
 
-        public ClusterPeeringEntry(string peerName, Dictionary<string, string> meta)
+        public ClusterPeeringTokenEntry(string peerName, Dictionary<string, string> meta)
         {
             PeerName = peerName;
             Meta = meta;
         }
     }
 
-    public class ClustingPeeringResponse
+    public class ClusterPeeringTokenResponse
     {
         public string PeeringToken { get; set; }
     }
@@ -61,29 +61,29 @@ namespace Consul
         /// <summary>
         /// Generates a Peering Token in Consul
         /// </summary>
-        /// <param name="entry">The new Cluster Peering Entry</param>
+        /// <param name="tokenEntry">The new Cluster Peering Entry</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public Task<WriteResult<ClustingPeeringResponse>> Create(ClusterPeeringEntry entry,
+        public Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry,
             CancellationToken ct = default)
         {
-            return Create(entry, WriteOptions.Default, ct);
+            return GenerateToken(tokenEntry, WriteOptions.Default, ct);
         }
 
         /// <summary>
         /// Generates a Peering Token in Consul
         /// </summary>
-        /// <param name="entry">A new Cluster Peering Entry</param>
+        /// <param name="tokenEntry">A new Cluster Peering Entry</param>
         /// <param name="options"></param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A new Binding Rule</returns>
-        public async Task<WriteResult<ClustingPeeringResponse>> Create(ClusterPeeringEntry entry, WriteOptions options,
+        public async Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, WriteOptions options,
             CancellationToken ct = default)
         {
             var res = await _client
-                .Post<ClusterPeeringEntry, ClustingPeeringResponse>("/v1/peering/token", entry, options).Execute(ct)
+                .Post<ClusterPeeringTokenEntry, ClusterPeeringTokenResponse>("/v1/peering/token", tokenEntry, options).Execute(ct)
                 .ConfigureAwait(false);
-            return new WriteResult<ClustingPeeringResponse>(res, res.Response);
+            return new WriteResult<ClusterPeeringTokenResponse>(res, res.Response);
         }
     }
 

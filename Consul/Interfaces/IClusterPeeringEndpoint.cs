@@ -26,9 +26,9 @@ namespace Consul.Interfaces
     /// </summary>
     public interface IClusterPeeringEndpoint
     {
-        Task<WriteResult<ClustingPeeringResponse>> Create(ClusterPeeringEntry entry, CancellationToken ct = default);
+        Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, CancellationToken ct = default);
 
-        Task<WriteResult<ClustingPeeringResponse>> Create(ClusterPeeringEntry entry, WriteOptions options,
+        Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, WriteOptions options,
             CancellationToken ct = default);
     }
 }

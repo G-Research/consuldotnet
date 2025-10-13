@@ -31,12 +31,12 @@ namespace Consul.Test
             var cutOffVersion = SemanticVersion.Parse("1.14.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
 
-            var clusterPeeringEntry = new ClusterPeeringEntry
+            var clusterPeeringEntry = new ClusterPeeringTokenEntry
             {
                 PeerName = "cluster-02",
                 Meta = new Dictionary<string, string> { ["env"] = "production" }
             };
-            var clusterPeeringCreateResponse = await _client.ClusterPeering.Create(clusterPeeringEntry);
+            var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
             Assert.NotNull(clusterPeeringCreateResponse);
             Assert.NotNull(clusterPeeringCreateResponse.Response.PeeringToken);
         }
