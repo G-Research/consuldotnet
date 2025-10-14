@@ -29,16 +29,6 @@ namespace Consul
         public string PeerName { get; set; }
         public Dictionary<string, string> Meta { get; set; }
 
-        public ClusterPeeringTokenEntry()
-            : this(string.Empty, null)
-        {
-        }
-
-        public ClusterPeeringTokenEntry(string peerName, Dictionary<string, string> meta)
-        {
-            PeerName = peerName;
-            Meta = meta;
-        }
     }
 
     public class ClusterPeeringTokenResponse
