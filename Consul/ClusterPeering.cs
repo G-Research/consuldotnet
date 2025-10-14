@@ -28,7 +28,6 @@ namespace Consul
     {
         public string PeerName { get; set; }
         public Dictionary<string, string> Meta { get; set; }
-
     }
 
     public class ClusterPeeringTokenResponse
