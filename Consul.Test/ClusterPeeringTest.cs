@@ -46,6 +46,8 @@ namespace Consul.Test
         [SkippableFact]
         public async Task ClusterPeeringTest_PeeringList()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
             var result = await _client.ClusterPeering.PeeringList(QueryOptions.Default);
             Assert.NotNull(result.Response);
             var firstObject = result.Response.First();
