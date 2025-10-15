@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
+using Newtonsoft.Json;
 
 namespace Consul
 {
@@ -33,6 +34,75 @@ namespace Consul
     public class ClusterPeeringTokenResponse
     {
         public string PeeringToken { get; set; }
+    }
+
+    /// <summary>
+    /// Represents the status of a cluster peering connection in Consul.
+    /// </summary>
+    public class ClusterPeeringStatus
+    {
+        [JsonProperty("ID")]
+        public string ID { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("State")]
+        public string State { get; set; }
+
+        [JsonProperty("PeerID")]
+        public string PeerID { get; set; }
+
+        [JsonProperty("PeerServerName")]
+        public string PeerServerName { get; set; }
+
+        [JsonProperty("PeerServerAddresses")]
+        public List<string> PeerServerAddresses { get; set; }
+
+        [JsonProperty("StreamStatus")]
+        public StreamStatus StreamStatus { get; set; }
+
+        [JsonProperty("CreateIndex")]
+        public long CreateIndex { get; set; }
+
+        [JsonProperty("ModifyIndex")]
+        public long ModifyIndex { get; set; }
+
+        [JsonProperty("Remote")]
+        public RemoteInfo Remote { get; set; }
+    }
+
+    /// <summary>
+    /// Details the state of the data stream between peered clusters.
+    /// </summary>
+    public class StreamStatus
+    {
+        [JsonProperty("ImportedServices")]
+        public List<string> ImportedServices { get; set; }
+
+        [JsonProperty("ExportedServices")]
+        public List<string> ExportedServices { get; set; }
+
+        [JsonProperty("LastHeartbeat")]
+        public DateTime? LastHeartbeat { get; set; }
+
+        [JsonProperty("LastReceive")]
+        public DateTime? LastReceive { get; set; }
+
+        [JsonProperty("LastSend")]
+        public DateTime? LastSend { get; set; }
+    }
+
+    /// <summary>
+    /// Specifies the remote datacenter and partition for the peering connection.
+    /// </summary>
+    public class RemoteInfo
+    {
+        [JsonProperty("Partition")]
+        public string Partition { get; set; }
+
+        [JsonProperty("Datacenter")]
+        public string Datacenter { get; set; }
     }
 
     /// <summary>
@@ -73,6 +143,22 @@ namespace Consul
                 .Post<ClusterPeeringTokenEntry, ClusterPeeringTokenResponse>("/v1/peering/token", tokenEntry, options).Execute(ct)
                 .ConfigureAwait(false);
             return new WriteResult<ClusterPeeringTokenResponse>(res, res.Response);
+        }
+
+        /// <summary>
+        /// PeeringList is used to list peering connections
+        /// </summary>
+        public Task<QueryResult<List<ClusterPeeringStatus>>> PeeringList(CancellationToken cancellationToken = default)
+        {
+            return PeeringList(null, cancellationToken);
+        }
+        /// <summary>
+        /// PeeringList is used to list peering connections
+        /// </summary>
+        public Task<QueryResult<List<ClusterPeeringStatus>>> PeeringList(QueryOptions q,
+            CancellationToken cancellationToken = default)
+        {
+            return _client.Get<List<ClusterPeeringStatus>>("/v1/peerings", q).Execute(cancellationToken);
         }
     }
 

@@ -16,7 +16,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -40,5 +42,17 @@ namespace Consul.Test
             Assert.NotNull(clusterPeeringCreateResponse);
             Assert.NotNull(clusterPeeringCreateResponse.Response.PeeringToken);
         }
+
+        [SkippableFact]
+        public async Task Operator_GetUsage()
+        {
+            var result = await _client.ClusterPeering.PeeringList(QueryOptions.Default);
+            Assert.NotNull(result.Response);
+            var firstObject = result.Response.First();
+            Assert.NotNull(firstObject);
+            Assert.NotNull(firstObject.ID);
+            Assert.NotNull(firstObject.Name);
+        }
+
     }
 }
