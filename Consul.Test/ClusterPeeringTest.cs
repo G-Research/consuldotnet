@@ -44,7 +44,7 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Operator_GetUsage()
+        public async Task ClusterPeeringTest_PeeringList()
         {
             var result = await _client.ClusterPeering.PeeringList(QueryOptions.Default);
             Assert.NotNull(result.Response);
