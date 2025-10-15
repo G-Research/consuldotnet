@@ -1,0 +1,49 @@
+# Running Tests
+
+Once your local Consul Agent is running, you can verify your changes and contributions by running the tests.
+
+---
+
+## 🧪 Running Tests
+
+**PS**: **Make sure you’ve written or updated unit tests relevant to your contribution.**
+### Option 1: Using Visual Studio
+
+If you’re using Visual Studio's GUI:
+
+1. Open the **Test Explorer** panel (`Test` → `Test Explorer`).
+2. Build the project to ensure all test assemblies are loaded.
+3. Select the test or test class you want to run.  
+   You can filter by project or namespace if needed.
+4. Click **Run** or **Debug** to execute the selected test(s).
+
+
+---
+
+### Option 2: Using the Command Line
+
+If you prefer using the command line:
+
+1. Navigate into the `Consul.Test` project directory.
+   ```bash
+   cd Consul.Test
+   ```
+2. Run the tests in the Consul.Test project using the following command:
+   ```bash
+   dotnet test
+   ```
+   This command will build the test project and execute all tests, providing output in the terminal that looks like this:
+
+    ```yaml
+    Passed!  - Failed: 0, Passed: 124, Skipped: 0, Total: 124
+    ```
+    For more precision, you can filter the tests by class and even down to a specific test method. For example:
+    ```bash
+    dotnet test --filter FullyQualifiedName~Consul.Tests.Agent
+    ```
+    This will run only the tests in the `Consul.Tests.Agent` class.
+    
+    To run a single test method: for example, a test named Catalog_GetServices:
+    ```bash
+    dotnet test --filter FullyQualifiedName=Consul.Tests.Agent.Catalog_GetServices
+    ```
