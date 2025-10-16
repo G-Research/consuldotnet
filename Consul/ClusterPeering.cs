@@ -57,10 +57,10 @@ namespace Consul
         public string PeerServerName { get; set; }
 
         [JsonProperty("PeerServerAddresses")]
-        public List<string> PeerServerAddresses { get; set; }
+        public string[] PeerServerAddresses { get; set; }
 
         [JsonProperty("StreamStatus")]
-        public StreamStatus StreamStatus { get; set; }
+        public PeeringStreamStatus StreamStatus { get; set; }
 
         [JsonProperty("CreateIndex")]
         public long CreateIndex { get; set; }
@@ -69,13 +69,13 @@ namespace Consul
         public long ModifyIndex { get; set; }
 
         [JsonProperty("Remote")]
-        public RemoteInfo Remote { get; set; }
+        public PeeringRemoteInfo Remote { get; set; }
     }
 
     /// <summary>
     /// Details the state of the data stream between peered clusters.
     /// </summary>
-    public class StreamStatus
+    public class PeeringStreamStatus
     {
         [JsonProperty("ImportedServices")]
         public List<string> ImportedServices { get; set; }
@@ -96,7 +96,7 @@ namespace Consul
     /// <summary>
     /// Specifies the remote datacenter and partition for the peering connection.
     /// </summary>
-    public class RemoteInfo
+    public class PeeringRemoteInfo
     {
         [JsonProperty("Partition")]
         public string Partition { get; set; }
@@ -146,19 +146,19 @@ namespace Consul
         }
 
         /// <summary>
-        /// PeeringList is used to list peering connections
+        /// ListPeerings is used to list peering connections
         /// </summary>
-        public Task<QueryResult<List<ClusterPeeringStatus>>> PeeringList(CancellationToken cancellationToken = default)
+        public Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken = default)
         {
-            return PeeringList(null, cancellationToken);
+            return ListPeerings(null, cancellationToken);
         }
         /// <summary>
-        /// PeeringList is used to list peering connections
+        /// ListPeerings is used to list peering connections
         /// </summary>
-        public Task<QueryResult<List<ClusterPeeringStatus>>> PeeringList(QueryOptions q,
+        public Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
-            return _client.Get<List<ClusterPeeringStatus>>("/v1/peerings", q).Execute(cancellationToken);
+            return _client.Get<ClusterPeeringStatus[]>("/v1/peerings", q).Execute(cancellationToken);
         }
     }
 
