@@ -16,6 +16,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,5 +31,8 @@ namespace Consul.Interfaces
 
         Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, WriteOptions options,
             CancellationToken ct = default);
+        Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken = default);
+        Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(QueryOptions q, CancellationToken cancellationToken = default);
+
     }
 }

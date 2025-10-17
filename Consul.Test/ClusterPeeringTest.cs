@@ -16,7 +16,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -40,5 +42,19 @@ namespace Consul.Test
             Assert.NotNull(clusterPeeringCreateResponse);
             Assert.NotNull(clusterPeeringCreateResponse.Response.PeeringToken);
         }
+
+        [SkippableFact]
+        public async Task ClusterPeeringTest_ListPeerings()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var result = await _client.ClusterPeering.ListPeerings(QueryOptions.Default);
+            Assert.NotNull(result.Response);
+            var firstObject = result.Response.First();
+            Assert.NotNull(firstObject);
+            Assert.NotNull(firstObject.ID);
+            Assert.NotNull(firstObject.Name);
+        }
+
     }
 }
