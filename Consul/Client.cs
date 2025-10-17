@@ -457,6 +457,7 @@ namespace Consul
 #pragma warning restore CS0618 // Type or member is obsolete
             _agent = new Lazy<Agent>(() => new Agent(this));
             _catalog = new Lazy<Catalog>(() => new Catalog(this));
+            _clusterPeering = new Lazy<ClusterPeering>(() => new ClusterPeering(this));
             _coordinate = new Lazy<Coordinate>(() => new Coordinate(this));
             _configuration = new Lazy<Configuration>(() => new Configuration(this));
             _event = new Lazy<Event>(() => new Event(this));
