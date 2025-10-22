@@ -22,11 +22,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Consul.Test
 {
     public class ClusterPeeringTest : BaseFixture
     {
+        private readonly ITestOutputHelper _output;
+        public ClusterPeeringTest(ITestOutputHelper output)
+        {
+            _output = output;
+
+        }
+
         [SkippableFact]
         public async Task ClusterPeeringTest_Create()
         {
@@ -54,6 +62,28 @@ namespace Consul.Test
             Assert.NotNull(firstObject);
             Assert.NotNull(firstObject.ID);
             Assert.NotNull(firstObject.Name);
+        }
+
+        [SkippableFact]
+        public async Task ClusterPeeringTest_GetPeering()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var clusterPeeringEntry = new ClusterPeeringTokenEntry
+            {
+                PeerName = "cluster-03",
+                Meta = new Dictionary<string, string> { ["env"] = "production" }
+            };
+            var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
+            var result = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.ID);
+            Assert.NotNull(result.Response.Remote);
+            Assert.NotNull(result.Response.StreamStatus);
+
+            // Reading a connection that has not been generated
+            var newResult = await _client.ClusterPeering.GetPeering("cluster-05", QueryOptions.Default);
+            Assert.Null(newResult.Response);
         }
 
     }

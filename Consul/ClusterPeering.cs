@@ -160,6 +160,30 @@ namespace Consul
         {
             return _client.Get<ClusterPeeringStatus[]>("/v1/peerings", q).Execute(cancellationToken);
         }
+
+        /// <summary>
+        /// GetPeering is used to query a specific connection by its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A specific connection instance.</returns>
+        public Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, CancellationToken cancellationToken)
+        {
+            return GetPeering(name, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// GetPeering is used to query a specific connection by its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A specific connection instance.</returns>
+        public Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, QueryOptions options, CancellationToken cancellationToken)
+        {
+            var res = _client.Get<ClusterPeeringStatus>(string.Format("/v1/peering/{0}", name), options);
+            return res.Execute(cancellationToken);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
