@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Consul.Test
 {
