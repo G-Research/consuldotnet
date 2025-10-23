@@ -28,12 +28,6 @@ namespace Consul.Test
 {
     public class ClusterPeeringTest : BaseFixture
     {
-        private readonly ITestOutputHelper _output;
-        public ClusterPeeringTest(ITestOutputHelper output)
-        {
-            _output = output;
-
-        }
 
         [SkippableFact]
         public async Task ClusterPeeringTest_Create()
@@ -85,6 +79,5 @@ namespace Consul.Test
             var newResult = await _client.ClusterPeering.GetPeering("cluster-05", QueryOptions.Default);
             Assert.Null(newResult.Response);
         }
-
     }
 }
