@@ -1,0 +1,42 @@
+## **Inspecting Local Consul Agent Logs**
+When running a local Consul Agent (e.g., via consul agent -dev -config-file test_config.json), logs appear directly in the same terminal window or console.
+These logs provide real-time insights into the agent's operations, including service registrations, health checks, and any errors or warnings.
+
+An example of your startup log would look like this:
+```lua
+==> Starting Consul agent...
+        Version: '1.14.0'
+        Node ID: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+        Node name: 'your-machine-name'
+        Datacenter: 'dc1' (Segment: '<all>')
+        Server: true (Bootstrap: true)
+        Client Addr: [127.0.0.1] (HTTP: 8500, HTTPS: -1, gRPC: 8502, gRPC-TLS: 8503, DNS: 8600)
+        Cluster Addr: 127.0.0.1 (LAN: 8301, WAN: 8302)
+        Gossip Encryption: true
+        Auto-Encrypt-TLS: false
+        ACL Enabled: true
+        Reporting Enabled: false
+        ACL Default Policy: allow
+        HTTPS TLS: Verify Incoming: false, Verify Outgoing: false, Min Version: TLSv1_2
+        gRPC TLS: Verify Incoming: false, Min Version: TLSv1_2
+        Internal RPC TLS: Verify Incoming: false, Verify Outgoing: false (Verify Hostname: false), Min Version: TLSv1_2
+==> Log data will now stream in as it occurs:
+```
+These logs show real-time events like node joins, service registrations, and key/value updates.
+Keep this console open while testing your contribution...it’s your real-time feedback loop.
+
+
+## **Inspecting Local Agent State via Web UI**
+When Consul runs in dev mode, it automatically serves a Web UI that lets you visualize the cluster’s current state which can be accessed via your browser at `http://127.0.0.1:8500/ui`.
+
+Here, you can explore components of your cluster, such as:
+- **Services**: View registered services, their health status, and metadata.
+- **Nodes**: See all nodes in the cluster, their status, and associated services.
+- **Key/Value**: Inspect and manage key/value pairs stored in Consul.
+- **Intentions**: Manage communication permissions between services.
+- **Tokens**: View and manage ACL tokens used for authentication and authorization.
+- **Policies**: Manage ACL policies that define access rules.
+etc.
+
+**Useful Tip**: Use the Web UI to verify that your tests register/deregister services correctly or modify expected state.
+It’s also a great place to debug unexpected behavior before submitting a PR.
