@@ -27,7 +27,6 @@ namespace Consul.Test
 {
     public class ClusterPeeringTest : BaseFixture
     {
-
         [SkippableFact]
         public async Task ClusterPeeringTest_Create()
         {
