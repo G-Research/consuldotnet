@@ -184,6 +184,30 @@ namespace Consul
             var res = _client.Get<ClusterPeeringStatus>(string.Format("/v1/peering/{0}", name), options);
             return res.Execute(cancellationToken);
         }
+
+        /// <summary>
+        /// DeletePeering is used to delete a specific connection by its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A specific connection instance.</returns>
+        public Task<WriteResult> DeletePeering(string name, CancellationToken cancellationToken)
+        {
+            return DeletePeering(name, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// DeletePeering is used to delete a specific connection by its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A specific connection instance.</returns>
+        public Task<WriteResult> DeletePeering(string name, WriteOptions options, CancellationToken cancellationToken)
+        {
+            var res = _client.Delete(string.Format("/v1/peering/{0}", name), options);
+            return res.Execute(cancellationToken);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
