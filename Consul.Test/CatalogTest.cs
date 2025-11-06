@@ -238,6 +238,7 @@ namespace Consul.Test
             var options = new QueryOptions()
             {
                 WaitIndex = 1000,
+                WaitTime = new TimeSpan(0, 0, 5)
             };
             await _client.Agent.ServiceRegister(registration);
 
