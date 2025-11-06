@@ -235,7 +235,13 @@ namespace Consul.Test
             };
             await _client.Agent.ServiceRegister(registration);
 
-            var services = await _client.Catalog.NodesForMeshCapableService(registration.Name);
+            var options = new QueryOptions()
+            {
+                WaitIndex = 1000,
+            };
+            await _client.Agent.ServiceRegister(registration);
+
+            var services = await _client.Catalog.NodesForMeshCapableService(registration.Name, options);
             Assert.NotEmpty(services.Response);
             Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
         }
