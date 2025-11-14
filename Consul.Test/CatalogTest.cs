@@ -230,20 +230,16 @@ namespace Consul.Test
             };
 
             await _client.Agent.ServiceRegister(registration);
-            // First request - no WaitIndex set
+            // First request - with no WaitIndex set
             var services = await _client.Catalog.NodesForMeshCapableService(registration.Name);
             if (services.Response == null || services.Response.Length == 0)
             {
-                //Assert.NotEmpty(services.Response);
-                //Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
                 // Get the index from the first response
-                var currentIndex = services.LastIndex;
-                var options = new QueryOptions() { WaitIndex = currentIndex, };
+                var options = new QueryOptions() { WaitIndex = services.LastIndex, };
                 services = await _client.Catalog.NodesForMeshCapableService(registration.Name, options);
             }
             Assert.NotEmpty(services.Response);
             Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
-
         }
 
         [Fact]
