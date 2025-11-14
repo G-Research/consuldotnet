@@ -225,17 +225,19 @@ namespace Consul.Test
                 Port = 8000,
                 Connect = new AgentServiceConnect
                 {
-
-                    SidecarService = new AgentServiceRegistration
-                    {
-                        Name = "sidecar",
-                        Port = 9000,
-                    },
+                    SidecarService = new AgentServiceRegistration { Name = "sidecar", Port = 9000, },
                 },
             };
-            await _client.Agent.ServiceRegister(registration);
 
+            await _client.Agent.ServiceRegister(registration);
+            // First request - with no WaitIndex set
             var services = await _client.Catalog.NodesForMeshCapableService(registration.Name);
+            if (services.Response == null || services.Response.Length == 0)
+            {
+                // Get the index from the first response
+                var options = new QueryOptions() { WaitIndex = services.LastIndex, };
+                services = await _client.Catalog.NodesForMeshCapableService(registration.Name, options);
+            }
             Assert.NotEmpty(services.Response);
             Assert.Equal(services.Response[0].ServiceID, registration.Name + "-sidecar-proxy");
         }
