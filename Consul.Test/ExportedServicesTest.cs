@@ -18,6 +18,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -27,6 +28,8 @@ namespace Consul.Test
         [SkippableFact]
         public async Task ExportedServicesTest_ListExportedServices()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.17.3");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
             var result = await _client.ExportedServices.ListExportedService();
             Assert.NotNull(result.Response);
         }
