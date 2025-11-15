@@ -461,6 +461,7 @@ namespace Consul
             _coordinate = new Lazy<Coordinate>(() => new Coordinate(this));
             _configuration = new Lazy<Configuration>(() => new Configuration(this));
             _event = new Lazy<Event>(() => new Event(this));
+            _exportedServices = new Lazy<ExportedServices>(() => new ExportedServices(this));
             _health = new Lazy<Health>(() => new Health(this));
             _kv = new Lazy<KV>(() => new KV(this));
             _operator = new Lazy<Operator>(() => new Operator(this));
