@@ -36,7 +36,7 @@ namespace Consul.Test
                 Description = "API Testing Token",
                 SecretID = "1ED8D9E5-7868-4A0A-AC2F-6F75BEC71830",
                 Local = true,
-                NodeIdentities = new NodeIdentity[] {nodeIdentity},
+                NodeIdentities = new NodeIdentity[] { nodeIdentity },
             };
 
             var newToken = await _client.Token.Create(tokenEntry);
