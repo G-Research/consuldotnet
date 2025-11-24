@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -29,6 +30,9 @@ namespace Consul.Test
         public async Task Token_CreateDelete()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var cutOffVersion = SemanticVersion.Parse("1.17.14");
+            Skip.If(AgentVersion == cutOffVersion, $"Node Identity is not supported in {AgentVersion}");
+
             var nodeIdentity = new NodeIdentity { NodeName = "node-1", Datacenter = "dc1", };
 
             var tokenEntry = new TokenEntry

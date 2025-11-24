@@ -91,27 +91,27 @@ namespace Consul
         }
 
         public TokenEntry()
-            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, null, null, null, null)
+            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
         }
 
         public TokenEntry(string description, PolicyLink[] policies)
-            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, null, null, null, null)
+            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
         }
 
         public TokenEntry(string description, RoleLink[] roles)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>(), false, null, null, null, null)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
         }
 
         public TokenEntry(string description, ServiceIdentity[] serviceIdentities)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities, false, null, null, null, null)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities, false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
         }
 
         public TokenEntry(string accessorId, string description)
-            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, null, null, null, null)
+            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
         }
 
