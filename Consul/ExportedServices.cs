@@ -25,7 +25,18 @@ using Newtonsoft.Json;
 
 namespace Consul
 {
-    public class ServiceConsumer
+    public class ExportedServicesConfigEntry : IConfigurationEntry
+    {
+        [JsonProperty("Kind")]
+        public string Kind { get; set; } = "exported-services";
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Services")]
+        public ResolvedExportedService[] Services { get; set; }
+    }
+    public class ResolvedExportedService
     {
         [JsonProperty("Service")]
         public string Service { get; set; }
@@ -51,7 +62,7 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ServiceConsumer[]>> ListExportedService(CancellationToken cancellationToken = default)
+        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(CancellationToken cancellationToken = default)
         {
             return ListExportedService(null, cancellationToken);
         }
@@ -62,10 +73,10 @@ namespace Consul
         /// <param name="q">Query parameters</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ServiceConsumer[]>> ListExportedService(QueryOptions q,
+        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
-            return _client.Get<ServiceConsumer[]>("/v1/exported-services", q).Execute(cancellationToken);
+            return _client.Get<ResolvedExportedService[]>("/v1/exported-services", q).Execute(cancellationToken);
         }
     }
     public partial class ConsulClient : IConsulClient
