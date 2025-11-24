@@ -30,7 +30,7 @@ namespace Consul.Test
         public async Task Token_CreateDelete()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
-            var cutOffVersion = SemanticVersion.Parse("1.17.14");
+            var cutOffVersion = SemanticVersion.Parse("1.7.14");
             Skip.If(AgentVersion == cutOffVersion, $"Node Identity is not supported in {AgentVersion}");
 
             var nodeIdentity = new NodeIdentity { NodeName = "node-1", Datacenter = "dc1", };
