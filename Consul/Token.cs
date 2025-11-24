@@ -85,6 +85,11 @@ namespace Consul
             return TemplatedPolicies != null && TemplatedPolicies.Length > 0;
         }
 
+        public bool ShouldSerializeNodeIdentities()
+        {
+            return NodeIdentities != null && NodeIdentities.Length > 0;
+        }
+
         public TokenEntry()
             : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
         {
