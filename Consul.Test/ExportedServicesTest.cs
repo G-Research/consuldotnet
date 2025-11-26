@@ -16,6 +16,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Versioning;
@@ -30,8 +32,51 @@ namespace Consul.Test
         {
             var cutOffVersion = SemanticVersion.Parse("1.17.3");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
-            var result = await _client.ExportedServices.ListExportedService();
-            Assert.NotNull(result.Response);
+
+            var serviceName = "test-service-";
+            var serviceRegistration = new AgentServiceRegistration
+            {
+                ID = serviceName + "-1",
+                Name = serviceName,
+                Port = 8080,
+                Tags = new[] { "test" }
+            };
+
+            await _client.Agent.ServiceRegister(serviceRegistration);
+
+            try
+            {
+                var exportConfig = new ExportedServicesConfigEntry
+                {
+                    Name = "default",
+                    Services = new[]
+                    {
+                        new ExportedServiceConfig
+                        {
+                            Name = serviceName,
+                            Consumers = new[]{ new ServiceConsumer
+                            {
+                                Peer = "test-peer"
+                            }
+                            }
+                        }
+                    }
+                };
+
+                await _client.Configuration.ApplyConfig(exportConfig);
+
+                var result = await _client.ExportedServices.ListExportedService();
+                Assert.NotNull(result.Response);
+                Assert.NotEmpty(result.Response);
+
+                // Verify the service is in the list
+                Assert.Contains(result.Response, svc => svc.Service == serviceName);
+            }
+            finally
+            {
+                // Deregister the service
+                await _client.Agent.ServiceDeregister(serviceRegistration.ID);
+            }
         }
     }
 }

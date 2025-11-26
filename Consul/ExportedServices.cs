@@ -34,20 +34,43 @@ namespace Consul
         public string Name { get; set; }
 
         [JsonProperty("Services")]
-        public ResolvedExportedService[] Services { get; set; }
+        public ExportedServiceConfig[] Services { get; set; }
     }
-    public class ResolvedExportedService
+
+    public class ExportedServiceConfig
+    {
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Consumers")]
+        public ServiceConsumer[] Consumers { get; set; }
+    }
+
+    public class ServiceConsumer
+    {
+        [JsonProperty("Peer", NullValueHandling = NullValueHandling.Ignore)]
+        public string Peer { get; set; }
+
+        [JsonProperty("Partition", NullValueHandling = NullValueHandling.Ignore)]
+        public string Partition { get; set; }
+    }
+
+    public class ExportedServiceResponse
     {
         [JsonProperty("Service")]
         public string Service { get; set; }
 
         [JsonProperty("Consumers")]
-        public ConsumerInfo Consumers { get; set; }
+        public ExportedServiceConsumers Consumers { get; set; }
     }
-    public class ConsumerInfo
+
+    public class ExportedServiceConsumers
     {
         [JsonProperty("Peers")]
         public List<string> Peers { get; set; }
+
+        [JsonProperty("Partitions")]
+        public List<string> Partitions { get; set; }
     }
     public class ExportedServices : IExportedServicesEndpoint
     {
@@ -62,7 +85,7 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(CancellationToken cancellationToken = default)
+        public Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(CancellationToken cancellationToken = default)
         {
             return ListExportedService(null, cancellationToken);
         }
@@ -73,10 +96,10 @@ namespace Consul
         /// <param name="q">Query parameters</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(QueryOptions q,
+        public Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
-            return _client.Get<ResolvedExportedService[]>("/v1/exported-services", q).Execute(cancellationToken);
+            return _client.Get<ExportedServiceResponse[]>("/v1/exported-services", q).Execute(cancellationToken);
         }
     }
     public partial class ConsulClient : IConsulClient

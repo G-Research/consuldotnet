@@ -23,7 +23,7 @@ namespace Consul.Interfaces
 {
     public interface IExportedServicesEndpoint
     {
-        Task<QueryResult<ResolvedExportedService[]>> ListExportedService(CancellationToken cancellationToken = default);
-        Task<QueryResult<ResolvedExportedService[]>> ListExportedService(QueryOptions q, CancellationToken cancellationToken = default);
+        Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(CancellationToken cancellationToken = default);
+        Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(QueryOptions q, CancellationToken cancellationToken = default);
     }
 }
