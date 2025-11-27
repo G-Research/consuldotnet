@@ -55,16 +55,16 @@ namespace Consul
         public string Partition { get; set; }
     }
 
-    public class ExportedServiceResponse
+    public class ResolvedExportedService
     {
         [JsonProperty("Service")]
         public string Service { get; set; }
 
         [JsonProperty("Consumers")]
-        public ExportedServiceConsumers Consumers { get; set; }
+        public ResolvedConsumer Consumers { get; set; }
     }
 
-    public class ExportedServiceConsumers
+    public class ResolvedConsumer
     {
         [JsonProperty("Peers")]
         public List<string> Peers { get; set; }
@@ -85,7 +85,7 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(CancellationToken cancellationToken = default)
+        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(CancellationToken cancellationToken = default)
         {
             return ListExportedService(null, cancellationToken);
         }
@@ -96,10 +96,10 @@ namespace Consul
         /// <param name="q">Query parameters</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The exported services</returns>
-        public Task<QueryResult<ExportedServiceResponse[]>> ListExportedService(QueryOptions q,
+        public Task<QueryResult<ResolvedExportedService[]>> ListExportedService(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
-            return _client.Get<ExportedServiceResponse[]>("/v1/exported-services", q).Execute(cancellationToken);
+            return _client.Get<ResolvedExportedService[]>("/v1/exported-services", q).Execute(cancellationToken);
         }
     }
     public partial class ConsulClient : IConsulClient

@@ -33,7 +33,8 @@ namespace Consul.Test
             var cutOffVersion = SemanticVersion.Parse("1.17.3");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
 
-            var serviceName = "test-service-";
+            var serviceName = KVTest.GenerateTestKeyName();
+            var peerName = "test-peer";
             var serviceRegistration = new AgentServiceRegistration
             {
                 ID = serviceName + "-1",
@@ -56,7 +57,7 @@ namespace Consul.Test
                             Name = serviceName,
                             Consumers = new[]{ new ServiceConsumer
                             {
-                                Peer = "test-peer"
+                                Peer = peerName
                             }
                             }
                         }
@@ -71,6 +72,8 @@ namespace Consul.Test
 
                 // Verify the service is in the list
                 Assert.Contains(result.Response, svc => svc.Service == serviceName);
+                // Verify peer is not empty in the response
+                Assert.Contains(result.Response, con => con.Consumers.Peers.First() == peerName);
             }
             finally
             {
