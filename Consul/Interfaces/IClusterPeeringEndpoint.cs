@@ -34,5 +34,9 @@ namespace Consul.Interfaces
         Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken = default);
         Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(QueryOptions q, CancellationToken cancellationToken = default);
 
+        Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, CancellationToken cancellationToken = default);
+        Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, QueryOptions q, CancellationToken cancellationToken = default);
+        Task<WriteResult> DeletePeering(string name, CancellationToken cancellationToken = default);
+        Task<WriteResult> DeletePeering(string name, WriteOptions q, CancellationToken cancellationToken = default);
     }
 }

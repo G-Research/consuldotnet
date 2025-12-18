@@ -56,5 +56,49 @@ namespace Consul.Test
             Assert.NotNull(firstObject.Name);
         }
 
+        [SkippableFact]
+        public async Task ClusterPeeringTest_GetPeering()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var clusterPeeringEntry = new ClusterPeeringTokenEntry
+            {
+                PeerName = "cluster-03",
+                Meta = new Dictionary<string, string> { ["env"] = "production" }
+            };
+            var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
+            var result = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.ID);
+            Assert.NotNull(result.Response.Remote);
+            Assert.NotNull(result.Response.StreamStatus);
+
+            // Reading a connection that has not been generated
+            var newResult = await _client.ClusterPeering.GetPeering("cluster-05", QueryOptions.Default);
+            Assert.Null(newResult.Response);
+        }
+
+        [SkippableFact]
+        public async Task ClusterPeeringTest_DeletePeering()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var clusterPeeringEntry = new ClusterPeeringTokenEntry
+            {
+                PeerName = "cluster-03",
+                Meta = new Dictionary<string, string> { ["env"] = "production" }
+            };
+            var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
+            var result = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.ID);
+            Assert.NotNull(result.Response.Remote);
+            Assert.NotNull(result.Response.StreamStatus);
+            // Request to delete that peering
+            var deleteResult = await _client.ClusterPeering.DeletePeering("cluster-03", WriteOptions.Default);
+            // Attempt to access the deleted peering
+            var newResult = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            Assert.Null(newResult.Response);
+        }
     }
 }

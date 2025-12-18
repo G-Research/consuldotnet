@@ -343,6 +343,18 @@ namespace Consul
         /// Returns the nodes providing a mesh-capable service in a given datacenter.
         /// </summary>
         /// <param name="service">The service ID</param>
+        /// /// <param name="q">Customized Query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct = default)
+        {
+            return NodesForMeshCapableService(service, q, null, ct);
+        }
+
+        /// <summary>
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
+        /// </summary>
+        /// <param name="service">The service ID</param>
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>

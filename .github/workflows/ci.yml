@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
       # For the time being (https://github.com/dotnet/format/issues/1500, https://github.com/dotnet/format/issues/1560) we need to use `dotnet-format` instead of `dotnet format`
@@ -30,13 +30,13 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, macos-13] # macos-13 for x86_x64 arch
+        os: [ubuntu-latest, windows-latest, macos-latest, macos-15-intel]
         framework: [net8.0, net9.0]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET SDK v8.0.x
         if: matrix.framework == 'net8.0'
         uses: actions/setup-dotnet@v5
@@ -55,7 +55,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.9, 1.14.11, 1.15.10, 1.16.6, 1.17.3, 1.18.2, 1.19.2, 1.20.6, 1.21.5]
+        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.9, 1.14.11, 1.15.10, 1.16.6, 1.17.3, 1.18.2, 1.19.2, 1.20.6, 1.21.5, 1.22.1]
         framework: [net461, net8.0] # Latest LTS
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
@@ -64,7 +64,7 @@ jobs:
             consul: 1.20.0            
             os: ubuntu-latest
 
-          - os: macos-13  # macos-13 for x86_x64 arch
+          - os: macos-15-intel
             framework: net8.0
             consul: 1.20.0 
 
@@ -72,7 +72,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET SDK v8.0.x
         if: matrix.framework == 'net8.0'
         uses: actions/setup-dotnet@v5
@@ -140,7 +140,7 @@ jobs:
             CONSUL_AGENT_CONFIG_PATH: ${{ github.workspace }}/Consul.Test/test_config.json
       - name: Upload Consul logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
           path: consul*.log
@@ -150,7 +150,7 @@ jobs:
     needs: [Consul_AspNetCore, Consul]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
       - name: Create NuGet packages
@@ -178,7 +178,7 @@ jobs:
               }
           }
       - name: Upload NuGet package artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: nuget-packages
           path: dist/*.nupkg
@@ -191,7 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: nuget-packages
           path: dist
@@ -207,7 +207,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download NuGet package artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: nuget-packages
           path: dist

@@ -222,9 +222,9 @@ const config = {
                 ],
                 logo: {
                     alt: 'G-Research Open-Source Software',
-                    src: 'organization/logo/svg/GR-OSS.svg',
-                    srcDark: 'organization/logo/svg/GR-OSS-Dark.svg',
-                    href: 'https://opensource.gresearch.co.uk/',
+                    src: 'https://github.com/G-Research/brand/raw/main/logo/GR-OSS/logo-light-bg.svg',
+                    srcDark: 'https://github.com/G-Research/brand/raw/main/logo/GR-OSS/logo-dark-bg.svg',
+                    href: 'https://opensource.gresearch.com/',
                 },
                 copyright: `Copyright © ${new Date().getFullYear()} Consul.NET`,
             },
