@@ -45,16 +45,22 @@ namespace Consul.Test
             Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Operator_RaftTransferLeader()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
             var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader());
             Assert.Contains("cannot find peer", e.Message);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task Operator_RaftTransferLeaderById()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
             var config = await _client.Operator.RaftGetConfiguration();
             Assert.Single(config.Response.Servers);
             Assert.True(config.Response.Servers[0].Leader);
