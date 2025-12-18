@@ -41,14 +41,8 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_GetRaftRemovePeerByAddress()
         {
-            try
-            {
-                await _client.Operator.RaftRemovePeerByAddress("nope");
-            }
-            catch (ConsulRequestException e)
-            {
-                Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
-            }
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftRemovePeerByAddress("nope"));
+            Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
         }
 
         [Fact]
