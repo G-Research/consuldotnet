@@ -56,8 +56,10 @@ namespace Consul.Test
         public async Task Operator_RaftTransferLeaderById()
         {
             var config = await _client.Operator.RaftGetConfiguration();
-            var serverId = config.Response.Servers[0].ID;
+            Assert.Single(config.Response.Servers);
             Assert.True(config.Response.Servers[0].Leader);
+            var serverId = config.Response.Servers[0].ID;
+            Assert.False(string.IsNullOrWhiteSpace(serverId));
 
             var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader(serverId));
             Assert.Contains("cannot transfer leadership to itself", e.Message);
