@@ -19,14 +19,14 @@ jobs:
     steps:
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
 
       - name: Install the dotnet-format
         # Installing the tool globally to avoid any interference from potentially malicious code checked out in the next step
         run: dotnet tool install dotnet-format -g --version 5.1.250801
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           show-progress: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}

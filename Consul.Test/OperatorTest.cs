@@ -361,5 +361,31 @@ namespace Consul.Test
 
             Assert.Null(req.Response);
         }
+
+        [SkippableFact]
+        public async Task Operator_GetUsage()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var result = await _client.Operator.OperatorGetUsage(QueryOptions.Default);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.Usage);
+            Assert.True(result.Response.Usage.Count > 0, "Expected at least one datacenter in usage response");
+
+            // Verify we have at least one datacenter with valid data
+            var firstDatacenter = result.Response.Usage.First();
+            Assert.False(string.IsNullOrEmpty(firstDatacenter.Key), "Datacenter name should not be empty");
+            Assert.NotNull(firstDatacenter.Value);
+
+            var usage = firstDatacenter.Value;
+
+            // Verify ConnectServiceInstances exists and has valid data
+            Assert.NotNull(usage.ConnectServiceInstances);
+            // Verify QueryResult metadata
+            Assert.True(result.LastIndex > 0, "LastIndex should be greater than 0");
+        }
+
     }
 }

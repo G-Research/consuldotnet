@@ -1,0 +1,54 @@
+# Basic Example
+
+Once Consul is running (you'll see something like `==> Consul
+agent running!`) in your command prompt, then do the following
+steps in your project.
+
+Add a reference to the Consul library and add a using statement:
+
+```csharp
+using Consul;
+```
+
+Write a function to talk to the KV store:
+
+```csharp
+public static async Task<string> HelloConsul()
+{
+    using (var client = new ConsulClient())
+    {
+        var putPair = new KVPair("hello")
+        {
+            Value = Encoding.UTF8.GetBytes("Hello Consul")
+        };
+
+        var putAttempt = await client.KV.Put(putPair);
+
+        if (putAttempt.Response)
+        {
+            var getPair = await client.KV.Get("hello");
+            return Encoding.UTF8.GetString(getPair.Response.Value, 0,
+                getPair.Response.Value.Length);
+        }
+        return "";
+    }
+}
+```
+
+And call it:
+
+```csharp
+Console.WriteLine(HelloConsul().GetAwaiter().GetResult());
+```
+
+You should see `Hello Consul` in the output of your program. You should
+also see the following lines in your command prompt, if you're running
+a local Consul server:
+
+```log
+[DEBUG] http: Request /v1/kv/hello (6.0039ms)
+[DEBUG] http: Request /v1/kv/hello (0)
+```
+
+The API just went out to Consul, wrote "Hello Consul" under the key
+"hello", then fetched the data back out and wrote it to your prompt.

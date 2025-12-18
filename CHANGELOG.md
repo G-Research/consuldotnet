@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## 1.7.14.9
+* [BUG FIX]: Restore missing Services() overload - fix for broken ABI compatibility (#496)
+
+## 1.7.14.8
+
+* Add support for reading Autopilot State (#484)
+* Add support for putting Autopilot Configuration (#486)
+* Add support for retrieving Autopilot Health (#481)
+* Add support for retrieving the current Autopilot Configuration (#476)
+* Add support for reading Self Tokens (#464)
+* Add support for reading Policies by name (#465)
+* Add support for reading a Templated Policy by name (#459)
+* Add support for previewing a Templated Policy by name (#462)
+* Add `filter` parameter to list all Services in catalog (#456)
+* Add support for checking Intention Results (#447)
+* Add support for listing matching Intentions (#443)
+* Add support for reading Intentions by name (#442)
+* Add support for deleting Intentions by name (#441)
+* Add support for upserting Intentions by name (#435)
+* Add support for retrieving a list of all configured Intentions (#427)
+
 ## 1.7.14.7
 
 * Do not use static JsonConvert (#417)

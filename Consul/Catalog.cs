@@ -243,7 +243,18 @@ namespace Consul
         /// <returns>A list of all services</returns>
         public Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default)
         {
-            return Services(string.Empty, null, QueryOptions.Default, ct);
+            return Services(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Services is used to query for all known services
+        /// </summary>
+        /// <param name="q">Customized query options</param>
+        /// <param name="ct"></param>
+        /// <returns>A list of all services</returns>
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default)
+        {
+            return Services(null, null, q, ct);
         }
 
         /// <summary>
@@ -318,7 +329,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// Returns the nodes providing a mesh-capable service in a given datacenter. 
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
         /// </summary>
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
@@ -326,6 +337,18 @@ namespace Consul
         public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default)
         {
             return NodesForMeshCapableService(service, QueryOptions.Default, null, ct);
+        }
+
+        /// <summary>
+        /// Returns the nodes providing a mesh-capable service in a given datacenter.
+        /// </summary>
+        /// <param name="service">The service ID</param>
+        /// /// <param name="q">Customized Query options</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A list of service instances</returns>
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct = default)
+        {
+            return NodesForMeshCapableService(service, q, null, ct);
         }
 
         /// <summary>

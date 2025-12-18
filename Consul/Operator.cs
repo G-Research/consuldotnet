@@ -487,6 +487,16 @@ namespace Consul
         {
             return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
         }
+
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(CancellationToken cancellationToken = default)
+        {
+            return OperatorGetUsage(null, cancellationToken);
+        }
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(QueryOptions q,
+            CancellationToken cancellationToken = default)
+        {
+            return _client.Get<OperatorUsageInformation>("/v1/operator/usage", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -632,6 +642,48 @@ namespace Consul
         public string NodeType { get; set; }
         public string RedundancyZone { get; set; }
         public string UpgradeVersion { get; set; }
+    }
+
+    public class OperatorUsageInformation
+    {
+        [JsonProperty("Usage")]
+        public Dictionary<string, DatacenterUsage> Usage { get; set; }
+    }
+
+    public class DatacenterUsage
+    {
+        [JsonProperty("Services")]
+        public int Services { get; set; }
+
+        [JsonProperty("ServiceInstances")]
+        public int ServiceInstances { get; set; }
+
+        [JsonProperty("ConnectServiceInstances")]
+        public ConnectServiceInstances ConnectServiceInstances { get; set; }
+
+        [JsonProperty("BillableServiceInstances")]
+        public int BillableServiceInstances { get; set; }
+
+        [JsonProperty("Nodes")]
+        public int Nodes { get; set; }
+    }
+
+    public class ConnectServiceInstances
+    {
+        [JsonProperty("connect-native")]
+        public int ConnectNative { get; set; }
+
+        [JsonProperty("connect-proxy")]
+        public int ConnectProxy { get; set; }
+
+        [JsonProperty("ingress-gateway")]
+        public int IngressGateway { get; set; }
+
+        [JsonProperty("mesh-gateway")]
+        public int MeshGateway { get; set; }
+
+        [JsonProperty("terminating-gateway")]
+        public int TerminatingGateway { get; set; }
     }
 
     public class Flags
