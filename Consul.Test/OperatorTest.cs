@@ -41,14 +41,34 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_GetRaftRemovePeerByAddress()
         {
-            try
-            {
-                await _client.Operator.RaftRemovePeerByAddress("nope");
-            }
-            catch (ConsulRequestException e)
-            {
-                Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
-            }
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftRemovePeerByAddress("nope"));
+            Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
+        }
+
+        [SkippableFact]
+        public async Task Operator_RaftTransferLeader()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader());
+            Assert.Contains("cannot find peer", e.Message);
+        }
+
+        [SkippableFact]
+        public async Task Operator_RaftTransferLeaderById()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
+            var config = await _client.Operator.RaftGetConfiguration();
+            Assert.Single(config.Response.Servers);
+            Assert.True(config.Response.Servers[0].Leader);
+            var serverId = config.Response.Servers[0].ID;
+            Assert.False(string.IsNullOrWhiteSpace(serverId));
+
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader(serverId));
+            Assert.Contains("cannot transfer leadership to itself", e.Message);
         }
 
         [Fact]
