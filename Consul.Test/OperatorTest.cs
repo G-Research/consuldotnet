@@ -54,32 +54,18 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_RaftTransferLeader()
         {
-            try
-            {
-                var result = await _client.Operator.RaftTransferLeader();
-                Assert.NotNull(result);
-            }
-            catch (ConsulRequestException e)
-            {
-                Assert.Contains("cannot find peer", e.Message);
-            }
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader());
+            Assert.Contains("cannot find peer", e.Message);
         }
 
         [Fact]
         public async Task Operator_RaftTransferLeaderById()
         {
-            try
-            {
-                var config = await _client.Operator.RaftGetConfiguration();
-                var serverId = config.Response.Servers[0].ID;
+            var config = await _client.Operator.RaftGetConfiguration();
+            var serverId = config.Response.Servers[0].ID;
 
-                var result = await _client.Operator.RaftTransferLeader(serverId);
-                Assert.NotNull(result);
-            }
-            catch (ConsulRequestException e)
-            {
-                Assert.Contains("cannot transfer leadership to itself", e.Message);
-            }
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader(serverId));
+            Assert.Contains("cannot transfer leadership to itself", e.Message);
         }
 
         [Fact]
