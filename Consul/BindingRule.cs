@@ -40,39 +40,6 @@ namespace Consul
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ACLTemplatedPolicyVariables BindVars { get; set; }
-
-        public static bool ShouldSerializeCreateIndex()
-        {
-            return false;
-        }
-
-        public static bool ShouldSerializeModifyIndex()
-        {
-            return false;
-        }
-
-        public BindingRuleEntry()
-            : this(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, null)
-        {
-        }
-
-        public BindingRuleEntry(string authMethod, string bindType, string bindName)
-            : this(string.Empty, string.Empty, authMethod, string.Empty, bindType, bindName, null)
-        {
-        }
-
-        public BindingRuleEntry(string id, string description, string authMethod,
-            string selector, string bindType, string bindName,
-            ACLTemplatedPolicyVariables bindVars)
-        {
-            ID = id;
-            Description = description;
-            AuthMethod = authMethod;
-            Selector = selector;
-            BindType = bindType;
-            BindName = bindName;
-            BindVars = bindVars;
-        }
     }
 
     public class BindingRuleResponse : BindingRuleEntry
