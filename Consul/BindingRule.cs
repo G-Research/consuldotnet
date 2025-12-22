@@ -29,7 +29,7 @@ namespace Consul
         public string Name { get; set; }
     }
 
-    public class BindingRuleEntry
+    public class ACLBindingRule
     {
         public string ID { get; set; }
         public string Description { get; set; }
@@ -42,7 +42,7 @@ namespace Consul
         public ACLTemplatedPolicyVariables BindVars { get; set; }
     }
 
-    public class BindingRuleResponse : BindingRuleEntry
+    public class ACLBindingRuleResponse : ACLBindingRule
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ulong CreateIndex { get; set; }
@@ -69,7 +69,7 @@ namespace Consul
         /// <param name="entry">The new ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public Task<WriteResult<BindingRuleEntry>> Create(BindingRuleEntry entry, CancellationToken ct = default)
+        public Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct = default)
         {
             return Create(entry, WriteOptions.Default, ct);
         }
@@ -81,12 +81,12 @@ namespace Consul
         /// <param name="options"></param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A new Binding Rule</returns>
-        public async Task<WriteResult<BindingRuleEntry>> Create(BindingRuleEntry entry, WriteOptions options,
+        public async Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, WriteOptions options,
             CancellationToken ct = default)
         {
-            var res = await _client.Put<BindingRuleEntry, BindingRuleResponse>("/v1/acl/binding-rule", entry, options)
+            var res = await _client.Put<ACLBindingRule, ACLBindingRuleResponse>("/v1/acl/binding-rule", entry, options)
                 .Execute(ct).ConfigureAwait(false);
-            return new WriteResult<BindingRuleEntry>(res, res.Response);
+            return new WriteResult<ACLBindingRuleResponse>(res, res.Response);
         }
     }
 

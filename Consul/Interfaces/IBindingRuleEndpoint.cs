@@ -27,9 +27,9 @@ namespace Consul.Interfaces
     /// </summary>
     public interface IBindingRuleEndpoint
     {
-        Task<WriteResult<BindingRuleEntry>> Create(BindingRuleEntry entry, CancellationToken ct = default);
+        Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct = default);
 
-        Task<WriteResult<BindingRuleEntry>> Create(BindingRuleEntry entry, WriteOptions options,
+        Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, WriteOptions options,
             CancellationToken ct = default);
     }
 }
