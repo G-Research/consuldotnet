@@ -41,14 +41,34 @@ namespace Consul.Test
         [Fact]
         public async Task Operator_GetRaftRemovePeerByAddress()
         {
-            try
-            {
-                await _client.Operator.RaftRemovePeerByAddress("nope");
-            }
-            catch (ConsulRequestException e)
-            {
-                Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
-            }
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftRemovePeerByAddress("nope"));
+            Assert.Contains("address \"nope\" was not found in the Raft configuration", e.Message);
+        }
+
+        [SkippableFact]
+        public async Task Operator_RaftTransferLeader()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader());
+            Assert.Contains("cannot find peer", e.Message);
+        }
+
+        [SkippableFact]
+        public async Task Operator_RaftTransferLeaderById()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+
+            var config = await _client.Operator.RaftGetConfiguration();
+            Assert.Single(config.Response.Servers);
+            Assert.True(config.Response.Servers[0].Leader);
+            var serverId = config.Response.Servers[0].ID;
+            Assert.False(string.IsNullOrWhiteSpace(serverId));
+
+            var e = await Assert.ThrowsAsync<ConsulRequestException>(async () => await _client.Operator.RaftTransferLeader(serverId));
+            Assert.Contains("cannot transfer leadership to itself", e.Message);
         }
 
         [Fact]
@@ -330,5 +350,31 @@ namespace Consul.Test
 
             Assert.Null(req.Response);
         }
+
+        [SkippableFact]
+        public async Task Operator_GetUsage()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
+            var result = await _client.Operator.OperatorGetUsage(QueryOptions.Default);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Response);
+            Assert.NotNull(result.Response.Usage);
+            Assert.True(result.Response.Usage.Count > 0, "Expected at least one datacenter in usage response");
+
+            // Verify we have at least one datacenter with valid data
+            var firstDatacenter = result.Response.Usage.First();
+            Assert.False(string.IsNullOrEmpty(firstDatacenter.Key), "Datacenter name should not be empty");
+            Assert.NotNull(firstDatacenter.Value);
+
+            var usage = firstDatacenter.Value;
+
+            // Verify ConnectServiceInstances exists and has valid data
+            Assert.NotNull(usage.ConnectServiceInstances);
+            // Verify QueryResult metadata
+            Assert.True(result.LastIndex > 0, "LastIndex should be greater than 0");
+        }
+
     }
 }

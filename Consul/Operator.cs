@@ -194,6 +194,51 @@ namespace Consul
 
             return req.Execute(ct);
         }
+        /// <summary>
+        /// Transfers Raft leadership to another server
+        /// </summary>
+        /// <param name="ct">Cancellation token for the request</param>
+        /// <returns>A write result indicating the success of the operation</returns>
+        public Task<WriteResult> RaftTransferLeader(CancellationToken ct = default)
+        {
+            return RaftTransferLeader(WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Transfers Raft leadership to another server with write options
+        /// </summary>
+        /// <param name="q">Write options including datacenter and token</param>
+        /// <param name="ct">Cancellation token for the request</param>
+        /// <returns>A write result indicating the success of the operation</returns>
+        public Task<WriteResult> RaftTransferLeader(WriteOptions q, CancellationToken ct = default)
+        {
+            return _client.Post<object>("/v1/operator/raft/transfer-leader", null, q).Execute(ct);
+        }
+
+        /// <summary>
+        /// Transfers Raft leadership to another server by ID
+        /// </summary>
+        /// <param name="id">The node ID of the Raft peer to transfer leadership to</param>
+        /// <param name="ct">Cancellation token for the request</param>
+        /// <returns>A write result indicating the success of the operation</returns>
+        public Task<WriteResult> RaftTransferLeader(string id, CancellationToken ct = default)
+        {
+            return RaftTransferLeader(id, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Transfers Raft leadership to another server by ID with write options
+        /// </summary>
+        /// <param name="id">The node ID of the Raft peer to transfer leadership to</param>
+        /// <param name="q">Write options including datacenter and token</param>
+        /// <param name="ct">Cancellation token for the request</param>
+        /// <returns>A write result indicating the success of the operation</returns>
+        public Task<WriteResult> RaftTransferLeader(string id, WriteOptions q, CancellationToken ct = default)
+        {
+            var req = _client.Post<object>("/v1/operator/raft/transfer-leader", null, q);
+            req.Params["id"] = id;
+            return req.Execute(ct);
+        }
 
         /// <summary>
         /// KeyringInstall is used to install a new gossip encryption key into the cluster
@@ -442,6 +487,16 @@ namespace Consul
         {
             return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
         }
+
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(CancellationToken cancellationToken = default)
+        {
+            return OperatorGetUsage(null, cancellationToken);
+        }
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(QueryOptions q,
+            CancellationToken cancellationToken = default)
+        {
+            return _client.Get<OperatorUsageInformation>("/v1/operator/usage", q).Execute(cancellationToken);
+        }
     }
 
     public class ConsulLicense
@@ -587,6 +642,48 @@ namespace Consul
         public string NodeType { get; set; }
         public string RedundancyZone { get; set; }
         public string UpgradeVersion { get; set; }
+    }
+
+    public class OperatorUsageInformation
+    {
+        [JsonProperty("Usage")]
+        public Dictionary<string, DatacenterUsage> Usage { get; set; }
+    }
+
+    public class DatacenterUsage
+    {
+        [JsonProperty("Services")]
+        public int Services { get; set; }
+
+        [JsonProperty("ServiceInstances")]
+        public int ServiceInstances { get; set; }
+
+        [JsonProperty("ConnectServiceInstances")]
+        public ConnectServiceInstances ConnectServiceInstances { get; set; }
+
+        [JsonProperty("BillableServiceInstances")]
+        public int BillableServiceInstances { get; set; }
+
+        [JsonProperty("Nodes")]
+        public int Nodes { get; set; }
+    }
+
+    public class ConnectServiceInstances
+    {
+        [JsonProperty("connect-native")]
+        public int ConnectNative { get; set; }
+
+        [JsonProperty("connect-proxy")]
+        public int ConnectProxy { get; set; }
+
+        [JsonProperty("ingress-gateway")]
+        public int IngressGateway { get; set; }
+
+        [JsonProperty("mesh-gateway")]
+        public int MeshGateway { get; set; }
+
+        [JsonProperty("terminating-gateway")]
+        public int TerminatingGateway { get; set; }
     }
 
     public class Flags

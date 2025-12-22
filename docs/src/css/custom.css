@@ -99,3 +99,11 @@ div[class^='announcementBarContent'] a:hover, div[class*='announcementBarContent
 }
 
 /* Header */
+
+
+/* Footer */
+footer .footer__logo {
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+}
+/* Footer */
