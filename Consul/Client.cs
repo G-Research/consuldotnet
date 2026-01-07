@@ -478,6 +478,7 @@ namespace Consul
             _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
             _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
             _connect = new Lazy<Connect>(() => new Connect(this));
+            _exportedServices = new Lazy<ExportedServices>(() => new ExportedServices(this));
         }
 
         #region IDisposable Support

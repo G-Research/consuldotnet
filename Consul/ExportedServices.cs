@@ -68,7 +68,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// List of exported services
+        /// List of exported services, as well as the admin partitions and cluster peers that consume the services
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns> A query result containing an array of exported service</returns>
@@ -78,7 +78,7 @@ namespace Consul
         }
 
         /// <summary>
-        /// List of exported services
+        /// List of exported services, as well as the admin partitions and cluster peers that consume the services
         /// </summary>
         /// <param name="queryOptions">Customised query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
@@ -88,5 +88,15 @@ namespace Consul
             var res = await _client.Get<ResolvedExportedService[]>("/v1/exported-services", queryOptions).Execute(ct).ConfigureAwait(false);
             return new QueryResult<ResolvedExportedService[]>(res, res.Response);
         }
+    }
+
+    public partial class ConsulClient : IConsulClient
+    {
+        private Lazy<ExportedServices> _exportedServices;
+
+        /// <summary>
+        /// Exported services returns a handle to the exported services endpoints
+        /// </summary>
+        public IExportedServicesEnpoint ExportedServices => _exportedServices.Value;
     }
 }
