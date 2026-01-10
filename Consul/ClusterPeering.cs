@@ -212,11 +212,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<ClusterPeering> _clusterPeering;
-
         /// <summary>
         /// Cluster Peering returns a handle to the Cluster Peering endpoints
         /// </summary>
-        public IClusterPeeringEndpoint ClusterPeering => _clusterPeering.Value;
+        public IClusterPeeringEndpoint ClusterPeering { get; private set; }
     }
 }

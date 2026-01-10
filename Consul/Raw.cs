@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -62,11 +61,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Raw> _raw;
-
         /// <summary>
         /// Raw returns a handle to query endpoints
         /// </summary>
-        public IRawEndpoint Raw => _raw.Value;
+        public IRawEndpoint Raw { get; private set; }
     }
 }

@@ -693,11 +693,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Operator> _operator;
-
         /// <summary>
         /// Operator returns a handle to the operator endpoints.
         /// </summary>
-        public IOperatorEndpoint Operator => _operator.Value;
+        public IOperatorEndpoint Operator { get; private set; }
     }
 }

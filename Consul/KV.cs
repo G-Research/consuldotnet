@@ -632,11 +632,9 @@ namespace Consul
     /// </summary>
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<KV> _kv;
-
         /// <summary>
         /// KV returns a handle to the KV endpoint
         /// </summary>
-        public IKVEndpoint KV => _kv.Value;
-    }
+        public IKVEndpoint KV { get; private set; }
+}
 }

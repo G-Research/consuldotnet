@@ -1338,11 +1338,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Agent> _agent;
-
         /// <summary>
         /// Agent returns a handle to the agent endpoints
         /// </summary>
-        public IAgentEndpoint Agent => _agent.Value;
+        public IAgentEndpoint Agent { get; private set; }
     }
 }

@@ -404,17 +404,10 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-#pragma warning disable CS0618 // Type or member is obsolete
-        private Lazy<ACL> _acl;
-#pragma warning restore CS0618 // Type or member is obsolete
-
         /// <summary>
         /// [Deprecated] ACL returns a handle to the ACL endpoints
         /// </summary>
         [Obsolete("The Legacy ACL system has been deprecated, please use Token, Role and Policy instead.")]
-        public IACLEndpoint ACL
-        {
-            get { return _acl.Value; }
-        }
+        public IACLEndpoint ACL { get; private set; }
     }
 }
