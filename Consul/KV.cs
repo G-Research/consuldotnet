@@ -636,5 +636,5 @@ namespace Consul
         /// KV returns a handle to the KV endpoint
         /// </summary>
         public IKVEndpoint KV { get; private set; }
-}
+    }
 }
