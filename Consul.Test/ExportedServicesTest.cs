@@ -32,7 +32,6 @@ namespace Consul.Test
         [Fact]
         public async Task ExportedServices_List()
         {
-
             var svcID = KVTest.GenerateTestKeyName();
             var tagsInit = new[] { "web", "monitoring", "platform" };
             var registration = new AgentServiceRegistration
@@ -73,15 +72,10 @@ namespace Consul.Test
             Assert.NotNull(writeResult);
             Assert.Equal(HttpStatusCode.OK, writeResult.StatusCode);
 
-            var querytoken = new QueryOptions
-            {
-                Token = TestHelper.MasterToken
-            };
+            var res = await _client.ExportedServices.List();
+            var peers = res.Response.FirstOrDefault(b => b.Service == svcID)?.Consumers.Peers;
 
-            var res = await _client.ExportedServices.List(querytoken);
-            var peers = res.Response.FirstOrDefault(b => b.Service == svcID).Consumers.Peers;
-
-            Assert.NotNull(res);
+            Assert.NotNull(peers);
             Assert.Equal(tags.Length, peers.Count);
         }
     }
