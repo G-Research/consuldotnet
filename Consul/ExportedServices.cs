@@ -59,6 +59,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Partitions { get; set; }
     }
+
     public class ExportedServices : IExportedServicesEnpoint
     {
         private readonly ConsulClient _client;
