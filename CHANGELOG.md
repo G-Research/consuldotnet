@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.7.14.10
+* Add create ACL Binding Rules (#506)
+* Add raft transfer leader (#489)
+* Add delete peering token by name (#523)
+* Add reading peering token by name (#521)
+* Add list peerings (#516)
+* Add generate peering token (#513)
+* Add list operator (#507)
+
 ## 1.7.14.9
 * [BUG FIX]: Restore missing Services() overload - fix for broken ABI compatibility (#496)
 

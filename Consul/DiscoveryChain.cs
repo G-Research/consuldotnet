@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
@@ -224,11 +223,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<DiscoveryChain> _discoveryChain;
-
         /// <summary>
         /// DiscoveryChain returns a handle to the discovery chain endpoints
         /// </summary>
-        public IDiscoveryChainEndpoint DiscoveryChain => _discoveryChain.Value;
+        public IDiscoveryChainEndpoint DiscoveryChain { get; private set; }
     }
 }

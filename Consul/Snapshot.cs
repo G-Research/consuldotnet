@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,11 +59,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Snapshot> _snapshot;
-
         /// <summary>
         /// Catalog returns a handle to the snapshot endpoints
         /// </summary>
-        public ISnapshotEndpoint Snapshot => _snapshot.Value;
+        public ISnapshotEndpoint Snapshot { get; private set; }
     }
 }

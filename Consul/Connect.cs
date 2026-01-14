@@ -18,10 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Consul.Interfaces;
 using Newtonsoft.Json;
 
@@ -454,11 +452,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Connect> _connect;
-
         /// <summary>
         /// Connect returns a handle to the Connect endpoints
         /// </summary>
-        public IConnectEndpoint Connect => _connect.Value;
+        public IConnectEndpoint Connect { get; private set; }
     }
 }

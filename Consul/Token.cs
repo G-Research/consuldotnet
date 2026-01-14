@@ -325,11 +325,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Token> _token;
-
         /// <summary>
         /// Token returns a handle to the ACL Token endpoints
         /// </summary>
-        public ITokenEndpoint Token => _token.Value;
+        public ITokenEndpoint Token { get; private set; }
     }
 }

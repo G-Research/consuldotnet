@@ -420,17 +420,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Health> _health;
-
         /// <summary>
         /// Health returns a handle to the health endpoint
         /// </summary>
-        public IHealthEndpoint Health
-        {
-            get
-            {
-                return _health.Value;
-            }
-        }
+        public IHealthEndpoint Health { get; private set; }
     }
 }

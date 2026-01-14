@@ -273,11 +273,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Role> _role;
-
         /// <summary>
         /// Role returns a handle to the ACL Role endpoints
         /// </summary>
-        public IRoleEndpoint Role => _role.Value;
+        public IRoleEndpoint Role { get; private set; }
     }
 }

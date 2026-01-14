@@ -111,14 +111,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<ACLReplication> _aclReplication;
-
         /// <summary>
         /// ACLReplication returns a handle to the ACLReplication endpoints
         /// </summary>
-        public IACLReplicationEndpoint ACLReplication
-        {
-            get { return _aclReplication.Value; }
-        }
+        public IACLReplicationEndpoint ACLReplication { get; private set; }
     }
 }

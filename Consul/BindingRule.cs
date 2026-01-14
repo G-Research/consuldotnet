@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
@@ -92,11 +91,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<BindingRule> _bindingRule;
-
         /// <summary>
         /// ACL Binding Rule returns a handle to the ACL Binding Rules endpoints
         /// </summary>
-        public IBindingRuleEndpoint BindingRule => _bindingRule.Value;
+        public IBindingRuleEndpoint BindingRule { get; private set; }
     }
 }

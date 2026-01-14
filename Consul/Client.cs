@@ -357,7 +357,7 @@ namespace Consul
             #endregion
         }
 
-        private ConsulClientConfigurationContainer _configContainer;
+        private readonly ConsulClientConfigurationContainer _configContainer;
 
         internal HttpClient HttpClient { get { return _configContainer._httpClient; } }
 #if NETSTANDARD || NETCOREAPP
@@ -453,32 +453,31 @@ namespace Consul
         private void InitializeEndpoints()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            _acl = new Lazy<ACL>(() => new ACL(this));
+            ACL = new ACL(this);
 #pragma warning restore CS0618 // Type or member is obsolete
-            _agent = new Lazy<Agent>(() => new Agent(this));
-            _catalog = new Lazy<Catalog>(() => new Catalog(this));
-            _clusterPeering = new Lazy<ClusterPeering>(() => new ClusterPeering(this));
-            _coordinate = new Lazy<Coordinate>(() => new Coordinate(this));
-            _configuration = new Lazy<Configuration>(() => new Configuration(this));
-            _event = new Lazy<Event>(() => new Event(this));
-            _health = new Lazy<Health>(() => new Health(this));
-            _kv = new Lazy<KV>(() => new KV(this));
-            _operator = new Lazy<Operator>(() => new Operator(this));
-            _policy = new Lazy<Policy>(() => new Policy(this));
-            _preparedquery = new Lazy<PreparedQuery>(() => new PreparedQuery(this));
-            _raw = new Lazy<Raw>(() => new Raw(this));
-            _role = new Lazy<Role>(() => new Role(this));
-            _session = new Lazy<Session>(() => new Session(this));
-            _snapshot = new Lazy<Snapshot>(() => new Snapshot(this));
-            _status = new Lazy<Status>(() => new Status(this));
-            _token = new Lazy<Token>(() => new Token(this));
-            _aclReplication = new Lazy<ACLReplication>(() => new ACLReplication(this));
-            _bindingRule = new Lazy<BindingRule>(() => new BindingRule(this));
-            _authMethod = new Lazy<AuthMethod>(() => new AuthMethod(this));
-            _namespaces = new Lazy<Namespaces>(() => new Namespaces(this));
-            _discoveryChain = new Lazy<DiscoveryChain>(() => new DiscoveryChain(this));
-            _connect = new Lazy<Connect>(() => new Connect(this));
-            _exportedServices = new Lazy<ExportedServices>(() => new ExportedServices(this));
+            Agent = new Agent(this);
+            Catalog = new Catalog(this);
+            ClusterPeering = new ClusterPeering(this);
+            Coordinate = new Coordinate(this);
+            Configuration = new Configuration(this);
+            Event = new Event(this);
+            Health = new Health(this);
+            KV = new KV(this);
+            Operator = new Operator(this);
+            Policy = new Policy(this);
+            PreparedQuery = new PreparedQuery(this);
+            Raw = new Raw(this);
+            Role = new Role(this);
+            Session = new Session(this);
+            Snapshot = new Snapshot(this);
+            Status = new Status(this);
+            Token = new Token(this);
+            ACLReplication = new ACLReplication(this);
+            BindingRule = new BindingRule(this);
+            AuthMethod = new AuthMethod(this);
+            Namespaces = new Namespaces(this);
+            DiscoveryChain = new DiscoveryChain(this);
+            Connect = new Connect(this);
         }
 
         #region IDisposable Support
@@ -491,10 +490,7 @@ namespace Consul
                 if (disposing)
                 {
                     Config._updated -= HandleConfigUpdateEvent;
-                    if (_configContainer != null)
-                    {
-                        _configContainer.Dispose();
-                    }
+                    _configContainer?.Dispose();
                 }
 
                 _disposedValue = true;
