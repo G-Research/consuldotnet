@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -449,11 +448,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Catalog> _catalog;
-
         /// <summary>
         /// Catalog returns a handle to the catalog endpoints
         /// </summary>
-        public ICatalogEndpoint Catalog => _catalog.Value;
+        public ICatalogEndpoint Catalog { get; private set; }
     }
 }

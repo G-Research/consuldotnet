@@ -96,11 +96,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Namespaces> _namespaces;
-
         /// <summary>
         /// Namespaces returns a handle to the namespaces endpoint
         /// </summary>
-        public INamespacesEndpoint Namespaces => _namespaces.Value;
+        public INamespacesEndpoint Namespaces { get; private set; }
     }
 }

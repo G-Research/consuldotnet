@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -140,14 +139,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Event> _event;
-
         /// <summary>
         /// Event returns a handle to the event endpoints
         /// </summary>
-        public IEventEndpoint Event
-        {
-            get { return _event.Value; }
-        }
+        public IEventEndpoint Event { get; private set; }
     }
 }

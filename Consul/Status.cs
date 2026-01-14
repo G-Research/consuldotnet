@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,11 +52,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Status> _status;
-
         /// <summary>
         /// Status returns a handle to the status endpoint
         /// </summary>
-        public IStatusEndpoint Status => _status.Value;
+        public IStatusEndpoint Status { get; private set; }
     }
 }

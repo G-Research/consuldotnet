@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -134,14 +133,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Coordinate> _coordinate;
-
         /// <summary>
         /// Session returns a handle to the session endpoints
         /// </summary>
-        public ICoordinateEndpoint Coordinate
-        {
-            get { return _coordinate.Value; }
-        }
+        public ICoordinateEndpoint Coordinate { get; private set; }
     }
 }

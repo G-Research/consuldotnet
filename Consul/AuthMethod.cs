@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -247,14 +246,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<AuthMethod> _authMethod;
-
         /// <summary>
         /// AuthMethod returns a handle to the ACL AuthMethod endpoints
         /// </summary>
-        public IAuthMethodEndpoint AuthMethod
-        {
-            get { return _authMethod.Value; }
-        }
+        public IAuthMethodEndpoint AuthMethod { get; private set; }
     }
 }

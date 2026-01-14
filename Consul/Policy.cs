@@ -16,7 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -337,11 +336,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<Policy> _policy;
-
         /// <summary>
         /// Policy returns a handle to the ACL Policy endpoints
         /// </summary>
-        public IPolicyEndpoint Policy => _policy.Value;
+        public IPolicyEndpoint Policy { get; private set; }
     }
 }
