@@ -60,7 +60,7 @@ namespace Consul
         public List<string> Partitions { get; set; }
     }
 
-    public class ExportedServices : IExportedServicesEnpoint
+    public class ExportedServices : IExportedServicesEndpoint
     {
         private readonly ConsulClient _client;
         internal ExportedServices(ConsulClient c)
@@ -93,11 +93,9 @@ namespace Consul
 
     public partial class ConsulClient : IConsulClient
     {
-        private Lazy<ExportedServices> _exportedServices;
-
         /// <summary>
         /// Exported services returns a handle to the exported services endpoints
         /// </summary>
-        public IExportedServicesEnpoint ExportedServices => _exportedServices.Value;
+        public IExportedServicesEndpoint ExportedServices { get; private set; }
     }
 }

@@ -65,6 +65,6 @@ namespace Consul
         ICoordinateEndpoint Coordinate { get; }
         ISnapshotEndpoint Snapshot { get; }
         IDiscoveryChainEndpoint DiscoveryChain { get; }
-        IExportedServicesEnpoint ExportedServices { get; }
+        IExportedServicesEndpoint ExportedServices { get; }
     }
 }
