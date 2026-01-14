@@ -27,7 +27,7 @@ namespace Consul.Interfaces
     /// <summary>
     /// Interface for the Exported Services API Endpoints
     /// </summary>
-    public interface IExportedServicesEnpoint
+    public interface IExportedServicesEndpoint
     {
         Task<QueryResult<ResolvedExportedService[]>> List(CancellationToken ct = default);
         Task<QueryResult<ResolvedExportedService[]>> List(QueryOptions queryOptions, CancellationToken ct = default);
