@@ -23,15 +23,24 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
 {
     public class ExportedServicesTest : BaseFixture
     {
-        [Fact]
+        void SkipIfNotSupported()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.17.3");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but the legacy ACL system was removed in Consul {cutOffVersion}");
+        }
+
+        [SkippableFact]
         public async Task ExportedServices_List()
         {
+            SkipIfNotSupported();
+
             var svcID = KVTest.GenerateTestKeyName();
             var tagsInit = new[] { "web", "monitoring", "platform" };
             var registration = new AgentServiceRegistration
