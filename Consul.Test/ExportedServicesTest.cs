@@ -32,8 +32,8 @@ namespace Consul.Test
     {
         void SkipIfNotSupported()
         {
-            var cutOffVersion = SemanticVersion.Parse("1.17.3");
-            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but the legacy ACL system was removed in Consul {cutOffVersion}");
+            var cutOffVersion = SemanticVersion.Parse("1.18.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Exported Services are only supported from Consul {cutOffVersion}");
         }
 
         [SkippableFact]
