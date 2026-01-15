@@ -478,6 +478,7 @@ namespace Consul
             Namespaces = new Namespaces(this);
             DiscoveryChain = new DiscoveryChain(this);
             Connect = new Connect(this);
+            ExportedServices = new ExportedServices(this);
         }
 
         #region IDisposable Support
