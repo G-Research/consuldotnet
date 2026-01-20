@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -181,6 +182,48 @@ namespace Consul.Test
             Assert.Equal(tokenEntry.SecretID, newToken.Response.SecretID);
             Assert.Equal(tokenEntry.ServiceIdentities[0].ServiceName, newToken.Response.ServiceIdentities.OrderBy(x => x.ServiceName).ToArray()[0].ServiceName);
             Assert.Equal(tokenEntry.ServiceIdentities[1].ServiceName, newToken.Response.ServiceIdentities.OrderBy(x => x.ServiceName).ToArray()[1].ServiceName);
+            Assert.Equal(tokenEntry.Local, newToken.Response.Local);
+
+            var deleteResponse = await _client.Token.Delete(newToken.Response.AccessorID);
+            Assert.True(deleteResponse.Response);
+        }
+
+        [SkippableFact]
+        public async Task Token_CreateWithNodeIdentitiesDelete()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.18.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Service Tokens are only supported from Consul {cutOffVersion}");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var nodeIdentityOne = new NodeIdentity
+            {
+                NodeName = "node-1",
+                Datacenter = "dc1"
+            };
+
+            var nodeIdentityTwo = new NodeIdentity
+            {
+                NodeName = "node-2",
+                Datacenter = "dc2"
+            };
+
+            var tokenEntry = new TokenEntry
+            {
+                Description = "API Testing Token for Node Identity",
+                SecretID = Guid.NewGuid().ToString(),
+                NodeIdentities = new NodeIdentity[] { nodeIdentityOne, nodeIdentityTwo },
+                Local = false
+            };
+
+            var newToken = await _client.Token.Create(tokenEntry);
+
+            Assert.NotEqual(TimeSpan.Zero, newToken.RequestTime);
+            Assert.NotNull(newToken.Response);
+            Assert.False(string.IsNullOrEmpty(newToken.Response.AccessorID));
+            Assert.Equal(tokenEntry.Description, newToken.Response.Description);
+            Assert.Equal(tokenEntry.SecretID, newToken.Response.SecretID);
+            Assert.Equal(tokenEntry.NodeIdentities[0].NodeName, newToken.Response.NodeIdentities.OrderBy(x => x.NodeName).ToArray()[0].NodeName);
+            Assert.Equal(tokenEntry.NodeIdentities[1].NodeName, newToken.Response.NodeIdentities.OrderBy(x => x.NodeName).ToArray()[1].NodeName);
             Assert.Equal(tokenEntry.Local, newToken.Response.Local);
 
             var deleteResponse = await _client.Token.Delete(newToken.Response.AccessorID);

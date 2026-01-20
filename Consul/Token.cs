@@ -40,6 +40,8 @@ namespace Consul
         public RoleLink[] Roles { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public NodeIdentity[] NodeIdentities { get; set; }
         public bool Local { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AuthMethod { get; set; }
@@ -56,37 +58,43 @@ namespace Consul
         }
 
         public TokenEntry()
-            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
+            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public TokenEntry(string description, PolicyLink[] policies)
-            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
+            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public TokenEntry(string description, RoleLink[] roles)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>())
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public TokenEntry(string description, ServiceIdentity[] serviceIdentities)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities, Array.Empty<NodeIdentity>())
+        {
+        }
+
+        public TokenEntry(string description, NodeIdentity[] nodeIdentities)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), nodeIdentities)
         {
         }
 
         public TokenEntry(string accessorId, string description)
-            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
+            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
-        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities)
+        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities, NodeIdentity[] nodeIdentities)
         {
             AccessorID = accessorId;
             Description = description;
             Policies = policies;
             Roles = roles;
             ServiceIdentities = serviceIdentities;
+            NodeIdentities = nodeIdentities;
         }
     }
 

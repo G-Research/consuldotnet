@@ -285,10 +285,10 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Role_Create_WithNodeIdentityUpdateWithNodeIdentityDelete()
+        public async Task Role_Create_WithNodeIdentitiesUpdateWithNodeIdentityDelete()
         {
             var cutOffVersion = SemanticVersion.Parse("1.18.0");
-            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Exported Services are only supported from Consul {cutOffVersion}");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Roles are only supported from Consul {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             var nodeIdentityOne = new NodeIdentity
@@ -306,7 +306,7 @@ namespace Consul.Test
             var roleEntry = new RoleEntry
             {
                 Name = "APITestingNodeIdentityRole",
-                Description = "Role for API Testing (Role_CreateWithNodeIdentityUpdateWithNodeIdentityDelete)",
+                Description = "Role for API Testing (Role_Create_WithNodeIdentitiesUpdateWithNodeIdentityDelete)",
                 NodeIdentities = new NodeIdentity[] { nodeIdentityOne, nodeIdentityTwo }
             };
 
@@ -318,7 +318,7 @@ namespace Consul.Test
             Assert.Equal(roleEntry.Description, newRoleResult.Response.Description);
             Assert.Equal(roleEntry.Name, newRoleResult.Response.Name);
 
-            newRoleResult.Response.Description = "This is an updated role for API testing (Role_CreateWithNodeIdentityUpdateWithNodeIdentityDelete)";
+            newRoleResult.Response.Description = "This is an updated role for API testing (Role_CreateWithNodeIdentitiesUpdateWithNodeIdentityDelete)";
             newRoleResult.Response.NodeIdentities = new NodeIdentity[] { nodeIdentityTwo };
             var updatedRoleResult = await _client.Role.Update(newRoleResult.Response);
 
@@ -334,7 +334,7 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Role_Create_WithNodeIdentityReadByNameDelete()
+        public async Task Role_Create_WithNodeIdentitiesReadByNameDelete()
         {
             var cutOffVersion = SemanticVersion.Parse("1.18.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Exported Services are only supported from Consul {cutOffVersion}");
@@ -355,7 +355,7 @@ namespace Consul.Test
             var roleEntry = new RoleEntry
             {
                 Name = "APITestingNodeIdentityRole",
-                Description = "Role for API Testing (Role_CreateWithNodeIdentityUpdateWithNodeIdentityDelete)",
+                Description = "Role for API Testing (Role_CreateWithNodeIdentitiesReadByNameDelete)",
                 NodeIdentities = new NodeIdentity[] { nodeIdentityOne, nodeIdentityTwo }
             };
 
