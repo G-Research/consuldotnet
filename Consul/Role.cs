@@ -57,6 +57,9 @@ namespace Consul
         public PolicyLink[] Policies { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public NodeIdentity[] NodeIdentities { get; set; }
+
 
         public static bool ShouldSerializeCreateIndex()
         {
@@ -69,42 +72,48 @@ namespace Consul
         }
 
         public RoleEntry()
-            : this(string.Empty, string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>())
+            : this(string.Empty, string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public RoleEntry(string name)
-            : this(string.Empty, name, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>())
+            : this(string.Empty, name, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public RoleEntry(string name, string description)
-            : this(string.Empty, name, description, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>())
+            : this(string.Empty, name, description, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public RoleEntry(string id, string name, string description)
-            : this(id, name, description, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>())
+            : this(id, name, description, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public RoleEntry(string id, string name, string description, PolicyLink[] policies)
-            : this(id, name, description, policies, Array.Empty<ServiceIdentity>())
+            : this(id, name, description, policies, Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
         {
         }
 
         public RoleEntry(string id, string name, string description, ServiceIdentity[] serviceIdentities)
-            : this(id, name, description, Array.Empty<PolicyLink>(), serviceIdentities)
+            : this(id, name, description, Array.Empty<PolicyLink>(), serviceIdentities, Array.Empty<NodeIdentity>())
         {
         }
 
-        public RoleEntry(string id, string name, string description, PolicyLink[] policies, ServiceIdentity[] serviceIdentities)
+        public RoleEntry(string id, string name, string description, NodeIdentity[] nodeIdentities)
+            : this(id, name, description, Array.Empty<PolicyLink>(), Array.Empty<ServiceIdentity>(), nodeIdentities)
+        {
+        }
+
+        public RoleEntry(string id, string name, string description, PolicyLink[] policies, ServiceIdentity[] serviceIdentities, NodeIdentity[] nodeIdentities)
         {
             ID = id;
             Name = name;
             Description = description;
             Policies = policies;
             ServiceIdentities = serviceIdentities;
+            NodeIdentities = nodeIdentities;
         }
         public static implicit operator RoleLink(RoleEntry r) => new RoleLink(r.ID);
     }
