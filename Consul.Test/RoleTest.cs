@@ -287,7 +287,7 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Role_Create_WithNodeIdentitiesUpdateWithNodeIdentityDelete()
         {
-            var cutOffVersion = SemanticVersion.Parse("1.18.0");
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Roles are only supported from Consul {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
