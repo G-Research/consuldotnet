@@ -58,43 +58,37 @@ namespace Consul
         }
 
         public TokenEntry()
-            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
+            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, PolicyLink[] policies)
-            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
+            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, RoleLink[] roles)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, ServiceIdentity[] serviceIdentities)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities, Array.Empty<NodeIdentity>())
-        {
-        }
-
-        public TokenEntry(string description, NodeIdentity[] nodeIdentities)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), nodeIdentities)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities)
         {
         }
 
         public TokenEntry(string accessorId, string description)
-            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), Array.Empty<NodeIdentity>())
+            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
-        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities, NodeIdentity[] nodeIdentities)
+        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities)
         {
             AccessorID = accessorId;
             Description = description;
             Policies = policies;
             Roles = roles;
             ServiceIdentities = serviceIdentities;
-            NodeIdentities = nodeIdentities;
         }
     }
 
