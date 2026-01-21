@@ -57,6 +57,9 @@ namespace Consul
         public PolicyLink[] Policies { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public NodeIdentity[] NodeIdentities { get; set; }
+
 
         public static bool ShouldSerializeCreateIndex()
         {

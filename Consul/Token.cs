@@ -40,6 +40,8 @@ namespace Consul
         public RoleLink[] Roles { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public NodeIdentity[] NodeIdentities { get; set; }
         public bool Local { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AuthMethod { get; set; }

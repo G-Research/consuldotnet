@@ -18,6 +18,7 @@
 
 using System;
 using System.Threading.Tasks;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -273,6 +274,99 @@ namespace Consul.Test
             Assert.Equal(roleEntry.Name, newRoleResult.Response.Name);
 
             var readRoleByName = await _client.Role.ReadByName("APITestingRole");
+            Assert.NotNull(readRoleByName.Response);
+            Assert.NotEqual(TimeSpan.Zero, readRoleByName.RequestTime);
+            Assert.Equal(newRoleResult.Response.ID, readRoleByName.Response.ID);
+            Assert.Equal(newRoleResult.Response.Name, readRoleByName.Response.Name);
+            Assert.Equal(newRoleResult.Response.Description, readRoleByName.Response.Description);
+
+            var deleteResponse = await _client.Role.Delete(newRoleResult.Response.ID);
+            Assert.True(deleteResponse.Response);
+        }
+
+        [SkippableFact]
+        public async Task Role_Create_WithNodeIdentitiesUpdateWithNodeIdentityDelete()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Roles are only supported from Consul {cutOffVersion}");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var nodeIdentityOne = new NodeIdentity
+            {
+                NodeName = "node-1",
+                Datacenter = "dc1"
+            };
+
+            var nodeIdentityTwo = new NodeIdentity
+            {
+                NodeName = "node-1",
+                Datacenter = "dc2"
+            };
+
+            var roleEntry = new RoleEntry
+            {
+                Name = "APITestingNodeIdentityRole",
+                Description = "Role for API Testing (Role_Create_WithNodeIdentitiesUpdateWithNodeIdentityDelete)",
+                NodeIdentities = new NodeIdentity[] { nodeIdentityOne, nodeIdentityTwo }
+            };
+
+            var newRoleResult = await _client.Role.Create(roleEntry);
+            Assert.NotNull(newRoleResult.Response);
+            Assert.NotNull(newRoleResult.Response.Policies);
+            Assert.NotEqual(TimeSpan.Zero, newRoleResult.RequestTime);
+            Assert.False(string.IsNullOrEmpty(newRoleResult.Response.ID));
+            Assert.Equal(roleEntry.Description, newRoleResult.Response.Description);
+            Assert.Equal(roleEntry.Name, newRoleResult.Response.Name);
+
+            newRoleResult.Response.Description = "This is an updated role for API testing (Role_CreateWithNodeIdentitiesUpdateWithNodeIdentityDelete)";
+            newRoleResult.Response.NodeIdentities = new NodeIdentity[] { nodeIdentityTwo };
+            var updatedRoleResult = await _client.Role.Update(newRoleResult.Response);
+
+            Assert.NotNull(updatedRoleResult.Response);
+            Assert.NotEqual(TimeSpan.Zero, updatedRoleResult.RequestTime);
+            Assert.Equal(newRoleResult.Response.ID, updatedRoleResult.Response.ID);
+            Assert.Equal(newRoleResult.Response.Name, updatedRoleResult.Response.Name);
+            Assert.Equal(newRoleResult.Response.Description, updatedRoleResult.Response.Description);
+            Assert.NotEqual(roleEntry.Description, updatedRoleResult.Response.Description);
+
+            var deleteResponse = await _client.Role.Delete(updatedRoleResult.Response.ID);
+            Assert.True(deleteResponse.Response);
+        }
+
+        [SkippableFact]
+        public async Task Role_Create_WithNodeIdentitiesReadByNameDelete()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.18.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Exported Services are only supported from Consul {cutOffVersion}");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            var nodeIdentityOne = new NodeIdentity
+            {
+                NodeName = "node-1",
+                Datacenter = "dc1"
+            };
+
+            var nodeIdentityTwo = new NodeIdentity
+            {
+                NodeName = "node-1",
+                Datacenter = "dc2"
+            };
+
+            var roleEntry = new RoleEntry
+            {
+                Name = "APITestingNodeIdentityRole",
+                Description = "Role for API Testing (Role_CreateWithNodeIdentitiesReadByNameDelete)",
+                NodeIdentities = new NodeIdentity[] { nodeIdentityOne, nodeIdentityTwo }
+            };
+
+            var newRoleResult = await _client.Role.Create(roleEntry);
+            Assert.NotNull(newRoleResult.Response);
+            Assert.NotEqual(TimeSpan.Zero, newRoleResult.RequestTime);
+            Assert.False(string.IsNullOrEmpty(newRoleResult.Response.ID));
+            Assert.Equal(roleEntry.Description, newRoleResult.Response.Description);
+            Assert.Equal(roleEntry.Name, newRoleResult.Response.Name);
+
+            var readRoleByName = await _client.Role.ReadByName("APITestingNodeIdentityRole");
             Assert.NotNull(readRoleByName.Response);
             Assert.NotEqual(TimeSpan.Zero, readRoleByName.RequestTime);
             Assert.Equal(newRoleResult.Response.ID, readRoleByName.Response.ID);
