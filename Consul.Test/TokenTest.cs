@@ -191,7 +191,7 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Token_CreateWithNodeIdentitiesDelete()
         {
-            var cutOffVersion = SemanticVersion.Parse("1.18.0");
+            var cutOffVersion = SemanticVersion.Parse("1.6.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but Service Tokens are only supported from Consul {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
