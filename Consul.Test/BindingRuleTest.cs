@@ -44,7 +44,7 @@ namespace Consul.Test
             await _client.AuthMethod.Create(authMethodEntry);
             var authMethodsResponse = await _client.AuthMethod.List();
             var existingAuthMethod = authMethodsResponse.Response?.FirstOrDefault();
-            Skip.If(existingAuthMethod == null, "No auth methods available in Consul for testing");
+            
             var BindingRuleEntry = new ACLBindingRule
             {
                 Description = "ACL Binding Rule for API Unit Testing",
@@ -81,8 +81,6 @@ namespace Consul.Test
             await _client.AuthMethod.Create(authMethodEntry);
             var authMethodsResponse = await _client.AuthMethod.List();
             var existingAuthMethod = authMethodsResponse.Response?.FirstOrDefault();
-
-            Skip.If(existingAuthMethod == null, "No auth methods available in Consul for testing");
 
             var BindingRuleEntry = new ACLBindingRule
             {
