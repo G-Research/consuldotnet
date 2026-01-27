@@ -87,6 +87,30 @@ namespace Consul
                 .Execute(ct).ConfigureAwait(false);
             return new WriteResult<ACLBindingRuleResponse>(res, res.Response);
         }
+
+        /// <summary>
+        /// Reads a binding rule in Consul
+        /// </summary>
+        /// <param name="id">UUID of the binding rule to read</param>
+        /// <param name="ct">>Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>An existing Binding rule with the specified id</returns>
+        public Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct = default)
+        {
+            return Read(id, QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Reads an ACL binding rule in Consul
+        /// </summary>
+        /// <param name="id">UUID of the ACL binding rule to read</param>
+        /// <param name="options"></param>
+        /// <param name="ct">>Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>An existing Binding rule with the specified id</returns>
+        public async Task<QueryResult<ACLBindingRuleResponse>> Read(string id, QueryOptions options, CancellationToken ct = default)
+        {
+            var res = await _client.Get<ACLBindingRuleResponse>($"/v1/acl/binding-rule/{id}").Execute(ct).ConfigureAwait(false);
+            return new QueryResult<ACLBindingRuleResponse>(res, res.Response);
+        }
     }
 
     public partial class ConsulClient : IConsulClient

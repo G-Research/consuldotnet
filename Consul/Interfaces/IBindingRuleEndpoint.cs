@@ -30,5 +30,7 @@ namespace Consul.Interfaces
 
         Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, WriteOptions options,
             CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse>> Read(string id, QueryOptions options, CancellationToken ct = default);
     }
 }
