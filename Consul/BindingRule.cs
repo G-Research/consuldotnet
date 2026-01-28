@@ -111,6 +111,30 @@ namespace Consul
             var res = await _client.Get<ACLBindingRuleResponse>($"/v1/acl/binding-rule/{id}").Execute(ct).ConfigureAwait(false);
             return new QueryResult<ACLBindingRuleResponse>(res, res.Response);
         }
+
+        /// <summary>
+        /// Updates an existing ACL binding rule
+        /// </summary>
+        /// <param name="entry">Specifies the ACL binding rule you update</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>Returns the updated Binding Rule</returns>
+        public Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, CancellationToken ct = default)
+        {
+            return Update(entry, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Updates an existing ACL binding rule
+        /// </summary>
+        /// <param name="entry">Specifies the ACL binding rule you update</param>
+        /// <param name="options"></param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>Returns the updated Binding Rule</returns>
+        public async Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, WriteOptions options, CancellationToken ct = default)
+        {
+            var res = await _client.Put<ACLBindingRule, ACLBindingRuleResponse>($"/v1/acl/binding-rule/{entry.ID}", entry, options).Execute(ct).ConfigureAwait(false);
+            return new WriteResult<ACLBindingRuleResponse>(res, res.Response);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
