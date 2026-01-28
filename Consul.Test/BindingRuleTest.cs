@@ -105,5 +105,57 @@ namespace Consul.Test
             Assert.Equal(newBindingRuleResult.Response.Description, bindingRuleById.Response.Description);
 
         }
+
+        [Fact]
+        public async Task BindingRule_Update()
+        {
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "AuthMethodApiTest",
+                Type = "kubernetes",
+                Description = "Auth Method for API Unit Testing",
+                Config = new Dictionary<string, string>
+                {
+                    ["Host"] = _host,
+                    ["CACert"] = _caCert,
+                    ["ServiceAccountJWT"] = _serviceAccountJWT
+                }
+            };
+
+            await _client.AuthMethod.Create(authMethodEntry);
+            var authMethodsResponse = await _client.AuthMethod.List();
+            var existingAuthMethod = authMethodsResponse.Response?.FirstOrDefault();
+            var BindingRuleEntry = new ACLBindingRule
+            {
+                Description = "ACL Binding Rule for API Unit Testing",
+                AuthMethod = existingAuthMethod.Name,
+                Selector = "serviceaccount.namespace==default",
+                BindType = "service",
+                BindName = "${serviceaccount.name}"
+            };
+            var newBindingRuleResult = await _client.BindingRule.Create(BindingRuleEntry);
+
+            Assert.NotNull(newBindingRuleResult.Response);
+            Assert.Equal(BindingRuleEntry.Description, newBindingRuleResult.Response.Description);
+            Assert.Equal(BindingRuleEntry.AuthMethod, newBindingRuleResult.Response.AuthMethod);
+            Assert.False(string.IsNullOrEmpty(newBindingRuleResult.Response.ID));
+
+            var BindingRuleUpdateEntry = new ACLBindingRule
+            {
+                Description = "Updated rule",
+                AuthMethod = existingAuthMethod.Name,
+                Selector = "serviceaccount.namespace==default",
+                BindType = "role",
+                BindName = "${serviceaccount.name}",
+                ID = newBindingRuleResult.Response.ID
+            };
+            var updatedBindingRule = await _client.BindingRule.Update(BindingRuleUpdateEntry);
+
+            Assert.NotNull(updatedBindingRule.Response);
+            Assert.False(string.IsNullOrEmpty(updatedBindingRule.Response.ID));
+            Assert.Equal(newBindingRuleResult.Response.ID, updatedBindingRule.Response.ID);
+            Assert.NotEqual(newBindingRuleResult.Response.Description, updatedBindingRule.Response.Description);
+            Assert.NotEqual(newBindingRuleResult.Response.BindType, updatedBindingRule.Response.BindType);
+        }
     }
 }
