@@ -144,7 +144,7 @@ namespace Consul
         /// <returns></returns>
         public Task<WriteResult> Delete(string id, CancellationToken ct = default)
         {
-            return Delete(id, WriteOptions.Default,  ct);
+            return Delete(id, WriteOptions.Default, ct);
         }
 
         /// <summary>
