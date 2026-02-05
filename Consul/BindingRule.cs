@@ -135,6 +135,30 @@ namespace Consul
             var res = await _client.Put<ACLBindingRule, ACLBindingRuleResponse>($"/v1/acl/binding-rule/{entry.ID}", entry, options).Execute(ct).ConfigureAwait(false);
             return new WriteResult<ACLBindingRuleResponse>(res, res.Response);
         }
+
+        /// <summary>
+        /// Deletes an ACL binding rule.
+        /// </summary>
+        /// <param name="id">Specifies the UUID of the binding rule you delete</param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns></returns>
+        public Task<WriteResult> Delete(string id, CancellationToken ct = default)
+        {
+            return Delete(id, WriteOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Deletes an ACL binding rule.
+        /// </summary>
+        /// <param name="id">Specifies the UUID of the binding rule you delete</param>
+        /// <param name="options"></param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns></returns>
+        public async Task<WriteResult> Delete(string id, WriteOptions options, CancellationToken ct = default)
+        {
+            var res = await _client.Delete($"/v1/acl/binding-rule/{id}", options).Execute(ct).ConfigureAwait(false);
+            return res;
+        }
     }
 
     public partial class ConsulClient : IConsulClient
