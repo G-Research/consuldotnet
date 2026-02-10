@@ -8,7 +8,7 @@
     <PackageOutputPath>../dist/consul</PackageOutputPath>
     <AssemblyTitle>Consul.NET</AssemblyTitle>
     <AssemblyProduct>Consul.NET</AssemblyProduct>
-    <NoWarn>$(NoWarn);RS0016;RS0026;RS0022;RS0041</NoWarn>
+    <NoWarn>$(NoWarn);RS0026;RS0022;RS0041</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
-    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
+    <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
