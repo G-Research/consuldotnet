@@ -201,5 +201,51 @@ namespace Consul.Test
             var readBindingRule = await _client.BindingRule.Read(newBindingRuleResult.Response.ID);
             Assert.Equal(HttpStatusCode.NotFound, readBindingRule.StatusCode);
         }
+
+        [Fact]
+        public async Task BindingRule_List()
+        {
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "AuthMethodApiTest",
+                Type = "kubernetes",
+                Description = "Auth Method for API Unit Testing",
+                Config = new Dictionary<string, string>
+                {
+                    ["Host"] = _host,
+                    ["CACert"] = _caCert,
+                    ["ServiceAccountJWT"] = _serviceAccountJWT
+                }
+            };
+
+            await _client.AuthMethod.Create(authMethodEntry);
+
+            var authMethodsResponse = await _client.AuthMethod.List();
+            var existingAuthMethod = authMethodsResponse.Response?.FirstOrDefault();
+            var bindingRuleEntry = new ACLBindingRule
+            {
+                Description = "ACL Binding Rule 1 for API Unit Testing",
+                AuthMethod = existingAuthMethod.Name,
+                Selector = "serviceaccount.namespace==default",
+                BindType = "service",
+                BindName = "${serviceaccount.name}"
+            };
+
+            var newBindingRuleResult = await _client.BindingRule.Create(bindingRuleEntry);
+            Assert.NotNull(newBindingRuleResult.Response);
+            Assert.Equal(bindingRuleEntry.Description, newBindingRuleResult.Response.Description);
+            Assert.Equal(bindingRuleEntry.AuthMethod, newBindingRuleResult.Response.AuthMethod);
+            Assert.False(string.IsNullOrEmpty(newBindingRuleResult.Response.ID));
+
+            var listResult = await _client.BindingRule.List();
+            var existingRule = listResult.Response?.FirstOrDefault(r => r.ID == newBindingRuleResult.Response.ID);
+            Assert.NotEmpty(listResult.Response);
+            Assert.NotNull(existingRule);
+
+            await _client.BindingRule.Delete(existingRule.ID);
+            var listResult2 = await _client.BindingRule.List();
+            var existingRule2 = listResult2.Response?.FirstOrDefault(r => r.ID == existingRule.ID);
+            Assert.Null(existingRule2);
+        }
     }
 }

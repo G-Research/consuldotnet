@@ -159,6 +159,28 @@ namespace Consul
             var res = await _client.Delete($"/v1/acl/binding-rule/{id}", options).Execute(ct).ConfigureAwait(false);
             return res;
         }
+
+        /// <summary>
+        /// Retrieves a listing of all binding rules
+        /// </summary>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A lists of all the ACL binding rules</returns>
+        public Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct = default)
+        {
+            return List(QueryOptions.Default, ct);
+        }
+
+        /// <summary>
+        /// Retrieves a listing of all binding rules
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
+        /// <returns>A lists of all the ACL binding rules</returns>
+        public async Task<QueryResult<ACLBindingRuleResponse[]>> List(QueryOptions options, CancellationToken ct = default)
+        {
+            var res = await _client.Get<ACLBindingRuleResponse[]>("/v1/acl/binding-rules").Execute(ct).ConfigureAwait(false);
+            return new QueryResult<ACLBindingRuleResponse[]>(res, res.Response);
+        }
     }
 
     public partial class ConsulClient : IConsulClient
