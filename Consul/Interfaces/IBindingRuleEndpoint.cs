@@ -36,5 +36,7 @@ namespace Consul.Interfaces
         Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, WriteOptions options, CancellationToken ct = default);
         Task<WriteResult> Delete(string id, CancellationToken ct = default);
         Task<WriteResult> Delete(string id, WriteOptions options, CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse[]>> List(QueryOptions options, CancellationToken ct = default);
     }
 }
