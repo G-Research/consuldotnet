@@ -32,7 +32,7 @@ jobs:
 
       - name: Get Consul.NET latest version
         id: version
-        uses: WyriHaximus/github-action-get-previous-tag@v1
+        uses: WyriHaximus/github-action-get-previous-tag@v2
         with:
           fallback: "vX.X.X.X" # Optional fallback tag to use when no tag can be found
 
