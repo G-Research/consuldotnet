@@ -1845,7 +1845,6 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.ConsulClient.ConsulClient(Consul.ConsulClientConfiguration config, System.Net.Http.HttpClient client) -> void
 ~Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride) -> void
 ~Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride, System.Action<System.Net.Http.HttpClient> clientOverride) -> void
-~Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride, System.Action<System.Net.Http.HttpClient> clientOverride, System.Action<System.Net.Http.HttpClientHandler> handlerOverride) -> void
 ~Consul.ConsulClient.Coordinate.get -> Consul.ICoordinateEndpoint
 ~Consul.ConsulClient.CreateLock(Consul.LockOptions opts) -> Consul.IDistributedLock
 ~Consul.ConsulClient.CreateLock(string key) -> Consul.IDistributedLock
