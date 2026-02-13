@@ -1,0 +1,20 @@
+#nullable enable
+~Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride, System.Action<System.Net.Http.HttpClient> clientOverride, System.Action<System.Net.Http.WebRequestHandler> handlerOverride) -> void
+~Consul.ConsulConfigurationException.ConsulConfigurationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.ConsulRequestException.ConsulRequestException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.InvalidKeyPairException.InvalidKeyPairException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.LockConflictException.LockConflictException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.LockHeldException.LockHeldException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.LockInUseException.LockInUseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.LockMaxAttemptsReachedException.LockMaxAttemptsReachedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.LockNotHeldException.LockNotHeldException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreConflictException.SemaphoreConflictException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreHeldException.SemaphoreHeldException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreInUseException.SemaphoreInUseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreLimitConflictException.SemaphoreLimitConflictException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreMaxAttemptsReachedException.SemaphoreMaxAttemptsReachedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SemaphoreNotHeldException.SemaphoreNotHeldException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SessionCreationException.SessionCreationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~Consul.SessionExpiredException.SessionExpiredException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~override Consul.ConsulRequestException.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
+~override Consul.SemaphoreLimitConflictException.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
