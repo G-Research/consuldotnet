@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -191,9 +191,14 @@ namespace Consul
         /// <param name="service">The service ID</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the health checks matching the provided service ID, or a query result with a null response if no service matched the provided ID</returns>
-        public Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct = default)
+        public Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct)
         {
             return Checks(service, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<HealthCheck[]>> Checks(string service)
+        {
+            return Checks(service, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -214,9 +219,14 @@ namespace Consul
         /// <param name="node">The node name</param>
         /// <param name="ct">The cancellation token</param>"
         /// <returns>A query result containing the health checks matching the provided node ID, or a query result with a null response if no node matched the provided ID</returns>
-        public Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct = default)
+        public Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<HealthCheck[]>> Node(string node)
+        {
+            return Node(node, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -237,9 +247,14 @@ namespace Consul
         /// <param name="service">The service ID</param>
         /// <param name="ct">The cancellation token</param>"
         /// <returns>A query result containing the service members matching the provided service ID, or a query result with a null response if no service members matched the filters provided</returns>
-        public Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct)
         {
             return Service(service, string.Empty, false, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Service(string service)
+        {
+            return Service(service, string.Empty, false, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -249,9 +264,14 @@ namespace Consul
         /// <param name="tag">The service member tag</param>
         /// <param name="ct">The cancellation token</param>"
         /// <returns>A query result containing the service members matching the provided service ID and tag, or a query result with a null response if no service members matched the filters provided</returns>
-        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, CancellationToken ct)
         {
             return Service(service, tag, false, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag)
+        {
+            return Service(service, tag, false, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -262,9 +282,14 @@ namespace Consul
         /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
         /// <param name="ct">The cancellation token</param>"
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
-        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, CancellationToken ct)
         {
             return Service(service, tag, passingOnly, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly)
+        {
+            return Service(service, tag, passingOnly, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -276,9 +301,14 @@ namespace Consul
         /// <param name="q">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the service members matching the provided service ID, tag, and health status, or a query result with a null response if no service members matched the filters provided</returns>
-        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct)
         {
             return Service(service, tag, passingOnly, q, null, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q)
+        {
+            return Service(service, tag, passingOnly, q, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -338,9 +368,14 @@ namespace Consul
         /// <param name="q">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>This endpoint returns the nodes providing a Connect-capable service in a given datacenter, or a query result with a null response</returns>
-        public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct)
         {
             return Connect(service, tag, passingOnly, q, null, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q)
+        {
+            return Connect(service, tag, passingOnly, q, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -376,9 +411,14 @@ namespace Consul
         /// <param name="q">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>This endpoint returns the nodes providing an ingress service in a given datacenter, or a query result with a null response</returns>
-        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct)
         {
             return Ingress(service, tag, passingOnly, q, null, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q)
+        {
+            return Ingress(service, tag, passingOnly, q, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -389,9 +429,14 @@ namespace Consul
         /// <param name="passingOnly">Only return if the health check is in the Passing state</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>This endpoint returns the nodes providing an ingress service in a given datacenter, or a query result with a null response</returns>
-        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct = default)
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct)
         {
             return Ingress(service, tag, passingOnly, QueryOptions.Default, null, ct);
+        }
+
+        public Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly)
+        {
+            return Ingress(service, tag, passingOnly, QueryOptions.Default, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -400,9 +445,14 @@ namespace Consul
         /// <param name="status">The health status to filter for</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing a list of health checks in the specified state, or a query result with a null response if no health checks matched the provided state</returns>
-        public Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct = default)
+        public Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct)
         {
             return State(status, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<HealthCheck[]>> State(HealthStatus status)
+        {
+            return State(status, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
