@@ -1324,10 +1324,12 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.AddressDetails.Address.set -> void
 ~Consul.Agent.CheckDeregister(string checkID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.CheckRegister(Consul.AgentCheckRegistration check, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Agent.Checks() -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentCheck>>>
 ~Consul.Agent.Checks(Consul.Filtering.Filter filter, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentCheck>>>
-~Consul.Agent.Checks(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentCheck>>>
+~Consul.Agent.Checks(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentCheck>>>
+~Consul.Agent.ConnectAuthorize(Consul.AgentAuthorizeParameters parameters) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.AgentAuthorizeResponse>>
 ~Consul.Agent.ConnectAuthorize(Consul.AgentAuthorizeParameters parameters, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.AgentAuthorizeResponse>>
-~Consul.Agent.ConnectAuthorize(Consul.AgentAuthorizeParameters parameters, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.AgentAuthorizeResponse>>
+~Consul.Agent.ConnectAuthorize(Consul.AgentAuthorizeParameters parameters, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.AgentAuthorizeResponse>>
 ~Consul.Agent.DisableNodeMaintenance(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.DisableServiceMaintenance(string serviceID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.EnableNodeMaintenance(string reason, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
@@ -1337,19 +1339,25 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Agent.GetAgentHostInfo(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AgentHostInfo>>
 ~Consul.Agent.GetAgentMetrics(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Metrics>>
 ~Consul.Agent.GetAgentVersion(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AgentVersion>>
+~Consul.Agent.GetCALeaf(string serviceId) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CALeaf>>
 ~Consul.Agent.GetCALeaf(string serviceId, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CALeaf>>
-~Consul.Agent.GetCALeaf(string serviceId, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CALeaf>>
+~Consul.Agent.GetCALeaf(string serviceId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CALeaf>>
+~Consul.Agent.GetCARoots() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CARoots>>
 ~Consul.Agent.GetCARoots(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CARoots>>
-~Consul.Agent.GetCARoots(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CARoots>>
+~Consul.Agent.GetCARoots(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CARoots>>
+~Consul.Agent.GetLocalServiceHealth(string serviceName) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth[]>>
 ~Consul.Agent.GetLocalServiceHealth(string serviceName, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth[]>>
-~Consul.Agent.GetLocalServiceHealth(string serviceName, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth[]>>
+~Consul.Agent.GetLocalServiceHealth(string serviceName, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth[]>>
+~Consul.Agent.GetLocalServiceHealthByID(string serviceID) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth>>
 ~Consul.Agent.GetLocalServiceHealthByID(string serviceID, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth>>
-~Consul.Agent.GetLocalServiceHealthByID(string serviceID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth>>
+~Consul.Agent.GetLocalServiceHealthByID(string serviceID, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.LocalServiceHealth>>
 ~Consul.Agent.GetNodeName(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string>
+~Consul.Agent.GetServiceConfiguration(string serviceId) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ServiceConfiguration>>
 ~Consul.Agent.GetServiceConfiguration(string serviceId, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ServiceConfiguration>>
-~Consul.Agent.GetServiceConfiguration(string serviceId, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ServiceConfiguration>>
+~Consul.Agent.GetServiceConfiguration(string serviceId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ServiceConfiguration>>
+~Consul.Agent.GetWorstLocalServiceHealth(string serviceName) -> System.Threading.Tasks.Task<Consul.QueryResult<string>>
 ~Consul.Agent.GetWorstLocalServiceHealth(string serviceName, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string>>
-~Consul.Agent.GetWorstLocalServiceHealth(string serviceName, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string>>
+~Consul.Agent.GetWorstLocalServiceHealth(string serviceName, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<string>>
 ~Consul.Agent.Join(string addr, bool wan, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.Leave(string node, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.LogStream.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Threading.Tasks.Task<string>>
@@ -1358,14 +1366,17 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Agent.MonitorJSON(Consul.LogLevel level = Consul.LogLevel.Info, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.Agent.LogStream>
 ~Consul.Agent.NodeName.get -> string
 ~Consul.Agent.PassTTL(string checkID, string note, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+~Consul.Agent.Reload() -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.Reload(string node, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Agent.Reload(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Agent.Reload(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.Self(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, dynamic>>>>
 ~Consul.Agent.ServiceDeregister(string serviceID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Agent.ServiceRegister(Consul.AgentServiceRegistration service) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.ServiceRegister(Consul.AgentServiceRegistration service, bool replaceExistingChecks, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Agent.ServiceRegister(Consul.AgentServiceRegistration service, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Agent.ServiceRegister(Consul.AgentServiceRegistration service, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Agent.Services() -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentService>>>
 ~Consul.Agent.Services(Consul.Filtering.Filter filter, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentService>>>
-~Consul.Agent.Services(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentService>>>
+~Consul.Agent.Services(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.AgentService>>>
 ~Consul.Agent.UpdateTTL(string checkID, string output, Consul.TTLStatus status, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Agent.WarnTTL(string checkID, string note, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 ~Consul.AgentAuthorizeParameters.ClientCertSerial.get -> string
@@ -1684,31 +1695,46 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.CARoots.Roots.set -> void
 ~Consul.CARoots.TrustDomain.get -> string
 ~Consul.CARoots.TrustDomain.set -> void
+~Consul.Catalog.Datacenters() -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
 ~Consul.Catalog.Datacenters(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
-~Consul.Catalog.Datacenters(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
+~Consul.Catalog.Datacenters(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
+~Consul.Catalog.Deregister(Consul.CatalogDeregistration reg) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Catalog.Deregister(Consul.CatalogDeregistration reg, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Catalog.Deregister(Consul.CatalogDeregistration reg, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Catalog.Deregister(Consul.CatalogDeregistration reg, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Catalog.GatewayService(string gateway) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.GatewayService[]>>
 ~Consul.Catalog.GatewayService(string gateway, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.GatewayService[]>>
-~Consul.Catalog.GatewayService(string gateway, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.GatewayService[]>>
+~Consul.Catalog.GatewayService(string gateway, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.GatewayService[]>>
+~Consul.Catalog.Node(string node) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogNode>>
 ~Consul.Catalog.Node(string node, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogNode>>
-~Consul.Catalog.Node(string node, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogNode>>
+~Consul.Catalog.Node(string node, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogNode>>
+~Consul.Catalog.Nodes() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Node[]>>
 ~Consul.Catalog.Nodes(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Node[]>>
-~Consul.Catalog.Nodes(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Node[]>>
-~Consul.Catalog.NodesForMeshCapableService(string service, Consul.Filtering.Filter filter, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.Nodes(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Node[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service, Consul.Filtering.Filter filter) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service, Consul.Filtering.Filter filter, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
 ~Consul.Catalog.NodesForMeshCapableService(string service, Consul.QueryOptions q, Consul.Filtering.Filter filter, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
-~Consul.Catalog.NodesForMeshCapableService(string service, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
-~Consul.Catalog.NodesForMeshCapableService(string service, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.NodesForMeshCapableService(string service, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.Register(Consul.CatalogRegistration reg) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Catalog.Register(Consul.CatalogRegistration reg, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Catalog.Register(Consul.CatalogRegistration reg, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Catalog.Register(Consul.CatalogRegistration reg, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Catalog.Service(string service) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.Service(string service, string tag) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
 ~Consul.Catalog.Service(string service, string tag, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
-~Consul.Catalog.Service(string service, string tag, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
-~Consul.Catalog.Service(string service, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
-~Consul.Catalog.Services(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Service(string service, string tag, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.Service(string service, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CatalogService[]>>
+~Consul.Catalog.Services() -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Services(Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Services(Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Services(string dc, Consul.Filtering.Filter filter) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
 ~Consul.Catalog.Services(string dc, Consul.Filtering.Filter filter, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
-~Consul.Catalog.Services(string dc, Consul.Filtering.Filter filter, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
-~Consul.Catalog.Services(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Services(string dc, Consul.Filtering.Filter filter, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.Services(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, string[]>>>
+~Consul.Catalog.ServicesForNode(string node) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NodeService>>
 ~Consul.Catalog.ServicesForNode(string node, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NodeService>>
-~Consul.Catalog.ServicesForNode(string node, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NodeService>>
+~Consul.Catalog.ServicesForNode(string node, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NodeService>>
 ~Consul.CatalogDeregistration.Address.get -> string
 ~Consul.CatalogDeregistration.Address.set -> void
 ~Consul.CatalogDeregistration.CheckID.get -> string
@@ -1751,12 +1777,14 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.CatalogService.ServiceTags.set -> void
 ~Consul.ClusterPeering.DeletePeering(string name, Consul.WriteOptions options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.ClusterPeering.DeletePeering(string name, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.ClusterPeering.GenerateToken(Consul.ClusterPeeringTokenEntry tokenEntry) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ClusterPeeringTokenResponse>>
 ~Consul.ClusterPeering.GenerateToken(Consul.ClusterPeeringTokenEntry tokenEntry, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ClusterPeeringTokenResponse>>
-~Consul.ClusterPeering.GenerateToken(Consul.ClusterPeeringTokenEntry tokenEntry, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ClusterPeeringTokenResponse>>
+~Consul.ClusterPeering.GenerateToken(Consul.ClusterPeeringTokenEntry tokenEntry, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ClusterPeeringTokenResponse>>
 ~Consul.ClusterPeering.GetPeering(string name, Consul.QueryOptions options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus>>
 ~Consul.ClusterPeering.GetPeering(string name, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus>>
+~Consul.ClusterPeering.ListPeerings() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus[]>>
 ~Consul.ClusterPeering.ListPeerings(Consul.QueryOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus[]>>
-~Consul.ClusterPeering.ListPeerings(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus[]>>
+~Consul.ClusterPeering.ListPeerings(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ClusterPeeringStatus[]>>
 ~Consul.ClusterPeeringStatus.ID.get -> string
 ~Consul.ClusterPeeringStatus.ID.set -> void
 ~Consul.ClusterPeeringStatus.Name.get -> string
