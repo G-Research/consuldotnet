@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -235,10 +235,16 @@ namespace Consul
         /// <summary>
         /// CARoots queries the list of available roots.
         /// </summary>
-        public Task<QueryResult<CARoots>> CARoots(CancellationToken ct = default)
+        public Task<QueryResult<CARoots>> CARoots(CancellationToken ct)
         {
             return CARoots(QueryOptions.Default, ct);
         }
+
+        public Task<QueryResult<CARoots>> CARoots()
+        {
+            return CARoots(QueryOptions.Default, CancellationToken.None);
+        }
+
         /// <summary>
         /// CARoots queries the list of available roots.
         /// </summary>
@@ -249,9 +255,14 @@ namespace Consul
         /// <summary>
         /// CAGetConfig returns the current CA configuration.
         /// </summary>
-        public Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct = default)
+        public Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct)
         {
             return CAGetConfig(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CAConfig>> CAGetConfig()
+        {
+            return CAGetConfig(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -265,9 +276,14 @@ namespace Consul
         /// <summary>
         /// CASetConfig sets the current CA configuration.
         /// </summary>
-        public Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default)
+        public Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct)
         {
             return CASetConfig(config, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> CASetConfig(CAConfig config)
+        {
+            return CASetConfig(config, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -284,9 +300,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of service intentions</returns>
-        public Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct = default)
+        public Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct)
         {
             return ListIntentions<ServiceIntention>(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>()
+        {
+            return ListIntentions<ServiceIntention>(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -328,9 +349,14 @@ namespace Consul
         /// <param name="intention"></param>
         /// <param name="ct"></param>
         /// <returns>True if the intention was created successfully or False if not</returns>
-        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default)
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct)
         {
             return UpsertIntentionsByName(intention, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention)
+        {
+            return UpsertIntentionsByName(intention, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -356,9 +382,14 @@ namespace Consul
         /// <param name="destination"></param>
         /// <param name="ct"></param>
         /// <returns>A Write Option</returns>
-        public Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct = default)
+        public Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct)
         {
             return DeleteIntentionByName(source, destination, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> DeleteIntentionByName(string source, string destination)
+        {
+            return DeleteIntentionByName(source, destination, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -386,9 +417,14 @@ namespace Consul
         /// <param name="destination"></param>
         /// <param name="ct"></param>
         /// <returns>A service intention</returns>
-        public Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct = default)
+        public Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct)
         {
             return ReadSpecificIntentionByName<ServiceIntention>(source, destination, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination)
+        {
+            return ReadSpecificIntentionByName<ServiceIntention>(source, destination, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -414,9 +450,14 @@ namespace Consul
         /// <param name="name">Specifies a name to match according to the source or destination</param>
         /// <param name="ct"></param>
         /// <returns>A list of intentions that match the source of destination specified</returns>
-        public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct)
         {
             return ListMatchingIntentions(by, name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name)
+        {
+            return ListMatchingIntentions(by, name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -444,9 +485,14 @@ namespace Consul
         /// <param name="destination"></param>
         /// <param name="ct"></param>
         /// <returns>Returns true or false which indicates whether the connection would be authorized or not</returns>
-        public Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct = default)
+        public Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct)
         {
             return CheckIntentionResult(source, destination, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination)
+        {
+            return CheckIntentionResult(source, destination, QueryOptions.Default, CancellationToken.None);
         }
     }
 

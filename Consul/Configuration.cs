@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1663,9 +1663,14 @@ namespace Consul
         /// <param name="configurationEntry">The configuration entry</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct) where TConfig : IConfigurationEntry
         {
             return ApplyConfig<TConfig>(WriteOptions.Default, configurationEntry, ct);
+        }
+
+        public Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry) where TConfig : IConfigurationEntry
+        {
+            return ApplyConfig<TConfig>(WriteOptions.Default, configurationEntry, CancellationToken.None);
         }
 
         /// <summary>
@@ -1691,9 +1696,14 @@ namespace Consul
         /// <param name="name">The name of config entry</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A config entry</returns>
-        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct) where TConfig : IConfigurationEntry
         {
             return GetConfig<TConfig>(kind, name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name) where TConfig : IConfigurationEntry
+        {
+            return GetConfig<TConfig>(kind, name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -1716,9 +1726,14 @@ namespace Consul
         /// <param name="kind">The kind of config entry</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A list of config entries</returns>
-        public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry
+        public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct) where TConfig : IConfigurationEntry
         {
             return ListConfig<TConfig>(kind, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind) where TConfig : IConfigurationEntry
+        {
+            return ListConfig<TConfig>(kind, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -1742,9 +1757,14 @@ namespace Consul
         /// <param name="name">The name of config entry</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>A config entry</returns>
-        public Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct = default)
+        public Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct)
         {
             return DeleteConfig(kind, name, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> DeleteConfig(string kind, string name)
+        {
+            return DeleteConfig(kind, name, WriteOptions.Default, CancellationToken.None);
         }
     }
     public partial class ConsulClient : IConsulClient
