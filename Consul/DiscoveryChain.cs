@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -171,9 +171,14 @@ namespace Consul
         /// <param name="q">Query Options</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
-        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q, CancellationToken ct)
         {
             return _client.Get<DiscoveryChainResponse>($"/v1/discovery-chain/{name}", q).Execute(ct);
+        }
+
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q)
+        {
+            return _client.Get<DiscoveryChainResponse>($"/v1/discovery-chain/{name}", q).Execute(CancellationToken.None);
         }
 
         /// <summary>
@@ -182,9 +187,14 @@ namespace Consul
         /// <param name="name">Specifies the service to query when compiling the discovery chain</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
-        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct = default)
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name, CancellationToken ct)
         {
             return Get(name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<DiscoveryChainResponse>> Get(string name)
+        {
+            return Get(name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -195,9 +205,19 @@ namespace Consul
         /// <param name="ct">Cancellation Token</param>
         /// <param name="compileDataCenter">Datacenter to evaluate the discovery chain in</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter = null, CancellationToken ct = default)
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter, CancellationToken ct)
         {
             return Get(name, options, WriteOptions.Default, compileDataCenter, ct);
+        }
+
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct)
+        {
+            return Get(name, options, WriteOptions.Default, null, ct);
+        }
+
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options)
+        {
+            return Get(name, options, WriteOptions.Default, null, CancellationToken.None);
         }
 
         /// <summary>

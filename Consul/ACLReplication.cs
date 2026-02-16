@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,9 +91,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result with details of the ACL Replication system in Consul</returns>
-        public Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct = default)
+        public Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct)
         {
             return Status(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ACLReplicationEntry>> Status()
+        {
+            return Status(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
