@@ -706,14 +706,7 @@ namespace Consul
 
         public async Task<IDistributedLock> AcquireLock(LockOptions opts)
         {
-            if (opts == null)
-            {
-                throw new ArgumentNullException(nameof(opts));
-            }
-
-            var l = CreateLock(opts);
-            await l.Acquire(CancellationToken.None).ConfigureAwait(false);
-            return l;
+            return await AcquireLock(opts, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -778,30 +771,7 @@ namespace Consul
 
         public async Task ExecuteLocked(LockOptions opts, Action action)
         {
-            if (opts == null)
-            {
-                throw new ArgumentNullException(nameof(opts));
-            }
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            var l = await AcquireLock(opts, CancellationToken.None).ConfigureAwait(false);
-
-            try
-            {
-                if (!l.IsHeld)
-                {
-                    throw new LockNotHeldException("Could not obtain the lock");
-                }
-                action();
-            }
-            finally
-            {
-                await l.Release(CancellationToken.None).ConfigureAwait(false);
-            }
-
+            await ExecuteLocked(opts, action, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
