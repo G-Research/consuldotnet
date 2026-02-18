@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,21 +28,30 @@ namespace Consul
     /// </summary>
     public interface ISessionEndpoint
     {
-        Task<WriteResult<string>> Create(CancellationToken ct = default);
-        Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct = default);
+        Task<WriteResult<string>> Create(CancellationToken ct);
+        Task<WriteResult<string>> Create();
+        Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct);
+        Task<WriteResult<string>> Create(SessionEntry se);
         Task<WriteResult<string>> Create(SessionEntry se, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<string>> CreateNoChecks(CancellationToken ct = default);
-        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct = default);
+        Task<WriteResult<string>> CreateNoChecks(CancellationToken ct);
+        Task<WriteResult<string>> CreateNoChecks();
+        Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct);
+        Task<WriteResult<string>> CreateNoChecks(SessionEntry se);
         Task<WriteResult<string>> CreateNoChecks(SessionEntry se, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Destroy(string id, CancellationToken ct);
+        Task<WriteResult<bool>> Destroy(string id);
         Task<WriteResult<bool>> Destroy(string id, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct);
+        Task<QueryResult<SessionEntry>> Info(string id);
         Task<QueryResult<SessionEntry>> Info(string id, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<SessionEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> List(CancellationToken ct);
+        Task<QueryResult<SessionEntry[]>> List();
         Task<QueryResult<SessionEntry[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct);
+        Task<QueryResult<SessionEntry[]>> Node(string node);
         Task<QueryResult<SessionEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct = default);
+        Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct);
+        Task<WriteResult<SessionEntry>> Renew(string id);
         Task<WriteResult<SessionEntry>> Renew(string id, WriteOptions q, CancellationToken ct = default);
         Task RenewPeriodic(TimeSpan initialTTL, string id, CancellationToken ct);
         Task RenewPeriodic(TimeSpan initialTTL, string id, WriteOptions q, CancellationToken ct);

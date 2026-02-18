@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Filtering;
@@ -28,21 +28,31 @@ namespace Consul
     /// </summary>
     public interface IHealthEndpoint
     {
-        Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct = default);
+        Task<QueryResult<HealthCheck[]>> Checks(string service, CancellationToken ct);
+        Task<QueryResult<HealthCheck[]>> Checks(string service);
         Task<QueryResult<HealthCheck[]>> Checks(string service, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<HealthCheck[]>> Node(string node, CancellationToken ct);
+        Task<QueryResult<HealthCheck[]>> Node(string node);
         Task<QueryResult<HealthCheck[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Service(string service);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q);
         Task<QueryResult<ServiceEntry[]>> Service(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
         Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Connect(string service, string tag, bool passingOnly, QueryOptions q);
         Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, Filter filter, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct = default);
-        Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct = default);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, QueryOptions q);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly, CancellationToken ct);
+        Task<QueryResult<ServiceEntry[]>> Ingress(string service, string tag, bool passingOnly);
+        Task<QueryResult<HealthCheck[]>> State(HealthStatus status, CancellationToken ct);
+        Task<QueryResult<HealthCheck[]>> State(HealthStatus status);
         Task<QueryResult<HealthCheck[]>> State(HealthStatus status, QueryOptions q, CancellationToken ct = default);
     }
 }

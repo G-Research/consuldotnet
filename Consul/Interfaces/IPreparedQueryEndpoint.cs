@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,20 +27,27 @@ namespace Consul
     /// </summary>
     public interface IPreparedQueryEndpoint
     {
-        Task<WriteResult<string>> Create(PreparedQueryDefinition query, CancellationToken ct = default);
+        Task<WriteResult<string>> Create(PreparedQueryDefinition query, CancellationToken ct);
+        Task<WriteResult<string>> Create(PreparedQueryDefinition query);
         Task<WriteResult<string>> Create(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> Update(PreparedQueryDefinition query, CancellationToken ct = default);
+        Task<WriteResult> Update(PreparedQueryDefinition query, CancellationToken ct);
+        Task<WriteResult> Update(PreparedQueryDefinition query);
         Task<WriteResult> Update(PreparedQueryDefinition query, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<PreparedQueryDefinition[]>> List(CancellationToken ct = default);
+        Task<QueryResult<PreparedQueryDefinition[]>> List(CancellationToken ct);
+        Task<QueryResult<PreparedQueryDefinition[]>> List();
         Task<QueryResult<PreparedQueryDefinition[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, CancellationToken ct = default);
+        Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, CancellationToken ct);
+        Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID);
         Task<QueryResult<PreparedQueryDefinition[]>> Get(string queryID, QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult> Delete(string queryID, CancellationToken ct = default);
+        Task<WriteResult> Delete(string queryID, CancellationToken ct);
+        Task<WriteResult> Delete(string queryID);
         Task<WriteResult> Delete(string queryID, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, CancellationToken ct = default);
+        Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, CancellationToken ct);
+        Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName);
         Task<QueryResult<PreparedQueryExecuteResponse>> Execute(string queryIDOrName, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, CancellationToken ct = default);
+        Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName, CancellationToken ct);
+        Task<QueryResult<PreparedQueryExplainResponse>> Explain(string queryIDOrName);
 
     }
 }
