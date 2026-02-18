@@ -3027,45 +3027,65 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.NodeService.Node.set -> void
 ~Consul.NodeService.Services.get -> System.Collections.Generic.List<Consul.ServiceInfo>
 ~Consul.NodeService.Services.set -> void
+~Consul.Operator.AreaCreate(Consul.AreaRequest area) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
 ~Consul.Operator.AreaCreate(Consul.AreaRequest area, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
-~Consul.Operator.AreaCreate(Consul.AreaRequest area, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.Operator.AreaCreate(Consul.AreaRequest area, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.Operator.AreaDelete(string areaId) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.AreaDelete(string areaId, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.AreaDelete(string areaId, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.AreaDelete(string areaId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.AreaGet(string areaId) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Area[]>>
 ~Consul.Operator.AreaGet(string areaId, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Area[]>>
-~Consul.Operator.AreaGet(string areaId, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Area[]>>
+~Consul.Operator.AreaGet(string areaId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.Area[]>>
+~Consul.Operator.AreaList() -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.List<Consul.Area>>>
 ~Consul.Operator.AreaList(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.List<Consul.Area>>>
-~Consul.Operator.AreaList(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.List<Consul.Area>>>
+~Consul.Operator.AreaList(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.List<Consul.Area>>>
+~Consul.Operator.AreaUpdate(Consul.AreaRequest area, string areaId) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
 ~Consul.Operator.AreaUpdate(Consul.AreaRequest area, string areaId, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
-~Consul.Operator.AreaUpdate(Consul.AreaRequest area, string areaId, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.Operator.AreaUpdate(Consul.AreaRequest area, string areaId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.Operator.AutopilotGetConfiguration() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotConfiguration>>
 ~Consul.Operator.AutopilotGetConfiguration(Consul.QueryOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotConfiguration>>
-~Consul.Operator.AutopilotGetConfiguration(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotConfiguration>>
+~Consul.Operator.AutopilotGetConfiguration(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotConfiguration>>
+~Consul.Operator.AutopilotGetHealth() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotHealth>>
 ~Consul.Operator.AutopilotGetHealth(Consul.QueryOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotHealth>>
-~Consul.Operator.AutopilotGetHealth(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotHealth>>
+~Consul.Operator.AutopilotGetHealth(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotHealth>>
+~Consul.Operator.AutopilotGetState() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotState>>
 ~Consul.Operator.AutopilotGetState(Consul.QueryOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotState>>
-~Consul.Operator.AutopilotGetState(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotState>>
+~Consul.Operator.AutopilotGetState(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.AutopilotState>>
+~Consul.Operator.AutopilotSetConfiguration(Consul.AutopilotConfiguration configuration) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.AutopilotSetConfiguration(Consul.AutopilotConfiguration configuration, Consul.WriteOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.AutopilotSetConfiguration(Consul.AutopilotConfiguration configuration, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.AutopilotSetConfiguration(Consul.AutopilotConfiguration configuration, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.GetConsulLicense(string datacenter = "", System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ConsulLicense>>
+~Consul.Operator.KeyringInstall(string key) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.KeyringInstall(string key, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.KeyringInstall(string key, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.KeyringInstall(string key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.KeyringList() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.KeyringResponse[]>>
 ~Consul.Operator.KeyringList(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.KeyringResponse[]>>
-~Consul.Operator.KeyringList(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.KeyringResponse[]>>
+~Consul.Operator.KeyringList(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.KeyringResponse[]>>
+~Consul.Operator.KeyringRemove(string key) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.KeyringRemove(string key, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.KeyringRemove(string key, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.KeyringRemove(string key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.KeyringUse(string key) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.KeyringUse(string key, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.KeyringUse(string key, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.KeyringUse(string key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.OperatorGetUsage() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.OperatorUsageInformation>>
 ~Consul.Operator.OperatorGetUsage(Consul.QueryOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.OperatorUsageInformation>>
-~Consul.Operator.OperatorGetUsage(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.OperatorUsageInformation>>
+~Consul.Operator.OperatorGetUsage(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.OperatorUsageInformation>>
+~Consul.Operator.RaftGetConfiguration() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RaftConfiguration>>
 ~Consul.Operator.RaftGetConfiguration(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RaftConfiguration>>
-~Consul.Operator.RaftGetConfiguration(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RaftConfiguration>>
+~Consul.Operator.RaftGetConfiguration(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RaftConfiguration>>
+~Consul.Operator.RaftRemovePeerByAddress(string address) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.RaftRemovePeerByAddress(string address, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.RaftRemovePeerByAddress(string address, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.RaftTransferLeader(Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftRemovePeerByAddress(string address, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader() -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader(Consul.WriteOptions q) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader(Consul.WriteOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader(string id) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Operator.RaftTransferLeader(string id, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.RaftTransferLeader(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Operator.RaftTransferLeader(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.RaftTransferLeader(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Operator.SegmentList() -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
 ~Consul.Operator.SegmentList(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
-~Consul.Operator.SegmentList(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
+~Consul.Operator.SegmentList(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<string[]>>
 ~Consul.OperatorUsageInformation.Usage.get -> System.Collections.Generic.Dictionary<string, Consul.DatacenterUsage>
 ~Consul.OperatorUsageInformation.Usage.set -> void
 ~Consul.OverrideConfig.BalanceOutboundConnections.get -> string
