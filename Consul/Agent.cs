@@ -785,9 +785,14 @@ namespace Consul
         /// Checks returns the locally registered checks
         /// </summary>
         /// <returns>A map of the registered check names and check data</returns>
-        public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct)
         {
             return Checks(null, ct);
+        }
+
+        public Task<QueryResult<Dictionary<string, AgentCheck>>> Checks()
+        {
+            return Checks(null, CancellationToken.None);
         }
 
         /// <summary>
@@ -805,9 +810,14 @@ namespace Consul
         /// Services returns the locally registered services
         /// </summary>
         /// <returns>A map of the registered services and service data</returns>
-        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default)
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct)
         {
             return await Services(null, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<Dictionary<string, AgentService>>> Services()
+        {
+            return await Services(null, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -841,9 +851,14 @@ namespace Consul
         /// <param name="service">A service registration object</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default)
+        public Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct)
         {
             return ServiceRegister(service, replaceExistingChecks: false, ct);
+        }
+
+        public Task<WriteResult> ServiceRegister(AgentServiceRegistration service)
+        {
+            return ServiceRegister(service, replaceExistingChecks: false, CancellationToken.None);
         }
 
         /// <summary>
@@ -1006,9 +1021,14 @@ namespace Consul
         /// Reload triggers a configuration reload for the agent we are connected to.
         /// </summary>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> Reload(CancellationToken ct = default)
+        public Task<WriteResult> Reload(CancellationToken ct)
         {
             return _client.PutNothing("/v1/agent/reload").Execute(ct);
+        }
+
+        public Task<WriteResult> Reload()
+        {
+            return _client.PutNothing("/v1/agent/reload").Execute(CancellationToken.None);
         }
 
         /// <summary>
@@ -1121,9 +1141,14 @@ namespace Consul
         /// <param name="serviceName">Name of service</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
-        public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct = default)
+        public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct)
         {
             return await GetLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName)
+        {
+            return await GetLocalServiceHealth(serviceName, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1146,9 +1171,14 @@ namespace Consul
         /// <param name="serviceName">Name of service</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>passing, warning, or critical</returns>
-        public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default)
+        public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct)
         {
             return await GetWorstLocalServiceHealth(serviceName, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName)
+        {
+            return await GetWorstLocalServiceHealth(serviceName, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1169,9 +1199,14 @@ namespace Consul
         /// <param name="serviceID">ID of the service</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An array containing the details of each passing, warning, or critical service</returns>
-        public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default)
+        public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct)
         {
             return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID)
+        {
+            return await GetLocalServiceHealthByID(serviceID, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1200,9 +1235,14 @@ namespace Consul
         /// <param name="serviceId">Id of service to fetch</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Service Configuration</returns>
-        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, CancellationToken ct = default)
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId, CancellationToken ct)
         {
             return await GetServiceConfiguration(serviceId, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceId)
+        {
+            return await GetServiceConfiguration(serviceId, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1223,9 +1263,14 @@ namespace Consul
         /// <param name="parameters">Parameters for the request</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An Authorize Response</returns>
-        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct = default)
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct)
         {
             return await ConnectAuthorize(parameters, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters)
+        {
+            return await ConnectAuthorize(parameters, WriteOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1245,9 +1290,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Root certificates</returns>
-        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default)
+        public async Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct)
         {
             return await GetCARoots(QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<CARoots>> GetCARoots()
+        {
+            return await GetCARoots(QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1267,9 +1317,14 @@ namespace Consul
         /// <param name="serviceId">Id of service to fetch</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Leaf certificate</returns>
-        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct = default)
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct)
         {
             return await GetCALeaf(serviceId, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<CALeaf>> GetCALeaf(string serviceId)
+        {
+            return await GetCALeaf(serviceId, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>

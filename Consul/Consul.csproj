@@ -8,7 +8,7 @@
     <PackageOutputPath>../dist/consul</PackageOutputPath>
     <AssemblyTitle>Consul.NET</AssemblyTitle>
     <AssemblyProduct>Consul.NET</AssemblyProduct>
-    <NoWarn>$(NoWarn);RS0026;RS0022;RS0041</NoWarn>
+    <NoWarn>$(NoWarn);RS0022;RS0041</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

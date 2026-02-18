@@ -124,9 +124,14 @@ namespace Consul
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
         public Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry,
-            CancellationToken ct = default)
+            CancellationToken ct)
         {
             return GenerateToken(tokenEntry, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry)
+        {
+            return GenerateToken(tokenEntry, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -148,10 +153,16 @@ namespace Consul
         /// <summary>
         /// ListPeerings is used to list peering connections
         /// </summary>
-        public Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken = default)
+        public Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken)
         {
             return ListPeerings(null, cancellationToken);
         }
+
+        public Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings()
+        {
+            return ListPeerings(null, CancellationToken.None);
+        }
+
         /// <summary>
         /// ListPeerings is used to list peering connections
         /// </summary>
