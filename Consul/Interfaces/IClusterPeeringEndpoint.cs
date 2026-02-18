@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,16 +26,20 @@ namespace Consul.Interfaces
     /// </summary>
     public interface IClusterPeeringEndpoint
     {
-        Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, CancellationToken ct = default);
+        Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, CancellationToken ct);
+        Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry);
 
         Task<WriteResult<ClusterPeeringTokenResponse>> GenerateToken(ClusterPeeringTokenEntry tokenEntry, WriteOptions options,
             CancellationToken ct = default);
-        Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken = default);
+        Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(CancellationToken cancellationToken);
+        Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings();
         Task<QueryResult<ClusterPeeringStatus[]>> ListPeerings(QueryOptions q, CancellationToken cancellationToken = default);
 
-        Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, CancellationToken cancellationToken = default);
+        Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, CancellationToken cancellationToken);
+        Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name);
         Task<QueryResult<ClusterPeeringStatus>> GetPeering(string name, QueryOptions q, CancellationToken cancellationToken = default);
-        Task<WriteResult> DeletePeering(string name, CancellationToken cancellationToken = default);
+        Task<WriteResult> DeletePeering(string name, CancellationToken cancellationToken);
+        Task<WriteResult> DeletePeering(string name);
         Task<WriteResult> DeletePeering(string name, WriteOptions q, CancellationToken cancellationToken = default);
     }
 }

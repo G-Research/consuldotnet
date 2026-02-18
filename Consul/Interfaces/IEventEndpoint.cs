@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,11 +27,14 @@ namespace Consul
     /// </summary>
     public interface IEventEndpoint
     {
-        Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default);
+        Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct);
+        Task<WriteResult<string>> Fire(UserEvent ue);
         Task<WriteResult<string>> Fire(UserEvent ue, WriteOptions q, CancellationToken ct = default);
         ulong IDToIndex(string uuid);
-        Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default);
-        Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default);
+        Task<QueryResult<UserEvent[]>> List(CancellationToken ct);
+        Task<QueryResult<UserEvent[]>> List();
+        Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct);
+        Task<QueryResult<UserEvent[]>> List(string name);
         Task<QueryResult<UserEvent[]>> List(string name, QueryOptions q, CancellationToken ct = default);
     }
 }
