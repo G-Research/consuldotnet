@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,14 +27,19 @@ namespace Consul
     public interface INamespacesEndpoint
     {
         Task<WriteResult<NamespaceResponse>> Create(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct);
+        Task<WriteResult<NamespaceResponse>> Create(Namespace ns);
         Task<WriteResult<NamespaceResponse>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default);
+        Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct);
+        Task<WriteResult<NamespaceResponse>> Update(Namespace ns);
         Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct);
+        Task<QueryResult<NamespaceResponse>> Read(string name);
         Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default);
+        Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct);
+        Task<QueryResult<NamespaceResponse[]>> List();
         Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> Delete(string name, CancellationToken ct = default);
+        Task<WriteResult> Delete(string name, CancellationToken ct);
+        Task<WriteResult> Delete(string name);
     }
 }
