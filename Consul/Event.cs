@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-
+#pragma warning disable RS0026
 using System.Globalization;
 using System.Linq;
 using System.Threading;
