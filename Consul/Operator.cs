@@ -233,7 +233,7 @@ namespace Consul
 
         public Task<WriteResult> RaftTransferLeader(WriteOptions q)
         {
-            return _client.Post<object>("/v1/operator/raft/transfer-leader", null, q).Execute(CancellationToken.None);
+            return RaftTransferLeader(q, CancellationToken.None);
         }
 
         /// <summary>
