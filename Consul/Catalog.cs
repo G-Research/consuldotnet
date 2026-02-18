@@ -219,7 +219,7 @@ namespace Consul
 
         public Task<QueryResult<string[]>> Datacenters()
         {
-            return _client.Get<string[]>("/v1/catalog/datacenters").Execute(CancellationToken.None);
+            return Datacenters(CancellationToken.None);
         }
 
         /// <summary>

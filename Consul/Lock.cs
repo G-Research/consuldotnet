@@ -679,11 +679,7 @@ namespace Consul
 
         public Task<IDistributedLock> AcquireLock(string key)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-            return AcquireLock(new LockOptions(key), CancellationToken.None);
+            return AcquireLock(key, CancellationToken.None);
         }
 
         /// <summary>
@@ -727,11 +723,7 @@ namespace Consul
 
         public Task ExecuteLocked(string key, Action action)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-            return ExecuteLocked(new LockOptions(key), action, CancellationToken.None);
+            return ExecuteLocked(key, action, CancellationToken.None);
         }
 
         /// <summary>

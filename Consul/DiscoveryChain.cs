@@ -178,7 +178,7 @@ namespace Consul
 
         public Task<QueryResult<DiscoveryChainResponse>> Get(string name, QueryOptions q)
         {
-            return _client.Get<DiscoveryChainResponse>($"/v1/discovery-chain/{name}", q).Execute(CancellationToken.None);
+            return Get(name, q, CancellationToken.None);
         }
 
         /// <summary>
