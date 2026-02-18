@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-
+#pragma warning disable RS0026
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;

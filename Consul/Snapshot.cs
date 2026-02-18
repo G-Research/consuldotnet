@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-
+#pragma warning disable RS0026
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
