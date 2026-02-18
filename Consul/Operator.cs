@@ -155,9 +155,15 @@ namespace Consul
         /// <summary>
         /// RaftGetConfiguration is used to query the current Raft peer set.
         /// </summary>
-        public Task<QueryResult<RaftConfiguration>> RaftGetConfiguration(CancellationToken ct = default)
+        public Task<QueryResult<RaftConfiguration>> RaftGetConfiguration(CancellationToken ct)
         {
             return RaftGetConfiguration(QueryOptions.Default, ct);
+        }
+
+        // Add a parameterless overload for convenience
+        public Task<QueryResult<RaftConfiguration>> RaftGetConfiguration()
+        {
+            return RaftGetConfiguration(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -173,9 +179,14 @@ namespace Consul
         /// quorum but no longer known to Serf or the catalog) by address in the form of
         /// "IP:port".
         /// </summary>
-        public Task<WriteResult> RaftRemovePeerByAddress(string address, CancellationToken ct = default)
+        public Task<WriteResult> RaftRemovePeerByAddress(string address, CancellationToken ct)
         {
             return RaftRemovePeerByAddress(address, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> RaftRemovePeerByAddress(string address)
+        {
+            return RaftRemovePeerByAddress(address, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -199,9 +210,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for the request</param>
         /// <returns>A write result indicating the success of the operation</returns>
-        public Task<WriteResult> RaftTransferLeader(CancellationToken ct = default)
+        public Task<WriteResult> RaftTransferLeader(CancellationToken ct)
         {
             return RaftTransferLeader(WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> RaftTransferLeader()
+        {
+            return RaftTransferLeader(WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -210,9 +226,14 @@ namespace Consul
         /// <param name="q">Write options including datacenter and token</param>
         /// <param name="ct">Cancellation token for the request</param>
         /// <returns>A write result indicating the success of the operation</returns>
-        public Task<WriteResult> RaftTransferLeader(WriteOptions q, CancellationToken ct = default)
+        public Task<WriteResult> RaftTransferLeader(WriteOptions q, CancellationToken ct)
         {
             return _client.Post<object>("/v1/operator/raft/transfer-leader", null, q).Execute(ct);
+        }
+
+        public Task<WriteResult> RaftTransferLeader(WriteOptions q)
+        {
+            return RaftTransferLeader(q, CancellationToken.None);
         }
 
         /// <summary>
@@ -221,9 +242,14 @@ namespace Consul
         /// <param name="id">The node ID of the Raft peer to transfer leadership to</param>
         /// <param name="ct">Cancellation token for the request</param>
         /// <returns>A write result indicating the success of the operation</returns>
-        public Task<WriteResult> RaftTransferLeader(string id, CancellationToken ct = default)
+        public Task<WriteResult> RaftTransferLeader(string id, CancellationToken ct)
         {
             return RaftTransferLeader(id, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> RaftTransferLeader(string id)
+        {
+            return RaftTransferLeader(id, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -243,9 +269,14 @@ namespace Consul
         /// <summary>
         /// KeyringInstall is used to install a new gossip encryption key into the cluster
         /// </summary>
-        public Task<WriteResult> KeyringInstall(string key, CancellationToken ct = default)
+        public Task<WriteResult> KeyringInstall(string key, CancellationToken ct)
         {
             return KeyringInstall(key, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> KeyringInstall(string key)
+        {
+            return KeyringInstall(key, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -259,9 +290,14 @@ namespace Consul
         /// <summary>
         /// KeyringList is used to list the gossip keys installed in the cluster
         /// </summary>
-        public Task<QueryResult<KeyringResponse[]>> KeyringList(CancellationToken ct = default)
+        public Task<QueryResult<KeyringResponse[]>> KeyringList(CancellationToken ct)
         {
             return KeyringList(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<KeyringResponse[]>> KeyringList()
+        {
+            return KeyringList(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -275,9 +311,14 @@ namespace Consul
         /// <summary>
         /// KeyringRemove is used to remove a gossip encryption key from the cluster
         /// </summary>
-        public Task<WriteResult> KeyringRemove(string key, CancellationToken ct = default)
+        public Task<WriteResult> KeyringRemove(string key, CancellationToken ct)
         {
             return KeyringRemove(key, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> KeyringRemove(string key)
+        {
+            return KeyringRemove(key, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -291,9 +332,14 @@ namespace Consul
         /// <summary>
         /// KeyringUse is used to change the active gossip encryption key
         /// </summary>
-        public Task<WriteResult> KeyringUse(string key, CancellationToken ct = default)
+        public Task<WriteResult> KeyringUse(string key, CancellationToken ct)
         {
             return KeyringUse(key, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> KeyringUse(string key)
+        {
+            return KeyringUse(key, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -320,17 +366,27 @@ namespace Consul
         /// <summary>
         /// // SegmentList returns all the available LAN segments.
         /// </summary>
-        public Task<QueryResult<string[]>> SegmentList(CancellationToken ct = default)
+        public Task<QueryResult<string[]>> SegmentList(CancellationToken ct)
         {
             return SegmentList(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<string[]>> SegmentList()
+        {
+            return SegmentList(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
         /// CreateArea will create a new network area, a generated ID will be returned on success.
         /// </summary>
-        public Task<WriteResult<string>> AreaCreate(AreaRequest area, CancellationToken ct = default)
+        public Task<WriteResult<string>> AreaCreate(AreaRequest area, CancellationToken ct)
         {
             return AreaCreate(area, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> AreaCreate(AreaRequest area)
+        {
+            return AreaCreate(area, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -345,9 +401,14 @@ namespace Consul
         /// <summary>
         /// AreaList returns all the available network areas
         /// </summary>
-        public Task<QueryResult<List<Area>>> AreaList(CancellationToken ct = default)
+        public Task<QueryResult<List<Area>>> AreaList(CancellationToken ct)
         {
             return AreaList(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<List<Area>>> AreaList()
+        {
+            return AreaList(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -360,10 +421,16 @@ namespace Consul
         /// <summary>
         /// AreaUpdate will update the configuration of the network area with the given area Id.
         /// </summary>
-        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, CancellationToken ct = default)
+        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId, CancellationToken ct)
         {
             return AreaUpdate(area, areaId, WriteOptions.Default, ct);
         }
+
+        public Task<WriteResult<string>> AreaUpdate(AreaRequest area, string areaId)
+        {
+            return AreaUpdate(area, areaId, WriteOptions.Default, CancellationToken.None);
+        }
+
         /// <summary>
         /// AreaUpdate will update the configuration of the network area with the given area Id.
         /// </summary>
@@ -375,10 +442,16 @@ namespace Consul
         /// <summary>
         /// AreaGet returns a single network area
         /// </summary>
-        public Task<QueryResult<Area[]>> AreaGet(string areaId, CancellationToken ct = default)
+        public Task<QueryResult<Area[]>> AreaGet(string areaId, CancellationToken ct)
         {
             return AreaGet(areaId, QueryOptions.Default, ct);
         }
+
+        public Task<QueryResult<Area[]>> AreaGet(string areaId)
+        {
+            return AreaGet(areaId, QueryOptions.Default, CancellationToken.None);
+        }
+
         /// <summary>
         /// AreaGet returns a single network area
         /// </summary>
@@ -389,10 +462,16 @@ namespace Consul
         /// <summary>
         /// AreaDelete deletes the given network area.
         /// </summary>
-        public Task<WriteResult> AreaDelete(string areaId, CancellationToken ct = default)
+        public Task<WriteResult> AreaDelete(string areaId, CancellationToken ct)
         {
             return AreaDelete(areaId, WriteOptions.Default, ct);
         }
+
+        public Task<WriteResult> AreaDelete(string areaId)
+        {
+            return AreaDelete(areaId, WriteOptions.Default, CancellationToken.None);
+        }
+
         /// <summary>
         /// AreaDelete deletes the given network area.
         /// </summary>
@@ -406,9 +485,14 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Cancellation token for the request</param>
         /// <returns>A query result containing the Autopilot configuration</returns>
-        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(CancellationToken cancellationToken = default)
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration(CancellationToken cancellationToken)
         {
             return AutopilotGetConfiguration(null, cancellationToken);
+        }
+
+        public Task<QueryResult<AutopilotConfiguration>> AutopilotGetConfiguration()
+        {
+            return AutopilotGetConfiguration(null, CancellationToken.None);
         }
 
         /// <summary>
@@ -428,9 +512,14 @@ namespace Consul
         /// <param name="configuration">The autopilot configuration to set</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The write result</returns>
-        public Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, CancellationToken cancellationToken = default)
+        public Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration, CancellationToken cancellationToken)
         {
             return AutopilotSetConfiguration(configuration, WriteOptions.Default, cancellationToken);
+        }
+
+        public Task<WriteResult> AutopilotSetConfiguration(AutopilotConfiguration configuration)
+        {
+            return AutopilotSetConfiguration(configuration, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -451,9 +540,14 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Query parameters</param>
         /// <returns>The autopilot health information</returns>
-        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(CancellationToken cancellationToken = default)
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth(CancellationToken cancellationToken)
         {
             return AutopilotGetHealth(null, cancellationToken);
+        }
+
+        public Task<QueryResult<AutopilotHealth>> AutopilotGetHealth()
+        {
+            return AutopilotGetHealth(null, CancellationToken.None);
         }
 
         /// <summary>
@@ -472,9 +566,14 @@ namespace Consul
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The autopilot state information</returns>
-        public Task<QueryResult<AutopilotState>> AutopilotGetState(CancellationToken cancellationToken = default)
+        public Task<QueryResult<AutopilotState>> AutopilotGetState(CancellationToken cancellationToken)
         {
             return AutopilotGetState(null, cancellationToken);
+        }
+
+        public Task<QueryResult<AutopilotState>> AutopilotGetState()
+        {
+            return AutopilotGetState(null, CancellationToken.None);
         }
 
         /// <summary>
@@ -488,10 +587,16 @@ namespace Consul
             return _client.Get<AutopilotState>("/v1/operator/autopilot/state", q).Execute(cancellationToken);
         }
 
-        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(CancellationToken cancellationToken = default)
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(CancellationToken cancellationToken)
         {
             return OperatorGetUsage(null, cancellationToken);
         }
+
+        public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage()
+        {
+            return OperatorGetUsage(null, CancellationToken.None);
+        }
+
         public Task<QueryResult<OperatorUsageInformation>> OperatorGetUsage(QueryOptions q,
             CancellationToken cancellationToken = default)
         {
