@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -158,9 +158,14 @@ namespace Consul
         /// <param name="reg">A catalog registration</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> Register(CatalogRegistration reg, CancellationToken ct = default)
+        public Task<WriteResult> Register(CatalogRegistration reg, CancellationToken ct)
         {
             return Register(reg, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Register(CatalogRegistration reg)
+        {
+            return Register(reg, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -181,9 +186,14 @@ namespace Consul
         /// <param name="reg">A catalog deregistration</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct = default)
+        public Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct)
         {
             return Deregister(reg, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Deregister(CatalogDeregistration reg)
+        {
+            return Deregister(reg, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -202,9 +212,14 @@ namespace Consul
         /// Datacenters is used to query for all the known datacenters
         /// </summary>
         /// <returns>A list of datacenter names</returns>
-        public Task<QueryResult<string[]>> Datacenters(CancellationToken ct = default)
+        public Task<QueryResult<string[]>> Datacenters(CancellationToken ct)
         {
             return _client.Get<string[]>("/v1/catalog/datacenters").Execute(ct);
+        }
+
+        public Task<QueryResult<string[]>> Datacenters()
+        {
+            return Datacenters(CancellationToken.None);
         }
 
         /// <summary>
@@ -220,9 +235,14 @@ namespace Consul
         /// Nodes is used to query all the known nodes
         /// </summary>
         /// <returns>A list of all nodes</returns>
-        public Task<QueryResult<Node[]>> Nodes(CancellationToken ct = default)
+        public Task<QueryResult<Node[]>> Nodes(CancellationToken ct)
         {
             return Nodes(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<Node[]>> Nodes()
+        {
+            return Nodes(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -240,9 +260,14 @@ namespace Consul
         /// Services is used to query for all known services
         /// </summary>
         /// <returns>A list of all services</returns>
-        public Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct)
         {
             return Services(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<Dictionary<string, string[]>>> Services()
+        {
+            return Services(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -251,9 +276,14 @@ namespace Consul
         /// <param name="q">Customized query options</param>
         /// <param name="ct"></param>
         /// <returns>A list of all services</returns>
-        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct)
         {
             return Services(null, null, q, ct);
+        }
+
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q)
+        {
+            return Services(null, null, q, CancellationToken.None);
         }
 
         /// <summary>
@@ -263,9 +293,14 @@ namespace Consul
         /// <param name="filter"></param>
         /// <param name="ct"></param>
         /// <returns>Alist of services registered in a given datacenter.</returns>
-        public Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, CancellationToken ct = default)
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, CancellationToken ct)
         {
             return Services(dc, filter, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter)
+        {
+            return Services(dc, filter, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -292,9 +327,14 @@ namespace Consul
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
-        public Task<QueryResult<CatalogService[]>> Service(string service, CancellationToken ct = default)
+        public Task<QueryResult<CatalogService[]>> Service(string service, CancellationToken ct)
         {
             return Service(service, string.Empty, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CatalogService[]>> Service(string service)
+        {
+            return Service(service, string.Empty, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -304,9 +344,14 @@ namespace Consul
         /// <param name="tag">A tag to filter on</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
-        public Task<QueryResult<CatalogService[]>> Service(string service, string tag, CancellationToken ct = default)
+        public Task<QueryResult<CatalogService[]>> Service(string service, string tag, CancellationToken ct)
         {
             return Service(service, tag, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CatalogService[]>> Service(string service, string tag)
+        {
+            return Service(service, tag, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -333,9 +378,14 @@ namespace Consul
         /// <param name="service">The service ID</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
-        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default)
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct)
         {
             return NodesForMeshCapableService(service, QueryOptions.Default, null, ct);
+        }
+
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service)
+        {
+            return NodesForMeshCapableService(service, QueryOptions.Default, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -345,9 +395,14 @@ namespace Consul
         /// /// <param name="q">Customized Query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
-        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct = default)
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct)
         {
             return NodesForMeshCapableService(service, q, null, ct);
+        }
+
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q)
+        {
+            return NodesForMeshCapableService(service, q, null, CancellationToken.None);
         }
 
         /// <summary>
@@ -357,9 +412,14 @@ namespace Consul
         /// <param name="filter">Specifies the expression used to filter the queries results prior to returning the data</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A list of service instances</returns>
-        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct = default)
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct)
         {
             return NodesForMeshCapableService(service, QueryOptions.Default, filter, ct);
+        }
+
+        public Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter)
+        {
+            return NodesForMeshCapableService(service, QueryOptions.Default, filter, CancellationToken.None);
         }
 
         /// <summary>
@@ -381,9 +441,14 @@ namespace Consul
         /// <param name="node">The node name</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>The node information including a list of services</returns>
-        public Task<QueryResult<CatalogNode>> Node(string node, CancellationToken ct = default)
+        public Task<QueryResult<CatalogNode>> Node(string node, CancellationToken ct)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CatalogNode>> Node(string node)
+        {
+            return Node(node, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -404,9 +469,14 @@ namespace Consul
         /// <param name="node">Node Name</param>
         /// <param name="ct">CancellationToken</param>
         /// <returns>Node Services</returns>
-        public Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct = default)
+        public Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct)
         {
             return ServicesForNode(node, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<NodeService>> ServicesForNode(string node)
+        {
+            return ServicesForNode(node, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -440,9 +510,14 @@ namespace Consul
         /// <param name="gateway">Gateway name</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>Gateway services</returns>
-        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway, CancellationToken ct = default)
+        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway, CancellationToken ct)
         {
             return GatewayService(gateway, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<GatewayService[]>> GatewayService(string gateway)
+        {
+            return GatewayService(gateway, QueryOptions.Default, CancellationToken.None);
         }
     }
 
