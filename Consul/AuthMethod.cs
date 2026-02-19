@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,9 +90,14 @@ namespace Consul
         /// <param name="authMethod">The new ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct = default)
+        public Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod, CancellationToken ct)
         {
             return Create(authMethod, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<AuthMethodEntry>> Create(AuthMethodEntry authMethod)
+        {
+            return Create(authMethod, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -114,9 +119,14 @@ namespace Consul
         /// <param name="authMethod">The modified ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the updated ACL AuthMethod</returns>
-        public Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct = default)
+        public Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod, CancellationToken ct)
         {
             return Update(authMethod, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<AuthMethodEntry>> Update(AuthMethodEntry authMethod)
+        {
+            return Update(authMethod, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -138,9 +148,14 @@ namespace Consul
         /// <param name="name">The name of the ACL AuthMethod to delete</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>Success (true) or failure (false)</returns>
-        public Task<WriteResult<bool>> Delete(string name, CancellationToken ct = default)
+        public Task<WriteResult<bool>> Delete(string name, CancellationToken ct)
         {
             return Delete(name, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<bool>> Delete(string name)
+        {
+            return Delete(name, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -161,9 +176,14 @@ namespace Consul
         /// <param name="name">The Name of the ACL AuthMethod to get</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL AuthMethod</returns>
-        public Task<QueryResult<AuthMethodEntry>> Read(string name, CancellationToken ct = default)
+        public Task<QueryResult<AuthMethodEntry>> Read(string name, CancellationToken ct)
         {
             return Read(name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<AuthMethodEntry>> Read(string name)
+        {
+            return Read(name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -184,9 +204,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL AuthMethods</returns>
-        public Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<AuthMethodEntry[]>> List(CancellationToken ct)
         {
             return List(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<AuthMethodEntry[]>> List()
+        {
+            return List(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -205,9 +230,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing an ACL Token for the login</returns>
-        public Task<WriteResult<TokenEntry>> Login(CancellationToken ct = default)
+        public Task<WriteResult<TokenEntry>> Login(CancellationToken ct)
         {
             return Login(WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<TokenEntry>> Login()
+        {
+            return Login(WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -227,9 +257,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result</returns>
-        public Task<WriteResult> Logout(CancellationToken ct = default)
+        public Task<WriteResult> Logout(CancellationToken ct)
         {
             return Logout(WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Logout()
+        {
+            return Logout(WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
