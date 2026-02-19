@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,9 +74,14 @@ namespace Consul
         /// Nodes is used to return the coordinates of all the nodes in the LAN pool.
         /// </summary>
         /// <returns>A query result containing coordinates of all the nodes in the LAN pool</returns>
-        public Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct = default)
+        public Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct)
         {
             return Nodes(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CoordinateEntry[]>> Nodes()
+        {
+            return Nodes(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -102,9 +107,14 @@ namespace Consul
             return _client.Get<CoordinateEntry[]>(string.Format("/v1/coordinate/node/{0}", node), q).Execute(ct);
         }
 
-        public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default)
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<CoordinateEntry[]>> Node(string node)
+        {
+            return Node(node, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -125,9 +135,14 @@ namespace Consul
         /// <param name="entry">The coordinate entry to update</param>
         /// <param name="ct">Cancellation Token</param>
         /// <returns>An empty write result</returns>
-        public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default)
+        public Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct)
         {
             return Update(entry, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Update(CoordinateEntry entry)
+        {
+            return Update(entry, WriteOptions.Default, CancellationToken.None);
         }
     }
 

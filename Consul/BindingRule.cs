@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 using Consul.Interfaces;
@@ -68,9 +68,14 @@ namespace Consul
         /// <param name="entry">The new ACL AuthMethod</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL AuthMethod</returns>
-        public Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct = default)
+        public Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct)
         {
             return Create(entry, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry)
+        {
+            return Create(entry, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -94,9 +99,14 @@ namespace Consul
         /// <param name="id">UUID of the binding rule to read</param>
         /// <param name="ct">>Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>An existing Binding rule with the specified id</returns>
-        public Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct = default)
+        public Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct)
         {
             return Read(id, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ACLBindingRuleResponse>> Read(string id)
+        {
+            return Read(id, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -118,9 +128,14 @@ namespace Consul
         /// <param name="entry">Specifies the ACL binding rule you update</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>Returns the updated Binding Rule</returns>
-        public Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, CancellationToken ct = default)
+        public Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, CancellationToken ct)
         {
             return Update(entry, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry)
+        {
+            return Update(entry, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -142,9 +157,14 @@ namespace Consul
         /// <param name="id">Specifies the UUID of the binding rule you delete</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns></returns>
-        public Task<WriteResult> Delete(string id, CancellationToken ct = default)
+        public Task<WriteResult> Delete(string id, CancellationToken ct)
         {
             return Delete(id, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Delete(string id)
+        {
+            return Delete(id, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -165,9 +185,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A lists of all the ACL binding rules</returns>
-        public Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct)
         {
             return List(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ACLBindingRuleResponse[]>> List()
+        {
+            return List(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
