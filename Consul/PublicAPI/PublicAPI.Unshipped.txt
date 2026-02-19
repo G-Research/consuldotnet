@@ -1309,8 +1309,9 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.ACLEntry.Rules.set -> void
 ~Consul.ACLEntry.Type.get -> Consul.ACLType
 ~Consul.ACLEntry.Type.set -> void
+~Consul.ACLReplication.Status() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLReplicationEntry>>
 ~Consul.ACLReplication.Status(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLReplicationEntry>>
-~Consul.ACLReplication.Status(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLReplicationEntry>>
+~Consul.ACLReplication.Status(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLReplicationEntry>>
 ~Consul.ACLReplicationEntry.ACLReplicationEntry(bool enabled, bool running, string sourceDatacenter, string replicationType, ulong replicatedIndex, ulong replicatedRoleIndex, ulong replicatedTokenIndex, System.DateTime lastSuccess, System.DateTime lastError) -> void
 ~Consul.ACLReplicationEntry.ReplicationType.get -> string
 ~Consul.ACLReplicationEntry.ReplicationType.set -> void
@@ -1664,16 +1665,21 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.AutopilotState.Upgrade.set -> void
 ~Consul.AutopilotState.Voters.get -> System.Collections.Generic.List<string>
 ~Consul.AutopilotState.Voters.set -> void
+~Consul.BindingRule.Create(Consul.ACLBindingRule entry) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
 ~Consul.BindingRule.Create(Consul.ACLBindingRule entry, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
-~Consul.BindingRule.Create(Consul.ACLBindingRule entry, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
+~Consul.BindingRule.Create(Consul.ACLBindingRule entry, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
+~Consul.BindingRule.Delete(string id) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.BindingRule.Delete(string id, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.BindingRule.Delete(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.BindingRule.Delete(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.BindingRule.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse[]>>
 ~Consul.BindingRule.List(Consul.QueryOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse[]>>
-~Consul.BindingRule.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse[]>>
+~Consul.BindingRule.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse[]>>
+~Consul.BindingRule.Read(string id) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse>>
 ~Consul.BindingRule.Read(string id, Consul.QueryOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse>>
-~Consul.BindingRule.Read(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse>>
+~Consul.BindingRule.Read(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ACLBindingRuleResponse>>
+~Consul.BindingRule.Update(Consul.ACLBindingRule entry) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
 ~Consul.BindingRule.Update(Consul.ACLBindingRule entry, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
-~Consul.BindingRule.Update(Consul.ACLBindingRule entry, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
+~Consul.BindingRule.Update(Consul.ACLBindingRule entry, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
 ~Consul.CaCertificateProviderInstanceConfig.CertificateName.get -> string
 ~Consul.CaCertificateProviderInstanceConfig.CertificateName.set -> void
 ~Consul.CaCertificateProviderInstanceConfig.InstanceName.get -> string
@@ -1963,12 +1969,15 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.CookieLocation.Name.get -> string
 ~Consul.CookieLocation.Name.set -> void
 ~Consul.Coordinate.Datacenters(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateDatacenterMap[]>>
+~Consul.Coordinate.Node(string node) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
 ~Consul.Coordinate.Node(string node, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
-~Consul.Coordinate.Node(string node, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
+~Consul.Coordinate.Node(string node, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
+~Consul.Coordinate.Nodes() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
 ~Consul.Coordinate.Nodes(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
-~Consul.Coordinate.Nodes(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
+~Consul.Coordinate.Nodes(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.CoordinateEntry[]>>
+~Consul.Coordinate.Update(Consul.CoordinateEntry entry) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Coordinate.Update(Consul.CoordinateEntry entry, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Coordinate.Update(Consul.CoordinateEntry entry, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Coordinate.Update(Consul.CoordinateEntry entry, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.CoordinateDatacenterMap.Coordinates.get -> System.Collections.Generic.List<Consul.CoordinateEntry>
 ~Consul.CoordinateDatacenterMap.Coordinates.set -> void
 ~Consul.CoordinateDatacenterMap.Datacenter.get -> string
