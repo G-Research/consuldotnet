@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -54,9 +54,14 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct = default)
+        public Task<WriteResult<string>> Fire(UserEvent ue, CancellationToken ct)
         {
             return Fire(ue, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> Fire(UserEvent ue)
+        {
+            return Fire(ue, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -89,9 +94,14 @@ namespace Consul
         /// List is used to get the most recent events an agent has received. This list can be optionally filtered by the name. This endpoint supports quasi-blocking queries. The index is not monotonic, nor does it provide provide LastContact or KnownLeader.
         /// </summary>
         /// <returns>An array of events</returns>
-        public Task<QueryResult<UserEvent[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<UserEvent[]>> List(CancellationToken ct)
         {
             return List(string.Empty, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<UserEvent[]>> List()
+        {
+            return List(string.Empty, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -100,9 +110,14 @@ namespace Consul
         /// <param name="name">The name of the event to filter for</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An array of events</returns>
-        public Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct = default)
+        public Task<QueryResult<UserEvent[]>> List(string name, CancellationToken ct)
         {
             return List(name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<UserEvent[]>> List(string name)
+        {
+            return List(name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
