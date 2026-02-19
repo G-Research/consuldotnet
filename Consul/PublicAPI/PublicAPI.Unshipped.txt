@@ -2005,10 +2005,14 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.DeleteReturnRequest<TOut>.Options.set -> void
 ~Consul.DestinationConfig.Addresses.get -> System.Collections.Generic.List<string>
 ~Consul.DestinationConfig.Addresses.set -> void
+~Consul.DiscoveryChain.Get(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, Consul.WriteOptions q, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
-~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
-~Consul.DiscoveryChain.Get(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
-~Consul.DiscoveryChain.Get(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChainOptions.OverrideMeshGateway.get -> Consul.MeshGatewayConfig
 ~Consul.DiscoveryChainOptions.OverrideMeshGateway.set -> void
 ~Consul.DiscoveryChainOptions.OverrideProtocol.get -> string
@@ -2095,8 +2099,9 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.ExportedServiceEntry.Partition.set -> void
 ~Consul.ExportedServiceEntry.Services.get -> System.Collections.Generic.List<Consul.ServiceDefinition>
 ~Consul.ExportedServiceEntry.Services.set -> void
+~Consul.ExportedServices.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
 ~Consul.ExportedServices.List(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
-~Consul.ExportedServices.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
+~Consul.ExportedServices.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
 ~Consul.ExposeConfig.Paths.get -> System.Collections.Generic.List<Consul.PathConfig>
 ~Consul.ExposeConfig.Paths.set -> void
 ~Consul.ExternalService.Defaults.get -> Consul.GatewayDefaults

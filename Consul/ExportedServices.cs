@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -73,9 +73,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns> A query result containing an array of exported service</returns>
-        public Task<QueryResult<ResolvedExportedService[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<ResolvedExportedService[]>> List(CancellationToken ct)
         {
             return List(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<ResolvedExportedService[]>> List()
+        {
+            return List(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
