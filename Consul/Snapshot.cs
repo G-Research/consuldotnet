@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,9 +36,14 @@ namespace Consul
             _client = c;
         }
 
-        public Task<WriteResult> Restore(Stream s, CancellationToken ct = default)
+        public Task<WriteResult> Restore(Stream s, CancellationToken ct)
         {
             return Restore(s, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult> Restore(Stream s)
+        {
+            return Restore(s, WriteOptions.Default, CancellationToken.None);
         }
 
         public Task<WriteResult> Restore(Stream s, WriteOptions q, CancellationToken ct = default)
@@ -46,9 +51,14 @@ namespace Consul
             return _client.Put("/v1/snapshot", s, q).Execute(ct);
         }
 
-        public Task<QueryResult<Stream>> Save(CancellationToken ct = default)
+        public Task<QueryResult<Stream>> Save(CancellationToken ct)
         {
             return Save(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<Stream>> Save()
+        {
+            return Save(QueryOptions.Default, CancellationToken.None);
         }
 
         public Task<QueryResult<Stream>> Save(QueryOptions q, CancellationToken ct = default)

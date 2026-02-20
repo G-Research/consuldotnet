@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -137,9 +137,14 @@ namespace Consul
         /// <param name="policy">The new ACL Role</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the created ACL Role</returns>
-        public Task<WriteResult<RoleEntry>> Create(RoleEntry policy, CancellationToken ct = default)
+        public Task<WriteResult<RoleEntry>> Create(RoleEntry policy, CancellationToken ct)
         {
             return Create(policy, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<RoleEntry>> Create(RoleEntry policy)
+        {
+            return Create(policy, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -161,9 +166,14 @@ namespace Consul
         /// <param name="id">The ID of the ACL Role to delete</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>Success (true) or failure (false)</returns>
-        public Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default)
+        public Task<WriteResult<bool>> Delete(string id, CancellationToken ct)
         {
             return Delete(id, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<bool>> Delete(string id)
+        {
+            return Delete(id, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -184,9 +194,14 @@ namespace Consul
         /// </summary>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL Roles</returns>
-        public Task<QueryResult<RoleEntry[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<RoleEntry[]>> List(CancellationToken ct)
         {
             return List(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<RoleEntry[]>> List()
+        {
+            return List(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -207,9 +222,14 @@ namespace Consul
         /// <param name="id">The ID of the ACL Role to get</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL Role</returns>
-        public Task<QueryResult<RoleEntry>> Read(string id, CancellationToken ct = default)
+        public Task<QueryResult<RoleEntry>> Read(string id, CancellationToken ct)
         {
             return Read(id, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<RoleEntry>> Read(string id)
+        {
+            return Read(id, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -231,9 +251,14 @@ namespace Consul
         /// <param name="name">The Name of the ACL Role to get</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL Role</returns>
-        public Task<QueryResult<RoleEntry>> ReadByName(string name, CancellationToken ct = default)
+        public Task<QueryResult<RoleEntry>> ReadByName(string name, CancellationToken ct)
         {
             return ReadByName(name, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<RoleEntry>> ReadByName(string name)
+        {
+            return ReadByName(name, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -255,9 +280,14 @@ namespace Consul
         /// <param name="role">The modified ACL Role</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing the updated ACL Role</returns>
-        public Task<WriteResult<RoleEntry>> Update(RoleEntry role, CancellationToken ct = default)
+        public Task<WriteResult<RoleEntry>> Update(RoleEntry role, CancellationToken ct)
         {
             return Update(role, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<RoleEntry>> Update(RoleEntry role)
+        {
+            return Update(role, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
