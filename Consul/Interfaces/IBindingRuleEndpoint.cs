@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,17 +26,22 @@ namespace Consul.Interfaces
     /// </summary>
     public interface IBindingRuleEndpoint
     {
-        Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct = default);
+        Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, CancellationToken ct);
+        Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry);
 
         Task<WriteResult<ACLBindingRuleResponse>> Create(ACLBindingRule entry, WriteOptions options,
             CancellationToken ct = default);
-        Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse>> Read(string id, CancellationToken ct);
+        Task<QueryResult<ACLBindingRuleResponse>> Read(string id);
         Task<QueryResult<ACLBindingRuleResponse>> Read(string id, QueryOptions options, CancellationToken ct = default);
-        Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, CancellationToken ct = default);
+        Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, CancellationToken ct);
+        Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry);
         Task<WriteResult<ACLBindingRuleResponse>> Update(ACLBindingRule entry, WriteOptions options, CancellationToken ct = default);
-        Task<WriteResult> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult> Delete(string id, CancellationToken ct);
+        Task<WriteResult> Delete(string id);
         Task<WriteResult> Delete(string id, WriteOptions options, CancellationToken ct = default);
-        Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct = default);
+        Task<QueryResult<ACLBindingRuleResponse[]>> List(CancellationToken ct);
+        Task<QueryResult<ACLBindingRuleResponse[]>> List();
         Task<QueryResult<ACLBindingRuleResponse[]>> List(QueryOptions options, CancellationToken ct = default);
     }
 }

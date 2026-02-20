@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +26,8 @@ namespace Consul
     /// </summary>
     public interface IACLReplicationEndpoint
     {
-        Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct = default);
+        Task<QueryResult<ACLReplicationEntry>> Status(CancellationToken ct);
+        Task<QueryResult<ACLReplicationEntry>> Status();
         Task<QueryResult<ACLReplicationEntry>> Status(QueryOptions q, CancellationToken ct = default);
     }
 }

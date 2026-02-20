@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,30 +29,45 @@ namespace Consul
     /// </summary>
     public interface ICatalogEndpoint
     {
-        Task<QueryResult<string[]>> Datacenters(CancellationToken ct = default);
+        Task<QueryResult<string[]>> Datacenters(CancellationToken ct);
+        Task<QueryResult<string[]>> Datacenters();
         Task<QueryResult<string[]>> Datacenters(QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct = default);
+        Task<WriteResult> Deregister(CatalogDeregistration reg, CancellationToken ct);
+        Task<WriteResult> Deregister(CatalogDeregistration reg);
         Task<WriteResult> Deregister(CatalogDeregistration reg, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<CatalogNode>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<CatalogNode>> Node(string node, CancellationToken ct);
+        Task<QueryResult<CatalogNode>> Node(string node);
         Task<QueryResult<CatalogNode>> Node(string node, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Node[]>> Nodes(CancellationToken ct = default);
+        Task<QueryResult<Node[]>> Nodes(CancellationToken ct);
+        Task<QueryResult<Node[]>> Nodes();
         Task<QueryResult<Node[]>> Nodes(QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult> Register(CatalogRegistration reg, CancellationToken ct = default);
+        Task<WriteResult> Register(CatalogRegistration reg, CancellationToken ct);
+        Task<WriteResult> Register(CatalogRegistration reg);
         Task<WriteResult> Register(CatalogRegistration reg, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<CatalogService[]>> Service(string service, CancellationToken ct = default);
-        Task<QueryResult<CatalogService[]>> Service(string service, string tag, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> Service(string service, CancellationToken ct);
+        Task<QueryResult<CatalogService[]>> Service(string service);
+        Task<QueryResult<CatalogService[]>> Service(string service, string tag, CancellationToken ct);
+        Task<QueryResult<CatalogService[]>> Service(string service, string tag);
         Task<QueryResult<CatalogService[]>> Service(string service, string tag, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, string[]>>> Services(CancellationToken ct);
+        Task<QueryResult<Dictionary<string, string[]>>> Services();
+        Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q, CancellationToken ct);
+        Task<QueryResult<Dictionary<string, string[]>>> Services(QueryOptions q);
+        Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, CancellationToken ct);
+        Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter);
         Task<QueryResult<Dictionary<string, string[]>>> Services(string dc, Filter filter, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct = default);
-        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter, CancellationToken ct);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, Filter filter);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, CancellationToken ct);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q);
         Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, QueryOptions q, Filter filter, CancellationToken ct = default);
-        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct = default);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service, CancellationToken ct);
+        Task<QueryResult<CatalogService[]>> NodesForMeshCapableService(string service);
         Task<QueryResult<NodeService>> ServicesForNode(string node, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct = default);
+        Task<QueryResult<NodeService>> ServicesForNode(string node, CancellationToken ct);
+        Task<QueryResult<NodeService>> ServicesForNode(string node);
         Task<QueryResult<GatewayService[]>> GatewayService(string gateway, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<GatewayService[]>> GatewayService(string gateway, CancellationToken ct = default);
+        Task<QueryResult<GatewayService[]>> GatewayService(string gateway, CancellationToken ct);
+        Task<QueryResult<GatewayService[]>> GatewayService(string gateway);
     }
 }
