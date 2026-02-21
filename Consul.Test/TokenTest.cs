@@ -30,12 +30,17 @@ namespace Consul.Test
         public async Task Token_CreateDelete()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+            var cutOffVersion = SemanticVersion.Parse("1.7.14");
+            Skip.If(AgentVersion == cutOffVersion, $"Node Identity is not supported in {AgentVersion}");
+
+            var nodeIdentity = new NodeIdentity { NodeName = "node-1", Datacenter = "dc1", };
 
             var tokenEntry = new TokenEntry
             {
                 Description = "API Testing Token",
                 SecretID = "1ED8D9E5-7868-4A0A-AC2F-6F75BEC71830",
-                Local = true
+                Local = true,
+                NodeIdentities = new NodeIdentity[] { nodeIdentity },
             };
 
             var newToken = await _client.Token.Create(tokenEntry);
@@ -277,6 +282,62 @@ namespace Consul.Test
             Assert.NotNull(aclList.Response);
             Assert.NotEqual(TimeSpan.Zero, aclList.RequestTime);
             Assert.True(aclList.Response.Length >= 1);
+        }
+
+        [SkippableFact]
+        public async Task Token_List_FilterByPolicy()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            //Create a specific Policy to filter by
+            var policyEntry = new PolicyEntry
+            {
+                Name = "TokenListFilterPolicy",
+                Description = "Policy used to test token list filtering",
+                Rules = "key \"\" { policy = \"read\" }",
+                Datacenters = new[] { "dc1" }
+            };
+            var policy = await _client.Policy.Create(policyEntry);
+            Assert.NotNull(policy.Response);
+
+            //Create a Token linked to this Policy (Should be found)
+            var matchingTokenEntry = new TokenEntry
+            {
+                Description = "Token Linked to Filter Policy",
+                SecretID = Guid.NewGuid().ToString(),
+                Policies = new[] { new PolicyLink { ID = policy.Response.ID } },
+                Local = true
+            };
+            var matchingToken = await _client.Token.Create(matchingTokenEntry);
+
+            // Create a Token NOT linked to this Policy (It Should NOT be found)
+            var nonMatchingTokenEntry = new TokenEntry
+            {
+                Description = "Token NOT Linked to Filter Policy",
+                SecretID = Guid.NewGuid().ToString(),
+                Local = true
+            };
+            var nonMatchingToken = await _client.Token.Create(nonMatchingTokenEntry);
+
+            try
+            {
+                // List tokens filtering by the specific Policy ID
+                var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
+
+                Assert.NotNull(filteredList.Response);
+                Assert.NotEqual(TimeSpan.Zero, filteredList.RequestTime);
+
+                Assert.Contains(filteredList.Response, t => t.AccessorID == matchingToken.Response.AccessorID);
+
+                Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == nonMatchingToken.Response.AccessorID);
+            }
+            finally
+            {
+                // Cleanup
+                await _client.Token.Delete(matchingToken.Response.AccessorID);
+                await _client.Token.Delete(nonMatchingToken.Response.AccessorID);
+                await _client.Policy.Delete(policy.Response.ID);
+            }
         }
 
         [SkippableFact]
