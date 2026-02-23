@@ -2790,7 +2790,7 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Interfaces.IConnectEndpoint.ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<ServiceIntention>>
 ~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
-~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
 ~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, Consul.WriteOptions q, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
