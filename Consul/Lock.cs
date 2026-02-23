@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
@@ -668,7 +668,7 @@ namespace Consul
         /// <param name="key"></param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct = default)
+        public Task<IDistributedLock> AcquireLock(string key, CancellationToken ct)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -677,13 +677,18 @@ namespace Consul
             return AcquireLock(new LockOptions(key), ct);
         }
 
+        public Task<IDistributedLock> AcquireLock(string key)
+        {
+            return AcquireLock(key, CancellationToken.None);
+        }
+
         /// <summary>
         /// AcquireLock creates a lock that is already acquired when this call returns.
         /// </summary>
         /// <param name="opts"></param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct = default)
+        public async Task<IDistributedLock> AcquireLock(LockOptions opts, CancellationToken ct)
         {
             if (opts == null)
             {
@@ -695,6 +700,11 @@ namespace Consul
             return l;
         }
 
+        public async Task<IDistributedLock> AcquireLock(LockOptions opts)
+        {
+            return await AcquireLock(opts, CancellationToken.None).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// ExecuteLock accepts a delegate to execute in the context of a lock, releasing the lock when completed.
         /// </summary>
@@ -702,13 +712,18 @@ namespace Consul
         /// <param name="action"></param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public Task ExecuteLocked(string key, Action action, CancellationToken ct = default)
+        public Task ExecuteLocked(string key, Action action, CancellationToken ct)
         {
             if (string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException(nameof(key));
             }
             return ExecuteLocked(new LockOptions(key), action, ct);
+        }
+
+        public Task ExecuteLocked(string key, Action action)
+        {
+            return ExecuteLocked(key, action, CancellationToken.None);
         }
 
         /// <summary>
@@ -718,7 +733,7 @@ namespace Consul
         /// <param name="action"></param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct = default)
+        public async Task ExecuteLocked(LockOptions opts, Action action, CancellationToken ct)
         {
             if (opts == null)
             {
@@ -745,6 +760,12 @@ namespace Consul
             }
 
         }
+
+        public async Task ExecuteLocked(LockOptions opts, Action action)
+        {
+            await ExecuteLocked(opts, action, CancellationToken.None).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// ExecuteLock accepts a delegate to execute in the context of a lock, releasing the lock when completed.
         /// </summary>
