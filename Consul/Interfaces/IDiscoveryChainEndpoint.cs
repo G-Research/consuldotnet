@@ -32,6 +32,7 @@ namespace Consul.Interfaces
         Task<QueryResult<DiscoveryChainResponse>> Get(string name);
         Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, WriteOptions q, string compileDataCenter = null, CancellationToken ct = default);
         Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter, CancellationToken ct);
+        Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter);
         Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, CancellationToken ct);
         Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options);
     }
