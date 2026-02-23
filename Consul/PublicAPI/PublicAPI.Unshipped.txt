@@ -2626,6 +2626,7 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.IEventEndpoint.List(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
 ~Consul.IEventEndpoint.List(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
 ~Consul.IEventEndpoint.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
+~Consul.IHealthEndpoint.Checks(string service) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
 ~Consul.IHealthEndpoint.Checks(string service, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
 ~Consul.IHealthEndpoint.Checks(string service, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
 ~Consul.IHealthEndpoint.Connect(string service, string tag, bool passingOnly, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ServiceEntry[]>>
