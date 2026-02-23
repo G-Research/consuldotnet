@@ -2733,9 +2733,6 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Interfaces.IBindingRuleEndpoint.Update(Consul.ACLBindingRule entry) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
 ~Consul.Interfaces.IBindingRuleEndpoint.Update(Consul.ACLBindingRule entry, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
 ~Consul.Interfaces.IBindingRuleEndpoint.Update(Consul.ACLBindingRule entry, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ACLBindingRuleResponse>>
-<<<<<<< HEAD
-=======
->>>>>>> cc91aef (fix RS0026 in interfaces patch 1)
 ~Consul.Interfaces.IClusterPeeringEndpoint.DeletePeering(string name, Consul.WriteOptions q, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Interfaces.IClusterPeeringEndpoint.DeletePeering(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Interfaces.IClusterPeeringEndpoint.GenerateToken(Consul.ClusterPeeringTokenEntry tokenEntry, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.ClusterPeeringTokenResponse>>
