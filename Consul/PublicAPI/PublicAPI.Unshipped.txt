@@ -3079,16 +3079,21 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.NamespaceACLConfig.PolicyDefaults.set -> void
 ~Consul.NamespaceACLConfig.RoleDefaults.get -> System.Collections.Generic.List<Consul.AuthMethodEntry>
 ~Consul.NamespaceACLConfig.RoleDefaults.set -> void
+~Consul.Namespaces.Create(Consul.Namespace ns) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
 ~Consul.Namespaces.Create(Consul.Namespace ns, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
-~Consul.Namespaces.Create(Consul.Namespace ns, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
+~Consul.Namespaces.Create(Consul.Namespace ns, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
+~Consul.Namespaces.Delete(string name) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Namespaces.Delete(string name, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Namespaces.Delete(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Namespaces.Delete(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Namespaces.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse[]>>
 ~Consul.Namespaces.List(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse[]>>
-~Consul.Namespaces.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse[]>>
+~Consul.Namespaces.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse[]>>
+~Consul.Namespaces.Read(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse>>
 ~Consul.Namespaces.Read(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse>>
-~Consul.Namespaces.Read(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse>>
+~Consul.Namespaces.Read(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.NamespaceResponse>>
+~Consul.Namespaces.Update(Consul.Namespace ns) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
 ~Consul.Namespaces.Update(Consul.Namespace ns, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
-~Consul.Namespaces.Update(Consul.Namespace ns, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
+~Consul.Namespaces.Update(Consul.Namespace ns, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.NamespaceResponse>>
 ~Consul.Node.Address.get -> string
 ~Consul.Node.Address.set -> void
 ~Consul.Node.Datacenter.get -> string
@@ -3453,18 +3458,24 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.RetryPolicyConfig.NumRetries.set -> void
 ~Consul.RetryPolicyConfig.RetryPolicyBackOff.get -> Consul.RetryPolicyBackOffConfig
 ~Consul.RetryPolicyConfig.RetryPolicyBackOff.set -> void
+~Consul.Role.Create(Consul.RoleEntry policy) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
 ~Consul.Role.Create(Consul.RoleEntry policy, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
-~Consul.Role.Create(Consul.RoleEntry policy, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
+~Consul.Role.Create(Consul.RoleEntry policy, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
+~Consul.Role.Delete(string id) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Role.Delete(string id, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
-~Consul.Role.Delete(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Role.Delete(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Role.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry[]>>
 ~Consul.Role.List(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry[]>>
-~Consul.Role.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry[]>>
+~Consul.Role.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry[]>>
+~Consul.Role.Read(string id) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
 ~Consul.Role.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
-~Consul.Role.Read(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
+~Consul.Role.Read(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
+~Consul.Role.ReadByName(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
 ~Consul.Role.ReadByName(string name, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
-~Consul.Role.ReadByName(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
+~Consul.Role.ReadByName(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.RoleEntry>>
+~Consul.Role.Update(Consul.RoleEntry role) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
 ~Consul.Role.Update(Consul.RoleEntry role, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
-~Consul.Role.Update(Consul.RoleEntry role, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
+~Consul.Role.Update(Consul.RoleEntry role, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.RoleEntry>>
 ~Consul.RoleEntry.Description.get -> string
 ~Consul.RoleEntry.Description.set -> void
 ~Consul.RoleEntry.ID.get -> string
@@ -3780,10 +3791,12 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.SessionEntry.Node.set -> void
 ~Consul.SessionExpiredException.SessionExpiredException(string message) -> void
 ~Consul.SessionExpiredException.SessionExpiredException(string message, System.Exception inner) -> void
+~Consul.Snapshot.Restore(System.IO.Stream s) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.Snapshot.Restore(System.IO.Stream s, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.Snapshot.Restore(System.IO.Stream s, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Snapshot.Restore(System.IO.Stream s, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.Snapshot.Save() -> System.Threading.Tasks.Task<Consul.QueryResult<System.IO.Stream>>
 ~Consul.Snapshot.Save(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.IO.Stream>>
-~Consul.Snapshot.Save(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.IO.Stream>>
+~Consul.Snapshot.Save(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.IO.Stream>>
 ~Consul.SourceIntention.Action.get -> string
 ~Consul.SourceIntention.Action.set -> void
 ~Consul.SourceIntention.Description.get -> string
