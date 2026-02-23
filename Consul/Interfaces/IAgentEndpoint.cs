@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -32,7 +32,8 @@ namespace Consul
     {
         Task<WriteResult> CheckDeregister(string checkID, CancellationToken ct = default);
         Task<WriteResult> CheckRegister(AgentCheckRegistration check, CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(CancellationToken ct);
+        Task<QueryResult<Dictionary<string, AgentCheck>>> Checks();
         Task<QueryResult<Dictionary<string, AgentCheck>>> Checks(Filter filter, CancellationToken ct = default);
         Task<WriteResult> DisableNodeMaintenance(CancellationToken ct = default);
         Task<WriteResult> DisableServiceMaintenance(string serviceID, CancellationToken ct = default);
@@ -48,34 +49,44 @@ namespace Consul
         Task PassTTL(string checkID, string note, CancellationToken ct = default);
         Task<QueryResult<Dictionary<string, Dictionary<string, dynamic>>>> Self(CancellationToken ct = default);
         Task<WriteResult> ServiceDeregister(string serviceID, CancellationToken ct = default);
-        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct = default);
+        Task<WriteResult> ServiceRegister(AgentServiceRegistration service, CancellationToken ct);
+        Task<WriteResult> ServiceRegister(AgentServiceRegistration service);
         Task<WriteResult> ServiceRegister(AgentServiceRegistration service, bool replaceExistingChecks, CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, AgentService>>> Services(CancellationToken ct);
+        Task<QueryResult<Dictionary<string, AgentService>>> Services();
         Task<QueryResult<Dictionary<string, AgentService>>> Services(Filter filter, CancellationToken ct = default);
         Task<WriteResult> UpdateTTL(string checkID, string output, TTLStatus status, CancellationToken ct = default);
         Task WarnTTL(string checkID, string note, CancellationToken ct = default);
         Task<Agent.LogStream> Monitor(LogLevel level = default, CancellationToken ct = default);
         Task<Agent.LogStream> MonitorJSON(LogLevel level = default, CancellationToken ct = default);
         Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct = default);
+        Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName, CancellationToken ct);
+        Task<QueryResult<LocalServiceHealth[]>> GetLocalServiceHealth(string serviceName);
         Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct = default);
+        Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName, CancellationToken ct);
+        Task<QueryResult<string>> GetWorstLocalServiceHealth(string serviceName);
         Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct = default);
+        Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID, CancellationToken ct);
+        Task<QueryResult<LocalServiceHealth>> GetLocalServiceHealthByID(string serviceID);
         Task<QueryResult<Metrics>> GetAgentMetrics(CancellationToken ct = default);
-        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct = default);
+        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, CancellationToken ct);
+        Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters);
         Task<WriteResult<AgentAuthorizeResponse>> ConnectAuthorize(AgentAuthorizeParameters parameters, WriteOptions w, CancellationToken ct = default);
-        Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct = default);
+        Task<QueryResult<CARoots>> GetCARoots(CancellationToken ct);
+        Task<QueryResult<CARoots>> GetCARoots();
         Task<QueryResult<CARoots>> GetCARoots(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct = default);
+        Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, CancellationToken ct);
+        Task<QueryResult<CALeaf>> GetCALeaf(string serviceId);
         Task<QueryResult<CALeaf>> GetCALeaf(string serviceId, QueryOptions q, CancellationToken ct = default);
         Task<QueryResult<AgentVersion>> GetAgentVersion(CancellationToken ct = default);
-        Task<WriteResult> Reload(CancellationToken ct = default);
+        Task<WriteResult> Reload(CancellationToken ct);
+        Task<WriteResult> Reload();
         [Obsolete]
         Task<WriteResult> Reload(string node, CancellationToken ct = default);
         Task<QueryResult<AgentHostInfo>> GetAgentHostInfo(CancellationToken ct = default);
         Task<WriteResult> Leave(string node, CancellationToken ct = default);
         Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, CancellationToken ct = default);
+        Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID, CancellationToken ct);
+        Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID);
     }
 }
