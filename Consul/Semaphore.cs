@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -895,7 +895,7 @@ namespace Consul
             }
             return AcquireSemaphore(new SemaphoreOptions(prefix, limit), ct);
         }
-        public async Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct = default)
+        public async Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts, CancellationToken ct)
         {
             if (opts == null)
             {
@@ -905,6 +905,11 @@ namespace Consul
             var semaphore = Semaphore(opts);
             await semaphore.Acquire(ct).ConfigureAwait(false);
             return semaphore;
+        }
+
+        public async Task<IDistributedSemaphore> AcquireSemaphore(SemaphoreOptions opts)
+        {
+            return await AcquireSemaphore(opts, CancellationToken.None).ConfigureAwait(false);
         }
 
         public Task ExecuteInSemaphore(string prefix, int limit, Action a, CancellationToken ct = default)
@@ -920,7 +925,7 @@ namespace Consul
             return ExecuteInSemaphore(new SemaphoreOptions(prefix, limit), a, ct);
         }
 
-        public async Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct = default)
+        public async Task ExecuteInSemaphore(SemaphoreOptions opts, Action a, CancellationToken ct)
         {
             if (opts == null)
             {
@@ -945,6 +950,11 @@ namespace Consul
             {
                 await semaphore.Release(ct).ConfigureAwait(false);
             }
+        }
+
+        public async Task ExecuteInSemaphore(SemaphoreOptions opts, Action a)
+        {
+            await ExecuteInSemaphore(opts, a, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }
