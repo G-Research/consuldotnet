@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,12 +25,16 @@ namespace Consul.Interfaces
     public interface IConfigurationEndpoint
     {
         Task<WriteResult> ApplyConfig<TConfig>(WriteOptions q, TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry, CancellationToken ct) where TConfig : IConfigurationEntry;
+        Task<WriteResult> ApplyConfig<TConfig>(TConfig configurationEntry) where TConfig : IConfigurationEntry;
         Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name, CancellationToken ct) where TConfig : IConfigurationEntry;
+        Task<QueryResult<TConfig>> GetConfig<TConfig>(string kind, string name) where TConfig : IConfigurationEntry;
         Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, QueryOptions q, CancellationToken ct = default) where TConfig : IConfigurationEntry;
-        Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct = default) where TConfig : IConfigurationEntry;
+        Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind, CancellationToken ct) where TConfig : IConfigurationEntry;
+        Task<QueryResult<List<TConfig>>> ListConfig<TConfig>(string kind) where TConfig : IConfigurationEntry;
         Task<WriteResult> DeleteConfig(string kind, string name, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct = default);
+        Task<WriteResult> DeleteConfig(string kind, string name, CancellationToken ct);
+        Task<WriteResult> DeleteConfig(string kind, string name);
     }
 }

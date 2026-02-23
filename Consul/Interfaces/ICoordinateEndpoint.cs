@@ -16,7 +16,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,11 +28,14 @@ namespace Consul
     public interface ICoordinateEndpoint
     {
         Task<QueryResult<CoordinateDatacenterMap[]>> Datacenters(CancellationToken ct = default);
-        Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct = default);
+        Task<QueryResult<CoordinateEntry[]>> Nodes(CancellationToken ct);
+        Task<QueryResult<CoordinateEntry[]>> Nodes();
         Task<QueryResult<CoordinateEntry[]>> Node(string node, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct = default);
+        Task<QueryResult<CoordinateEntry[]>> Node(string node, CancellationToken ct);
+        Task<QueryResult<CoordinateEntry[]>> Node(string node);
         Task<QueryResult<CoordinateEntry[]>> Nodes(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult> Update(CoordinateEntry entry, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct = default);
+        Task<WriteResult> Update(CoordinateEntry entry, CancellationToken ct);
+        Task<WriteResult> Update(CoordinateEntry entry);
     }
 }
