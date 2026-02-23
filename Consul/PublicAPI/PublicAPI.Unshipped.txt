@@ -3220,24 +3220,33 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Point.Labels.set -> void
 ~Consul.Point.Name.get -> string
 ~Consul.Point.Name.set -> void
+~Consul.Policy.Create(Consul.PolicyEntry policy) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
 ~Consul.Policy.Create(Consul.PolicyEntry policy, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
-~Consul.Policy.Create(Consul.PolicyEntry policy, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
+~Consul.Policy.Create(Consul.PolicyEntry policy, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
+~Consul.Policy.Delete(string id) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Policy.Delete(string id, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
-~Consul.Policy.Delete(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Policy.Delete(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Policy.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry[]>>
 ~Consul.Policy.List(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry[]>>
-~Consul.Policy.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry[]>>
+~Consul.Policy.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry[]>>
+~Consul.Policy.ListTemplatedPolicies() -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.TemplatedPolicyResponse>>>
 ~Consul.Policy.ListTemplatedPolicies(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.TemplatedPolicyResponse>>>
-~Consul.Policy.ListTemplatedPolicies(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.TemplatedPolicyResponse>>>
+~Consul.Policy.ListTemplatedPolicies(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<System.Collections.Generic.Dictionary<string, Consul.TemplatedPolicyResponse>>>
+~Consul.Policy.PreviewTemplatedPolicy(string name) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
 ~Consul.Policy.PreviewTemplatedPolicy(string name, Consul.WriteOptions options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
-~Consul.Policy.PreviewTemplatedPolicy(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
+~Consul.Policy.PreviewTemplatedPolicy(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
+~Consul.Policy.Read(string id) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
 ~Consul.Policy.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
-~Consul.Policy.Read(string id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
+~Consul.Policy.Read(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
+~Consul.Policy.ReadPolicyByName(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
 ~Consul.Policy.ReadPolicyByName(string name, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
-~Consul.Policy.ReadPolicyByName(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
+~Consul.Policy.ReadPolicyByName(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PolicyEntry>>
+~Consul.Policy.ReadTemplatedPolicyByName(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TemplatedPolicyResponse>>
 ~Consul.Policy.ReadTemplatedPolicyByName(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TemplatedPolicyResponse>>
-~Consul.Policy.ReadTemplatedPolicyByName(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TemplatedPolicyResponse>>
+~Consul.Policy.ReadTemplatedPolicyByName(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TemplatedPolicyResponse>>
+~Consul.Policy.Update(Consul.PolicyEntry policy) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
 ~Consul.Policy.Update(Consul.PolicyEntry policy, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
-~Consul.Policy.Update(Consul.PolicyEntry policy, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
+~Consul.Policy.Update(Consul.PolicyEntry policy, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PolicyEntry>>
 ~Consul.PolicyEntry.Datacenters.get -> string[]
 ~Consul.PolicyEntry.Datacenters.set -> void
 ~Consul.PolicyEntry.Description.get -> string
@@ -3273,20 +3282,27 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.PostReturningRequest<TOut>.Options.get -> Consul.WriteOptions
 ~Consul.PostReturningRequest<TOut>.Options.set -> void
 ~Consul.PostReturningRequest<TOut>.PostReturningRequest(Consul.ConsulClient client, string url, Consul.WriteOptions options = null) -> void
+~Consul.PreparedQuery.Create(Consul.PreparedQueryDefinition query) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
 ~Consul.PreparedQuery.Create(Consul.PreparedQueryDefinition query, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
-~Consul.PreparedQuery.Create(Consul.PreparedQueryDefinition query, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.PreparedQuery.Create(Consul.PreparedQueryDefinition query, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.PreparedQuery.Delete(string queryID) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.PreparedQuery.Delete(string queryID, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.PreparedQuery.Delete(string queryID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.PreparedQuery.Delete(string queryID, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.PreparedQuery.Execute(string queryIDOrName) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExecuteResponse>>
 ~Consul.PreparedQuery.Execute(string queryIDOrName, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExecuteResponse>>
-~Consul.PreparedQuery.Execute(string queryIDOrName, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExecuteResponse>>
+~Consul.PreparedQuery.Execute(string queryIDOrName, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExecuteResponse>>
+~Consul.PreparedQuery.Explain(string queryIDOrName) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExplainResponse>>
 ~Consul.PreparedQuery.Explain(string queryIDOrName, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExplainResponse>>
-~Consul.PreparedQuery.Explain(string queryIDOrName, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExplainResponse>>
+~Consul.PreparedQuery.Explain(string queryIDOrName, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryExplainResponse>>
+~Consul.PreparedQuery.Get(string queryID) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
 ~Consul.PreparedQuery.Get(string queryID, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
-~Consul.PreparedQuery.Get(string queryID, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
+~Consul.PreparedQuery.Get(string queryID, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
+~Consul.PreparedQuery.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
 ~Consul.PreparedQuery.List(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
-~Consul.PreparedQuery.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
+~Consul.PreparedQuery.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.PreparedQueryDefinition[]>>
+~Consul.PreparedQuery.Update(Consul.PreparedQueryDefinition query) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.PreparedQuery.Update(Consul.PreparedQueryDefinition query, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
-~Consul.PreparedQuery.Update(Consul.PreparedQueryDefinition query, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+~Consul.PreparedQuery.Update(Consul.PreparedQueryDefinition query, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 ~Consul.PreparedQueryDefinition.DNS.get -> Consul.QueryDNSOptions
 ~Consul.PreparedQueryDefinition.DNS.set -> void
 ~Consul.PreparedQueryDefinition.ID.get -> string
