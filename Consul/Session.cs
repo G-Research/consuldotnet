@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -264,18 +264,28 @@ namespace Consul
         /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
 
-        public Task<WriteResult<string>> Create(CancellationToken ct = default)
+        public Task<WriteResult<string>> Create(CancellationToken ct)
         {
             return Create(null, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> Create()
+        {
+            return Create(null, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
         /// Create makes a new session with default options.
         /// </summary>
         /// <returns>A write result containing the new session ID</returns>
-        public Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct = default)
+        public Task<WriteResult<string>> Create(SessionEntry se, CancellationToken ct)
         {
             return Create(se, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> Create(SessionEntry se)
+        {
+            return Create(se, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -293,9 +303,14 @@ namespace Consul
         /// <summary>
         /// CreateNoChecks is like Create but is used specifically to create a session with no associated health checks.
         /// </summary>
-        public Task<WriteResult<string>> CreateNoChecks(CancellationToken ct = default)
+        public Task<WriteResult<string>> CreateNoChecks(CancellationToken ct)
         {
             return CreateNoChecks(null, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> CreateNoChecks()
+        {
+            return CreateNoChecks(null, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -304,9 +319,14 @@ namespace Consul
         /// <param name="se">The SessionEntry options to use</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the new session ID</returns>
-        public Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct = default)
+        public Task<WriteResult<string>> CreateNoChecks(SessionEntry se, CancellationToken ct)
         {
             return CreateNoChecks(se, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<string>> CreateNoChecks(SessionEntry se)
+        {
+            return CreateNoChecks(se, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -340,9 +360,14 @@ namespace Consul
         /// <param name="id">The session ID to destroy</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A write result containing the result of the session destruction</returns>
-        public Task<WriteResult<bool>> Destroy(string id, CancellationToken ct = default)
+        public Task<WriteResult<bool>> Destroy(string id, CancellationToken ct)
         {
             return Destroy(id, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<bool>> Destroy(string id)
+        {
+            return Destroy(id, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -363,9 +388,14 @@ namespace Consul
         /// <param name="id">The session ID to look up</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the session information, or an empty query result if the session entry does not exist</returns>
-        public Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct = default)
+        public Task<QueryResult<SessionEntry>> Info(string id, CancellationToken ct)
         {
             return Info(id, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<SessionEntry>> Info(string id)
+        {
+            return Info(id, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -385,9 +415,14 @@ namespace Consul
         /// List gets all active sessions
         /// </summary>
         /// <returns>A query result containing list of all sessions, or an empty query result if no sessions exist</returns>
-        public Task<QueryResult<SessionEntry[]>> List(CancellationToken ct = default)
+        public Task<QueryResult<SessionEntry[]>> List(CancellationToken ct)
         {
             return List(QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<SessionEntry[]>> List()
+        {
+            return List(QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -407,9 +442,14 @@ namespace Consul
         /// <param name="node">The node ID</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>A query result containing the list of sessions, or an empty query result if no sessions exist</returns>
-        public Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct = default)
+        public Task<QueryResult<SessionEntry[]>> Node(string node, CancellationToken ct)
         {
             return Node(node, QueryOptions.Default, ct);
+        }
+
+        public Task<QueryResult<SessionEntry[]>> Node(string node)
+        {
+            return Node(node, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
@@ -430,9 +470,14 @@ namespace Consul
         /// <param name="id">The session ID to renew</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns>An updated session entry</returns>
-        public Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct = default)
+        public Task<WriteResult<SessionEntry>> Renew(string id, CancellationToken ct)
         {
             return Renew(id, WriteOptions.Default, ct);
+        }
+
+        public Task<WriteResult<SessionEntry>> Renew(string id)
+        {
+            return Renew(id, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
