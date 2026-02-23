@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,22 +25,31 @@ namespace Consul.Interfaces
     public interface IConnectEndpoint
     {
         Task<QueryResult<CARoots>> CARoots(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CARoots>> CARoots(CancellationToken ct = default);
+        Task<QueryResult<CARoots>> CARoots(CancellationToken ct);
+        Task<QueryResult<CARoots>> CARoots();
         Task<QueryResult<CAConfig>> CAGetConfig(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct = default);
+        Task<QueryResult<CAConfig>> CAGetConfig(CancellationToken ct);
+        Task<QueryResult<CAConfig>> CAGetConfig();
         Task<WriteResult> CASetConfig(CAConfig config, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct = default);
-        Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct = default);
+        Task<WriteResult> CASetConfig(CAConfig config, CancellationToken ct);
+        Task<WriteResult> CASetConfig(CAConfig config);
+        Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(CancellationToken ct);
+        Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>();
         Task<QueryResult<List<ServiceIntention>>> ListIntentions<ServiceIntention>(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct = default);
+        Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention, CancellationToken ct);
+        Task<WriteResult<bool>> UpsertIntentionsByName(ServiceIntention intention);
         Task<WriteResult> DeleteIntentionByName(string source, string destination, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct = default);
+        Task<WriteResult> DeleteIntentionByName(string source, string destination, CancellationToken ct);
+        Task<WriteResult> DeleteIntentionByName(string source, string destination);
         Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination, CancellationToken ct);
+        Task<QueryResult<ServiceIntention>> ReadSpecificIntentionByName<ServiceIntention>(string source, string destination);
         Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct = default);
+        Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name, CancellationToken ct);
+        Task<QueryResult<Dictionary<string, List<ServiceIntention>>>> ListMatchingIntentions(string by, string name);
         Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct = default);
+        Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination, CancellationToken ct);
+        Task<QueryResult<ServiceIntentionResultResponse>> CheckIntentionResult(string source, string destination);
     }
 }
