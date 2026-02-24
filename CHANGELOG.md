@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.7.14.11
+* Add Create Exported Services List HTTP Endpoint (#543)
+* Add NodeIdentities Role Attribute (#547)
+* Add implement ACL Binding Rule "Read" Endpoint (#550)
+* Add implement ACL Binding Rule Update Endpoint (#551)
+* Add implement ACL Binding Rule Delete Endpoint (#552)
+* Add implement ACL Binding Rule List Endpoint (#556)
+
 ## 1.7.14.10
 * Add create ACL Binding Rules (#506)
 * Add raft transfer leader (#489)
