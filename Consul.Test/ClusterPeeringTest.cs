@@ -95,8 +95,13 @@ namespace Consul.Test
             Assert.NotNull(result.Response.StreamStatus);
             // Request to delete that peering
             var deleteResult = await _client.ClusterPeering.DeletePeering("cluster-03", WriteOptions.Default);
-            // Attempt to access the deleted peering
+            // First attempt to access the deleted peering
             var newResult = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            if (newResult.Response != null)
+            {
+                var options = new QueryOptions() { WaitIndex = newResult.LastIndex };
+                newResult = await _client.ClusterPeering.GetPeering("cluster-03", options);
+            }
             Assert.Null(newResult.Response);
         }
     }
