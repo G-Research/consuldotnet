@@ -2043,6 +2043,7 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.DiscoveryChain.Get(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, Consul.WriteOptions q, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.DiscoveryChainOptions options, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.DiscoveryChain.Get(string name, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
@@ -2617,12 +2618,15 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.IDistributedSemaphore.Acquire(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Threading.CancellationToken>
 ~Consul.IDistributedSemaphore.Destroy(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 ~Consul.IDistributedSemaphore.Release(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+~Consul.IEventEndpoint.Fire(Consul.UserEvent ue) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
 ~Consul.IEventEndpoint.Fire(Consul.UserEvent ue, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
-~Consul.IEventEndpoint.Fire(Consul.UserEvent ue, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
+~Consul.IEventEndpoint.Fire(Consul.UserEvent ue, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>
 ~Consul.IEventEndpoint.IDToIndex(string uuid) -> ulong
+~Consul.IEventEndpoint.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
+~Consul.IEventEndpoint.List(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
 ~Consul.IEventEndpoint.List(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
-~Consul.IEventEndpoint.List(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
-~Consul.IEventEndpoint.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
+~Consul.IEventEndpoint.List(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
+~Consul.IEventEndpoint.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.UserEvent[]>>
 ~Consul.IHealthEndpoint.Checks(string service) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
 ~Consul.IHealthEndpoint.Checks(string service, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
 ~Consul.IHealthEndpoint.Checks(string service, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.HealthCheck[]>>
@@ -2815,12 +2819,18 @@ virtual Consul.ConsulClient.Dispose(bool disposing) -> void
 ~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 ~Consul.Interfaces.IConnectEndpoint.UpsertIntentionsByName(Consul.ServiceIntention intention, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
 ~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, Consul.WriteOptions q, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
-~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
-~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
-~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, string compileDataCenter, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.DiscoveryChainOptions options, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IDiscoveryChainEndpoint.Get(string name, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.DiscoveryChainResponse>>
+~Consul.Interfaces.IExportedServicesEndpoint.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
 ~Consul.Interfaces.IExportedServicesEndpoint.List(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
-~Consul.Interfaces.IExportedServicesEndpoint.List(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
+~Consul.Interfaces.IExportedServicesEndpoint.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.ResolvedExportedService[]>>
 ~Consul.InvalidKeyPairException.InvalidKeyPairException(string message) -> void
 ~Consul.InvalidKeyPairException.InvalidKeyPairException(string message, System.Exception inner) -> void
 ~Consul.IOperatorEndpoint.AreaCreate(Consul.AreaRequest area) -> System.Threading.Tasks.Task<Consul.WriteResult<string>>

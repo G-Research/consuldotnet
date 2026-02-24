@@ -215,6 +215,11 @@ namespace Consul
             return Get(name, options, WriteOptions.Default, null, ct);
         }
 
+        public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options, string compileDataCenter)
+        {
+            return Get(name, options, WriteOptions.Default, compileDataCenter, CancellationToken.None);
+        }
+
         public Task<WriteResult<DiscoveryChainResponse>> Get(string name, DiscoveryChainOptions options)
         {
             return Get(name, options, WriteOptions.Default, null, CancellationToken.None);
