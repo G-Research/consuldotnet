@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-
+#pragma warning disable RS0022
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
