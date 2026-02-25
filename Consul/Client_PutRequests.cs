@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0022
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -34,6 +34,7 @@ namespace Consul
     {
         public WriteOptions Options { get; set; }
 
+        #pragma warning disable RS0022
         public PutReturningRequest(ConsulClient client, string url, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
@@ -42,6 +43,7 @@ namespace Consul
             }
             Options = options ?? WriteOptions.Default;
         }
+        #pragma warning restore RS0022
 
         /// <summary>
         /// Execute the PUT request to the API
@@ -119,6 +121,7 @@ namespace Consul
     {
         public WriteOptions Options { get; set; }
 
+        #pragma warning disable RS0022
         public PutNothingRequest(ConsulClient client, string url, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
@@ -127,6 +130,7 @@ namespace Consul
             }
             Options = options ?? WriteOptions.Default;
         }
+        #pragma warning restore RS0022
 
         /// <summary>
         /// Execute the PUT request to the API
@@ -201,6 +205,7 @@ namespace Consul
         public WriteOptions Options { get; set; }
         private readonly TIn _body;
 
+        #pragma warning disable RS0022
         public PutRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
@@ -210,6 +215,7 @@ namespace Consul
             _body = body;
             Options = options ?? WriteOptions.Default;
         }
+        #pragma warning restore RS0022
 
         /// <summary>
         /// Execute the PUT request to the API
@@ -302,6 +308,7 @@ namespace Consul
         public WriteOptions Options { get; set; }
         private readonly TIn _body;
 
+        #pragma warning disable RS0022
         public PutRequest(ConsulClient client, string url, TIn body, WriteOptions options = null) : base(client, url, HttpMethod.Put)
         {
             if (string.IsNullOrEmpty(url))
@@ -311,6 +318,7 @@ namespace Consul
             _body = body;
             Options = options ?? WriteOptions.Default;
         }
+        #pragma warning restore RS0022
 
         /// <summary>
         /// Execute the PUT request to the API
