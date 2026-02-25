@@ -40,7 +40,7 @@ namespace Consul
 
         public IEncodable Filter { get; }
 
-        #pragma warning disable RS0022
+#pragma warning disable RS0022
         public GetRequest(ConsulClient client, string url) :
             this(client, url, null, null)
         {
@@ -60,7 +60,7 @@ namespace Consul
             Options = options ?? QueryOptions.Default;
             Filter = filter;
         }
-        #pragma warning restore RS0022
+#pragma warning restore RS0022
 
         /// <summary>
         /// Execute the GET request to the API
@@ -307,7 +307,7 @@ namespace Consul
     {
         public QueryOptions Options { get; set; }
 
-        #pragma warning disable RS0022
+#pragma warning disable RS0022
         public GetRequest(ConsulClient client, string url, QueryOptions options = null) : base(client, url, HttpMethod.Get)
         {
             if (string.IsNullOrEmpty(url))
@@ -316,7 +316,7 @@ namespace Consul
             }
             Options = options ?? QueryOptions.Default;
         }
-        #pragma warning restore RS0022
+#pragma warning restore RS0022
 
         /// <summary>
         /// Execute the GET request to the API
