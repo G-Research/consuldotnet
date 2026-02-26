@@ -21,10 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Consul.Test
 {
@@ -120,9 +122,36 @@ namespace Consul.Test
 
         }
 
-        [Fact]
-        public async Task Health_Connect()
+        public sealed class RepeatAttribute : Xunit.Sdk.DataAttribute
         {
+            private readonly int _count;
+
+            public RepeatAttribute(int count)
+            {
+                if (count < 1)
+                {
+                    throw new System.ArgumentOutOfRangeException(
+                        paramName: nameof(count),
+                        message: "Repeat count must be greater than 0."
+                    );
+                }
+                this._count = count;
+            }
+
+            public override System.Collections.Generic.IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod)
+            {
+                foreach (var iterationNumber in Enumerable.Range(start: 1, count: this._count))
+                {
+                    yield return new object[] { iterationNumber };
+                }
+            }
+        }
+
+        [Theory]
+        [Repeat(1000)]
+        public async Task Health_Connect(int i)
+        {
+            _ = i;
             var destinationServiceID = KVTest.GenerateTestKeyName();
 
             var registration = new AgentServiceRegistration
