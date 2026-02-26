@@ -1,2 +1,1 @@
-#nullable enable
-~Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride, System.Action<System.Net.Http.HttpClient> clientOverride, System.Action<System.Net.Http.HttpClientHandler> handlerOverride) -> void
+Consul.ConsulClient.ConsulClient(System.Action<Consul.ConsulClientConfiguration> configOverride, System.Action<System.Net.Http.HttpClient> clientOverride, System.Action<System.Net.Http.HttpClientHandler> handlerOverride) -> void
