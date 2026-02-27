@@ -1,0 +1,16 @@
+Consul.AspNetCore.AgentServiceRegistrationHostedService
+Consul.AspNetCore.ConsulClientFactory
+Consul.AspNetCore.IConsulClientFactory
+Consul.AspNetCore.ServiceCollectionExtensions
+Consul.AspNetCore.AgentServiceRegistrationHostedService.AgentServiceRegistrationHostedService(Consul.IConsulClient consulClient, Consul.AgentServiceRegistration serviceRegistration) -> void
+Consul.AspNetCore.AgentServiceRegistrationHostedService.StartAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
+Consul.AspNetCore.AgentServiceRegistrationHostedService.StopAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
+Consul.AspNetCore.ConsulClientFactory.ConsulClientFactory(Microsoft.Extensions.Options.IOptionsMonitor<Consul.ConsulClientConfiguration> optionsMonitor) -> void
+Consul.AspNetCore.ConsulClientFactory.CreateClient() -> Consul.IConsulClient
+Consul.AspNetCore.ConsulClientFactory.CreateClient(string name) -> Consul.IConsulClient
+Consul.AspNetCore.IConsulClientFactory.CreateClient() -> Consul.IConsulClient
+Consul.AspNetCore.IConsulClientFactory.CreateClient(string name) -> Consul.IConsulClient
+static Consul.AspNetCore.ServiceCollectionExtensions.AddConsul(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
+static Consul.AspNetCore.ServiceCollectionExtensions.AddConsul(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, string name, System.Action<Consul.ConsulClientConfiguration> configure) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
+static Consul.AspNetCore.ServiceCollectionExtensions.AddConsul(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<Consul.ConsulClientConfiguration> configure) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
+static Consul.AspNetCore.ServiceCollectionExtensions.AddConsulServiceRegistration(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<Consul.AgentServiceRegistration> configure) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
