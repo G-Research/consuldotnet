@@ -9,7 +9,7 @@
 4. Then, draft a new [GitHub Release](https://github.com/G-Research/consuldotnet/releases) with a list of changes contained in the new version from the [CHANGELOG](https://github.com/G-Research/consuldotnet/blob/master/CHANGELOG.md).
 5. When the draft release is ready, publish it from the GitHub web UI. You can either have GitHub create a new tag for you from the GitHub Release page or push the tag yourself beforehand.
 Be aware, clicking **Publish** will trigger GitHub to push a new tag (as specified in the new Release entry, if not created by you already) which will instruct the CI to build and push a new stable release to NuGet.org.
-6. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the minor version in `Directory.Build.props` to the next unreleased version number, so that nightly build versioning can benefit.
+6. If everything went well, congrats, the new versions should be live on NuGet by now. As a final post-release step, bump the minor version in `Directory.Build.props` to the next unreleased semantic version, so that nightly build versioning can benefit.
 
 ## Updating Documentation
 
@@ -22,8 +22,13 @@ Please ensure that you review and update the documentation when making a new rel
 
 ## Versioning
 
-The version number indicates which version of Consul is supported in terms of API features.
-Since Consul already has a version that consists of three numbers (e.g. 1.6.1), the fourth number is necessary to indicate patch releases of Consul.NET.
+Consul.NET follows semantic versioning using the format:
 
-Please note that NuGet normalizes version numbers, by omitting zero in the fourth part of the version number.
-For example version `1.6.1.0` is going to be normalized to `1.6.1`. So to avoid problems, versions and tags with zero in the fourth part should be avoided and explicit three part version should be used instead.
+**MAJOR.MINOR.PATCH**
+
+The library version is independent from the version of Consul server. Consul's HTTP API is largely backward compatible, therefore different versions of Consul.NET may work with multiple Consul server versions.
+
+Version increments follow the standard semantic versioning rules:
+- **MAJOR** version for breaking changes
+- **MINOR** version for new features
+- **PATCH** version for bug fixes
