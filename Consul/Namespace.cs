@@ -1,4 +1,4 @@
-#pragma warning disable RS0026
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -48,9 +48,14 @@ namespace Consul
             return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public async Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Create(Namespace ns, CancellationToken ct)
         {
             return await Create(ns, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<WriteResult<NamespaceResponse>> Create(Namespace ns)
+        {
+            return await Create(ns, WriteOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, WriteOptions q, CancellationToken ct = default)
@@ -59,9 +64,14 @@ namespace Consul
             return new WriteResult<NamespaceResponse>(res, res.Response);
         }
 
-        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct = default)
+        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns, CancellationToken ct)
         {
             return await Update(ns, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<WriteResult<NamespaceResponse>> Update(Namespace ns)
+        {
+            return await Update(ns, WriteOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<QueryResult<NamespaceResponse>> Read(string name, QueryOptions q, CancellationToken ct = default)
@@ -69,9 +79,14 @@ namespace Consul
             return await _client.Get<NamespaceResponse>($"v1/namespace/{name}", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public async Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse>> Read(string name, CancellationToken ct)
         {
             return await Read(name, QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<NamespaceResponse>> Read(string name)
+        {
+            return await Read(name, QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<QueryResult<NamespaceResponse[]>> List(QueryOptions q, CancellationToken ct = default)
@@ -79,9 +94,14 @@ namespace Consul
             return await _client.Get<NamespaceResponse[]>($"v1/namespaces", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public async Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct = default)
+        public async Task<QueryResult<NamespaceResponse[]>> List(CancellationToken ct)
         {
             return await List(QueryOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResult<NamespaceResponse[]>> List()
+        {
+            return await List(QueryOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<WriteResult> Delete(string name, WriteOptions q, CancellationToken ct = default)
@@ -89,9 +109,14 @@ namespace Consul
             return await _client.Delete($"v1/namespace/{name}", q).Execute(ct).ConfigureAwait(false);
         }
 
-        public async Task<WriteResult> Delete(string name, CancellationToken ct = default)
+        public async Task<WriteResult> Delete(string name, CancellationToken ct)
         {
             return await Delete(name, WriteOptions.Default, ct).ConfigureAwait(false);
+        }
+
+        public async Task<WriteResult> Delete(string name)
+        {
+            return await Delete(name, WriteOptions.Default, CancellationToken.None).ConfigureAwait(false);
         }
     }
 

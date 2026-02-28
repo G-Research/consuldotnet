@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,17 +26,23 @@ namespace Consul
     /// </summary>
     public interface IRoleEndpoint
     {
-        Task<WriteResult<RoleEntry>> Create(RoleEntry role, CancellationToken ct = default);
+        Task<WriteResult<RoleEntry>> Create(RoleEntry role, CancellationToken ct);
+        Task<WriteResult<RoleEntry>> Create(RoleEntry role);
         Task<WriteResult<RoleEntry>> Create(RoleEntry role, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, CancellationToken ct);
+        Task<WriteResult<bool>> Delete(string id);
         Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<RoleEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<RoleEntry[]>> List(CancellationToken ct);
+        Task<QueryResult<RoleEntry[]>> List();
         Task<QueryResult<RoleEntry[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<RoleEntry>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<RoleEntry>> Read(string id, CancellationToken ct);
+        Task<QueryResult<RoleEntry>> Read(string id);
         Task<QueryResult<RoleEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<RoleEntry>> ReadByName(string name, CancellationToken ct = default);
+        Task<QueryResult<RoleEntry>> ReadByName(string name, CancellationToken ct);
+        Task<QueryResult<RoleEntry>> ReadByName(string name);
         Task<QueryResult<RoleEntry>> ReadByName(string name, QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult<RoleEntry>> Update(RoleEntry role, CancellationToken ct = default);
+        Task<WriteResult<RoleEntry>> Update(RoleEntry role, CancellationToken ct);
+        Task<WriteResult<RoleEntry>> Update(RoleEntry role);
         Task<WriteResult<RoleEntry>> Update(RoleEntry role, WriteOptions q, CancellationToken ct = default);
     }
 }

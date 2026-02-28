@@ -15,7 +15,7 @@
 //    limitations under the License.
 //  </copyright>
 // -----------------------------------------------------------------------
-#pragma warning disable RS0026
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,21 +26,29 @@ namespace Consul
     /// </summary>
     public interface ITokenEndpoint
     {
-        Task<WriteResult<TokenEntry>> Bootstrap(CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Bootstrap(CancellationToken ct);
+        Task<WriteResult<TokenEntry>> Bootstrap();
         Task<WriteResult<TokenEntry>> Bootstrap(WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<TokenEntry>> Clone(string id, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Clone(string id, CancellationToken ct);
+        Task<WriteResult<TokenEntry>> Clone(string id);
         Task<WriteResult<TokenEntry>> Clone(string id, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<TokenEntry>> Create(TokenEntry token, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Create(TokenEntry token, CancellationToken ct);
+        Task<WriteResult<TokenEntry>> Create(TokenEntry token);
         Task<WriteResult<TokenEntry>> Create(TokenEntry token, WriteOptions q, CancellationToken ct = default);
-        Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
+        Task<WriteResult<bool>> Delete(string id, CancellationToken ct);
+        Task<WriteResult<bool>> Delete(string id);
         Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct);
+        Task<QueryResult<TokenEntry>> Read(string id);
         Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct);
+        Task<QueryResult<TokenEntry[]>> List();
         Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct = default);
-        Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct);
+        Task<WriteResult<TokenEntry>> Update(TokenEntry token);
         Task<WriteResult<TokenEntry>> Update(TokenEntry token, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry>> ReadSelfToken(string token, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> ReadSelfToken(string token, CancellationToken ct);
+        Task<QueryResult<TokenEntry>> ReadSelfToken(string token);
         Task<QueryResult<TokenEntry>> ReadSelfToken(string token, QueryOptions q, CancellationToken ct = default);
     }
 }
