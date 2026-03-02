@@ -339,7 +339,7 @@ namespace Consul.Test
                 await _client.Policy.Delete(policy.Response.ID);
             }
         }
-        
+
         [SkippableFact]
         public async Task Token_ReadSelfToken()
         {
