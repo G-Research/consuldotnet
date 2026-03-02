@@ -1,39 +1,64 @@
 name: Format
-on:
 
+on:
   # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
   pull_request_target:
     paths:
-      - '**.editorconfig'
-      - '**.globalconfig'
-      - '**.cs'
+      - "**.editorconfig"
+      - "**.globalconfig"
+      - "**.cs"
       - .github/workflows/formatter.yml
 
-permissions:
-  contents: write
+permissions: {}
+concurrency: ${{ github.workflow }}-${{ github.head_ref }}
+env:
+  BRANCH: ${{ github.head_ref }}
 
 jobs:
   format:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     steps:
-
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-
-      - name: Install the dotnet-format
-        # Installing the tool globally to avoid any interference from potentially malicious code checked out in the next step
-        run: dotnet tool install dotnet-format -g --version 5.1.250801
+        uses: actions/setup-dotnet@v5.1.0
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
         with:
           show-progress: false
+          persist-credentials: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
 
       - name: Format scripts
-        run: dotnet-format --fix-whitespace --no-restore
+        run: dotnet format whitespace --no-restore
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: formatted-files
+          path: ${{ github.workspace }}
+
+  push:
+    needs: format
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          show-progress: false
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ env.BRANCH }}
+
+      - name: Download artifact
+        uses: actions/download-artifact@v8.0.0
+        with:
+          pattern: formatted-files
+          path: ${{ github.workspace }}
+          merge-multiple: true
 
       - name: Set Git config
         run: |
@@ -42,6 +67,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add .
+          git add '*.cs'
           git commit -m "style: fix whitespaces" || true
-          git push || true
+          git pull --rebase origin $BRANCH
+          git push origin HEAD:$BRANCH
