@@ -43,7 +43,7 @@ body:
       value: |
         - OS:       <!-- [e.g. Windows] -->
         - Consul Version:   <!-- [e.g. 1.7.2] -->
-        - consultdotnet Version   <!-- [e.g. 1.6.1.1] -->
+        - consultdotnet Version   <!-- [e.g. 2.0.0] -->
     validations:
       required: true
   - type: textarea

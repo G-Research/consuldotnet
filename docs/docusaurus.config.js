@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const dotNetFrameworkMinVersion = `4.6.1`;
 const dotNetCoreMinVersion = `2.0.0`;
-const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X.X`);
+const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X`);
 const consulAPIVersion = clean_version(extract_consul_version(consulDotNetVersion));
 const url = process.env.URL || `https://consuldot.net`;
 const baseUrl = process.env.BASE_URL || `/`;
