@@ -618,6 +618,9 @@ Consul.ISessionEndpoint
 Consul.ISnapshotEndpoint
 Consul.IStatusEndpoint
 Consul.ITokenEndpoint
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.JSONWebKeySetConfig
 Consul.JSONWebKeySetConfig.JSONWebKeySetConfig() -> void
 Consul.JWKSClusterConfig
@@ -1164,6 +1167,12 @@ Consul.TcpRouteEntry
 Consul.TcpRouteEntry.TcpRouteEntry() -> void
 Consul.TcpRouteService
 Consul.TcpRouteService.TcpRouteService() -> void
+Consul.TemplatedPolicy
+Consul.TemplatedPolicy.TemplatedPolicy() -> void
+Consul.TemplatedPolicy.TemplateName.get -> string
+Consul.TemplatedPolicy.TemplateName.set -> void
+Consul.TemplatedPolicy.TemplateVariables.get -> System.Collections.Generic.Dictionary<string, object>
+Consul.TemplatedPolicy.TemplateVariables.set -> void
 Consul.TemplatedPolicyResponse
 Consul.TemplatedPolicyResponse.TemplatedPolicyResponse() -> void
 Consul.TerminatingGatewayEntry
@@ -1177,10 +1186,22 @@ Consul.TLSConfig.TLSConfig() -> void
 Consul.TLSDirectionConfig
 Consul.TLSDirectionConfig.TLSDirectionConfig() -> void
 Consul.Token
+Consul.Token.List(string policy, string role, string serviceName, string authMethod) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(string policy, string role, string serviceName, string authMethod, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(string policy, string role, string serviceName, string authMethod, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.TokenEntry
+Consul.TokenEntry.ExpirationTime.get -> System.DateTime?
+Consul.TokenEntry.ExpirationTime.set -> void
+Consul.TokenEntry.ExpirationTTL.get -> System.TimeSpan?
+Consul.TokenEntry.ExpirationTTL.set -> void
 Consul.TokenEntry.Local.get -> bool
 Consul.TokenEntry.Local.set -> void
+Consul.TokenEntry.ShouldSerializeNodeIdentities() -> bool
+Consul.TokenEntry.ShouldSerializeTemplatedPolicies() -> bool
+Consul.TokenEntry.TemplatedPolicies.get -> Consul.TemplatedPolicy[]
+Consul.TokenEntry.TemplatedPolicies.set -> void
 Consul.TokenEntry.TokenEntry() -> void
+Consul.TokenEntry.TokenEntry(string accessorId, string description, Consul.PolicyLink[] policies, Consul.RoleLink[] roles, Consul.ServiceIdentity[] serviceIdentities, bool local, Consul.TemplatedPolicy[] templatedPolicies, Consul.NodeIdentity[] nodeIdentities, System.DateTime? expirationTime, System.TimeSpan? expirationTTL) -> void
 Consul.TransparentProxy
 Consul.TransparentProxy.OutboundListenerPort.get -> int
 Consul.TransparentProxy.OutboundListenerPort.set -> void
@@ -3007,7 +3028,6 @@ Consul.ITokenEndpoint.Delete(string id) -> System.Threading.Tasks.Task<Consul.Wr
 Consul.ITokenEndpoint.Delete(string id, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 Consul.ITokenEndpoint.Delete(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 Consul.ITokenEndpoint.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
-Consul.ITokenEndpoint.List(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.ITokenEndpoint.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.ITokenEndpoint.Read(string id) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
@@ -4093,7 +4113,6 @@ Consul.Token.Delete(string id) -> System.Threading.Tasks.Task<Consul.WriteResult
 Consul.Token.Delete(string id, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 Consul.Token.Delete(string id, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<bool>>
 Consul.Token.List() -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
-Consul.Token.List(Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.Token.List(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.Token.Read(string id) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 Consul.Token.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
@@ -4121,7 +4140,6 @@ Consul.TokenEntry.SecretID.set -> void
 Consul.TokenEntry.ServiceIdentities.get -> Consul.ServiceIdentity[]
 Consul.TokenEntry.ServiceIdentities.set -> void
 Consul.TokenEntry.TokenEntry(string accessorId, string description) -> void
-Consul.TokenEntry.TokenEntry(string accessorId, string description, Consul.PolicyLink[] policies, Consul.RoleLink[] roles, Consul.ServiceIdentity[] serviceIdentities) -> void
 Consul.TokenEntry.TokenEntry(string description, Consul.PolicyLink[] policies) -> void
 Consul.TokenEntry.TokenEntry(string description, Consul.RoleLink[] roles) -> void
 Consul.TokenEntry.TokenEntry(string description, Consul.ServiceIdentity[] serviceIdentities) -> void
