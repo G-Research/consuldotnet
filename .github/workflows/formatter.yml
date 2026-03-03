@@ -58,7 +58,6 @@ jobs:
         with:
           pattern: formatted-files
           path: ${{ github.workspace }}
-          merge-multiple: true
 
       - name: Set Git config
         run: |
