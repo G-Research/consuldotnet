@@ -68,7 +68,7 @@ namespace Consul
         public ulong? ModifyIndex { get; set; }
     }
 
-    public class Partition: IPartitionEndpoint
+    public class Partition : IPartitionEndpoint
     {
         private readonly ConsulClient _client;
 
@@ -95,7 +95,7 @@ namespace Consul
         /// <returns>A write result containing the created partition</returns>
         public Task<WriteResult<PartitionActionResult>> Create(PartitionEntry partition)
         {
-           return Create(partition, CancellationToken.None);
+            return Create(partition, CancellationToken.None);
         }
 
         /// <summary>
@@ -112,11 +112,11 @@ namespace Consul
         }
     }
 
-    public partial class ConsulClient: IConsulClient
+    public partial class ConsulClient : IConsulClient
     {
         /// <summary>
         /// Partion returns a handle the Partion API endpoints
         /// </summary>
-        public IPartitionEndpoint Partition { get; private set; } 
+        public IPartitionEndpoint Partition { get; private set; }
     }
 }
