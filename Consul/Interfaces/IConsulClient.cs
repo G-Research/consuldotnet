@@ -72,5 +72,6 @@ namespace Consul
         ISnapshotEndpoint Snapshot { get; }
         IDiscoveryChainEndpoint DiscoveryChain { get; }
         IExportedServicesEndpoint ExportedServices { get; }
+        IPartitionEndpoint Partition { get; }
     }
 }

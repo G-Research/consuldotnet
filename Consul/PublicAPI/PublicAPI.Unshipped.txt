@@ -295,6 +295,7 @@ Consul.ConsulClient
 Consul.ConsulClient.CheckDisposed() -> void
 Consul.ConsulClient.ConsulClient() -> void
 Consul.ConsulClient.Dispose() -> void
+Consul.ConsulClient.Partition.get -> Consul.Interfaces.IPartitionEndpoint
 Consul.ConsulClientConfiguration
 Consul.ConsulClientConfiguration.ConsulClientConfiguration() -> void
 Consul.ConsulClientConfiguration.WaitTime.get -> System.TimeSpan?
@@ -572,6 +573,7 @@ Consul.IAuthMethodEndpoint
 Consul.ICatalogEndpoint
 Consul.IConfigurationEntry
 Consul.IConsulClient
+Consul.IConsulClient.Partition.get -> Consul.Interfaces.IPartitionEndpoint
 Consul.ICoordinateEndpoint
 Consul.IDistributedLock
 Consul.IDistributedLock.IsHeld.get -> bool
@@ -607,6 +609,10 @@ Consul.Interfaces.IConfigurationEndpoint
 Consul.Interfaces.IConnectEndpoint
 Consul.Interfaces.IDiscoveryChainEndpoint
 Consul.Interfaces.IExportedServicesEndpoint
+Consul.Interfaces.IPartitionEndpoint
+Consul.Interfaces.IPartitionEndpoint.Create(Consul.PartitionEntry partition) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
+Consul.Interfaces.IPartitionEndpoint.Create(Consul.PartitionEntry partition, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
+Consul.Interfaces.IPartitionEndpoint.Create(Consul.PartitionEntry partition, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
 Consul.InvalidKeyPairException
 Consul.InvalidKeyPairException.InvalidKeyPairException() -> void
 Consul.IOperatorEndpoint
@@ -835,6 +841,26 @@ Consul.OverrideConfig
 Consul.OverrideConfig.ConnectTimeoutMs.get -> int?
 Consul.OverrideConfig.ConnectTimeoutMs.set -> void
 Consul.OverrideConfig.OverrideConfig() -> void
+Consul.Partition
+Consul.Partition.Create(Consul.PartitionEntry partition) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
+Consul.Partition.Create(Consul.PartitionEntry partition, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
+Consul.Partition.Create(Consul.PartitionEntry partition, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.PartitionActionResult>>
+Consul.PartitionActionResult
+Consul.PartitionActionResult.CreateIndex.get -> ulong?
+Consul.PartitionActionResult.CreateIndex.set -> void
+Consul.PartitionActionResult.DeletedAt.get -> System.DateTime?
+Consul.PartitionActionResult.DeletedAt.set -> void
+Consul.PartitionActionResult.ModifyIndex.get -> ulong?
+Consul.PartitionActionResult.ModifyIndex.set -> void
+Consul.PartitionActionResult.PartitionActionResult() -> void
+Consul.PartitionEntry
+Consul.PartitionEntry.Description.get -> string
+Consul.PartitionEntry.Description.set -> void
+Consul.PartitionEntry.DisableGossip.get -> bool?
+Consul.PartitionEntry.DisableGossip.set -> void
+Consul.PartitionEntry.Name.get -> string
+Consul.PartitionEntry.Name.set -> void
+Consul.PartitionEntry.PartitionEntry() -> void
 Consul.PassiveHealthCheckConfig
 Consul.PassiveHealthCheckConfig.EnforcingConsecutive5xx.get -> int?
 Consul.PassiveHealthCheckConfig.EnforcingConsecutive5xx.set -> void
