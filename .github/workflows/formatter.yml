@@ -25,7 +25,7 @@ jobs:
           show-progress: false
           persist-credentials: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.head_ref }}
+          ref: ${{ env.BRANCH }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5.1.0
@@ -70,4 +70,4 @@ jobs:
         run: |
           git apply format.patch || true
           git commit -am "style: fix whitespaces" || true
-          git push origin HEAD:$BRANCH
+          git push
