@@ -34,7 +34,7 @@ jobs:
         run: dotnet format whitespace --no-restore
 
       - name: Create format patch
-        run: git diff ".cs" > format.patch
+        run: git diff -- "*.cs" > format.patch
 
       - name: Upload patch
         uses: actions/upload-artifact@v7.0.0
