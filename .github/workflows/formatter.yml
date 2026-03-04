@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-slim
 
     steps:
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5.1.0
-
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
         with:
@@ -29,6 +26,9 @@ jobs:
           persist-credentials: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5.1.0
 
       - name: Format scripts
         run: dotnet format whitespace --no-restore
