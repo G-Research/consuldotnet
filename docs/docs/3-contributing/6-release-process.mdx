@@ -26,7 +26,7 @@ Consul.NET follows semantic versioning using the format:
 
 **MAJOR.MINOR.PATCH**
 
-The library version is independent from the version of Consul server. Consul's HTTP API is largely backward compatible, therefore different versions of Consul.NET may work with multiple Consul server versions.
+Historically, the project used four-component version numbers (e.g. `1.7.14.3`) where the first three components matched a Consul server version. Starting with version `1.8.0`, the project switched to standard three-component semantic versioning. Consul's HTTP API is largely backward compatible, therefore different versions of Consul.NET may work with multiple Consul server versions.
 
 Version increments follow the standard semantic versioning rules:
 - **MAJOR** version for breaking changes
