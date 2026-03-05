@@ -1,7 +1,6 @@
 ---
 sidebar_position: 0
 ---
-import {ConsulAPIBadge} from "@site/src/components/CustomBadge";
 
 # Introduction
 
@@ -10,6 +9,4 @@ of Goroutines/Channels. The majority of the calls directly track
 the [HTTP API](https://www.consul.io/docs/agent/http.html), but this API does have additional functionality that is
 provided in the Go API, like Locks and Semaphores.
 
-<ConsulAPIBadge inline={false}/>
-
-> **Note:** This version indicates the version of Consul API that is fully supported. Recent versions of Consul API still work, but some features may be missing. Read more about [Consul.NET versioning](./3-contributing/6-release-process.mdx#versioning) and the currently [Supported APIs](./2-guides/3-supported-apis.mdx).
+> **Note:** Supported Consul API versions depend on the features used. Consul.NET works with multiple Consul server versions due to the backward compatibility of the Consul HTTP API. Read more about [Consul.NET versioning](./3-contributing/6-release-process.mdx#versioning) and the currently [Supported APIs](./2-guides/3-supported-apis.mdx).
