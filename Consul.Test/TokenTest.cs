@@ -296,5 +296,64 @@ namespace Consul.Test
             Assert.Equal(selfTokenEntry.Response.SecretID, tokenEntry.Response.SecretID);
             Assert.Equal(selfTokenEntry.Response.AccessorID, tokenEntry.Response.AccessorID);
         }
+
+        [SkippableFact]
+        public async Task Token_ReadExpanded()
+        {
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            // create test policy
+            var policyEntry = new PolicyEntry
+            {
+                Name = "TestExpandedPolicy-" + Guid.NewGuid().ToString().Substring(0, 8),
+                Description = "Test Expanded Policy",
+                Rules = "key \"\" { policy = \"read\" }"
+            };
+            var policy = await _client.Policy.Create(policyEntry);
+            Assert.NotNull(policy.Response);
+
+            try
+            {
+                // create a test token and link it to the test policy
+                var tokenEntry = new TokenEntry
+                {
+                    Description = "Expansion Test Token",
+                    Policies = new PolicyLink[] { policy.Response },
+                    Local = true
+                };
+                var newToken = await _client.Token.Create(tokenEntry);
+                var accessorId = newToken.Response.AccessorID;
+
+                // both expanded and unexpanded responses contain policy links with ID and Name
+                var unexpandedRead = await _client.Token.Read(accessorId, false, QueryOptions.Default);
+                Assert.NotNull(unexpandedRead.Response.Policies);
+                var unexpandedPolicy = unexpandedRead.Response.Policies.FirstOrDefault(p => p.ID == policy.Response.ID);
+                Assert.NotNull(unexpandedPolicy);
+                Assert.Equal(policyEntry.Name, unexpandedPolicy.Name);
+
+                var expandedRead = await _client.Token.Read(accessorId, true, QueryOptions.Default);
+                Assert.NotNull(expandedRead.Response.Policies);
+                var expandedPolicyLink = expandedRead.Response.Policies.FirstOrDefault(p => p.ID == policy.Response.ID);
+                Assert.NotNull(expandedPolicyLink);
+                Assert.Equal(policyEntry.Name, expandedPolicyLink.Name);
+
+                // when expanded=true, make sure we can read Description and Rules
+                var expandedPolicyDetails = await _client.Policy.Read(expandedPolicyLink.ID);
+                Assert.NotNull(expandedPolicyDetails.Response);
+                Assert.Equal(policyEntry.Description, expandedPolicyDetails.Response.Description);
+                Assert.Equal(policyEntry.Rules, expandedPolicyDetails.Response.Rules);
+            }
+            finally
+            {
+                // Cleanup
+                var list = await _client.Token.List();
+                var testToken = list.Response.FirstOrDefault(t => t.Description == "Expansion Test Token");
+                if (testToken != null)
+                {
+                    await _client.Token.Delete(testToken.AccessorID);
+                }
+                await _client.Policy.Delete(policy.Response.ID);
+            }
+        }
     }
 }

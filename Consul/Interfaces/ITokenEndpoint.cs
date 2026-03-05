@@ -34,9 +34,13 @@ namespace Consul
         Task<WriteResult<TokenEntry>> Create(TokenEntry token, WriteOptions q, CancellationToken ct = default);
         Task<WriteResult<bool>> Delete(string id, CancellationToken ct = default);
         Task<WriteResult<bool>> Delete(string id, WriteOptions q, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct = default);
-        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct = default);
+        Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct);
+        Task<QueryResult<TokenEntry>> Read(string id);
+        Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q);
+        Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct);
+        Task<QueryResult<TokenEntry>> Read(string id, bool expanded, QueryOptions q, CancellationToken ct = default);
+        Task<QueryResult<TokenEntry[]>> List(CancellationToken ct);
+        Task<QueryResult<TokenEntry[]>> List();
         Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<TokenEntry>> Update(TokenEntry token, CancellationToken ct = default);
         Task<WriteResult<TokenEntry>> Update(TokenEntry token, WriteOptions q, CancellationToken ct = default);
