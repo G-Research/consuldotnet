@@ -11,8 +11,6 @@ on:
 
 permissions: {}
 concurrency: ${{ github.workflow }}-${{ github.head_ref }}
-env:
-  BRANCH: ${{ github.head_ref }}
 
 jobs:
   format:
@@ -25,7 +23,7 @@ jobs:
           show-progress: false
           persist-credentials: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ env.BRANCH }}
+          ref: ${{ github.head_ref }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5.1.0
@@ -54,7 +52,7 @@ jobs:
         with:
           show-progress: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ env.BRANCH }}
+          ref: ${{ github.head_ref }}
 
       - name: Download patch
         uses: actions/download-artifact@v8.0.0
