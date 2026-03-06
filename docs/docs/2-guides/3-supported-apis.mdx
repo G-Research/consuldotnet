@@ -12,12 +12,51 @@ _This version indicates the version of Consul API that is fully supported. Recen
 
 | Group                           | Endpoint                                                | Route                                          | Status                    |
 | ------------------------------- | ------------------------------------------------------- | ---------------------------------------------- | ------------------------- |
+| **ACLs**                        | Bootstrap ACLs                                          | PUT v1/acl/bootstrap                           | ✅                        |
+|                                 | Check ACL Replication                                   | GET v1/acl/replication                         | ✅                        |
+|                                 | Login to Auth Method                                    | POST v1/acl/login                              | ✅                        |
+|                                 | Logout from Auth Method                                 | POST v1/acl/logout                             | ✅                        |
+|                                 | OIDC Authorization URL Request                          | POST v1/acl/oidc/auth-url                      | ❌                        |
+|                                 | OIDC Callback                                           | POST v1/acl/oidc/callback                      | ❌                        |
+| **ACL-Tokens**                  | Create a Token                                          | PUT v1/acl/token                               | ❌                        |
+|                                 | Read a Token                                            | GET v1/acl/token/:AccessorID                   | ✅                        |
+|                                 | Read Self Token                                         | GET v1/acl/token/self                          | ✅                        |
+|                                 | Update a Token                                          | PUT v1/acl/token/:AccessorID                   | ✅                        |
+|                                 | Clone a Token                                           | PUT v1/acl/token/:AccessorID/clone             | ✅                        |
+|                                 | Delete a Token                                          | DELETE v1/acl/token/:AccessorID                | ✅                        |
+|                                 | List Tokens                                             | GET v1/acl/tokens                              | ✅                        |
+| **ACL-Policies**                | Create a Policy                                         | PUT v1/acl/policy                              | ✅                        |
+|                                 | Read a Policy                                           | GET v1/acl/policy/:id                          | ✅                        |
+|                                 | Read a Policy by Name                                   | GET v1/acl/policy/name/:name                   | ✅                        |
+|                                 | Update a Policy                                         | PUT v1/acl/policy/:id                          | ✅                        |
+|                                 | Delete a Policy                                         | DELETE v1/acl/policy/:id                       | ✅                        |
+|                                 | List Policies                                           | GET v1/acl/policies                            | ✅                        |
+| **ACL-Templated Policies**      | Read a templated policy by name                         | GET v1/acl/templated-policy/name/:name         | ✅                        |
+|                                 | Preview a templated policy                              | POST v1/acl/templated-policy/preview/:name     | ✅                        |
+|                                 | List templated policies                                 | GET v1/acl/templated-policies                  | ✅                        |
+| **ACL-Roles**                   | Create a Role                                           | PUT v1/acl/role                                | ✅                        |
+|                                 | Read a Role                                             | GET v1/acl/role/:id                            | ✅                        |
+|                                 | Read a Role by Name                                     | GET v1/acl/role/name/:name                     | ✅                        |
+|                                 | Update a Role                                           | PUT v1/acl/role/:id                            | ✅                        |
+|                                 | Delete a Role                                           | DELETE v1/acl/role/:id                         | ✅                        |
+|                                 | List Roles                                              | GET v1/acl/roles                               | ✅                        |
+| **ACL-Auth Methods**            | Create an Auth Method                                   | PUT v1/acl/auth-method                         | ✅                        |
+|                                 | Read an Auth Method                                     | GET v1/acl/auth-method/:name                   | ✅                        |
+|                                 | Update an Auth Method                                   | PUT v1/acl/auth-method/:name                   | ✅                        |
+|                                 | Delete an Auth Method                                   | DELETE v1/acl/auth-method/:name                | ✅                        |
+|                                 | List Auth Methods                                       | GET v1/acl/auth-methods                        | ✅                        |
+| **ACL-Binding Rules**           | Create a Binding Rule                                   | PUT v1/acl/binding-rule                        | ✅                        |
+|                                 | Read a Binding Rule                                     | GET v1/acl/binding-rule/:id                    | ✅                        |
+|                                 | Update a Binding Rule                                   | PUT v1/acl/binding-rule/:id                    | ✅                        |
+|                                 | Delete a Binding Rule                                   | DELETE v1/acl/binding-rule/:id                 | ✅                        |
+|                                 | List Binding Rules                                      | GET v1/acl/binding-rules                       | ✅                        |     
 | **Admin Partition**             | Create a Partition                                      | PUT v1/partition                               | 🚧                        |
 |                                 | Read a Partition                                        | GET v1/partition/:name                         | ❌                        |
 |                                 | Update a Partition                                      | PUT v1/partition/:name                         | ❌                        |
 |                                 | Delete a Partition                                      | DELETE v1/partition/:name                      | ❌                        |
 |                                 | List all Partitions                                     | GET v1/partitions                              | ❌                        |
 | **Agent**                       | Retrieve host information                               | GET v1/agent/host                              | ✅                        |
+|                                 | Retrieve version information                            | GET v1/agent/version                           | ✅                        |
 |                                 | List Members                                            | GET v1/agent/members                           | ✅                        |
 |                                 | Read Configuration                                      | GET v1/agent/self                              | ✅                        |
 |                                 | Reload Agent                                            | PUT v1/agent/reload                            | ✅                        |
@@ -27,6 +66,15 @@ _This version indicates the version of Consul API that is fully supported. Recen
 |                                 | Join Agent                                              | PUT v1/agent/join/:address                     | ✅                        |
 |                                 | Graceful Leave and Shutdown                             | PUT v1/agent/leave                             | ✅                        |
 |                                 | Force Leave and Shutdown                                | PUT v1/agent/force-leave/:node                 | ✅                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/default                     | ❌                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/agent                       | ❌                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/agent_recovery              | ❌                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/replication                 | ❌                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/agent_master                | 🛑 (Deprecated in 1.11)   |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/acl_token                   | 🛑 (Deprecated in 1.4.3)  |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/acl_agent_token             | 🛑 (Deprecated in 1.4.3)  |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/acl_agent_master_token      | 🛑 (Deprecated in 1.4.3)  |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/acl_replication_token       | 🛑 (Deprecated in 1.4.3)  |
 | **Agent-Checks**                | List Checks                                             | GET v1/agent/checks                            | ✅                        |
 |                                 | Register Check                                          | PUT v1/agent/check/register                    | ✅                        |
 |                                 | Deregister Check                                        | PUT v1/agent/check/deregister/:check_id        | ✅                        |
@@ -50,16 +98,22 @@ _This version indicates the version of Consul API that is fully supported. Recen
 |                                 | List Nodes                                              | GET v1/catalog/nodes                           | ✅                        |
 |                                 | List Services                                           | GET v1/catalog/services                        | ✅                        |
 |                                 | List Nodes for Service                                  | GET v1/catalog/service/:service                | ✅                        |
+|                                 | List Nodes for Mesh-capable Service                     | GET v1/catalog/connect/:service                | ✅                        |
 |                                 | Retrieve Map of Services for a Node                     | GET v1/catalog/node/:node                      | ✅                        |
 |                                 | List Services for Node                                  | GET v1/catalog/node-services/:node             | ✅                        |
 |                                 | List Services for Gateway                               | GET v1/catalog/gateway-services/:gateway       | ✅                        |
+| **Cluster Peering**             | Generate a Peering Token                                | POST v1/peering/token                          | ✅                        |
+|                                 | Establish a Peering Connection                          | POST v1/peering/establish                      | ❌                        |
+|                                 | Read a Peering Connection                               | GET v1/peering/:name                           | ✅                        |
+|                                 | Delete a Peering Connection                             | DELETE v1/peering/:name                        | ✅                        |
+|                                 | List all Peerings                                       | GET v1/peerings                                | ✅                        |
 | **Config**                      | Apply Configuration                                     | PUT v1/config                                  | ✅                        |
 |                                 | Get Configuration                                       | GET v1/config/:kind/:name                      | ✅                        |
 |                                 | List Configurations                                     | GET v1/config/:kind/:name                      | ✅                        |
 |                                 | Delete Configuration                                    | DELETE v1/config/:kind/:name                   | ✅                        |
 | **Connect**                     | List CA Root Certificates                               | GET v1/connect/ca/roots                        | ✅                        |
-|                                 | Get CA Configuration                                    | GET v1/connect/ca/configuration                | 🚧                        |
-|                                 | Update CA Configuration                                 | PUT v1/connect/ca/configuration                | ❌                        |
+|                                 | Get CA Configuration                                    | GET v1/connect/ca/configuration                | ✅                        |
+|                                 | Update CA Configuration                                 | PUT v1/connect/ca/configuration                | ✅                        |
 |                                 | Upsert Intention by Name                                | PUT v1/connect/intentions/exact                | ✅                        |
 |                                 | Create Intention with ID                                | POST v1/connect/intentions                     | 🛑 (Deprecated in 1.9.0)  |
 |                                 | Update Intention by ID                                  | PUT v1/connect/intentions/:uuid                | 🛑 (Deprecated in 1.9.0)  |
@@ -78,6 +132,7 @@ _This version indicates the version of Consul API that is fully supported. Recen
 |                                 | POST v1/discovery-chain/:service                        | POST v1/discovery-chain/:service               | ✅                        |
 | **Events**                      | Fire Event                                              | PUT v1/event/fire/:name                        | ✅                        |
 |                                 | List Events                                             | GET v1/event/list                              | ✅                        |
+| **Exported Services**           | List Exported Services                                  | GET v1/exported-services                       | ✅                        |
 | **Health**                      | List Checks for Node                                    | GET v1/health/node/:node                       | ✅                        |
 |                                 | List Checks for Service                                 | GET v1/health/checks/:service                  | ✅                        |
 |                                 | List Nodes for Service                                  | GET v1/health/service/:service                 | ✅                        |
@@ -94,10 +149,10 @@ _This version indicates the version of Consul API that is fully supported. Recen
 |                                 | Delete Network Area                                     | DELETE v1/operator/area/:uuid                  | ✅                        |
 |                                 | Join Network Area                                       | PUT v1/operator/area/:uuid/join                | 🚧                        |
 |                                 | List Network Area Members                               | GET v1/operator/area/:uuid/members             | ❌                        |
-| **Autopilot Operator**          | Read Configuration                                      | GET v1/operator/autopilot/configuration        | ❌                        |
-|                                 | Update Configuration                                    | PUT v1/operator/autopilot/configuration        | ❌                        |
-|                                 | Read Health                                             | GET v1/operator/autopilot/health               | ❌                        |
-|                                 | Read the Autopilot State                                | GET v1/operator/autopilot/state                | ❌                        |
+| **Autopilot Operator**          | Read Configuration                                      | GET v1/operator/autopilot/configuration        | ✅                        |
+|                                 | Update Configuration                                    | PUT v1/operator/autopilot/configuration        | ✅                        |
+|                                 | Read Health                                             | GET v1/operator/autopilot/health               | ✅                        |
+|                                 | Read the Autopilot State                                | GET v1/operator/autopilot/state                | ✅                        |
 | **Keyring Operator**            | List Gossip Encryption Keys                             | GET v1/operator/keyring                        | ✅                        |
 |                                 | Add New Gossip Encryption Key                           | POST v1/operator/keyring                       | ✅                        |
 |                                 | Change Primary Gossip Encryption Key                    | PUT v1/operator/keyring                        | ✅                        |
@@ -107,7 +162,9 @@ _This version indicates the version of Consul API that is fully supported. Recen
 |                                 | Resetting the Consul License                            | DELETE v1/operator/license                     | 🛑 (Deprecated in 1.10.0) |
 | **Raft Operator**               | Read Configuration                                      | GET v1/operator/raft/configuration             | ✅                        |
 |                                 | Delete Raft Peer                                        | DELETE v1/operator/raft/peer                   | ✅                        |
+|                                 | Transfer Raft Leadership                                | POST v1/operator/raft/transfer-leader          | ✅                        |
 | **Network Segments - Operator** | List Network Segments                                   | GET v1/operator/segment                        | ✅                        |
+| **Operator-Utilization**        | Generate utilization bundle                             | GET v1/operator/utilization                    | ✅                        |
 | **Namespace**                   | Create a Namespace                                      | PUT v1/namespace                               | ✅                        |
 |                                 | Read a Namespace                                        | GET v1/namespace/:name                         | ✅                        |
 |                                 | Update a Namespace                                      | PUT v1/namespace/:name                         | ✅                        |
