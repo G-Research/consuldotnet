@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -84,24 +85,22 @@ namespace Consul.Test
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
             var clusterPeeringEntry = new ClusterPeeringTokenEntry
             {
-                PeerName = "cluster-03",
+                PeerName = "cluster-delete-entry",
                 Meta = new Dictionary<string, string> { ["env"] = "production" }
             };
             var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
-            var result = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            var result = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, QueryOptions.Default);
             Assert.NotNull(result.Response);
             Assert.NotNull(result.Response.ID);
             Assert.NotNull(result.Response.Remote);
             Assert.NotNull(result.Response.StreamStatus);
             // Request to delete that peering
-            var deleteResult = await _client.ClusterPeering.DeletePeering("cluster-03", WriteOptions.Default);
+            var deleteResult = await _client.ClusterPeering.DeletePeering(clusterPeeringEntry.PeerName, WriteOptions.Default);
+            Assert.NotNull(deleteResult);
+            Assert.Equal(HttpStatusCode.OK, deleteResult.StatusCode);
             // First attempt to access the deleted peering
-            var newResult = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
-            if (newResult.Response != null)
-            {
-                var options = new QueryOptions() { WaitIndex = newResult.LastIndex };
-                newResult = await _client.ClusterPeering.GetPeering("cluster-03", options);
-            }
+            var newResult = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, QueryOptions.Default);
+            Assert.Equal(HttpStatusCode.NotFound, newResult.StatusCode);
             Assert.Null(newResult.Response);
         }
     }
