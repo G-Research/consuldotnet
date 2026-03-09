@@ -79,7 +79,7 @@ jobs:
           path: ${{ runner.temp }}/format-patch
 
       - name: Commit changes
-        if: hashFiles('${{ runner.temp }}/format-patch/format.patch') != ''
+        if: hashFiles(format('{0}/format-patch/format.patch', runner.temp)) != ''
         run: |
           git config user.name octocat
           git config user.email octocat@users.noreply.github.com
