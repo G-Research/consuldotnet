@@ -57,6 +57,9 @@ Consul.AddressDetails.Port.set -> void
 Consul.Agent
 Consul.Agent.LogStream
 Consul.Agent.LogStream.Dispose() -> void
+Consul.Agent.UpdateToken(Consul.AgentToken token, string target) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.Agent.UpdateToken(Consul.AgentToken token, string target, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.Agent.UpdateToken(Consul.AgentToken token, string target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.AgentAuthorizeParameters
 Consul.AgentAuthorizeParameters.AgentAuthorizeParameters() -> void
 Consul.AgentAuthorizeResponse
@@ -125,6 +128,10 @@ Consul.AgentServiceRegistration.EnableTagOverride.get -> bool
 Consul.AgentServiceRegistration.EnableTagOverride.set -> void
 Consul.AgentServiceRegistration.Port.get -> int
 Consul.AgentServiceRegistration.Port.set -> void
+Consul.AgentToken
+Consul.AgentToken.AgentToken() -> void
+Consul.AgentToken.Token.get -> string
+Consul.AgentToken.Token.set -> void
 Consul.AgentVersion
 Consul.AgentVersion.AgentVersion() -> void
 Consul.AgentVersion.BuildDate.get -> System.DateTime
@@ -568,6 +575,9 @@ Consul.HttpURLRewriteOperation.HttpURLRewriteOperation() -> void
 Consul.IACLEndpoint
 Consul.IACLReplicationEndpoint
 Consul.IAgentEndpoint
+Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAuthMethodEndpoint
 Consul.ICatalogEndpoint
 Consul.IConfigurationEntry
@@ -4283,13 +4293,3 @@ static Consul.TTLStatus.Warn.get -> Consul.TTLStatus
 static readonly Consul.QueryOptions.Default -> Consul.QueryOptions
 static readonly Consul.Semaphore.DefaultSemaphoreKey -> string
 static readonly Consul.WriteOptions.Default -> Consul.WriteOptions
-Consul.AgentToken
-Consul.AgentToken.Token.get -> string
-Consul.AgentToken.Token.set -> void
-Consul.AgentToken.AgentToken() -> void
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string target) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string target, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
