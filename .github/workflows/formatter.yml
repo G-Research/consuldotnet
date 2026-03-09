@@ -1,7 +1,13 @@
+# Auto-formats C# whitespace in pull requests and pushes a fixup commit.
+# Uses a two-job design (format → push) to limit write permissions to
+# only the job that actually needs them.
 name: Format
 
 on:
-  # https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
+  # pull_request_target runs in the context of the *base* branch, not the PR.
+  # This is intentional: it avoids executing untrusted PR code while still
+  # allowing us to push back to the PR branch.
+  # See: https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/
   pull_request_target:
     paths:
       - "**.editorconfig"
@@ -9,20 +15,24 @@ on:
       - "**.cs"
       - .github/workflows/formatter.yml
 
+# Top-level: no permissions. Each job declares only what it needs.
 permissions: {}
 concurrency: ${{ github.workflow }}-${{ github.head_ref }}
 
 jobs:
+
   format:
     runs-on: ubuntu-slim
 
     steps:
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5.1.0  
+        uses: actions/setup-dotnet@v5.1.0
         with:
           dotnet-version: '9.0.x'
 
+      # https://github.com/dotnet/runtime/issues/118148
+      # Checkout into subdirectory, so we never evaluate global.json from potential attacker
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
         with:
@@ -45,13 +55,16 @@ jobs:
           name: format-patch
           path: ${{ runner.temp }}/format.patch
 
+  # Downloads the patch from the format job and commits it to the PR branch.
+  # This is the only job with write permissions, and it never runs untrusted
+  # code - it just applies a patch and pushes.
   push:
     needs: format
     runs-on: ubuntu-slim
     permissions:
       contents: write
-
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
         with:
@@ -72,6 +85,6 @@ jobs:
 
       - name: Commit changes
         run: |
-          git apply ${{ runner.temp }}/format-patch/format.patch 
+          git apply ${{ runner.temp }}/format-patch/format.patch
           git commit -am "style: fix whitespaces"
           git push
