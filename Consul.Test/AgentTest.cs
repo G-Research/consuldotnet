@@ -1160,9 +1160,9 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Agent_UpdateToken()
         {
-            var cutOffVersion = SemanticVersion.Parse("1.4.0");
-            Skip.If(AgentVersion < cutOffVersion, $@"Current version is {AgentVersion}, but ACL parameters
-                                                  for Consul agent configuration files is only supported from Consul {cutOffVersion}");
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but ACL tokens for " +
+                                                  $"Consul agent configuration files is only supported from Consul {cutOffVersion}");
 
             var token = new AgentToken
             {
