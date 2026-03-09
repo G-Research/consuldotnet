@@ -78,13 +78,12 @@ jobs:
           pattern: format-patch
           path: ${{ runner.temp }}/format-patch
 
-      - name: Set Git config
+      - name: Commit changes
+        if: hashFiles('${{ runner.temp }}/format-patch/format.patch') != ''
         run: |
           git config user.name octocat
           git config user.email octocat@users.noreply.github.com
-
-      - name: Commit changes
-        run: |
-          git apply ${{ runner.temp }}/format-patch/format.patch
+          git apply ${{ runner.temp }}/format-patch/format.patch 
           git commit -am "style: fix whitespaces"
           git push
+
