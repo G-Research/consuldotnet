@@ -1403,13 +1403,13 @@ namespace Consul
         /// Used to update one of an agent's ACL tokens after the agent has started
         /// </summary>
         /// <param name="token">Specifies the ACL token to set</param>
-        /// <param name="target">Token name as found in the agent configuration</param>
+        /// <param name="token_type">Token name as found in the agent configuration</param>
         /// <param name="w">Write Options</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public async Task<WriteResult> UpdateToken(AgentToken token, string target, WriteOptions w, CancellationToken ct)
+        public async Task<WriteResult> UpdateToken(AgentToken token, string token_type, WriteOptions w, CancellationToken ct)
         {
-            var res = await _client.Put($"/v1/agent/token/{target}", token, w).Execute(ct).ConfigureAwait(false);
+            var res = await _client.Put($"/v1/agent/token/{token_type}", token, w).Execute(ct).ConfigureAwait(false);
             return new WriteResult(res);
         }
 
@@ -1417,23 +1417,23 @@ namespace Consul
         /// Used to update one of an agent's ACL tokens after the agent has started
         /// </summary>
         /// <param name="token">Specifies the ACL token to set</param>
-        /// <param name="target">Token name as found in the agent configuration</param>
+        /// <param name="token_type">Token name as found in the agent configuration</param>
         /// <returns></returns>
-        public Task<WriteResult> UpdateToken(AgentToken token, string target)
+        public Task<WriteResult> UpdateToken(AgentToken token, string token_type)
         {
-            return UpdateToken(token, target, CancellationToken.None);
+            return UpdateToken(token, token_type, CancellationToken.None);
         }
 
         /// <summary>
         /// Used to update one of an agent's ACL tokens after the agent has started
         /// </summary>
         /// <param name="token">Specifies the ACL token to set</param>
-        /// <param name="target">Token name as found in the agent configuration</param>
+        /// <param name="token_type">Token name as found in the agent configuration</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public Task<WriteResult> UpdateToken(AgentToken token, string target, CancellationToken ct)
+        public Task<WriteResult> UpdateToken(AgentToken token, string token_type, CancellationToken ct)
         {
-            return UpdateToken(token, target, WriteOptions.Default, ct);
+            return UpdateToken(token, token_type, WriteOptions.Default, ct);
         }
     }
 
