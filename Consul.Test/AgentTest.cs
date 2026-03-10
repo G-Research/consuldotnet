@@ -1157,37 +1157,26 @@ namespace Consul.Test
             Assert.Equal(serviceConfiguration2.Response.Proxy.LocalServiceAddress, service.Proxy.LocalServiceAddress);
         }
 
-        [SkippableFact]
-        public async Task Agent_UpdateToken()
+        [SkippableTheory]
+        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "default")]
+        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "agent")]
+        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "agent_recovery")]
+        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "config_file_service_registration")]
+        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "replication")]
+        public async Task Agent_UpdateToken(string token, string tokenType)
         {
             var cutOffVersion = SemanticVersion.Parse("1.15.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but ACL tokens for " +
                                                   $"Consul agent configuration files is only supported from Consul {cutOffVersion}");
 
-            var token = new AgentToken
+            var agentToken = new AgentToken
             {
-                Token = "adf4238a-882b-9ddc-4a9d-5b6758e4159e"
+                Token = token
             };
 
-            var resDefault = await _client.Agent.UpdateToken(token, "default", WriteOptions.Default, CancellationToken.None);
+            var resDefault = await _client.Agent.UpdateToken(agentToken, tokenType);
             Assert.NotNull(resDefault);
             Assert.Equal(HttpStatusCode.OK, resDefault.StatusCode);
-
-            var resAgent = await _client.Agent.UpdateToken(token, "agent", WriteOptions.Default, CancellationToken.None);
-            Assert.NotNull(resAgent);
-            Assert.Equal(HttpStatusCode.OK, resAgent.StatusCode);
-
-            var resAgentRec = await _client.Agent.UpdateToken(token, "agent_recovery", WriteOptions.Default, CancellationToken.None);
-            Assert.NotNull(resAgentRec);
-            Assert.Equal(HttpStatusCode.OK, resAgentRec.StatusCode);
-
-            var resConfig = await _client.Agent.UpdateToken(token, "config_file_service_registration", WriteOptions.Default, CancellationToken.None);
-            Assert.NotNull(resConfig);
-            Assert.Equal(HttpStatusCode.OK, resConfig.StatusCode);
-
-            var resReplication = await _client.Agent.UpdateToken(token, "replication", WriteOptions.Default, CancellationToken.None);
-            Assert.NotNull(resReplication);
-            Assert.Equal(HttpStatusCode.OK, resReplication.StatusCode);
         }
     }
 }
