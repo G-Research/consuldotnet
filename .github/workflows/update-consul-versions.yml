@@ -40,7 +40,7 @@ jobs:
         uses: technote-space/create-pr-action@v2
         with:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
-          EXECUTE_COMMANDS: pwsh .github/workflows/scripts/update-consul-versions.ps1
+          EXECUTE_COMMANDS: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pwsh .github/workflows/scripts/update-consul-versions.ps1
           COMMIT_MESSAGE: 'Update Consul agent versions used for testing'
           COMMIT_NAME: 'Consul.NET CI'
           COMMIT_EMAIL: 'consuldotnet@gr-oss.io'

@@ -8,6 +8,7 @@ Set-GitHubConfiguration -SuppressTelemetryReminder
 # Use GITHUB_TOKEN if provided
 if ($Env:GITHUB_TOKEN -ne $null)
 {
+  echo "Using provided GITHUB_TOKEN"
   $token = ($Env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
   $cred = New-Object System.Management.Automation.PSCredential "username is ignored", $token
   Set-GitHubAuthentication -Credential $cred -SessionOnly
