@@ -8,14 +8,13 @@ Set-GitHubConfiguration -SuppressTelemetryReminder
 # Use GITHUB_TOKEN if provided
 if ($Env:GITHUB_TOKEN -ne $null)
 {
-  echo "Using provided GITHUB_TOKEN"
   $token = ($Env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
   $cred = New-Object System.Management.Automation.PSCredential "username is ignored", $token
   Set-GitHubAuthentication -Credential $cred -SessionOnly
 }
 
-# Fetch all the latest stable Consul releases
-$releases = Get-GitHubRelease -OwnerName $owner -RepositoryName $repo | Where-Object { ! $_.PreRelease }
+# Fetch all the latest stable non-Enterprise Consul releases
+$releases = Get-GitHubRelease -OwnerName $owner -RepositoryName $repo | Where-Object { -not $_.Draft -and -not $_.PreRelease -and $_.tag_name -match '^v\d+' }
 
 # Find the latest version for each minor release
 $latest = @{}
@@ -28,6 +27,8 @@ foreach ($release in $releases)
     $latest[$minor] = $version
   }
 }
+
+Write-Output "Found latest versions:`n$($latest.Values | Sort-Object | ForEach-Object { [string]$_ } | Out-String)"
 
 # Update the CI workflow with the latest versions
 (Get-Content $workflow) -Replace "consul: \[(\d+\.\d+\.\d+(, )?)+\]", "consul: [$($latest.Values | Sort-Object | ForEach-Object { [string]$_ } | Join-String -Separator ", ")]" | Set-Content $workflow
