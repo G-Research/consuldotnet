@@ -85,7 +85,7 @@ namespace Consul.Test
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but this test is only supported from Consul {cutOffVersion}");
             var clusterPeeringEntry = new ClusterPeeringTokenEntry
             {
-                PeerName = "cluster-delete-entry",
+                PeerName = "cluster-03",
                 Meta = new Dictionary<string, string> { ["env"] = "production" }
             };
             var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
@@ -98,10 +98,19 @@ namespace Consul.Test
             var deleteResult = await _client.ClusterPeering.DeletePeering(clusterPeeringEntry.PeerName, WriteOptions.Default);
             Assert.NotNull(deleteResult);
             Assert.Equal(HttpStatusCode.OK, deleteResult.StatusCode);
-            // First attempt to access the deleted peering
-            var newResult = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, QueryOptions.Default);
-            Assert.Equal(HttpStatusCode.NotFound, newResult.StatusCode);
-            Assert.Null(newResult.Response);
+
+            var checks = new QueryResult<ClusterPeeringStatus>(); 
+            ulong lastIndex = 0;
+            do
+            {
+                var options = new QueryOptions() { WaitIndex = lastIndex };
+                // attempt to access the deleted peering
+                checks = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, options);
+                lastIndex = checks.LastIndex;
+            } while (checks.Response != null);
+
+            Assert.Equal(HttpStatusCode.NotFound, checks.StatusCode);
+            Assert.Null(checks.Response);
         }
     }
 }
