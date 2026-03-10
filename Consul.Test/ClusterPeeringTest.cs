@@ -107,7 +107,7 @@ namespace Consul.Test
                 // attempt to access the deleted peering
                 checks = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, options);
                 lastIndex = checks.LastIndex;
-            } while(checks.Response != null);
+            } while (checks.Response != null);
 
             Assert.Equal(HttpStatusCode.NotFound, checks.StatusCode);
             Assert.Null(checks.Response);
