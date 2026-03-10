@@ -1158,12 +1158,16 @@ namespace Consul.Test
         }
 
         [SkippableTheory]
-        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "default")]
-        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "agent")]
-        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "agent_recovery")]
-        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "config_file_service_registration")]
-        [InlineData("adf4238a-882b-9ddc-4a9d-5b6758e4159e", "replication")]
-        public async Task Agent_UpdateToken(string token, string tokenType)
+        [InlineData("default", HttpStatusCode.OK)]
+        [InlineData("agent", HttpStatusCode.OK)]
+        [InlineData("agent_recovery", HttpStatusCode.OK)]
+        [InlineData("config_file_service_registration", HttpStatusCode.OK)]
+        [InlineData("replication", HttpStatusCode.OK)]
+        [InlineData("config_file", HttpStatusCode.NotFound)]
+        [InlineData("master_token", HttpStatusCode.NotFound)]
+        [InlineData("recovery", HttpStatusCode.NotFound)]
+        [InlineData("replication_token", HttpStatusCode.NotFound)]
+        public async Task Agent_UpdateToken(string tokenType, HttpStatusCode expectedResult)
         {
             var cutOffVersion = SemanticVersion.Parse("1.15.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but ACL tokens for " +
@@ -1171,12 +1175,12 @@ namespace Consul.Test
 
             var agentToken = new AgentToken
             {
-                Token = token
+                Token = "adf4238a-882b-9ddc-4a9d-5b6758e4159e"
             };
 
-            var resDefault = await _client.Agent.UpdateToken(agentToken, tokenType);
-            Assert.NotNull(resDefault);
-            Assert.Equal(HttpStatusCode.OK, resDefault.StatusCode);
+            var res = await _client.Agent.UpdateToken(agentToken, tokenType);
+            Assert.NotNull(res);
+            Assert.Equal(expectedResult, res.StatusCode);
         }
     }
 }
