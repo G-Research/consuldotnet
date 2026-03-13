@@ -1,2 +1,2 @@
-export {default as default, DotNetCoreBadge, DotNetFrameworkBadge, ConsulAPIBadge} from './CustomBadge.view';
+export {default as default, DotNetCoreBadge, DotNetFrameworkBadge} from './CustomBadge.view';
 
