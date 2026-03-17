@@ -73,7 +73,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Download patch
-        uses: actions/download-artifact@v8.0.0
+        uses: actions/download-artifact@v8.0.1
         with:
           pattern: format-patch
           path: ${{ runner.temp }}/format-patch

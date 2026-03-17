@@ -19,25 +19,6 @@ CustomBadge.defaultProps = {
     inline: true
 }
 
-const ConsulAPIBadge = ({inline}: { inline?: boolean }) => {
-    const {
-        siteConfig: {customFields}
-    } = useDocusaurusContext();
-    // @ts-ignore
-    const version = customFields?.consulAPIVersion;
-    return <CustomBadge
-        href={`https://github.com/hashicorp/consul/tree/v${version}/api`}
-        src={`https://img.shields.io/badge/Consul%20API%20version-${version}-red`}
-        alt={`Consul API: ${version}`}
-        inline={inline}
-    />
-};
-
-ConsulAPIBadge.defaultProps = {
-    inline: true
-}
-
-
 const DotNetFrameworkBadge = ({inline}: { inline?: boolean }) => {
     const {
         siteConfig: {customFields}
@@ -74,4 +55,4 @@ DotNetCoreBadge.defaultProps = {
 
 
 export default CustomBadge;
-export {ConsulAPIBadge, DotNetFrameworkBadge, DotNetCoreBadge};
+export {DotNetFrameworkBadge, DotNetCoreBadge};
