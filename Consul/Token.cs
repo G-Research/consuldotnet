@@ -45,6 +45,20 @@ namespace Consul
         public bool Local { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AuthMethod { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ExpandedPolicy[] ExpandedPolicies { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ExpandedRole[] ExpandedRoles { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string[] NamespaceDefaultPolicyIDs { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string[] NamespaceDefaultRoleIDs { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentACLDefaultPolicy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentACLDownPolicy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ResolvedByAgent { get; set; }
 
 
         public static bool ShouldSerializeCreateIndex()
@@ -89,6 +103,22 @@ namespace Consul
             Policies = policies;
             Roles = roles;
             ServiceIdentities = serviceIdentities;
+        }
+
+        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities, ExpandedPolicy[] expandedPolicies, ExpandedRole[] expandedRoles, string[] namespaceDefaultPolicyIDs, string[] namespaceDefaultRoleIDs, string agentACLDefaultPolicy, string agentACLDownPolicy, string resolvedByAgent)
+        {
+            AccessorID = accessorId;
+            Description = description;
+            Policies = policies;
+            Roles = roles;
+            ServiceIdentities = serviceIdentities;
+            ExpandedPolicies = expandedPolicies;
+            ExpandedRoles = expandedRoles;
+            NamespaceDefaultPolicyIDs = namespaceDefaultPolicyIDs;
+            NamespaceDefaultRoleIDs = namespaceDefaultRoleIDs;
+            AgentACLDefaultPolicy = agentACLDefaultPolicy;
+            AgentACLDownPolicy = agentACLDownPolicy;
+            ResolvedByAgent = resolvedByAgent;
         }
     }
 
