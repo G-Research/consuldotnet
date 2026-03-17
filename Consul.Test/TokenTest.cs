@@ -312,36 +312,49 @@ namespace Consul.Test
             var policy = await _client.Policy.Create(policyEntry);
             Assert.NotNull(policy.Response);
 
+            // create test role
+            var roleEntry = new RoleEntry
+            {
+                Name = "TestExpandedRole-" + Guid.NewGuid().ToString().Substring(0, 8),
+                Description = "Test Expanded Role",
+                Policies = new PolicyLink[] { policy.Response },
+            };
+            var role = await _client.Role.Create(roleEntry);
+            Assert.NotNull(role.Response);
+
             try
             {
-                // create a test token and link it to the test policy
                 var tokenEntry = new TokenEntry
                 {
                     Description = "Expansion Test Token",
                     Policies = new PolicyLink[] { policy.Response },
+                    Roles = new RoleLink[] { role.Response },
                     Local = true
                 };
                 var newToken = await _client.Token.Create(tokenEntry);
                 var accessorId = newToken.Response.AccessorID;
 
-                // both expanded and unexpanded responses contain policy links with ID and Name
+                // when expanded=false
                 var unexpandedRead = await _client.Token.Read(accessorId, false, QueryOptions.Default);
                 Assert.NotNull(unexpandedRead.Response.Policies);
-                var unexpandedPolicy = unexpandedRead.Response.Policies.FirstOrDefault(p => p.ID == policy.Response.ID);
-                Assert.NotNull(unexpandedPolicy);
-                Assert.Equal(policyEntry.Name, unexpandedPolicy.Name);
+                Assert.Equal(unexpandedRead.Response.Policies.FirstOrDefault().Name, policyEntry.Name);
+                Assert.NotNull(unexpandedRead.Response.Description);
+                Assert.Null(unexpandedRead.Response.AgentACLDefaultPolicy);
+                Assert.Null(unexpandedRead.Response.AgentACLDownPolicy);
+                Assert.Null(unexpandedRead.Response.ResolvedByAgent);
+                Assert.Null(unexpandedRead.Response.ExpandedPolicies);
+                Assert.Null(unexpandedRead.Response.ExpandedRoles);
 
+                // when expanded=true
                 var expandedRead = await _client.Token.Read(accessorId, true, QueryOptions.Default);
-                Assert.NotNull(expandedRead.Response.Policies);
-                var expandedPolicyLink = expandedRead.Response.Policies.FirstOrDefault(p => p.ID == policy.Response.ID);
-                Assert.NotNull(expandedPolicyLink);
-                Assert.Equal(policyEntry.Name, expandedPolicyLink.Name);
-
-                // when expanded=true, make sure we can read Description and Rules
-                var expandedPolicyDetails = await _client.Policy.Read(expandedPolicyLink.ID);
-                Assert.NotNull(expandedPolicyDetails.Response);
-                Assert.Equal(policyEntry.Description, expandedPolicyDetails.Response.Description);
-                Assert.Equal(policyEntry.Rules, expandedPolicyDetails.Response.Rules);
+                Assert.NotNull(expandedRead.Response.AgentACLDefaultPolicy);
+                Assert.NotNull(expandedRead.Response.AgentACLDownPolicy);
+                Assert.NotNull(expandedRead.Response.ResolvedByAgent);
+                Assert.NotNull(expandedRead.Response.ExpandedPolicies);
+                Assert.Equal(expandedRead.Response.ExpandedPolicies.FirstOrDefault().Rules, policyEntry.Rules);
+                Assert.NotNull(expandedRead.Response.ExpandedRoles);
+                Assert.Equal(expandedRead.Response.ExpandedRoles.FirstOrDefault().Name, roleEntry.Name);
+                Assert.NotNull(expandedRead.Response.ExpandedRoles.FirstOrDefault().Policies);
             }
             finally
             {
@@ -353,6 +366,7 @@ namespace Consul.Test
                     await _client.Token.Delete(testToken.AccessorID);
                 }
                 await _client.Policy.Delete(policy.Response.ID);
+                await _client.Role.Delete(role.Response.ID);
             }
         }
     }
