@@ -300,7 +300,7 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Token_ReadExpanded()
         {
-            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            var cutOffVersion = SemanticVersion.Parse("1.12.0");
             Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
