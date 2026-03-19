@@ -445,7 +445,7 @@ Consul.ExpandedPolicy.Datacenters.get -> string[]
 Consul.ExpandedPolicy.Datacenters.set -> void
 Consul.ExpandedPolicy.Description.get -> string
 Consul.ExpandedPolicy.Description.set -> void
-Consul.ExpandedPolicy.ExpandedPolicy(string id, string name, string description, string rules, string[] datacenters) -> void
+Consul.ExpandedPolicy.ExpandedPolicy() -> void
 Consul.ExpandedPolicy.ID.get -> string
 Consul.ExpandedPolicy.ID.set -> void
 Consul.ExpandedPolicy.Name.get -> string
@@ -455,7 +455,7 @@ Consul.ExpandedPolicy.Rules.set -> void
 Consul.ExpandedRole
 Consul.ExpandedRole.Description.get -> string
 Consul.ExpandedRole.Description.set -> void
-Consul.ExpandedRole.ExpandedRole(string id, string name, string description, Consul.PolicyLink[] policies, Consul.ServiceIdentity[] serviceIdentities) -> void
+Consul.ExpandedRole.ExpandedRole() -> void
 Consul.ExpandedRole.ID.get -> string
 Consul.ExpandedRole.ID.set -> void
 Consul.ExpandedRole.Name.get -> string
@@ -1226,7 +1226,6 @@ Consul.TokenEntry.NamespaceDefaultRoleIDs.set -> void
 Consul.TokenEntry.ResolvedByAgent.get -> string
 Consul.TokenEntry.ResolvedByAgent.set -> void
 Consul.TokenEntry.TokenEntry() -> void
-Consul.TokenEntry.TokenEntry(string accessorId, string description, Consul.PolicyLink[] policies, Consul.RoleLink[] roles, Consul.ServiceIdentity[] serviceIdentities, Consul.ExpandedPolicy[] expandedPolicies, Consul.ExpandedRole[] expandedRoles, string[] namespaceDefaultPolicyIDs, string[] namespaceDefaultRoleIDs, string agentACLDefaultPolicy, string agentACLDownPolicy, string resolvedByAgent) -> void
 Consul.TransparentProxy
 Consul.TransparentProxy.OutboundListenerPort.get -> int
 Consul.TransparentProxy.OutboundListenerPort.set -> void

@@ -104,22 +104,6 @@ namespace Consul
             Roles = roles;
             ServiceIdentities = serviceIdentities;
         }
-
-        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities, ExpandedPolicy[] expandedPolicies, ExpandedRole[] expandedRoles, string[] namespaceDefaultPolicyIDs, string[] namespaceDefaultRoleIDs, string agentACLDefaultPolicy, string agentACLDownPolicy, string resolvedByAgent)
-        {
-            AccessorID = accessorId;
-            Description = description;
-            Policies = policies;
-            Roles = roles;
-            ServiceIdentities = serviceIdentities;
-            ExpandedPolicies = expandedPolicies;
-            ExpandedRoles = expandedRoles;
-            NamespaceDefaultPolicyIDs = namespaceDefaultPolicyIDs;
-            NamespaceDefaultRoleIDs = namespaceDefaultRoleIDs;
-            AgentACLDefaultPolicy = agentACLDefaultPolicy;
-            AgentACLDownPolicy = agentACLDownPolicy;
-            ResolvedByAgent = resolvedByAgent;
-        }
     }
 
     /// <summary>

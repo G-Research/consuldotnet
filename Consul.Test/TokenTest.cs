@@ -300,12 +300,14 @@ namespace Consul.Test
         [SkippableFact]
         public async Task Token_ReadExpanded()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.7.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             // create test policy
             var policyEntry = new PolicyEntry
             {
-                Name = "TestExpandedPolicy-" + Guid.NewGuid().ToString().Substring(0, 8),
+                Name = KVTest.GenerateTestKeyName(),
                 Description = "Test Expanded Policy",
                 Rules = "key \"\" { policy = \"read\" }"
             };
@@ -315,7 +317,7 @@ namespace Consul.Test
             // create test role
             var roleEntry = new RoleEntry
             {
-                Name = "TestExpandedRole-" + Guid.NewGuid().ToString().Substring(0, 8),
+                Name = KVTest.GenerateTestKeyName(),
                 Description = "Test Expanded Role",
                 Policies = new PolicyLink[] { policy.Response },
             };

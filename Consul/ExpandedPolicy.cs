@@ -27,14 +27,5 @@ namespace Consul
         public string Description { get; set; }
         public string Rules { get; set; }
         public string[] Datacenters { get; set; }
-
-        public ExpandedPolicy(string id, string name, string description, string rules, string[] datacenters)
-        {
-            ID = id;
-            Name = name;
-            Description = description;
-            Rules = rules;
-            Datacenters = datacenters;
-        }
     }
 }

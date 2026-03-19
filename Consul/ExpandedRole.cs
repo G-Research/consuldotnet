@@ -25,14 +25,5 @@ namespace Consul
         public string Description { get; set; }
         public PolicyLink[] Policies { get; set; }
         public ServiceIdentity[] ServiceIdentities { get; set; }
-
-        public ExpandedRole(string id, string name, string description, PolicyLink[] policies, ServiceIdentity[] serviceIdentities)
-        {
-            ID = id;
-            Name = name;
-            Description = description;
-            Policies = policies;
-            ServiceIdentities = serviceIdentities;
-        }
     }
 }
