@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Xunit;
@@ -88,21 +89,28 @@ namespace Consul.Test
                 Meta = new Dictionary<string, string> { ["env"] = "production" }
             };
             var clusterPeeringCreateResponse = await _client.ClusterPeering.GenerateToken(clusterPeeringEntry);
-            var result = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
+            var result = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, QueryOptions.Default);
             Assert.NotNull(result.Response);
             Assert.NotNull(result.Response.ID);
             Assert.NotNull(result.Response.Remote);
             Assert.NotNull(result.Response.StreamStatus);
             // Request to delete that peering
-            var deleteResult = await _client.ClusterPeering.DeletePeering("cluster-03", WriteOptions.Default);
-            // First attempt to access the deleted peering
-            var newResult = await _client.ClusterPeering.GetPeering("cluster-03", QueryOptions.Default);
-            if (newResult.Response != null)
+            var deleteResult = await _client.ClusterPeering.DeletePeering(clusterPeeringEntry.PeerName, WriteOptions.Default);
+            Assert.NotNull(deleteResult);
+            Assert.Equal(HttpStatusCode.OK, deleteResult.StatusCode);
+
+            var checks = new QueryResult<ClusterPeeringStatus>();
+            ulong lastIndex = 0;
+            do
             {
-                var options = new QueryOptions() { WaitIndex = newResult.LastIndex };
-                newResult = await _client.ClusterPeering.GetPeering("cluster-03", options);
-            }
-            Assert.Null(newResult.Response);
+                var options = new QueryOptions() { WaitIndex = lastIndex };
+                // attempt to access the deleted peering
+                checks = await _client.ClusterPeering.GetPeering(clusterPeeringEntry.PeerName, options);
+                lastIndex = checks.LastIndex;
+            } while (checks.Response != null);
+
+            Assert.Equal(HttpStatusCode.NotFound, checks.StatusCode);
+            Assert.Null(checks.Response);
         }
     }
 }
