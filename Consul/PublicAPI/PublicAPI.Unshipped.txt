@@ -1,0 +1,44 @@
+Consul.ExpandedPolicy
+Consul.ExpandedPolicy.Datacenters.get -> string[]
+Consul.ExpandedPolicy.Datacenters.set -> void
+Consul.ExpandedPolicy.Description.get -> string
+Consul.ExpandedPolicy.Description.set -> void
+Consul.ExpandedPolicy.ExpandedPolicy() -> void
+Consul.ExpandedPolicy.ID.get -> string
+Consul.ExpandedPolicy.ID.set -> void
+Consul.ExpandedPolicy.Name.get -> string
+Consul.ExpandedPolicy.Name.set -> void
+Consul.ExpandedPolicy.Rules.get -> string
+Consul.ExpandedPolicy.Rules.set -> void
+Consul.ExpandedRole
+Consul.ExpandedRole.Description.get -> string
+Consul.ExpandedRole.Description.set -> void
+Consul.ExpandedRole.ExpandedRole() -> void
+Consul.ExpandedRole.ID.get -> string
+Consul.ExpandedRole.ID.set -> void
+Consul.ExpandedRole.Name.get -> string
+Consul.ExpandedRole.Name.set -> void
+Consul.ExpandedRole.Policies.get -> Consul.PolicyLink[]
+Consul.ExpandedRole.Policies.set -> void
+Consul.ExpandedRole.ServiceIdentities.get -> Consul.ServiceIdentity[]
+Consul.ExpandedRole.ServiceIdentities.set -> void
+Consul.ITokenEndpoint.Read(string id, bool expanded, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.Token.Read(string id, bool expanded, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.Token.Read(string id, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.Token.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.TokenEntry.AgentACLDefaultPolicy.get -> string
+Consul.TokenEntry.AgentACLDefaultPolicy.set -> void
+Consul.TokenEntry.AgentACLDownPolicy.get -> string
+Consul.TokenEntry.AgentACLDownPolicy.set -> void
+Consul.TokenEntry.ExpandedPolicies.get -> Consul.ExpandedPolicy[]
+Consul.TokenEntry.ExpandedPolicies.set -> void
+Consul.TokenEntry.ExpandedRoles.get -> Consul.ExpandedRole[]
+Consul.TokenEntry.ExpandedRoles.set -> void
+Consul.TokenEntry.NamespaceDefaultPolicyIDs.get -> string[]
+Consul.TokenEntry.NamespaceDefaultPolicyIDs.set -> void
+Consul.TokenEntry.NamespaceDefaultRoleIDs.get -> string[]
+Consul.TokenEntry.NamespaceDefaultRoleIDs.set -> void
+Consul.TokenEntry.ResolvedByAgent.get -> string
+Consul.TokenEntry.ResolvedByAgent.set -> void
