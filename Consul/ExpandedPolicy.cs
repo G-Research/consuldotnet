@@ -16,8 +16,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Data;
-
 namespace Consul
 {
     public class ExpandedPolicy

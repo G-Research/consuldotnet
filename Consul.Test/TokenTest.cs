@@ -301,7 +301,7 @@ namespace Consul.Test
         public async Task Token_ReadExpanded()
         {
             var cutOffVersion = SemanticVersion.Parse("1.12.0");
-            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but `Namespaces` is only supported from Consul {cutOffVersion}");
+            Skip.If(AgentVersion < cutOffVersion, $"Current Consul version {AgentVersion} does not support the `-expanded` flag to display detailed role and policy information for the token. Requires >= {cutOffVersion}.");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             // create test policy
@@ -312,7 +312,9 @@ namespace Consul.Test
                 Rules = "key \"\" { policy = \"read\" }"
             };
             var policy = await _client.Policy.Create(policyEntry);
-            Assert.NotNull(policy.Response);
+            Assert.NotEmpty(policy.Response.Name);
+            Assert.NotEmpty(policy.Response.Description);
+            Assert.NotEmpty(policy.Response.Rules);
 
             // create test role
             var roleEntry = new RoleEntry
@@ -322,7 +324,9 @@ namespace Consul.Test
                 Policies = new PolicyLink[] { policy.Response },
             };
             var role = await _client.Role.Create(roleEntry);
-            Assert.NotNull(role.Response);
+            Assert.NotEmpty(role.Response.Name);
+            Assert.NotEmpty(role.Response.Description);
+            Assert.NotEmpty(role.Response.Policies);
 
             try
             {
@@ -338,9 +342,9 @@ namespace Consul.Test
 
                 // when expanded=false
                 var unexpandedRead = await _client.Token.Read(accessorId, false, QueryOptions.Default);
-                Assert.NotNull(unexpandedRead.Response.Policies);
-                Assert.Equal(unexpandedRead.Response.Policies.FirstOrDefault().Name, policyEntry.Name);
-                Assert.NotNull(unexpandedRead.Response.Description);
+                Assert.NotEmpty(unexpandedRead.Response.Policies);
+                Assert.Equal(policyEntry.Name, unexpandedRead.Response.Policies.First().Name);
+                Assert.NotEmpty(unexpandedRead.Response.Description);
                 Assert.Null(unexpandedRead.Response.AgentACLDefaultPolicy);
                 Assert.Null(unexpandedRead.Response.AgentACLDownPolicy);
                 Assert.Null(unexpandedRead.Response.ResolvedByAgent);
@@ -349,14 +353,14 @@ namespace Consul.Test
 
                 // when expanded=true
                 var expandedRead = await _client.Token.Read(accessorId, true, QueryOptions.Default);
-                Assert.NotNull(expandedRead.Response.AgentACLDefaultPolicy);
-                Assert.NotNull(expandedRead.Response.AgentACLDownPolicy);
-                Assert.NotNull(expandedRead.Response.ResolvedByAgent);
-                Assert.NotNull(expandedRead.Response.ExpandedPolicies);
-                Assert.Equal(expandedRead.Response.ExpandedPolicies.FirstOrDefault().Rules, policyEntry.Rules);
-                Assert.NotNull(expandedRead.Response.ExpandedRoles);
-                Assert.Equal(expandedRead.Response.ExpandedRoles.FirstOrDefault().Name, roleEntry.Name);
-                Assert.NotNull(expandedRead.Response.ExpandedRoles.FirstOrDefault().Policies);
+                Assert.NotEmpty(expandedRead.Response.AgentACLDefaultPolicy);
+                Assert.NotEmpty(expandedRead.Response.AgentACLDownPolicy);
+                Assert.NotEmpty(expandedRead.Response.ResolvedByAgent);
+                Assert.NotEmpty(expandedRead.Response.ExpandedPolicies);
+                Assert.Equal(policyEntry.Rules, expandedRead.Response.ExpandedPolicies.First().Rules);
+                Assert.NotEmpty(expandedRead.Response.ExpandedRoles);
+                Assert.Equal(roleEntry.Name, expandedRead.Response.ExpandedRoles.First().Name);
+                Assert.NotEmpty(expandedRead.Response.ExpandedRoles.First().Policies);
             }
             finally
             {
