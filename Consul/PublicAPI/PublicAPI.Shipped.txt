@@ -4283,13 +4283,3 @@ static Consul.TTLStatus.Warn.get -> Consul.TTLStatus
 static readonly Consul.QueryOptions.Default -> Consul.QueryOptions
 static readonly Consul.Semaphore.DefaultSemaphoreKey -> string
 static readonly Consul.WriteOptions.Default -> Consul.WriteOptions
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.AgentToken
-Consul.AgentToken.Token.get -> string
-Consul.AgentToken.Token.set -> void
-Consul.AgentToken.AgentToken() -> void
