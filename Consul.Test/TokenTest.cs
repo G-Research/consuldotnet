@@ -285,58 +285,70 @@ namespace Consul.Test
         }
 
         [SkippableFact]
-        public async Task Token_List_FilterByPolicy()
+        public async Task Token_List_FilterBy()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
-            //Create a specific Policy to filter by
+            // Create a specific Policy to filter by
             var policyEntry = new PolicyEntry
             {
-                Name = "TokenListFilterPolicy",
+                Name = KVTest.GenerateTestKeyName(),
                 Description = "Policy used to test token list filtering",
                 Rules = "key \"\" { policy = \"read\" }",
-                Datacenters = new[] { "dc1" }
             };
             var policy = await _client.Policy.Create(policyEntry);
-            Assert.NotNull(policy.Response);
+            Assert.NotNull(policy.Response.Name);
 
-            //Create a Token linked to this Policy (Should be found)
-            var matchingTokenEntry = new TokenEntry
+            // create a test role to filter by
+            var roleEntry = new RoleEntry
             {
-                Description = "Token Linked to Filter Policy",
-                SecretID = Guid.NewGuid().ToString(),
-                Policies = new[] { new PolicyLink { ID = policy.Response.ID } },
-                Local = true
+                Name = KVTest.GenerateTestKeyName(),
+                Description = "Test Expanded Role",
+                Policies = new PolicyLink[] { policy.Response },
             };
-            var matchingToken = await _client.Token.Create(matchingTokenEntry);
+            var role = await _client.Role.Create(roleEntry);
+            Assert.NotNull(role.Response);
 
-            // Create a Token NOT linked to this Policy (It Should NOT be found)
-            var nonMatchingTokenEntry = new TokenEntry
-            {
-                Description = "Token NOT Linked to Filter Policy",
-                SecretID = Guid.NewGuid().ToString(),
-                Local = true
-            };
-            var nonMatchingToken = await _client.Token.Create(nonMatchingTokenEntry);
-
+            WriteResult<TokenEntry> matchingToken = null;
+            WriteResult<TokenEntry> nonMatchingToken = null;
             try
             {
+                // Create a Token linked to this Policy (Should be found)
+                var matchingTokenEntry = new TokenEntry
+                {
+                    Description = "Token Linked to Filter Policy",
+                    Policies = new PolicyLink[] { policy.Response },
+                    Roles = new RoleLink[] { role.Response },
+                    Local = true
+                };
+                matchingToken = await _client.Token.Create(matchingTokenEntry);
+                Assert.NotEmpty(matchingToken.Response.Policies);
+                Assert.NotEmpty(matchingToken.Response.Roles);
+
+                // Create a Token NOT linked to this Policy (It Should NOT be found)
+                var nonMatchingTokenEntry = new TokenEntry
+                {
+                    Description = "Token NOT Linked to Filter Policy",
+                    Local = true
+                };
+                nonMatchingToken = await _client.Token.Create(nonMatchingTokenEntry);
+                Assert.NotEmpty(nonMatchingToken.Response.Description);
+
                 // List tokens filtering by the specific Policy ID
                 var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
-
-                Assert.NotNull(filteredList.Response);
-                Assert.NotEqual(TimeSpan.Zero, filteredList.RequestTime);
-
+                Assert.NotEmpty(filteredList.Response);
                 Assert.Contains(filteredList.Response, t => t.AccessorID == matchingToken.Response.AccessorID);
-
                 Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == nonMatchingToken.Response.AccessorID);
             }
             finally
             {
                 // Cleanup
-                await _client.Token.Delete(matchingToken.Response.AccessorID);
-                await _client.Token.Delete(nonMatchingToken.Response.AccessorID);
+                if (matchingToken.Response != null)
+                    await _client.Token.Delete(matchingToken.Response.AccessorID);
+                if (nonMatchingToken.Response != null)
+                    await _client.Token.Delete(nonMatchingToken.Response.AccessorID);
                 await _client.Policy.Delete(policy.Response.ID);
+                await _client.Role.Delete(role.Response.ID);
             }
         }
         

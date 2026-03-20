@@ -368,12 +368,12 @@ namespace Consul
         /// <returns>A query result containing an array of ACL Tokens</returns>
         public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod, CancellationToken ct)
         {
-            return List(policy, role, serviceName, authMethod, ct);
+            return List(policy, role, serviceName, authMethod, QueryOptions.Default, ct);
         }
 
         public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod)
         {
-            return List(policy, role, serviceName, authMethod, CancellationToken.None);
+            return List(policy, role, serviceName, authMethod, QueryOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
