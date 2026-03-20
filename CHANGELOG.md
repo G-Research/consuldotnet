@@ -5,13 +5,8 @@
 > **Note:** Starting with version 1.8.0, Consul.NET versioning is now independent from the Consul server version. The project now follows standard semantic versioning (`MAJOR.MINOR.PATCH`).
 
 ## 1.8.0
-* Fix RS0022 warnings (#577)
-* Fix RS0041 warnings (#583)
-* Update release process docs to include PublicAPIAnalyzers (#584)
 * Add PublicApiAnalyzers to AspNetCore project (#585)
-* Update supported APIs (docs) (#595)
 * Make Consul.NET versioning independent of Consul versioning (#586)
-* Fix formatting syntax in the docs (#604)
 
 ## 1.7.14.11
 * Add Create Exported Services List HTTP Endpoint (#543)
