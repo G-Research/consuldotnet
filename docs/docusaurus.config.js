@@ -9,8 +9,7 @@ require('dotenv').config();
 
 const dotNetFrameworkMinVersion = `4.6.1`;
 const dotNetCoreMinVersion = `2.0.0`;
-const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X.X`);
-const consulAPIVersion = clean_version(extract_consul_version(consulDotNetVersion));
+const consulDotNetVersion = clean_version(process.env.CONSUL_DOT_NET_VERSION || `X.X.X`);
 const url = process.env.URL || `https://consuldot.net`;
 const baseUrl = process.env.BASE_URL || `/`;
 const shouldIncludeApiReference = fs.existsSync('./api');
@@ -18,14 +17,6 @@ const shouldIncludeApiReference = fs.existsSync('./api');
 function clean_version(version) {
     if (version) {
         return version.replace(/^v/, ``);
-    }
-    return ``;
-}
-
-function extract_consul_version(consul_dot_net_version) {
-    if (consul_dot_net_version) {
-        const parts = consul_dot_net_version.split(".");
-        return parts.slice(0, 3).join(".");
     }
     return ``;
 }
@@ -55,7 +46,6 @@ const config = {
 
     customFields: {
         consulDotNetVersion,
-        consulAPIVersion,
         dotNetFrameworkMinVersion,
         dotNetCoreMinVersion,
     },
