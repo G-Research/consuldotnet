@@ -24,15 +24,6 @@ using Newtonsoft.Json;
 
 namespace Consul
 {
-    public class TemplatedPolicy
-    {
-        [JsonProperty("TemplateName")]
-        public string TemplateName { get; set; }
-
-        [JsonProperty("TemplateVariables")]
-        public Dictionary<string, object> TemplateVariables { get; set; }
-    }
-
     /// <summary>
     /// TokenEntry is used to represent an ACL Token in Consul
     /// </summary>
@@ -354,6 +345,16 @@ namespace Consul
         public Task<QueryResult<TokenEntry[]>> List()
         {
             return List(null, null, null, null, QueryOptions.Default, CancellationToken.None);
+        }
+
+        public Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct)
+        {
+            return List(null, null, null, null, q, ct);
+        }
+
+        public Task<QueryResult<TokenEntry[]>> List(QueryOptions q)
+        {
+            return List(null, null, null, null, q, CancellationToken.None);
         }
 
         /// <summary>

@@ -1,0 +1,25 @@
+Consul.ITokenEndpoint.List(Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.ITokenEndpoint.List(string policy, string role, string serviceName, string authMethod, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.TemplatedPolicy
+Consul.TemplatedPolicy.TemplatedPolicy() -> void
+Consul.TemplatedPolicy.TemplateName.get -> string
+Consul.TemplatedPolicy.TemplateName.set -> void
+Consul.TemplatedPolicy.TemplateVariables.get -> System.Collections.Generic.Dictionary<string, object>
+Consul.TemplatedPolicy.TemplateVariables.set -> void
+Consul.Token.List(Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(string policy, string role, string serviceName, string authMethod) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(string policy, string role, string serviceName, string authMethod, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.Token.List(string policy, string role, string serviceName, string authMethod, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
+Consul.TokenEntry.ExpirationTime.get -> System.DateTime?
+Consul.TokenEntry.ExpirationTime.set -> void
+Consul.TokenEntry.ExpirationTTL.get -> System.TimeSpan?
+Consul.TokenEntry.ExpirationTTL.set -> void
+Consul.TokenEntry.ShouldSerializeNodeIdentities() -> bool
+Consul.TokenEntry.ShouldSerializeTemplatedPolicies() -> bool
+Consul.TokenEntry.TemplatedPolicies.get -> Consul.TemplatedPolicy[]
+Consul.TokenEntry.TemplatedPolicies.set -> void
+Consul.TokenEntry.TokenEntry(string accessorId, string description, Consul.PolicyLink[] policies, Consul.RoleLink[] roles, Consul.ServiceIdentity[] serviceIdentities, bool local, Consul.TemplatedPolicy[] templatedPolicies, Consul.NodeIdentity[] nodeIdentities, System.DateTime? expirationTime, System.TimeSpan? expirationTTL) -> void
