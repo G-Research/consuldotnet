@@ -90,6 +90,6 @@ namespace Consul
         Task<QueryResult<ServiceConfiguration>> GetServiceConfiguration(string serviceID);
         Task<WriteResult> UpdateToken(AgentToken token, string tokenType);
         Task<WriteResult> UpdateToken(AgentToken token, string tokenType, CancellationToken ct);
-        Task<WriteResult> UpdateToken(AgentToken token, string tokenType, WriteOptions w = WriteOptions.Default, CancellationToken ct = default);
+        Task<WriteResult> UpdateToken(AgentToken token, string tokenType, WriteOptions w, CancellationToken ct = default);
     }
 }

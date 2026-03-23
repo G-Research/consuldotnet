@@ -1,9 +1,8 @@
-
+Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
-Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.AgentToken
 Consul.AgentToken.Token.get -> string

@@ -1407,10 +1407,9 @@ namespace Consul
         /// <param name="w">Write Options</param>
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
-        public async Task<WriteResult> UpdateToken(AgentToken token, string tokenType, WriteOptions w, CancellationToken ct)
+        public async Task<WriteResult> UpdateToken(AgentToken token, string tokenType, WriteOptions w, CancellationToken ct = default)
         {
             return await _client.Put($"/v1/agent/token/{tokenType}", token, w).Execute(ct).ConfigureAwait(false);
-            return new WriteResult(res);
         }
 
         /// <summary>
