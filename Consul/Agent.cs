@@ -1409,7 +1409,7 @@ namespace Consul
         /// <returns></returns>
         public async Task<WriteResult> UpdateToken(AgentToken token, string tokenType, WriteOptions w, CancellationToken ct)
         {
-            var res = await _client.Put($"/v1/agent/token/{tokenType}", token, w).Execute(ct).ConfigureAwait(false);
+            return await _client.Put($"/v1/agent/token/{tokenType}", token, w).Execute(ct).ConfigureAwait(false);
             return new WriteResult(res);
         }
 
