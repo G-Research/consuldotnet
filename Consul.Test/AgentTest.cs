@@ -19,7 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Consul.Filtering;
 using NuGet.Versioning;
@@ -1153,6 +1155,32 @@ namespace Consul.Test
             Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceName, service.Proxy.DestinationServiceName);
             Assert.Equal(serviceConfiguration2.Response.Proxy.DestinationServiceID, service.Proxy.DestinationServiceID);
             Assert.Equal(serviceConfiguration2.Response.Proxy.LocalServiceAddress, service.Proxy.LocalServiceAddress);
+        }
+
+        [SkippableTheory]
+        [InlineData("default", HttpStatusCode.OK)]
+        [InlineData("agent", HttpStatusCode.OK)]
+        [InlineData("agent_recovery", HttpStatusCode.OK)]
+        [InlineData("config_file_service_registration", HttpStatusCode.OK)]
+        [InlineData("replication", HttpStatusCode.OK)]
+        [InlineData("config_file", HttpStatusCode.NotFound)]
+        [InlineData("master_token", HttpStatusCode.NotFound)]
+        [InlineData("recovery", HttpStatusCode.NotFound)]
+        [InlineData("replication_token", HttpStatusCode.NotFound)]
+        public async Task Agent_UpdateToken(string tokenType, HttpStatusCode expectedResult)
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.15.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current version is {AgentVersion}, but ACL tokens for " +
+                                                  $"Consul agent configuration files is only supported from Consul {cutOffVersion}");
+
+            var agentToken = new AgentToken
+            {
+                Token = "adf4238a-882b-9ddc-4a9d-5b6758e4159e"
+            };
+
+            var res = await _client.Agent.UpdateToken(agentToken, tokenType);
+            Assert.NotNull(res);
+            Assert.Equal(expectedResult, res.StatusCode);
         }
     }
 }
