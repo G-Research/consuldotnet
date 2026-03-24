@@ -30,17 +30,12 @@ namespace Consul.Test
         public async Task Token_CreateDelete()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
-            var cutOffVersion = SemanticVersion.Parse("1.7.14");
-            Skip.If(AgentVersion == cutOffVersion, $"Node Identity is not supported in {AgentVersion}");
-
-            var nodeIdentity = new NodeIdentity { NodeName = "node-1", Datacenter = "dc1", };
-
+            
             var tokenEntry = new TokenEntry
             {
                 Description = "API Testing Token",
                 SecretID = "1ED8D9E5-7868-4A0A-AC2F-6F75BEC71830",
-                Local = true,
-                NodeIdentities = new NodeIdentity[] { nodeIdentity },
+                Local = true
             };
 
             var newToken = await _client.Token.Create(tokenEntry);
