@@ -309,7 +309,14 @@ namespace Consul.Test
                 ServiceName = "web",
                 Datacenters = new string[] {"dc1"}
             };
-            Assert.NotNull(serviceIdentity);
+
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "kubernetes",
+                Type = "kubernetes"
+            };
+            var authMethod = await _client.AuthMethod.Create(authMethodEntry);
+            Assert.Equal(authMethodEntry.Name, authMethod.Response.Name);
 
             var tokenEntry1 = new TokenEntry
             {
@@ -326,13 +333,13 @@ namespace Consul.Test
             {
                 Description = "Token NOT Linked to Filter Policy",
                 Local = true,
-                AuthMethod = "jwt",
+                AuthMethod = authMethodEntry.Name,
                 ServiceIdentities = new ServiceIdentity[] { serviceIdentity }
             };
             var token2 = await _client.Token.Create(tokenEntry2);
             Assert.NotEmpty(token2.Response.Description);
-            Assert.Equal("jwt", token2.Response.AuthMethod);
-            Assert.Equal("web", token2.Response.ServiceIdentities.First().ServiceName);
+            Assert.Equal(authMethodEntry.Name, token2.Response.AuthMethod);
+            Assert.Equal(serviceIdentity.ServiceName, token2.Response.ServiceIdentities.First().ServiceName);
 
             // List tokens filtering by the specific PolicyID
             var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
@@ -347,13 +354,13 @@ namespace Consul.Test
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
 
             // List tokens filtering by the specific ServiceName
-            filteredList = await _client.Token.List(null, null, "web", null);
+            filteredList = await _client.Token.List(null, null, serviceIdentity.ServiceName, null);
             Assert.NotEmpty(filteredList.Response);
             Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
 
             // List tokens filtering by the specific AuthMethod
-            filteredList = await _client.Token.List(null, null, null, "jwt");
+            filteredList = await _client.Token.List(null, null, null, authMethodEntry.Name);
             Assert.NotEmpty(filteredList.Response);
             Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
