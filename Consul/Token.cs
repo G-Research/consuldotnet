@@ -52,6 +52,16 @@ namespace Consul
         public TimeSpan? ExpirationTTL { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AuthMethod { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ExpandedPolicy[] ExpandedPolicies { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ExpandedRole[] ExpandedRoles { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentACLDefaultPolicy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentACLDownPolicy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ResolvedByAgent { get; set; }
 
 
         public static bool ShouldSerializeCreateIndex()
@@ -296,24 +306,40 @@ namespace Consul
         /// <returns>A query result containing the requested ACL Token</returns>
         public Task<QueryResult<TokenEntry>> Read(string id, CancellationToken ct)
         {
-            return Read(id, QueryOptions.Default, ct);
+            return Read(id, false, QueryOptions.Default, ct);
         }
 
         public Task<QueryResult<TokenEntry>> Read(string id)
         {
-            return Read(id, QueryOptions.Default, CancellationToken.None);
+            return Read(id, false, QueryOptions.Default, CancellationToken.None);
+        }
+
+        public Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q)
+        {
+            return Read(id, false, q, CancellationToken.None);
+        }
+
+        public Task<QueryResult<TokenEntry>> Read(string id, QueryOptions q, CancellationToken ct)
+        {
+            return Read(id, false, q, ct);
         }
 
         /// <summary>
         /// Gets an existing ACL Token from Consul
         /// </summary>
         /// <param name="id">The Accessor ID of the ACL Token to get</param>
+        /// <param name="expanded">If true, the contents of all policies and roles affecting the token will also be returned</param>
         /// <param name="queryOptions">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing the requested ACL Token</returns>
-        public async Task<QueryResult<TokenEntry>> Read(string id, QueryOptions queryOptions, CancellationToken ct = default)
+        public async Task<QueryResult<TokenEntry>> Read(string id, bool expanded, QueryOptions queryOptions, CancellationToken ct = default)
         {
-            var res = await _client.Get<TokenActionResult>($"/v1/acl/token/{id}", queryOptions).Execute(ct).ConfigureAwait(false);
+            var req = _client.Get<TokenActionResult>($"/v1/acl/token/{id}", queryOptions);
+            if (expanded)
+            {
+                req.Params["expanded"] = "true";
+            }
+            var res = await req.Execute(ct).ConfigureAwait(false);
             return new QueryResult<TokenEntry>(res, res.Response);
         }
 
