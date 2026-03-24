@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-//  <copyright file="TemplatedPolicy.cs" company="PlayFab Inc">
-//    Copyright 2015 PlayFab Inc.
+//  <copyright file="TemplatedPolicy.cs" company="G-Research Limited">
+//    Copyright 2020 G-Research Limited
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.

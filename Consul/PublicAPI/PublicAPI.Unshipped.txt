@@ -24,8 +24,6 @@ Consul.TokenEntry.ExpirationTime.get -> System.DateTime?
 Consul.TokenEntry.ExpirationTime.set -> void
 Consul.TokenEntry.ExpirationTTL.get -> System.TimeSpan?
 Consul.TokenEntry.ExpirationTTL.set -> void
-Consul.TokenEntry.ShouldSerializeNodeIdentities() -> bool
-Consul.TokenEntry.ShouldSerializeTemplatedPolicies() -> bool
 Consul.TokenEntry.TemplatedPolicies.get -> Consul.TemplatedPolicy[]
 Consul.TokenEntry.TemplatedPolicies.set -> void
 *REMOVED*Consul.ITokenEndpoint.List(Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
