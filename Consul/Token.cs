@@ -75,42 +75,37 @@ namespace Consul
         }
 
         public TokenEntry()
-            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
+            : this(string.Empty, string.Empty, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, PolicyLink[] policies)
-            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
+            : this(string.Empty, description, policies, Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, RoleLink[] roles)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), roles, Array.Empty<ServiceIdentity>())
         {
         }
 
         public TokenEntry(string description, ServiceIdentity[] serviceIdentities)
-            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities, false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
+            : this(string.Empty, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), serviceIdentities)
         {
         }
 
         public TokenEntry(string accessorId, string description)
-            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>(), false, Array.Empty<TemplatedPolicy>(), Array.Empty<NodeIdentity>(), null, null)
+            : this(accessorId, description, Array.Empty<PolicyLink>(), Array.Empty<RoleLink>(), Array.Empty<ServiceIdentity>())
         {
         }
 
-        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities, bool local, TemplatedPolicy[] templatedPolicies, NodeIdentity[] nodeIdentities, DateTime? expirationTime, TimeSpan? expirationTTL)
+        public TokenEntry(string accessorId, string description, PolicyLink[] policies, RoleLink[] roles, ServiceIdentity[] serviceIdentities)
         {
             AccessorID = accessorId;
             Description = description;
             Policies = policies;
             Roles = roles;
             ServiceIdentities = serviceIdentities;
-            Local = local;
-            TemplatedPolicies = templatedPolicies;
-            NodeIdentities = nodeIdentities;
-            ExpirationTime = expirationTime;
-            ExpirationTTL = expirationTTL;
         }
     }
 
@@ -364,29 +359,10 @@ namespace Consul
         /// <param name="role">Filters the token list to those tokens that are linked with this specific role ID</param>
         /// <param name="serviceName">Filters the token list to those tokens that are linked with this specific service name in their service identity</param>
         /// <param name="authMethod">Filters the token list to those tokens that are linked with this specific named auth method</param>
-        /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
-        /// <returns>A query result containing an array of ACL Tokens</returns>
-        public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod, CancellationToken ct)
-        {
-            return List(policy, role, serviceName, authMethod, QueryOptions.Default, ct);
-        }
-
-        public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod)
-        {
-            return List(policy, role, serviceName, authMethod, QueryOptions.Default, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Lists the existing ACL Tokens in Consul
-        /// </summary>
-        /// <param name="policy">Filters the token list to those tokens that are linked with this specific policy ID</param>
-        /// <param name="role">Filters the token list to those tokens that are linked with this specific role ID</param>
-        /// <param name="serviceName">Filters the token list to those tokens that are linked with this specific service name in their service identity</param>
-        /// <param name="authMethod">Filters the token list to those tokens that are linked with this specific named auth method</param>
         /// <param name="queryOptions">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL Tokens</returns>
-        public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod, QueryOptions queryOptions, CancellationToken ct = default)
+        public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod, QueryOptions queryOptions = default, CancellationToken ct = default)
         {
             var req = _client.Get<TokenEntry[]>("/v1/acl/tokens", queryOptions);
             if (!string.IsNullOrEmpty(policy))
