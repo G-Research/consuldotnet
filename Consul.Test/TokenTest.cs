@@ -296,5 +296,74 @@ namespace Consul.Test
             Assert.Equal(selfTokenEntry.Response.SecretID, tokenEntry.Response.SecretID);
             Assert.Equal(selfTokenEntry.Response.AccessorID, tokenEntry.Response.AccessorID);
         }
+
+        [SkippableFact]
+        public async Task Token_ReadExpanded()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.12.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current Consul version {AgentVersion} does not support the `-expanded` flag to display detailed role and policy information for the token. Requires >= {cutOffVersion}.");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+            // create test policy
+            var policyEntry = new PolicyEntry
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Description = "Test Expanded Policy",
+                Rules = "key \"\" { policy = \"read\" }"
+            };
+            var policy = await _client.Policy.Create(policyEntry);
+            Assert.NotEmpty(policy.Response.Name);
+            Assert.NotEmpty(policy.Response.Description);
+            Assert.NotEmpty(policy.Response.Rules);
+
+            // create test role
+            var roleEntry = new RoleEntry
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Description = "Test Expanded Role",
+                Policies = new PolicyLink[] { policy.Response },
+            };
+            var role = await _client.Role.Create(roleEntry);
+            Assert.NotEmpty(role.Response.Name);
+            Assert.NotEmpty(role.Response.Description);
+            Assert.NotEmpty(role.Response.Policies);
+
+            var tokenEntry = new TokenEntry
+            {
+                Description = "Expansion Test Token",
+                Policies = new PolicyLink[] { policy.Response },
+                Roles = new RoleLink[] { role.Response },
+                Local = true
+            };
+            var newToken = await _client.Token.Create(tokenEntry);
+            var accessorId = newToken.Response.AccessorID;
+
+            // when expanded=false
+            var unexpandedRead = await _client.Token.Read(accessorId, false, QueryOptions.Default);
+            Assert.NotEmpty(unexpandedRead.Response.Policies);
+            Assert.Equal(policyEntry.Name, unexpandedRead.Response.Policies.First().Name);
+            Assert.NotEmpty(unexpandedRead.Response.Description);
+            Assert.Null(unexpandedRead.Response.AgentACLDefaultPolicy);
+            Assert.Null(unexpandedRead.Response.AgentACLDownPolicy);
+            Assert.Null(unexpandedRead.Response.ResolvedByAgent);
+            Assert.Null(unexpandedRead.Response.ExpandedPolicies);
+            Assert.Null(unexpandedRead.Response.ExpandedRoles);
+
+            // when expanded=true
+            var expandedRead = await _client.Token.Read(accessorId, true, QueryOptions.Default);
+            Assert.NotEmpty(expandedRead.Response.AgentACLDefaultPolicy);
+            Assert.NotEmpty(expandedRead.Response.AgentACLDownPolicy);
+            Assert.NotEmpty(expandedRead.Response.ResolvedByAgent);
+            Assert.NotEmpty(expandedRead.Response.ExpandedPolicies);
+            Assert.Equal(policyEntry.Rules, expandedRead.Response.ExpandedPolicies.First().Rules);
+            Assert.NotEmpty(expandedRead.Response.ExpandedRoles);
+            Assert.Equal(roleEntry.Name, expandedRead.Response.ExpandedRoles.First().Name);
+            Assert.NotEmpty(expandedRead.Response.ExpandedRoles.First().Policies);
+
+            // Cleanup
+            await _client.Token.Delete(accessorId);
+            await _client.Policy.Delete(policy.Response.ID);
+            await _client.Role.Delete(role.Response.ID);
+        }
     }
 }
