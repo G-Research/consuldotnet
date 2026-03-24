@@ -17,16 +17,12 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Consul
 {
     public class TemplatedPolicy
     {
-        [JsonProperty("TemplateName")]
         public string TemplateName { get; set; }
-
-        [JsonProperty("TemplateVariables")]
         public Dictionary<string, object> TemplateVariables { get; set; }
     }
 }
