@@ -304,36 +304,63 @@ namespace Consul.Test
             var role = await _client.Role.Create(roleEntry);
             Assert.NotNull(role.Response);
 
-            // Create a Token linked to this Policy (Should be found)
-            var matchingTokenEntry = new TokenEntry
+            var serviceIdentity = new ServiceIdentity
+            {
+                ServiceName = "web",
+                Datacenters = new string[] {"dc1"}
+            };
+            Assert.NotNull(serviceIdentity);
+
+            var tokenEntry1 = new TokenEntry
             {
                 Description = "Token Linked to Filter Policy",
                 Policies = new PolicyLink[] { policy.Response },
                 Roles = new RoleLink[] { role.Response },
                 Local = true
             };
-            var matchingToken = await _client.Token.Create(matchingTokenEntry);
-            Assert.NotEmpty(matchingToken.Response.Policies);
-            Assert.NotEmpty(matchingToken.Response.Roles);
+            var token1 = await _client.Token.Create(tokenEntry1);
+            Assert.NotEmpty(token1.Response.Policies);
+            Assert.NotEmpty(token1.Response.Roles);
 
-            // Create a Token NOT linked to this Policy (It Should NOT be found)
-            var nonMatchingTokenEntry = new TokenEntry
+            var tokenEntry2 = new TokenEntry
             {
                 Description = "Token NOT Linked to Filter Policy",
-                Local = true
+                Local = true,
+                AuthMethod = "jwt",
+                ServiceIdentities = new ServiceIdentity[] { serviceIdentity }
             };
-            var nonMatchingToken = await _client.Token.Create(nonMatchingTokenEntry);
-            Assert.NotEmpty(nonMatchingToken.Response.Description);
+            var token2 = await _client.Token.Create(tokenEntry2);
+            Assert.NotEmpty(token2.Response.Description);
+            Assert.Equal("jwt", token2.Response.AuthMethod);
+            Assert.Equal("web", token2.Response.ServiceIdentities.First().ServiceName);
 
-            // List tokens filtering by the specific Policy ID
+            // List tokens filtering by the specific PolicyID
             var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
             Assert.NotEmpty(filteredList.Response);
-            Assert.Contains(filteredList.Response, t => t.AccessorID == matchingToken.Response.AccessorID);
-            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == nonMatchingToken.Response.AccessorID);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+
+            // List tokens filtering by the specific RoleID
+            filteredList = await _client.Token.List(null, role.Response.ID, null, null);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+
+            // List tokens filtering by the specific ServiceName
+            filteredList = await _client.Token.List(null, null, "web", null);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+
+            // List tokens filtering by the specific AuthMethod
+            filteredList = await _client.Token.List(null, null, null, "jwt");
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
 
             // Cleanup
-            await _client.Token.Delete(matchingToken.Response.AccessorID);
-            await _client.Token.Delete(nonMatchingToken.Response.AccessorID);
+            await _client.Token.Delete(token1.Response.AccessorID);
+            await _client.Token.Delete(token2.Response.AccessorID);
             await _client.Policy.Delete(policy.Response.ID);
             await _client.Role.Delete(role.Response.ID);
         }
