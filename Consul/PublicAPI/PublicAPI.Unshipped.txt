@@ -46,10 +46,6 @@ Consul.TokenEntry.ExpandedPolicies.get -> Consul.ExpandedPolicy[]
 Consul.TokenEntry.ExpandedPolicies.set -> void
 Consul.TokenEntry.ExpandedRoles.get -> Consul.ExpandedRole[]
 Consul.TokenEntry.ExpandedRoles.set -> void
-Consul.TokenEntry.NamespaceDefaultPolicyIDs.get -> string[]
-Consul.TokenEntry.NamespaceDefaultPolicyIDs.set -> void
-Consul.TokenEntry.NamespaceDefaultRoleIDs.get -> string[]
-Consul.TokenEntry.NamespaceDefaultRoleIDs.set -> void
 Consul.TokenEntry.ResolvedByAgent.get -> string
 Consul.TokenEntry.ResolvedByAgent.set -> void
 *REMOVED*Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>

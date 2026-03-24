@@ -50,10 +50,6 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ExpandedRole[] ExpandedRoles { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string[] NamespaceDefaultPolicyIDs { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string[] NamespaceDefaultRoleIDs { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AgentACLDefaultPolicy { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AgentACLDownPolicy { get; set; }
