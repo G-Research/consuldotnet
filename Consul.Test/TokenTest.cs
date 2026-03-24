@@ -359,7 +359,7 @@ namespace Consul.Test
             Assert.NotEmpty(expandedRead.Response.ExpandedRoles);
             Assert.Equal(roleEntry.Name, expandedRead.Response.ExpandedRoles.First().Name);
             Assert.NotEmpty(expandedRead.Response.ExpandedRoles.First().Policies);
-            
+
             // Cleanup
             await _client.Token.Delete(accessorId);
             await _client.Policy.Delete(policy.Response.ID);
