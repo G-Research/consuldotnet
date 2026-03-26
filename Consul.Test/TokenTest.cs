@@ -312,6 +312,23 @@ namespace Consul.Test
                 ServiceName = "web"
             };
 
+            var aclReplicationStatus = await _client.ACLReplication.Status();
+            Assert.True(aclReplicationStatus.Response.Enabled);
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "AuthMethodApiTest",
+                Type = "kubernetes",
+                Description = "Auth Method for API Unit Testing",
+                Config = new Dictionary<string, string>
+                {
+                    ["Host"] = "https://192.0.2.42:8443",
+                    ["CACert"] = "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n",
+                    ["ServiceAccountJWT"] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9..."
+                }
+            };
+            var authMethod = await _client.AuthMethod.Create(authMethodEntry);
+            Assert.Equal(authMethodEntry.Name, authMethod.Response.Name);
+
             var tokenEntry1 = new TokenEntry
             {
                 Description = "Token Linked to Filter Policy",
@@ -327,11 +344,13 @@ namespace Consul.Test
             {
                 Description = "Token NOT Linked to Filter Policy",
                 Local = true,
-                ServiceIdentities = new ServiceIdentity[] { serviceIdentity }
+                ServiceIdentities = new ServiceIdentity[] { serviceIdentity },
+                AuthMethod = authMethod.Response.Name
             };
             var token2 = await _client.Token.Create(tokenEntry2);
             Assert.NotEmpty(token2.Response.Description);
             Assert.Equal(serviceIdentity.ServiceName, token2.Response.ServiceIdentities.First().ServiceName);
+            Assert.Equal(authMethodEntry.Name, token2.Response.AuthMethod);
 
             // List tokens filtering by the specific PolicyID
             var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
@@ -351,11 +370,18 @@ namespace Consul.Test
             Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
 
+            // List tokens filtering by the specific AuthMethod
+            filteredList = await _client.Token.List(null, null, null, authMethodEntry.Name);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+
             // Cleanup
             await _client.Token.Delete(token1.Response.AccessorID);
             await _client.Token.Delete(token2.Response.AccessorID);
             await _client.Policy.Delete(policy.Response.ID);
             await _client.Role.Delete(role.Response.ID);
+            await _client.Policy.Delete(authMethod.Response.Name);
         }
 
         [SkippableFact]
