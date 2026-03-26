@@ -37,8 +37,6 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public PolicyLink[] Policies { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TemplatedPolicy[] TemplatedPolicies { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public RoleLink[] Roles { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ServiceIdentity[] ServiceIdentities { get; set; }
