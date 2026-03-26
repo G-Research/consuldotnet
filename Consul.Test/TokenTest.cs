@@ -284,7 +284,7 @@ namespace Consul.Test
         public async Task Token_List_FilterBy()
         {
             var cutOffVersion = SemanticVersion.Parse("1.14.0");
-            Skip.If(AgentVersion < cutOffVersion, $"Starting from {cutOffVersion}, the Consul server supports ServiceIdentity. Requires >= {cutOffVersion}.");
+            Skip.If(AgentVersion < cutOffVersion, $"This Consul server version({AgentVersion}) doesn't support `ServiceIdentity`. Requires >= {cutOffVersion}.");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
             // Create a specific Policy to filter by
