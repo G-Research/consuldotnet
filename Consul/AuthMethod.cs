@@ -33,7 +33,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Config { get; set; }
+        public Dictionary<string, object> Config { get; set; }
 
         public bool ShouldSerializeCreateIndex()
         {
@@ -46,22 +46,33 @@ namespace Consul
         }
 
         public AuthMethodEntry()
-            : this(string.Empty, string.Empty, string.Empty, new Dictionary<string, string>())
+            : this(string.Empty, string.Empty, string.Empty, new Dictionary<string, object>())
         {
         }
 
-        public AuthMethodEntry(string name, string type, Dictionary<string, string> config)
+        public AuthMethodEntry(string name, string type, Dictionary<string, object> config)
             : this(name, type, string.Empty, config)
         {
         }
 
-        public AuthMethodEntry(string name, string type, string description, Dictionary<string, string> config)
+        public AuthMethodEntry(string name, string type, string description, Dictionary<string, object> config)
         {
             Name = name;
             Type = type;
             Description = description;
             Config = config;
         }
+    }
+
+    /// <summary>
+    /// AuthMethodLoginRequest is used to login to an ACL Auth Method
+    /// </summary>
+    public class AuthMethodLoginRequest
+    {
+        public string AuthMethod { get; set; }
+        public string BearerToken { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, string> Meta { get; set; }
     }
 
     /// <summary>
@@ -228,27 +239,36 @@ namespace Consul
         /// <summary>
         /// Login to ACL Auth Method
         /// </summary>
+        /// <param name="authMethod">The name of the auth method to use for login</param>
+        /// <param name="bearerToken">The bearer token to present to the auth method</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A write result containing an ACL Token for the login</returns>
-        public Task<WriteResult<TokenEntry>> Login(CancellationToken ct)
+        public Task<WriteResult<TokenEntry>> Login(string authMethod, string bearerToken, CancellationToken ct)
         {
-            return Login(WriteOptions.Default, ct);
+            return Login(authMethod, bearerToken, WriteOptions.Default, ct);
         }
 
-        public Task<WriteResult<TokenEntry>> Login()
+        public Task<WriteResult<TokenEntry>> Login(string authMethod, string bearerToken)
         {
-            return Login(WriteOptions.Default, CancellationToken.None);
+            return Login(authMethod, bearerToken, WriteOptions.Default, CancellationToken.None);
         }
 
         /// <summary>
         /// Login to ACL Auth Method
         /// </summary>
-        /// <param name="writeOptions"></param>
+        /// <param name="authMethod">The name of the auth method to use for login</param>
+        /// <param name="bearerToken">The bearer token to present to the auth method</param>
+        /// <param name="writeOptions">Customized write options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
-        /// <returns>>A write result containing an ACL Token for the login</returns>
-        public async Task<WriteResult<TokenEntry>> Login(WriteOptions writeOptions, CancellationToken ct = default)
+        /// <returns>A write result containing an ACL Token for the login</returns>
+        public async Task<WriteResult<TokenEntry>> Login(string authMethod, string bearerToken, WriteOptions writeOptions, CancellationToken ct = default)
         {
-            var res = await _client.PutReturning<TokenEntry>("/v1/acl/login", writeOptions).Execute(ct).ConfigureAwait(false);
+            var request = new AuthMethodLoginRequest
+            {
+                AuthMethod = authMethod,
+                BearerToken = bearerToken
+            };
+            var res = await _client.Post<AuthMethodLoginRequest, TokenEntry>("/v1/acl/login", request, writeOptions).Execute(ct).ConfigureAwait(false);
             return new WriteResult<TokenEntry>(res, res.Response);
         }
 

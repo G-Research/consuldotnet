@@ -50,3 +50,29 @@ Consul.TokenEntry.ResolvedByAgent.get -> string
 Consul.TokenEntry.ResolvedByAgent.set -> void
 *REMOVED*Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 *REMOVED*Consul.Token.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+Consul.AuthMethodLoginRequest
+Consul.AuthMethodLoginRequest.AuthMethodLoginRequest() -> void
+Consul.AuthMethodLoginRequest.AuthMethod.get -> string
+Consul.AuthMethodLoginRequest.AuthMethod.set -> void
+Consul.AuthMethodLoginRequest.BearerToken.get -> string
+Consul.AuthMethodLoginRequest.BearerToken.set -> void
+Consul.AuthMethodLoginRequest.Meta.get -> System.Collections.Generic.Dictionary<string, string>
+Consul.AuthMethodLoginRequest.Meta.set -> void
+Consul.AuthMethod.Login(string authMethod, string bearerToken) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.AuthMethod.Login(string authMethod, string bearerToken, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.AuthMethod.Login(string authMethod, string bearerToken, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.IAuthMethodEndpoint.Login(string authMethod, string bearerToken) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.IAuthMethodEndpoint.Login(string authMethod, string bearerToken, Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.IAuthMethodEndpoint.Login(string authMethod, string bearerToken, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, string description, System.Collections.Generic.Dictionary<string, object> config) -> void
+Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, System.Collections.Generic.Dictionary<string, object> config) -> void
+Consul.AuthMethodEntry.Config.get -> System.Collections.Generic.Dictionary<string, object>
+*REMOVED*Consul.AuthMethod.Login() -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.AuthMethod.Login(Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.AuthMethod.Login(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.IAuthMethodEndpoint.Login() -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.IAuthMethodEndpoint.Login(Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.IAuthMethodEndpoint.Login(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, string description, System.Collections.Generic.Dictionary<string, string> config) -> void
+*REMOVED*Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, System.Collections.Generic.Dictionary<string, string> config) -> void
+*REMOVED*Consul.AuthMethodEntry.Config.get -> System.Collections.Generic.Dictionary<string, string>
