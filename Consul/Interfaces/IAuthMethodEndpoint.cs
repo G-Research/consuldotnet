@@ -40,7 +40,7 @@ namespace Consul
         Task<QueryResult<AuthMethodEntry[]>> List(QueryOptions q, CancellationToken ct = default);
         Task<WriteResult<TokenEntry>> Login(CancellationToken ct);
         Task<WriteResult<TokenEntry>> Login();
-        Task<WriteResult<TokenEntry>> Login(WriteOptions q, CancellationToken ct = default);
+        Task<WriteResult<TokenEntry>> Login(string AuthMethod, string BearerToken, WriteOptions writeOptions, CancellationToken ct = default);
         Task<WriteResult> Logout(CancellationToken ct);
         Task<WriteResult> Logout();
         Task<WriteResult> Logout(WriteOptions q, CancellationToken ct = default);

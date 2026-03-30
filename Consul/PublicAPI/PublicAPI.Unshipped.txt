@@ -1,4 +1,5 @@
 Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
+Consul.AuthMethod.Login(string AuthMethod, string BearerToken, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
@@ -32,6 +33,7 @@ Consul.ExpandedRole.Policies.get -> Consul.PolicyLink[]
 Consul.ExpandedRole.Policies.set -> void
 Consul.ExpandedRole.ServiceIdentities.get -> Consul.ServiceIdentity[]
 Consul.ExpandedRole.ServiceIdentities.set -> void
+Consul.IAuthMethodEndpoint.Login(string AuthMethod, string BearerToken, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 Consul.ITokenEndpoint.Read(string id, bool expanded, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
@@ -50,3 +52,5 @@ Consul.TokenEntry.ResolvedByAgent.get -> string
 Consul.TokenEntry.ResolvedByAgent.set -> void
 *REMOVED*Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 *REMOVED*Consul.Token.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
+*REMOVED*Consul.AuthMethod.Login(Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+*REMOVED*Consul.IAuthMethodEndpoint.Login(Consul.WriteOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
