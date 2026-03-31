@@ -33,7 +33,7 @@ namespace Consul
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> Config { get; set; }
+        public Dictionary<string, object> Config { get; set; }
 
         public bool ShouldSerializeCreateIndex()
         {
@@ -46,16 +46,16 @@ namespace Consul
         }
 
         public AuthMethodEntry()
-            : this(string.Empty, string.Empty, string.Empty, new Dictionary<string, string>())
+            : this(string.Empty, string.Empty, string.Empty, new Dictionary<string, object>())
         {
         }
 
-        public AuthMethodEntry(string name, string type, Dictionary<string, string> config)
+        public AuthMethodEntry(string name, string type, Dictionary<string, object> config)
             : this(name, type, string.Empty, config)
         {
         }
 
-        public AuthMethodEntry(string name, string type, string description, Dictionary<string, string> config)
+        public AuthMethodEntry(string name, string type, string description, Dictionary<string, object> config)
         {
             Name = name;
             Type = type;
@@ -76,7 +76,9 @@ namespace Consul
             _client = c;
         }
 
-        // Request body DTO
+        /// <summary>
+        /// LoginRequest is used to login to an ACL Auth Method
+        /// </summary>
         internal class LoginRequest
         {
             public string AuthMethod { get; set; }

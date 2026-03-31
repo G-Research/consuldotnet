@@ -2,6 +2,9 @@ Consul.Agent.UpdateToken(Consul.AgentToken token, string tokenType, Consul.Write
 Consul.AuthMethod.Login(string authMethod, string bearerToken) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 Consul.AuthMethod.Login(string authMethod, string bearerToken, Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 Consul.AuthMethod.Login(string authMethod, string bearerToken, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
+Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, string description, System.Collections.Generic.Dictionary<string, object> config) -> void
+Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, System.Collections.Generic.Dictionary<string, object> config) -> void
+Consul.AuthMethodEntry.Config.get -> System.Collections.Generic.Dictionary<string, object>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, Consul.WriteOptions w, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult>
 Consul.IAgentEndpoint.UpdateToken(Consul.AgentToken token, string tokenType, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult>
@@ -62,4 +65,6 @@ Consul.TokenEntry.ResolvedByAgent.set -> void
 *REMOVED*Consul.AuthMethod.Login() -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 *REMOVED*Consul.AuthMethod.Login(Consul.WriteOptions writeOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
 *REMOVED*Consul.AuthMethod.Login(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
-
+*REMOVED*Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, string description, System.Collections.Generic.Dictionary<string, string> config) -> void
+*REMOVED*Consul.AuthMethodEntry.AuthMethodEntry(string name, string type, System.Collections.Generic.Dictionary<string, string> config) -> void
+*REMOVED*Consul.AuthMethodEntry.Config.get -> System.Collections.Generic.Dictionary<string, string>
