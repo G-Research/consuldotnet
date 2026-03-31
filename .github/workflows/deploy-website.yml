@@ -61,7 +61,7 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
 
       - name: Restore cache
@@ -120,7 +120,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       - name: Check Algolia secrets availability
         run: |
