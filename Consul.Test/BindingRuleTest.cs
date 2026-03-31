@@ -39,7 +39,7 @@ namespace Consul.Test
                 Name = "AuthMethodApiTest",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
@@ -72,7 +72,7 @@ namespace Consul.Test
                 Name = "AuthMethodApiTest",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
@@ -115,7 +115,7 @@ namespace Consul.Test
                 Name = "AuthMethodApiTest",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
@@ -167,7 +167,7 @@ namespace Consul.Test
                 Name = "AuthMethodApiTest",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
@@ -210,7 +210,7 @@ namespace Consul.Test
                 Name = "AuthMethodApiTest",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
