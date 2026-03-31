@@ -133,7 +133,7 @@ namespace Consul.Test
             Assert.NotEmpty(res.Response.AccessorID);
             Assert.NotEmpty(res.Response.SecretID);
             Assert.Equal(res.Response.AuthMethod, authMethodEntry.Name);
-            
+
             // Cleanup
             await _client.AuthMethod.Delete(authMethod.Response.Name);
         }
