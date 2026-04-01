@@ -18,9 +18,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using Xunit;
 
 namespace Consul.Test
@@ -92,14 +94,22 @@ namespace Consul.Test
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
-            var rsaParams = new RSAParameters();
+#if NET5_0_OR_GREATER
             string pubKeyPem;
             string jwt;
-            using (var rsa = new RSACryptoServiceProvider(2048))
+            using (var rsa = RSA.Create(2048))
             {
-                rsaParams = rsa.ExportParameters(false);
-                pubKeyPem = ExportRSAPublicKeyPem(rsa);
-                jwt = CreateSignedJwt(rsa, "consul-login-test-issuer", "consul-login-test", "test-user");
+                pubKeyPem = rsa.ExportSubjectPublicKeyInfoPem();
+                var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
+                var token = new JwtSecurityToken(
+                    issuer: "consul-login-test-issuer",
+                    audience: "consul-login-test",
+                    claims: new[] { new Claim("sub", "test-user") },
+                    notBefore: DateTime.UtcNow.AddMinutes(-1),
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: signingCredentials
+                );
+                jwt = new JwtSecurityTokenHandler().WriteToken(token);
             }
 
             var authMethodEntry = new AuthMethodEntry
@@ -115,7 +125,6 @@ namespace Consul.Test
                     ["ClaimMappings"] = new Dictionary<string, string> { ["sub"] = "user_name" }
                 }
             };
-            await _client.AuthMethod.Create(authMethodEntry);
             var authMethod = await _client.AuthMethod.Create(authMethodEntry);
             Assert.NotNull(authMethod.Response);
 
@@ -136,87 +145,10 @@ namespace Consul.Test
 
             // Cleanup
             await _client.AuthMethod.Delete(authMethod.Response.Name);
-        }
-
-        private static string Base64UrlEncode(byte[] data)
-        {
-            return Convert.ToBase64String(data).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-        }
-
-        private static string ExportRSAPublicKeyPem(RSACryptoServiceProvider rsa)
-        {
-            var parameters = rsa.ExportParameters(false);
-
-            // Build DER-encoded SubjectPublicKeyInfo manually for net461 compatibility
-            var modulus = parameters.Modulus;
-            var exponent = parameters.Exponent;
-
-            // ASN.1 INTEGER: pad with leading zero if high bit set
-            byte[] EncodeInteger(byte[] value)
-            {
-                bool needsPadding = value[0] >= 0x80;
-                int length = value.Length + (needsPadding ? 1 : 0);
-                var result = new List<byte> { 0x02 };
-                result.AddRange(EncodeLength(length));
-                if (needsPadding) result.Add(0x00);
-                result.AddRange(value);
-                return result.ToArray();
-            }
-
-            byte[] EncodeLength(int length)
-            {
-                if (length < 0x80) return new[] { (byte)length };
-                if (length <= 0xFF) return new byte[] { 0x81, (byte)length };
-                return new byte[] { 0x82, (byte)(length >> 8), (byte)length };
-            }
-
-            var modulusEncoded = EncodeInteger(modulus);
-            var exponentEncoded = EncodeInteger(exponent);
-
-            // SEQUENCE { modulus, exponent }
-            var rsaKeySequence = new List<byte> { 0x30 };
-            var rsaKeyBody = new List<byte>();
-            rsaKeyBody.AddRange(modulusEncoded);
-            rsaKeyBody.AddRange(exponentEncoded);
-            rsaKeySequence.AddRange(EncodeLength(rsaKeyBody.Count));
-            rsaKeySequence.AddRange(rsaKeyBody);
-
-            // BIT STRING wrapping the RSA key sequence
-            var bitString = new List<byte> { 0x03 };
-            bitString.AddRange(EncodeLength(rsaKeySequence.Count + 1));
-            bitString.Add(0x00); // unused bits
-            bitString.AddRange(rsaKeySequence);
-
-            // AlgorithmIdentifier for RSA: SEQUENCE { OID 1.2.840.113549.1.1.1, NULL }
-            var algorithmIdentifier = new byte[]
-            {
-                0x30, 0x0D,
-                0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01,
-                0x05, 0x00
-            };
-
-            // Outer SEQUENCE { algorithmIdentifier, bitString }
-            var spkiBody = new List<byte>();
-            spkiBody.AddRange(algorithmIdentifier);
-            spkiBody.AddRange(bitString);
-
-            var spki = new List<byte> { 0x30 };
-            spki.AddRange(EncodeLength(spkiBody.Count));
-            spki.AddRange(spkiBody);
-
-            var base64 = Convert.ToBase64String(spki.ToArray(), Base64FormattingOptions.InsertLineBreaks);
-            return $"-----BEGIN PUBLIC KEY-----\n{base64}\n-----END PUBLIC KEY-----";
-        }
-        private static string CreateSignedJwt(RSACryptoServiceProvider rsa, string issuer, string audience, string subject)
-        {
-            var now = DateTimeOffset.UtcNow;
-            var header = $"{{\"alg\":\"RS256\",\"typ\":\"JWT\"}}";
-            var payload = $"{{\"sub\":\"{subject}\",\"iss\":\"{issuer}\",\"aud\":\"{audience}\",\"iat\":{now.ToUnixTimeSeconds()},\"exp\":{now.AddHours(1).ToUnixTimeSeconds()}}}";
-            var headerB64 = Base64UrlEncode(Encoding.UTF8.GetBytes(header));
-            var payloadB64 = Base64UrlEncode(Encoding.UTF8.GetBytes(payload));
-            var signingInput = $"{headerB64}.{payloadB64}";
-            var signature = rsa.SignData(Encoding.UTF8.GetBytes(signingInput), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-            return $"{signingInput}.{Base64UrlEncode(signature)}";
+#else
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not avaible befre NET5.0");
+            await Task.CompletedTask;
+#endif
         }
     }
 }
