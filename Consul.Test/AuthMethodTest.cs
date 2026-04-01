@@ -23,6 +23,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -92,6 +93,8 @@ namespace Consul.Test
         [SkippableFact]
         public async Task AuthMethod_Login()
         {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current Consul version {AgentVersion} does not support AuthMethod.Type=\"jwt\". Requires >= {cutOffVersion}");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
 #if NET5_0_OR_GREATER
