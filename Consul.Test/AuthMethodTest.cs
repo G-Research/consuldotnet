@@ -18,8 +18,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Consul.Test
@@ -37,7 +42,7 @@ namespace Consul.Test
                 Name = $"AuthMethodApiTest-{testName}",
                 Type = "kubernetes",
                 Description = "Auth Method for API Unit Testing",
-                Config = new Dictionary<string, string>
+                Config = new Dictionary<string, object>
                 {
                     ["Host"] = _host,
                     ["CACert"] = _caCert,
@@ -115,9 +120,7 @@ namespace Consul.Test
         public async Task AuthMethod_List()
         {
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
-
             var authMethodEntry = CreateTestAuthMethodEntry(nameof(AuthMethod_List));
-
             var newAuthMethodResult = await _client.AuthMethod.Create(authMethodEntry);
             Assert.NotNull(newAuthMethodResult.Response);
             Assert.NotEqual(TimeSpan.Zero, newAuthMethodResult.RequestTime);
@@ -129,9 +132,72 @@ namespace Consul.Test
             Assert.True(listResult.Response.Length >= 1);
             var existingAuthMethod = listResult.Response.FirstOrDefault(m => m.Name == newAuthMethodResult.Response.Name);
             Assert.NotNull(existingAuthMethod);
-
             var deleteResult = await _client.AuthMethod.Delete(newAuthMethodResult.Response.Name);
             Assert.True(deleteResult.Response);
+        }
+
+        [SkippableFact]
+        public async Task AuthMethod_Login()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.8.0");
+            Skip.If(AgentVersion < cutOffVersion, $"Current Consul version {AgentVersion} does not support AuthMethod.Type=\"jwt\". Requires >= {cutOffVersion}");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+#if NET5_0_OR_GREATER
+            string pubKeyPem;
+            string jwt;
+            using (var rsa = RSA.Create(2048))
+            {
+                pubKeyPem = rsa.ExportSubjectPublicKeyInfoPem();
+                var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
+                var token = new JwtSecurityToken(
+                    issuer: "consul-login-test-issuer",
+                    audience: "consul-login-test",
+                    claims: new[] { new Claim("sub", "test-user") },
+                    notBefore: DateTime.UtcNow.AddMinutes(-1),
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: signingCredentials
+                );
+                jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            }
+
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "AuthMethodLoginTest",
+                Type = "jwt",
+                Description = "JWT Auth Method for Login Testing",
+                Config = new Dictionary<string, object>
+                {
+                    ["BoundAudiences"] = new[] { "consul-login-test" },
+                    ["BoundIssuer"] = "consul-login-test-issuer",
+                    ["JWTValidationPubKeys"] = new[] { pubKeyPem },
+                    ["ClaimMappings"] = new Dictionary<string, string> { ["sub"] = "user_name" }
+                }
+            };
+            var authMethod = await _client.AuthMethod.Create(authMethodEntry);
+            Assert.NotNull(authMethod.Response);
+
+            var bindingRule = new ACLBindingRule
+            {
+                AuthMethod = authMethodEntry.Name,
+                BindType = "service",
+                BindName = "web",
+                Selector = ""
+            };
+            var bindingRuleResponse = await _client.BindingRule.Create(bindingRule);
+            Assert.NotNull(bindingRuleResponse.Response);
+
+            var res = await _client.AuthMethod.Login(authMethod.Response.Name, jwt);
+            Assert.NotEmpty(res.Response.AccessorID);
+            Assert.NotEmpty(res.Response.SecretID);
+            Assert.Equal(res.Response.AuthMethod, authMethodEntry.Name);
+
+            // Cleanup
+            await _client.AuthMethod.Delete(authMethod.Response.Name);
+#else
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not avaible befre NET5.0");
+            await Task.CompletedTask;
+#endif
         }
     }
 }
