@@ -291,6 +291,7 @@ namespace Consul.Test
             Skip.If(AgentVersion < cutOffVersion, $"This Consul server version({AgentVersion}) doesn't support `ServiceIdentity`. Requires >= {cutOffVersion}.");
             Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
 
+#if NET5_0_OR_GREATER
             // Create a specific Policy to filter by
             var policyEntry = new PolicyEntry
             {
@@ -337,7 +338,6 @@ namespace Consul.Test
             Assert.NotEmpty(token2.Response.Description);
             Assert.Equal(serviceIdentity.ServiceName, token2.Response.ServiceIdentities.First().ServiceName);
 
-#if NET5_0_OR_GREATER
             string pubKeyPem;
             string jwt;
             using (var rsa = RSA.Create(2048))
@@ -385,7 +385,6 @@ namespace Consul.Test
             Assert.NotEmpty(token3.Response.AccessorID);
             Assert.NotEmpty(token3.Response.SecretID);
             Assert.Equal(authMethodEntry.Name, token3.Response.AuthMethod);
-#endif
 
             // List tokens filtering by the specific PolicyID
             var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
@@ -405,22 +404,22 @@ namespace Consul.Test
             Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
 
-#if NET5_0_OR_GREATER
             // List tokens filtering by the specific AuthMethod
             filteredList = await _client.Token.List(null, null, null, authMethodEntry.Name);
             Assert.NotEmpty(filteredList.Response);
             Assert.Contains(filteredList.Response, t => t.AccessorID == token3.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
             Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
-#endif
 
             // Cleanup
             await _client.Token.Delete(token1.Response.AccessorID);
             await _client.Token.Delete(token2.Response.AccessorID);
             await _client.Policy.Delete(policy.Response.ID);
             await _client.Role.Delete(role.Response.ID);
-#if NET5_0_OR_GREATER
             await _client.AuthMethod.Delete(authMethod.Response.Name);
+#else
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not avaible befre NET5.0");
+            await Task.CompletedTask;
 #endif
         }
 
