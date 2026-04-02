@@ -191,7 +191,7 @@ namespace Consul.Test
             var res = await _client.AuthMethod.Login(authMethod.Response.Name, jwt);
             Assert.NotEmpty(res.Response.AccessorID);
             Assert.NotEmpty(res.Response.SecretID);
-            Assert.Equal(res.Response.AuthMethod, authMethodEntry.Name);
+            Assert.Equal(authMethodEntry.Name, res.Response.AuthMethod);
 
             // Cleanup
             await _client.AuthMethod.Delete(authMethod.Response.Name);
