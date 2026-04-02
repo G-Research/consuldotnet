@@ -34,34 +34,6 @@ namespace Consul
         public string Description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Config { get; set; }
-
-        public bool ShouldSerializeCreateIndex()
-        {
-            return false;
-        }
-
-        public bool ShouldSerializeModifyIndex()
-        {
-            return false;
-        }
-
-        public AuthMethodEntry()
-            : this(string.Empty, string.Empty, string.Empty, new Dictionary<string, object>())
-        {
-        }
-
-        public AuthMethodEntry(string name, string type, Dictionary<string, object> config)
-            : this(name, type, string.Empty, config)
-        {
-        }
-
-        public AuthMethodEntry(string name, string type, string description, Dictionary<string, object> config)
-        {
-            Name = name;
-            Type = type;
-            Description = description;
-            Config = config;
-        }
     }
 
     /// <summary>
