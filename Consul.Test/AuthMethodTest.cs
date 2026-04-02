@@ -161,9 +161,10 @@ namespace Consul.Test
                 jwt = new JwtSecurityTokenHandler().WriteToken(token);
             }
 
+            var authMethodName = $"AuthMethodApiTest-{nameof(AuthMethod_Login)}";
             var authMethodEntry = new AuthMethodEntry
             {
-                Name = "AuthMethodLoginTest",
+                Name = authMethodName,
                 Type = "jwt",
                 Description = "JWT Auth Method for Login Testing",
                 Config = new Dictionary<string, object>
@@ -195,7 +196,7 @@ namespace Consul.Test
             // Cleanup
             await _client.AuthMethod.Delete(authMethod.Response.Name);
 #else
-            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not avaible befre NET5.0");
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not available before NET5.0");
             await Task.CompletedTask;
 #endif
         }
