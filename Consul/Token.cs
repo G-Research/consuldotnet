@@ -44,11 +44,6 @@ namespace Consul
         public NodeIdentity[] NodeIdentities { get; set; }
         public bool Local { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? ExpirationTime { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan? ExpirationTTL { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AuthMethod { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public ExpandedPolicy[] ExpandedPolicies { get; set; }

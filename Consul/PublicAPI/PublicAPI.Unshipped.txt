@@ -61,10 +61,6 @@ Consul.ITokenEndpoint.List(string policy, string role, string serviceName, strin
 Consul.Token.List(Consul.QueryOptions q) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.Token.List(Consul.QueryOptions q, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
 Consul.Token.List(string policy, string role, string serviceName, string authMethod, Consul.QueryOptions queryOptions = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry[]>>
-Consul.TokenEntry.ExpirationTime.get -> System.DateTime?
-Consul.TokenEntry.ExpirationTime.set -> void
-Consul.TokenEntry.ExpirationTTL.get -> System.TimeSpan?
-Consul.TokenEntry.ExpirationTTL.set -> void
 *REMOVED*Consul.ITokenEndpoint.Read(string id, Consul.QueryOptions q, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 *REMOVED*Consul.Token.Read(string id, Consul.QueryOptions queryOptions, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Consul.QueryResult<Consul.TokenEntry>>
 *REMOVED*Consul.IAuthMethodEndpoint.Login() -> System.Threading.Tasks.Task<Consul.WriteResult<Consul.TokenEntry>>
