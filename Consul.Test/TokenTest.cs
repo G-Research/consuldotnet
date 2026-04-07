@@ -418,7 +418,7 @@ namespace Consul.Test
             await _client.Role.Delete(role.Response.ID);
             await _client.AuthMethod.Delete(authMethod.Response.Name);
 #else
-            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not avaible befre NET5.0");
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not available before NET5.0");
             await Task.CompletedTask;
 #endif
         }
