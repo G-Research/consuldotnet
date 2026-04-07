@@ -343,23 +343,54 @@ namespace Consul
         /// <returns>A query result containing an array of ACL Tokens</returns>
         public Task<QueryResult<TokenEntry[]>> List(CancellationToken ct)
         {
-            return List(QueryOptions.Default, ct);
+            return List(null, null, null, null, QueryOptions.Default, ct);
         }
 
         public Task<QueryResult<TokenEntry[]>> List()
         {
-            return List(QueryOptions.Default, CancellationToken.None);
+            return List(null, null, null, null, QueryOptions.Default, CancellationToken.None);
+        }
+
+        public Task<QueryResult<TokenEntry[]>> List(QueryOptions q, CancellationToken ct)
+        {
+            return List(null, null, null, null, q, ct);
+        }
+
+        public Task<QueryResult<TokenEntry[]>> List(QueryOptions q)
+        {
+            return List(null, null, null, null, q, CancellationToken.None);
         }
 
         /// <summary>
         /// Lists the existing ACL Tokens in Consul
         /// </summary>
+        /// <param name="policy">Filters the token list to those tokens that are linked with this specific policy ID</param>
+        /// <param name="role">Filters the token list to those tokens that are linked with this specific role ID</param>
+        /// <param name="serviceName">Filters the token list to those tokens that are linked with this specific service name in their service identity</param>
+        /// <param name="authMethod">Filters the token list to those tokens that are linked with this specific named auth method</param>
         /// <param name="queryOptions">Customized query options</param>
         /// <param name="ct">Cancellation token for long poll request. If set, OperationCanceledException will be thrown if the request is cancelled before completing</param>
         /// <returns>A query result containing an array of ACL Tokens</returns>
-        public Task<QueryResult<TokenEntry[]>> List(QueryOptions queryOptions, CancellationToken ct = default)
+        public Task<QueryResult<TokenEntry[]>> List(string policy, string role, string serviceName, string authMethod, QueryOptions queryOptions = default, CancellationToken ct = default)
         {
-            return _client.Get<TokenEntry[]>("/v1/acl/tokens", queryOptions).Execute(ct);
+            var req = _client.Get<TokenEntry[]>("/v1/acl/tokens", queryOptions);
+            if (!string.IsNullOrEmpty(policy))
+            {
+                req.Params["policy"] = policy;
+            }
+            if (!string.IsNullOrEmpty(role))
+            {
+                req.Params["role"] = role;
+            }
+            if (!string.IsNullOrEmpty(serviceName))
+            {
+                req.Params["servicename"] = serviceName;
+            }
+            if (!string.IsNullOrEmpty(authMethod))
+            {
+                req.Params["authmethod"] = authMethod;
+            }
+            return req.Execute(ct);
         }
 
         /// <summary>

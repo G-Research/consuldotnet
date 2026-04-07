@@ -17,8 +17,13 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Versioning;
 using Xunit;
 
@@ -277,6 +282,145 @@ namespace Consul.Test
             Assert.NotNull(aclList.Response);
             Assert.NotEqual(TimeSpan.Zero, aclList.RequestTime);
             Assert.True(aclList.Response.Length >= 1);
+        }
+
+        [SkippableFact]
+        public async Task Token_List_FilterBy()
+        {
+            var cutOffVersion = SemanticVersion.Parse("1.14.0");
+            Skip.If(AgentVersion < cutOffVersion, $"This Consul server version({AgentVersion}) doesn't support `ServiceIdentity`. Requires >= {cutOffVersion}.");
+            Skip.If(string.IsNullOrEmpty(TestHelper.MasterToken));
+
+#if NET5_0_OR_GREATER
+            // Create a specific Policy to filter by
+            var policyEntry = new PolicyEntry
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Description = "Policy used to test token list filtering",
+                Rules = "key \"\" { policy = \"read\" }",
+            };
+            var policy = await _client.Policy.Create(policyEntry);
+            Assert.NotNull(policy.Response.Name);
+
+            // create a test role to filter by
+            var roleEntry = new RoleEntry
+            {
+                Name = KVTest.GenerateTestKeyName(),
+                Description = "Test Expanded Role",
+                Policies = new PolicyLink[] { policy.Response },
+            };
+            var role = await _client.Role.Create(roleEntry);
+            Assert.NotNull(role.Response);
+
+            var serviceIdentity = new ServiceIdentity
+            {
+                ServiceName = "web"
+            };
+
+            var tokenEntry1 = new TokenEntry
+            {
+                Description = "Token Linked to Filter Policy",
+                Policies = new PolicyLink[] { policy.Response },
+                Roles = new RoleLink[] { role.Response },
+                Local = true
+            };
+            var token1 = await _client.Token.Create(tokenEntry1);
+            Assert.NotEmpty(token1.Response.Policies);
+            Assert.NotEmpty(token1.Response.Roles);
+
+            var tokenEntry2 = new TokenEntry
+            {
+                Description = "Token NOT Linked to Filter Policy",
+                Local = true,
+                ServiceIdentities = new ServiceIdentity[] { serviceIdentity },
+            };
+            var token2 = await _client.Token.Create(tokenEntry2);
+            Assert.NotEmpty(token2.Response.Description);
+            Assert.Equal(serviceIdentity.ServiceName, token2.Response.ServiceIdentities.First().ServiceName);
+
+            string pubKeyPem;
+            string jwt;
+            using (var rsa = RSA.Create(2048))
+            {
+                pubKeyPem = rsa.ExportSubjectPublicKeyInfoPem();
+                var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
+                var token = new JwtSecurityToken(
+                    issuer: "consul-login-test-issuer",
+                    audience: "consul-login-test",
+                    claims: new[] { new Claim("sub", "test-user") },
+                    notBefore: DateTime.UtcNow.AddMinutes(-1),
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: signingCredentials
+                );
+                jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            }
+
+            var authMethodEntry = new AuthMethodEntry
+            {
+                Name = "AuthMethodLoginTest",
+                Type = "jwt",
+                Description = "JWT Auth Method for Login Testing",
+                Config = new Dictionary<string, object>
+                {
+                    ["BoundAudiences"] = new[] { "consul-login-test" },
+                    ["BoundIssuer"] = "consul-login-test-issuer",
+                    ["JWTValidationPubKeys"] = new[] { pubKeyPem },
+                    ["ClaimMappings"] = new Dictionary<string, string> { ["sub"] = "user_name" }
+                }
+            };
+            var authMethod = await _client.AuthMethod.Create(authMethodEntry);
+            Assert.NotNull(authMethod.Response);
+
+            var bindingRule = new ACLBindingRule
+            {
+                AuthMethod = authMethodEntry.Name,
+                BindType = "service",
+                BindName = "web",
+                Selector = ""
+            };
+            var bindingRuleResponse = await _client.BindingRule.Create(bindingRule);
+            Assert.NotNull(bindingRuleResponse.Response);
+
+            var token3 = await _client.AuthMethod.Login(authMethod.Response.Name, jwt);
+            Assert.NotEmpty(token3.Response.AccessorID);
+            Assert.NotEmpty(token3.Response.SecretID);
+            Assert.Equal(authMethodEntry.Name, token3.Response.AuthMethod);
+
+            // List tokens filtering by the specific PolicyID
+            var filteredList = await _client.Token.List(policy.Response.ID, null, null, null);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+
+            // List tokens filtering by the specific RoleID
+            filteredList = await _client.Token.List(null, role.Response.ID, null, null);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+
+            // List tokens filtering by the specific ServiceName
+            filteredList = await _client.Token.List(null, null, serviceIdentity.ServiceName, null);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+
+            // List tokens filtering by the specific AuthMethod
+            filteredList = await _client.Token.List(null, null, null, authMethodEntry.Name);
+            Assert.NotEmpty(filteredList.Response);
+            Assert.Contains(filteredList.Response, t => t.AccessorID == token3.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token1.Response.AccessorID);
+            Assert.DoesNotContain(filteredList.Response, t => t.AccessorID == token2.Response.AccessorID);
+
+            // Cleanup
+            await _client.Token.Delete(token1.Response.AccessorID);
+            await _client.Token.Delete(token2.Response.AccessorID);
+            await _client.Policy.Delete(policy.Response.ID);
+            await _client.Role.Delete(role.Response.ID);
+            await _client.AuthMethod.Delete(authMethod.Response.Name);
+#else
+            Skip.If(true, "RSA.ExportSubjectPublicKeyInfoPem() is not available before NET5.0");
+            await Task.CompletedTask;
+#endif
         }
 
         [SkippableFact]
