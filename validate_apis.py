@@ -9,9 +9,6 @@ CODEBASE_DIR = PROJECT_ROOT / "Consul"
 MDX_FILE_PATH = str(MDX_FILE_PATH)
 CODEBASE_DIR = str(CODEBASE_DIR)
 
-print(f"Checking MDX at: {MDX_FILE_PATH}")
-print(f"Scanning Code at: {CODEBASE_DIR}")
-
 # Manual overrides for highly dynamic routes or known deviations
 OVERRIDES = {
     # These are constructed dynamically via string.Format("/v1/agent/check/{0}/{1}")
@@ -99,43 +96,79 @@ def search_codebase_for_route(base_dir, route):
                     pass
     return False
 
+def get_all_implemented_routes(base_dir):
+    """Extracts potential API route strings (v1/...) from the codebase."""
+    implemented = set()
+    # Matches strings like "v1/acl/tokens" or "v1/agent/check/{0}"
+    route_pattern = re.compile(r'v1/[a-zA-Z0-9/_.\-{}]+')
+    
+    for root, _, files in os.walk(base_dir):
+        for file in files:
+            if file.endswith('.cs'):
+                try:
+                    with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        for match in route_pattern.findall(content):
+                            # Clean up and normalize: "v1/path/{0}" -> "v1/path/:param"
+                            clean = match.strip('/').strip('"').strip("'")
+                            normalized = re.sub(r'\{[a-zA-Z0-9_]+\}', ':param', clean)
+                            implemented.add(normalized)
+                except Exception: pass
+    return implemented
+
 def run_validation():
+    print(f"Checking MDX at: {MDX_FILE_PATH}")
     print(f"Parsing {MDX_FILE_PATH}...")
     endpoints = parse_mdx_table(MDX_FILE_PATH)
     print(f"Found {len(endpoints)} endpoints to validate.\n")
     
     print(f"Scanning codebase in {CODEBASE_DIR}...\n")
+
+    doc_routes = {ep['route'] for ep in endpoints}
     
     errors = 0
     warnings = 0
     
+    print("\n1. Checking for documented endpoints...")
     for ep in endpoints:
         route = ep['route']
         status = ep['status']
-        
         is_found = search_codebase_for_route(CODEBASE_DIR, route)
         
-        if status == '✅':
-            if not is_found:
-                print(f"[ERROR] Overclaimed: Route '{route}' is marked ✅ but NOT found in codebase.")
-                errors += 1
+        if status == '✅' and not is_found:
+            print(f"[ERROR] Overclaimed: Route '{route}' is marked ✅ but NOT found in codebase.")
+            errors += 1
+        elif status == '❌' and is_found:
+            print(f"[ERROR] Violation: Route '{route}' is marked ❌ but WAS found in codebase.")
+            errors += 1
+        elif status in ['🚧', '🛑'] and is_found:
+            print(f"[INFO] Implemented: Route '{route}' is marked {status} and was found in codebase.")
+            warnings += 1
+
+    print("\n2. Checking for undocumented endpoints...")
+    implemented_routes = get_all_implemented_routes(CODEBASE_DIR)
+    for imp in implemented_routes:
+        # Simplify both for comparison (remove :param vs :uuid differences)
+        simple_imp = re.sub(r':[a-zA-Z0-9_]+', ':var', imp)
+        is_documented = False
+        for dr in doc_routes:
+            simple_dr = re.sub(r':[a-zA-Z0-9_]+', ':var', dr)
+            if simple_imp == simple_dr:
+                is_documented = True
+                break
         
-        elif status == '❌':
-            if is_found:
-                print(f"[ERROR] Violation: Route '{route}' is marked ❌ but WAS found in codebase.")
+        if not is_documented:
+            # Filter out common false positives like file versions or internal paths
+            if not imp.endswith('.cs') and '/' in imp:
+                print(f"[ERROR] Undocumented: Route '{imp}' is implemented in code but missing from MDX.")
                 errors += 1
-                
-        elif status in ['🚧', '🛑']:
-            if is_found:
-                print(f"[INFO] Implemented: Route '{route}' is marked {status} and was found in codebase.")
-                warnings += 1
 
     print("\n" + "="*40)
     print("VALIDATION SUMMARY")
     print("="*40)
-    print(f"Total endpoints checked : {len(endpoints)}")
-    print(f"Total Errors            : {errors}")
-    print(f"Total Info/Warnings     : {warnings}")
+    print(f"Total documented checked : {len(endpoints)}")
+    print(f"Total Errors             : {errors}")
+    print(f"Total Info/Warnings      : {warnings}")
     
     if errors > 0:
         sys.exit(1)
