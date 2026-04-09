@@ -96,6 +96,18 @@ def search_codebase_for_route(base_dir, route):
                     pass
     return False
 
+def normalize_route(route):
+    """
+    Standardizes routes for comparison by replacing all dynamic parts 
+    (:name, {name}, {0}) with a generic placeholder.
+    """
+    # 1. Handle C# string.Format or interpolated variables: {0}, {name}, {ns.Name}
+    route = re.sub(r'\{[a-zA-Z0-9_.]+\}', ':var', route)
+    # 2. Handle MDX colon variables: :uuid, :AccessorID
+    route = re.sub(r':[a-zA-Z0-9_]+', ':var', route)
+    # 3. Clean slashes and generic param tags
+    return route.strip('/').replace(':param', ':var')
+
 def get_all_implemented_routes(base_dir):
     """Extracts potential API route strings (v1/...) from the codebase."""
     implemented = set()
@@ -109,10 +121,11 @@ def get_all_implemented_routes(base_dir):
                     with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
                         content = f.read()
                         for match in route_pattern.findall(content):
-                            # Clean up and normalize: "v1/path/{0}" -> "v1/path/:param"
                             clean = match.strip('/').strip('"').strip("'")
-                            normalized = re.sub(r'\{[a-zA-Z0-9_]+\}', ':param', clean)
-                            implemented.add(normalized)
+                            # Ignore common false positives
+                            if clean.endswith('.cs') or clean.startswith('v1/helpers'):
+                                continue
+                            implemented.add(clean)
                 except Exception: pass
     return implemented
 
@@ -120,16 +133,21 @@ def run_validation():
     print(f"Checking MDX at: {MDX_FILE_PATH}")
     print(f"Parsing {MDX_FILE_PATH}...")
     endpoints = parse_mdx_table(MDX_FILE_PATH)
-    print(f"Found {len(endpoints)} endpoints to validate.\n")
     
-    print(f"Scanning codebase in {CODEBASE_DIR}...\n")
+    # Create a set of normalized routes from the documentation for easy comparison
+    doc_routes_normalized = {normalize_route(ep['route']) for ep in endpoints}
+    
+    # Add actual code routes from OVERRIDES to the documented set
+    for val in OVERRIDES.values():
+        if isinstance(val, str):
+            doc_routes_normalized.add(normalize_route(val))
 
-    doc_routes = {ep['route'] for ep in endpoints}
+    print(f"Scanning codebase in {CODEBASE_DIR}...\n")
     
     errors = 0
     warnings = 0
     
-    print("\n1. Checking for documented endpoints...")
+    print("1. Checking for documented endpoints...")
     for ep in endpoints:
         route = ep['route']
         status = ep['status']
@@ -148,20 +166,16 @@ def run_validation():
     print("\n2. Checking for undocumented endpoints...")
     implemented_routes = get_all_implemented_routes(CODEBASE_DIR)
     for imp in implemented_routes:
-        # Simplify both for comparison (remove :param vs :uuid differences)
-        simple_imp = re.sub(r':[a-zA-Z0-9_]+', ':var', imp)
-        is_documented = False
-        for dr in doc_routes:
-            simple_dr = re.sub(r':[a-zA-Z0-9_]+', ':var', dr)
-            if simple_imp == simple_dr:
-                is_documented = True
-                break
+        norm_imp = normalize_route(imp)
         
-        if not is_documented:
-            # Filter out common false positives like file versions or internal paths
-            if not imp.endswith('.cs') and '/' in imp:
-                print(f"[ERROR] Undocumented: Route '{imp}' is implemented in code but missing from MDX.")
-                errors += 1
+        # Check if this implementation exists in our documented set
+        if norm_imp not in doc_routes_normalized:
+            # Special case for Overrides that are just set to True
+            if imp in OVERRIDES and OVERRIDES[imp] is True:
+                continue
+                
+            print(f"[ERROR] Undocumented: Route '{imp}' is implemented in code but missing from MDX.")
+            errors += 1
 
     print("\n" + "="*40)
     print("VALIDATION SUMMARY")
