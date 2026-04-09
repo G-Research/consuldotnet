@@ -26,6 +26,20 @@ jobs:
       - name: Check format
         run: dotnet tool run dotnet-format  -- --check
 
+  # Validates that 3-supported-apis.mdx accurately reflects the implemented endpoints in the C# codebase.
+  validate-api-docs:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Run API Validation Script
+        run: python validate_apis.py
+
   Consul_AspNetCore:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
