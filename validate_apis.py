@@ -11,12 +11,20 @@ CODEBASE_DIR = str(CODEBASE_DIR)
 
 # Manual overrides for highly dynamic routes or known deviations
 OVERRIDES = {
-    # These are constructed dynamically via string.Format("/v1/agent/check/{0}/{1}")
+    # 1. Handle the health service naming variations
+    "v1/agent/health/service/name": "v1/agent/health/service/name/:service_name",
+    "v1/agent/health/service/id": "v1/agent/health/service/id/:service_id",
+    
+    # 2. Handle the numeric indexed dynamic route
+    "v1/agent/check/{0}/{1}": True,
+    
+    # 3. Handle the config kind naming
+    "v1/config/{kind}": "v1/config/:Kind",
+
+    # overrides
     "v1/agent/check/pass/:check_id": True,
     "v1/agent/check/warn/:check_id": True,
     "v1/agent/check/fail/:check_id": True,
-    
-    # Example of redirecting a doc claim to the actual code implementation
     "v1/operator/utilization": "v1/operator/usage" 
 }
 
@@ -105,8 +113,8 @@ def normalize_route(route):
     route = re.sub(r'\{[a-zA-Z0-9_.]+\}', ':var', route)
     # 2. Handle MDX colon variables: :uuid, :AccessorID
     route = re.sub(r':[a-zA-Z0-9_]+', ':var', route)
-    # 3. Clean slashes and generic param tags
-    return route.strip('/').replace(':param', ':var')
+    # 3. Clean slashes, generic param tags, and handle casing for robust matching
+    return route.strip('/').replace(':param', ':var').lower()
 
 def get_all_implemented_routes(base_dir):
     """Extracts potential API route strings (v1/...) from the codebase."""
@@ -166,14 +174,18 @@ def run_validation():
     print("\n2. Checking for undocumented endpoints...")
     implemented_routes = get_all_implemented_routes(CODEBASE_DIR)
     for imp in implemented_routes:
-        norm_imp = normalize_route(imp)
+        # Check if we have an explicit override mapping for this code route
+        route_to_check = OVERRIDES.get(imp, imp)
+        
+        # If it maps to True, it's a known dynamic route we are ignoring here
+        if route_to_check is True:
+            continue
+            
+        # Normalize the (potentially translated) route
+        norm_imp = normalize_route(route_to_check)
         
         # Check if this implementation exists in our documented set
         if norm_imp not in doc_routes_normalized:
-            # Special case for Overrides that are just set to True
-            if imp in OVERRIDES and OVERRIDES[imp] is True:
-                continue
-                
             print(f"[ERROR] Undocumented: Route '{imp}' is implemented in code but missing from MDX.")
             errors += 1
 
