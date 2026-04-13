@@ -50,7 +50,7 @@ jobs:
         run: git diff -- "*.cs" > ${{ runner.temp }}/format.patch
 
       - name: Upload patch
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: format-patch
           path: ${{ runner.temp }}/format.patch
