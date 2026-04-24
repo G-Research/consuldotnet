@@ -3,7 +3,7 @@ import re
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 MDX_FILE_PATH = PROJECT_ROOT / "docs/docs/2-guides/3-supported-apis.mdx"
 CODEBASE_DIR = PROJECT_ROOT / "Consul"
 MDX_FILE_PATH = str(MDX_FILE_PATH)
@@ -161,15 +161,12 @@ def run_validation():
         status = ep['status']
         is_found = search_codebase_for_route(CODEBASE_DIR, route)
         
-        if status == '✅' and not is_found:
+        if status in ['✅', '🚧'] and not is_found:
             print(f"[ERROR] Overclaimed: Route '{route}' is marked ✅ but NOT found in codebase.")
             errors += 1
         elif status == '❌' and is_found:
             print(f"[ERROR] Violation: Route '{route}' is marked ❌ but WAS found in codebase.")
             errors += 1
-        elif status in ['🚧', '🛑'] and is_found:
-            print(f"[INFO] Implemented: Route '{route}' is marked {status} and was found in codebase.")
-            warnings += 1
 
     print("\n2. Checking for undocumented endpoints...")
     implemented_routes = get_all_implemented_routes(CODEBASE_DIR)

@@ -45,7 +45,15 @@ _The table below shows which endpoints are currently supported._
 |                                 | Read a Binding Rule                                     | GET v1/acl/binding-rule/:id                    | ✅                        |
 |                                 | Update a Binding Rule                                   | PUT v1/acl/binding-rule/:id                    | ✅                        |
 |                                 | Delete a Binding Rule                                   | DELETE v1/acl/binding-rule/:id                 | ✅                        |
-|                                 | List Binding Rules                                      | GET v1/acl/binding-rules                       | ✅                        |     
+|                                 | List Binding Rules                                      | GET v1/acl/binding-rules                       | ✅                        |
+| **ACL-Legacy**                  | Create ACL Token                                        | PUT v1/acl/create                              | 🛑 (Deprecated)           |
+|                                 | Update ACL Token                                        | PUT v1/acl/update                              | 🛑 (Deprecated)           |
+|                                 | Destroy ACL Token                                       | PUT v1/acl/destroy/:id                         | 🛑 (Deprecated)           |
+|                                 | Read ACL Token                                          | GET v1/acl/info/:id                            | 🛑 (Deprecated)           |
+|                                 | Clone ACL Token                                         | PUT v1/acl/clone/:id                           | 🛑 (Deprecated)           |
+|                                 | List ACL Tokens                                         | GET v1/acl/list                                | 🛑 (Deprecated)           |
+|                                 | Translate Rules                                         | POST v1/acl/rules/translate                    | 🛑 (Deprecated)           |
+|                                 | Translate a Legacy Token's Rules                        | GET v1/acl/rules/translate/:id                 | 🛑 (Deprecated)           |
 | **Admin Partition**             | Create a Partition                                      | PUT v1/partition                               | ❌                       |
 |                                 | Read a Partition                                        | GET v1/partition/:name                         | ❌                        |
 |                                 | Update a Partition                                      | PUT v1/partition/:name                         | ❌                        |
@@ -62,6 +70,7 @@ _The table below shows which endpoints are currently supported._
 |                                 | Join Agent                                              | PUT v1/agent/join/:address                     | ✅                        |
 |                                 | Graceful Leave and Shutdown                             | PUT v1/agent/leave                             | ✅                        |
 |                                 | Force Leave and Shutdown                                | PUT v1/agent/force-leave/:node                 | ✅                        |
+|                                 | Update ACL Tokens                                       | PUT v1/agent/token/:token_type                 | ✅                        |
 |                                 | Update ACL Tokens                                       | PUT v1/agent/token/default                     | ❌                        |
 |                                 | Update ACL Tokens                                       | PUT v1/agent/token/agent                       | ❌                        |
 |                                 | Update ACL Tokens                                       | PUT v1/agent/token/agent_recovery              | ❌                        |
@@ -77,7 +86,7 @@ _The table below shows which endpoints are currently supported._
 |                                 | TTL Check Pass                                          | PUT v1/agent/check/pass/:check_id              | ✅                        |
 |                                 | TTL Check Warn                                          | PUT v1/agent/check/warn/:check_id              | ✅                        |
 |                                 | TTL Check Fail                                          | PUT v1/agent/check/fail/:check_id              | ✅                        |
-|                                 | TTL Check Update                                        | PUT /agent/check/update/:check_id              | ✅                        |
+|                                 | TTL Check Update                                        | PUT v1/agent/check/update/:check_id            | ✅                        |
 | **Agent-Services**              | List Services                                           | GET v1/agent/services                          | ✅                        |
 |                                 | Get Service Configuration                               | GET v1/agent/service/:service_id               | ✅                        |
 |                                 | Get local service health                                | GET v1/agent/health/service/name/:service_name | ✅                        |
@@ -143,7 +152,6 @@ _The table below shows which endpoints are currently supported._
 |                                 | Update Network Area                                     | PUT v1/operator/area/:uuid                     | ✅                        |
 |                                 | List Specific Network Area                              | GET v1/operator/area/:uuid                     | ✅                        |
 |                                 | Delete Network Area                                     | DELETE v1/operator/area/:uuid                  | ✅                        |
-|                                 | Join Network Area                                       | PUT v1/operator/area/:uuid/join                | 🚧                        |
 |                                 | List Network Area Members                               | GET v1/operator/area/:uuid/members             | ❌                        |
 | **Autopilot Operator**          | Read Configuration                                      | GET v1/operator/autopilot/configuration        | ✅                        |
 |                                 | Update Configuration                                    | PUT v1/operator/autopilot/configuration        | ✅                        |
