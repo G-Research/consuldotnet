@@ -69,7 +69,7 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     strategy:
       matrix:
-        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.9, 1.14.11, 1.15.10, 1.16.6, 1.17.3, 1.18.2, 1.19.2, 1.20.6, 1.21.5, 1.22.6]
+        consul: [1.6.10, 1.7.14, 1.8.19, 1.9.17, 1.10.12, 1.11.11, 1.12.9, 1.13.9, 1.14.11, 1.15.10, 1.16.6, 1.17.3, 1.18.2, 1.19.2, 1.20.6, 1.21.5, 1.22.7]
         framework: [net461, net8.0] # Latest LTS
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
@@ -154,7 +154,7 @@ jobs:
             CONSUL_AGENT_CONFIG_PATH: ${{ github.workspace }}/Consul.Test/test_config.json
       - name: Upload Consul logs
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: consul-logs-${{ matrix.consul }}-${{ matrix.framework }}-${{ matrix.os }}
           path: consul*.log
@@ -192,7 +192,7 @@ jobs:
               }
           }
       - name: Upload NuGet package artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: nuget-packages
           path: dist/*.nupkg
