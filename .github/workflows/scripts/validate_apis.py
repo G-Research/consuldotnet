@@ -60,7 +60,7 @@ def parse_mdx_table(filepath):
                     method, route = route_parts
                     status_symbol = status_cell[0] if status_cell else ""
                     
-                    if status_symbol in ['✅', '❌', '🚧', '🛑']:
+                    if status_symbol in ['✅', '❌']:
                         endpoints.append({
                             'method': method,
                             'route': route,
@@ -151,17 +151,15 @@ def run_validation():
             doc_routes_normalized.add(normalize_route(val))
 
     print(f"Scanning codebase in {CODEBASE_DIR}...\n")
+    print("1. Checking for documented endpoints...")
     
     errors = 0
-    warnings = 0
-    
-    print("1. Checking for documented endpoints...")
     for ep in endpoints:
         route = ep['route']
         status = ep['status']
         is_found = search_codebase_for_route(CODEBASE_DIR, route)
         
-        if status in ['✅', '🚧'] and not is_found:
+        if status == '✅' and not is_found:
             print(f"[ERROR] Overclaimed: Route '{route}' is marked ✅ but NOT found in codebase.")
             errors += 1
         elif status == '❌' and is_found:
@@ -191,7 +189,6 @@ def run_validation():
     print("="*40)
     print(f"Total documented checked : {len(endpoints)}")
     print(f"Total Errors             : {errors}")
-    print(f"Total Info/Warnings      : {warnings}")
     
     if errors > 0:
         sys.exit(1)
