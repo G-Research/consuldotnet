@@ -3,7 +3,7 @@ import re
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 MDX_FILE_PATH = PROJECT_ROOT / "docs/docs/2-guides/3-supported-apis.mdx"
 CODEBASE_DIR = PROJECT_ROOT / "Consul"
 MDX_FILE_PATH = str(MDX_FILE_PATH)
