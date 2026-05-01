@@ -161,15 +161,12 @@ def run_validation():
         status = ep['status']
         is_found = search_codebase_for_route(CODEBASE_DIR, route)
         
-        if status == '✅' and not is_found:
+        if status in ['✅', '🚧'] and not is_found:
             print(f"[ERROR] Overclaimed: Route '{route}' is marked ✅ but NOT found in codebase.")
             errors += 1
         elif status == '❌' and is_found:
             print(f"[ERROR] Violation: Route '{route}' is marked ❌ but WAS found in codebase.")
             errors += 1
-        elif status in ['🚧', '🛑'] and is_found:
-            print(f"[INFO] Implemented: Route '{route}' is marked {status} and was found in codebase.")
-            warnings += 1
 
     print("\n2. Checking for undocumented endpoints...")
     implemented_routes = get_all_implemented_routes(CODEBASE_DIR)
