@@ -27,14 +27,14 @@ jobs:
     steps:
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5.1.0
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: '9.0.x'
 
       # https://github.com/dotnet/runtime/issues/118148
       # Checkout into subdirectory, so we never evaluate global.json from potential attacker
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           show-progress: false
           persist-credentials: false
@@ -50,7 +50,7 @@ jobs:
         run: git diff -- "*.cs" > ${{ runner.temp }}/format.patch
 
       - name: Upload patch
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: format-patch
           path: ${{ runner.temp }}/format.patch
@@ -66,14 +66,14 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           show-progress: false
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
 
       - name: Download patch
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           pattern: format-patch
           path: ${{ runner.temp }}/format-patch

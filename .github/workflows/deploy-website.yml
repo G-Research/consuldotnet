@@ -26,13 +26,13 @@ jobs:
       has_pages: ${{ steps.has-pages.outputs.has_pages }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0 # Number of commits to fetch. 0 indicates all history for all branches and tags.
 
       - name: Get Consul.NET latest version
         id: version
-        uses: WyriHaximus/github-action-get-previous-tag@v2
+        uses: WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de
         with:
           fallback: "vX.X.X" # Optional fallback tag to use when no tag can be found
 
@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version: "lts/*"
           cache: yarn
@@ -61,11 +61,11 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
 
       - name: Restore cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             docs/build
@@ -79,7 +79,7 @@ jobs:
         working-directory: ./docs
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7
 
       - name: Restore tool
         run: dotnet tool restore
@@ -102,7 +102,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         if: github.ref == 'refs/heads/master' && steps.has-pages.outputs.has_pages == 'true'
         with:
           path: ./docs/build
@@ -120,7 +120,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
 
       - name: Check Algolia secrets availability
         run: |
@@ -152,7 +152,7 @@ jobs:
           exit 1
 
       - name: Trigger Algolia DocSearch Crawler
-        uses: algolia/algoliasearch-crawler-github-actions@v1
+        uses: algolia/algoliasearch-crawler-github-actions@79db67cd7284bf4623324cd69e3cba49c7a85c4c
         if: ${{ steps.wait-for-new-version.outcome == 'success' }} # Only if the new version was successfully published
         continue-on-error: true # Allows this step to fail without failing the job
         with:
