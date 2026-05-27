@@ -37,7 +37,7 @@ jobs:
         run: Install-Module -Force PowerShellForGitHub
 
       - name: Update consul versions
-        uses: technote-space/create-pr-action@v2
+        uses: technote-space/create-pr-action@91114507cf92349bec0a9a501c2edf1635427bc5
         with:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
           EXECUTE_COMMANDS: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pwsh .github/workflows/scripts/update-consul-versions.ps1
