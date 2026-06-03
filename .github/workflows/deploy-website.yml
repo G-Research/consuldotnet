@@ -152,7 +152,7 @@ jobs:
           exit 1
 
       - name: Trigger Algolia DocSearch Crawler
-        uses: algolia/algoliasearch-crawler-github-actions@79db67cd7284bf4623324cd69e3cba49c7a85c4c
+        uses: algolia/algoliasearch-crawler-github-actions@3ae4def15d82c60aa02b0e528b50167593cbaaf6
         if: ${{ steps.wait-for-new-version.outcome == 'success' }} # Only if the new version was successfully published
         continue-on-error: true # Allows this step to fail without failing the job
         with:
