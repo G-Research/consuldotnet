@@ -7,13 +7,8 @@ name: zizmor
 on:
   push:
     branches: [master]
-    paths:
-      - ".github/**"
   pull_request:
     branches: [master]
-    paths:
-      - ".github/**"
-  workflow_dispatch:
 
 permissions: {}
 
