@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '22 2 * * *' # Run once per day, at a randomly chosen time.
 
+# Top-level: no permissions. The pull request is created with a dedicated
+# GitHub App token (see the "Create access token" step), so the default
+# GITHUB_TOKEN only needs read access.
+permissions: {}
+
 jobs:
   update-consul-versions:
     # Only run on main repository
@@ -11,6 +16,8 @@ jobs:
     if: github.repository == 'G-Research/consuldotnet'
     environment: update-consul-versions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Install Step CLI
         env:

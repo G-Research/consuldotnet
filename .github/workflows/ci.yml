@@ -10,11 +10,16 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
+# Top-level: no permissions. Each job declares only what it needs.
+permissions: {}
+
 jobs:
   # Enforces the consistency of code formatting using `.editorconfig` and the `dotnet format`.
   check-format:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -30,6 +35,8 @@ jobs:
   validate-api-docs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.id != github.event.pull_request.base.repo.id
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -48,6 +55,8 @@ jobs:
         framework: [net8.0, net9.0]
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -57,7 +66,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Setup .NET SDK v9.0.x
-        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2    
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
         with:
           dotnet-version: 9.0.x
       - name: Build
@@ -84,6 +93,8 @@ jobs:
 
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -162,6 +173,8 @@ jobs:
   package:
     runs-on: windows-latest
     needs: [Consul_AspNetCore, Consul]
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -203,6 +216,8 @@ jobs:
     if: ${{ !github.event.repository.fork && github.ref == 'refs/heads/master' }}
     needs: package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
@@ -219,6 +234,8 @@ jobs:
     if: ${{ !github.event.repository.fork && startsWith(github.ref, 'refs/tags/v') }}
     needs: package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Download NuGet package artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c

@@ -6,6 +6,8 @@ on:
     types: [completed]
     branches: [master]
 
+# Sends an external webhook only; no GITHUB_TOKEN access required.
+permissions: {}
 
 jobs:
   nudge:
