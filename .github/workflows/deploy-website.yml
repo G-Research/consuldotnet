@@ -43,13 +43,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract URL and BASE_URL
+        env:
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          if [[ "${{ github.repository_owner }}" == "G-Research" ]]; then
+          if [[ "$REPO_OWNER" == "G-Research" ]]; then
             echo "URL=https://consuldot.net" >> $GITHUB_ENV
             echo "BASE_URL=/" >> $GITHUB_ENV
           else
-            echo "URL=https://${{ github.repository_owner }}.github.io" >> $GITHUB_ENV
-            echo "BASE_URL=/${{ github.event.repository.name }}/" >> $GITHUB_ENV
+            echo "URL=https://$REPO_OWNER.github.io" >> $GITHUB_ENV
+            echo "BASE_URL=/$REPO_NAME/" >> $GITHUB_ENV
           fi
 
       - name: Setup Node
@@ -134,11 +137,13 @@ jobs:
         id: wait-for-new-version
         if: ${{ env.ALGOLIA_SECRETS == 'true' }}
         continue-on-error: true # Allows this step to fail without failing the job
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           max_retries=5
           new_version="${{ github.sha }}"
           for i in $(seq 1 $max_retries); do
-            published_version=$(curl -s -f ${{ steps.deployment.outputs.page_url }}.build)
+            published_version=$(curl -s -f "${PAGE_URL}.build")
             if [ "$published_version" == "$new_version" ]; then
               echo "New version published!"
               exit 0
