@@ -191,16 +191,18 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2
       - name: Create NuGet packages
+        env:
+          GITHUB_REF: ${{ github.ref }}
         run: |
-          if (-not ("${{ github.ref }}" -like "refs/tags/v*")) {
+          if (-not ($env:GITHUB_REF -like "refs/tags/v*")) {
             $suffix = "preview-$(Get-Date -Format yyyyMMddHHmmss -AsUTC)-$(git rev-parse --short HEAD)"
             $params = "--version-suffix", $suffix
           }
 
           dotnet pack --configuration=Release --output dist @params
 
-          if ("${{ github.ref }}" -like "refs/tags/v*") {
-              $tag = "${{ github.ref }}".SubString(11)
+          if ($env:GITHUB_REF -like "refs/tags/v*") {
+              $tag = $env:GITHUB_REF.SubString(11)
               $expectedConsulFile = "dist/Consul.$tag.nupkg"
               $expectedConsulAspNetCoreFile = "dist/Consul.AspNetCore.$tag.nupkg"
 
