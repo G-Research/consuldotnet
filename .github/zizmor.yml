@@ -1,0 +1,23 @@
+# zizmor configuration — https://docs.zizmor.sh/configuration/
+#
+# This file records the small number of findings that are intentional and
+# cannot be "fixed" without breaking required functionality. Each ignore is
+# scoped as narrowly as possible and documented with the reason.
+
+rules:
+  dangerous-triggers:
+    ignore:
+      # formatter.yml deliberately uses `pull_request_target`. It runs in the
+      # context of the *base* branch so it can push a formatting fixup back to
+      # the PR branch, and it never executes untrusted PR code: the format job
+      # checks the PR out into a subdirectory with `persist-credentials: false`
+      # and only the privileged `push` job (which runs no PR code) applies the
+      # resulting patch. See the comments at the top of the workflow.
+      - formatter.yml
+
+  artipacked:
+    ignore:
+      # formatter.yml:68 — the `push` job must keep the persisted GITHUB_TOKEN
+      # to `git push` the formatting commit; `persist-credentials: false` here
+      # would break the workflow. All other checkouts disable persistence.
+      - formatter.yml:68
