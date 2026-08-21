@@ -5,6 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
       codeql:
         patterns:
@@ -18,7 +20,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    cooldown:
+      default-days: 7
     groups:
       nuget-security:
         applies-to: security-updates
@@ -30,7 +33,8 @@ updates:
     directory: "/docs"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    cooldown:
+      default-days: 7
     groups:
       npm-security:
         applies-to: security-updates
