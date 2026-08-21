@@ -1,6 +1,38 @@
 version: 2
 updates:
+  # ---------- CI: version updates ----------
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
+      github-actions:
+        patterns:
+          - "*"
+
+  # ---------- .NET / NuGet: security updates only ----------
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    groups:
+      nuget-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  # ---------- docs site (npm): security updates only ----------
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
