@@ -83,7 +83,7 @@ jobs:
         working-directory: ./docs
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73
 
       - name: Restore tool
         run: dotnet tool restore
